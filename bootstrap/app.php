@@ -15,6 +15,11 @@ $app = new Illuminate\Foundation\Application(
     realpath(__DIR__.'/../')
 );
 
+/**
+ * Fix app_path
+ */
+$app->instance('path', realpath(__DIR__.'/../modules/core/src'));
+
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces
@@ -28,17 +33,17 @@ $app = new Illuminate\Foundation\Application(
 
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
-    App\Http\Kernel::class
+    Rikkei\Core\Http\Kernel::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
+    Rikkei\Core\Console\Kernel::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
+    Rikkei\Core\Exceptions\Handler::class
 );
 
 /*

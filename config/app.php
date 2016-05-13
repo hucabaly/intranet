@@ -147,15 +147,23 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        Laravel\Socialite\SocialiteServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         /*
-         * Application Service Providers...
+         * Modules Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-
+        Rikkei\Core\ServiceProvider::class,
+        Rikkei\Accounting\ServiceProvider::class,
+        Rikkei\Assets\ServiceProvider::class,
+        Rikkei\Customer\ServiceProvider::class,
+        Rikkei\Employee\ServiceProvider::class,
+        Rikkei\Music\ServiceProvider::class,
+        Rikkei\News\ServiceProvider::class,
+        Rikkei\Project\ServiceProvider::class,
+        Rikkei\Recruitment\ServiceProvider::class,
+        Rikkei\Team\ServiceProvider::class,
+        Rikkei\Training\ServiceProvider::class,
+        Rikkei\Working\ServiceProvider::class,
     ],
 
     /*
@@ -201,7 +209,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];
