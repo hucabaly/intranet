@@ -37,18 +37,26 @@ class AuthController extends Controller
     public function callback($provider)
     {
         $user = Socialite::driver($provider)->user();
-
+        
+        //add check email rikkei
+        $email = $user->email;
+        if (!$email) {
+            redirect('/')->withErrors('Error Social connect');
+        }
+        if (!preg_match('/@rikkeisoft\.com$/', $email)) {
+            return redirect('/')->withErrors('Please use Rikkisoft\'s Email!');
+        }        
+        
         $account = User::firstOrNew([
-            'id'       => $user->id,
-            'email'    => $user->email,
+            'email'    => $user->email
         ]);
 
         $account->name = $user->name;
         $account->nickname = !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email);
         $account->token = $user->token;
         $account->save();
-
         Auth::login($account);
+        
 
         return redirect('/');
     }
@@ -58,12 +66,16 @@ class AuthController extends Controller
      *
      * @param string $provider
      */
-    public function logout($provider)
+    public function logout()
     {
         // TODO
-        Socialite::driver($provider)->deauthorize(Auth::user()->access_token);
-        Auth::user()->access_token = '';
-        Auth::user()->save();
+        //Socialite::driver($provider)->deauthorize(Auth::user()->access_token);
+        $user = Auth::user();
+        if($user) {
+            $user->token = '';
+            $user->save();
+        }
         Auth::logout();
+        return redirect('/');
     }
 }

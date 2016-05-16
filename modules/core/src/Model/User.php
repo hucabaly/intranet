@@ -30,28 +30,40 @@ class User extends Model implements Authenticatable
      *
      * @return string
      */
-    public function getAuthIdentifierName();
+    public function getAuthIdentifierName()
+    {
+        return $this->getKeyName();
+    }
 
     /**
      * Get the unique identifier for the user.
      *
      * @return mixed
      */
-    public function getAuthIdentifier();
+    public function getAuthIdentifier()
+    {
+        return $this->getKey();
+    }
 
     /**
      * Get the password for the user.
      *
      * @return string
      */
-    public function getAuthPassword();
+    public function getAuthPassword()
+    {
+        return null;
+    }
 
     /**
      * Get the token value for the "remember me" session.
      *
      * @return string
      */
-    public function getRememberToken();
+    public function getRememberToken()
+    {
+        return $this->{$this->getRememberTokenName()};
+    }
 
     /**
      * Set the token value for the "remember me" session.
@@ -59,12 +71,18 @@ class User extends Model implements Authenticatable
      * @param  string  $value
      * @return void
      */
-    public function setRememberToken($value);
+    public function setRememberToken($value)
+    {
+        $this->{$this->getRememberTokenName()} = $value;
+    }
 
     /**
      * Get the column name for the "remember me" token.
      *
      * @return string
      */
-    public function getRememberTokenName();
+    public function getRememberTokenName()
+    {
+        return 'token';
+    }
 }
