@@ -8,3 +8,4 @@ Features
 
 - [ ] Manage assets
 - [ ] Booking meeting room
+- [ ] Borrowed equipment

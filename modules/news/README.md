@@ -6,4 +6,5 @@ This is a package for Rikkei Intranet System
 Features
 ---
 
-- [ ] Site rikkei music
+- [ ] Rikkei NEWS
+- [ ] Publish and store regulations
