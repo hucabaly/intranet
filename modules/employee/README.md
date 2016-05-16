@@ -7,3 +7,4 @@ Features
 ---
 
 - [ ] Manage employees
+- [ ] Employee can see and update info

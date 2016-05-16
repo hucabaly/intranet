@@ -7,4 +7,4 @@ Features
 ---
 
 - [ ] Manage salary, bonuses, ...
-- [ ] 
+- [ ] Employee see my salary table
