@@ -299,7 +299,7 @@
                     </form>
                     <!-- /.search form -->
                     <!-- sidebar menu: : style can be found in sidebar.less -->
-                    @include('adminlte::include.navigationleft')
+                    @include('include.navigationleft')
                 </section>
                 <!-- /.sidebar -->
             </aside>
@@ -307,8 +307,8 @@
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Include messages -->
-                @include('adminlte::messages.success')
-                @include('adminlte::messages.errors')
+                @include('messages.success')
+                @include('messages.errors')
                 
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
@@ -317,7 +317,7 @@
                     @endif
                     
                     <!-- Breadcrumb -->
-                        @include('adminlte::include.breadcrumb')
+                        @include('include.breadcrumb')
                     <!-- end Breadcrumb -->
                 </section>
                 
