@@ -1,4 +1,4 @@
-@extends('adminlte::layouts.content')
+@extends('layouts.content')
 
 @section('content')
 <style type="text/css">

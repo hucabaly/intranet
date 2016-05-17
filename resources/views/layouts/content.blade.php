@@ -5,11 +5,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="robots" content="noindex, nofollow" />
         <title>
-            @if(isset($title) && $title)
-                {{ $title }}
-                -
-            @endif
-            Admin Rikkei Intranet
+            @yield('title')
+            Rikkei Intranet
         </title>
         <script>
             var baseUrl = '{{ url('/') }}/',
