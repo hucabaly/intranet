@@ -7,7 +7,8 @@
         "php": ">=5.5.9",
         "laravel/framework": "~5.2.5",
         "laravel/socialite": "~2.0.15",
-        "maatwebsite/excel": "~2.1.2"
+        "maatwebsite/excel": "~2.1.2",
+        "almasaeed2010/adminlte": "~2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -49,10 +50,12 @@
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
+            "php artisan vendor:publish --tag=assets",
             "php artisan optimize"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "php artisan vendor:publish --tag=assets",
             "php artisan optimize"
         ]
     },
