@@ -1,7 +1,6 @@
 <?php
-namespace Rikkei\Core\View;
 
-use URL;
+namespace Rikkei\Core\View;
 
 class Breadcrumb
 {
@@ -16,17 +15,26 @@ class Breadcrumb
      * @var array
      */
     protected static $path = array();
-
-    public static function root()
+    
+    /**
+     * Set root node
+     */
+    public static function root($paths)
     {
-        self::$root['root'] = [
-            'url' => URL::to('/'),
-            'text' => 'Home',
-            'pre_text' => '<i class="fa fa-dashboard"></i>',
-        ];
-        self::$path = array();
+        foreach ($paths as list($url, $text, $preText)) {
+            self::$root[] = [
+                'url' => $url,
+                'text' => $text,
+                'pre_text' => $preText,
+            ];
+        }
+
+        self::$path = [];
     }
 
+    /**
+     * Add a node
+     */
     public static function add($key, $text, $url = null, $pre_text = null)
     {
         self::$path[$key] = [
@@ -36,18 +44,11 @@ class Breadcrumb
         ];
     }
 
+    /**
+     * Get list nodes to render
+     */
     public static function get() 
     {
-        if(!count(self::$path)) {
-            return array();
-        }
-        if(!self::$root) {
-            self::$root['root'] = [
-                'url' => URL::to('/'),
-                'text' => 'Home',
-                'pre_text' => '<i class="fa fa-dashboard"></i>',
-            ];
-        }
         return array_merge(self::$root, self::$path);
     }
 }

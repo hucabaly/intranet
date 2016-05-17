@@ -4,10 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>
-            @if(\Rikkei\Core\View\Head::getTitle())
-                {{ \Rikkei\Core\View\Head::getTitle() }}
-                -
-            @endif
+            @yield('title')
             Rikkei Intranet
         </title>
         <script>
@@ -57,10 +54,6 @@
                     @include('messages.errors')
                     <!-- Content Header (Page header) -->
                     <section class="content-header">
-                        @if(\Rikkei\Core\View\Head::getTitle())
-                            <h1>{{ \Rikkei\Core\View\Head::getTitle() }}</h1>
-                        @endif
-                        
                         <!-- Breadcrumb -->
                             @include('include.breadcrumb')
                         <!-- end Breadcrumb -->

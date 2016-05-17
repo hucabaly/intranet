@@ -1,4 +1,9 @@
 <?php
+/** 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 namespace Rikkei\Core\View;
 
 class Menu
@@ -41,5 +46,13 @@ class Menu
             return true;
         }
         return false;
+    }
+    
+    /**
+     * get menu
+     */
+    public static function get()
+    {
+        
     }
 }
