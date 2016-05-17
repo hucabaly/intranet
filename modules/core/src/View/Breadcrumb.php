@@ -5,12 +5,6 @@ namespace Rikkei\Core\View;
 class Breadcrumb
 {
     /**
-     * breadcrumb first
-     * @var array
-     */
-    protected static $root = array();
-    
-    /**
      * breacdcrumb
      * @var array
      */
@@ -19,25 +13,19 @@ class Breadcrumb
     /**
      * Set root node
      */
-    public static function root($paths)
+    public static function adds($paths)
     {
         foreach ($paths as list($url, $text, $preText)) {
-            self::$root[] = [
-                'url' => $url,
-                'text' => $text,
-                'pre_text' => $preText,
-            ];
+            self::add($text, $url, $preText);
         }
-
-        self::$path = [];
     }
 
     /**
      * Add a node
      */
-    public static function add($key, $text, $url = null, $pre_text = null)
+    public static function add($text, $url = null, $pre_text = null)
     {
-        self::$path[$key] = [
+        self::$path[] = [
             'url' => $url,
             'text' => $text,
             'pre_text' => $pre_text,
@@ -49,6 +37,6 @@ class Breadcrumb
      */
     public static function get() 
     {
-        return array_merge(self::$root, self::$path);
+        return self::$path;
     }
 }
