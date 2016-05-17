@@ -1,6 +1,6 @@
-<?php if(isset($breadcrumb) && count($breadcrumb)): ?>
+@if(count(\Rikkei\Core\View\Breadcrumb::get()))
 <ol class="breadcrumb">
-    <?php foreach($breadcrumb as $bLink): ?>
+    @foreach(\Rikkei\Core\View\Breadcrumb::get() as $bLink)
         <li>
             <?php if(isset($bLink['url'])): ?>
                 <a href="<?php echo $bLink['url']; ?>">
@@ -20,8 +20,6 @@
                     </a>
             <?php endif; ?>
         </li>
-    <?php endforeach; ?>
+    @endforeach
 </ol>
-<?php endif;
-
-    
+@endif
