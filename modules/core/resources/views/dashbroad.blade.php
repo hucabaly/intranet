@@ -9,7 +9,7 @@
             <div class="container">
                 <h1>Dashbroad</h1>
                 <p>...</p>
-                <p><a class="btn btn-primary btn-lg" href="{{ url('auth/connect', ['google']) }}" role="button">Sign out</a></p>
+                <p><a class="btn btn-primary btn-lg" href="{{ url('/logout') }}" role="button">Sign out</a></p>
             </div>
         </div>
     </body>
