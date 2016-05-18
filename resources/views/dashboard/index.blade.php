@@ -1,9 +1,5 @@
 @extends('layouts.default')
 
-@section('title')
-Dashboard
-@endsection
-
 @section('content')
-Content page
+<h4>welcome admin Rikkei Intranet</h4>
 @endsection
