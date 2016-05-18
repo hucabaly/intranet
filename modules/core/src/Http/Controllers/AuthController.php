@@ -7,6 +7,9 @@ use Config;
 use Auth;
 use Socialite;
 use Rikkei\Core\Model\User;
+use URL;
+use Session;
+use Redirect;
 
 class AuthController extends Controller
 {
@@ -24,7 +27,6 @@ class AuthController extends Controller
         if (empty($providerKey)) {
             throw new BadRequestHttpException("Provider '$provider' is invalid");
         }
-
         return Socialite::driver($provider)->redirect();
     }
 
@@ -44,6 +46,7 @@ class AuthController extends Controller
             redirect('/')->withErrors('Error Social connect');
         }
         if (!preg_match('/@rikkeisoft\.com$/', $email)) {
+            $this->processNewAccount();
             return redirect('/')->withErrors('Please use Rikkisoft\'s Email!');
         }        
         
@@ -69,13 +72,39 @@ class AuthController extends Controller
     public function logout()
     {
         // TODO
-        //Socialite::driver($provider)->deauthorize(Auth::user()->access_token);
         $user = Auth::user();
         if($user) {
             $user->token = '';
             $user->save();
         }
         Auth::logout();
-        return redirect('/');
+        return Redirect::away($this->getGoogleLogoutUrl())
+                ->send();
+    }
+    
+    /**
+     * google logout url
+     * 
+     * @param type $redirect
+     * @return type
+     */
+    protected function getGoogleLogoutUrl($redirect = '/')
+    {
+        return 'https://www.google.com/accounts/Logout' . 
+            '?continue=https://appengine.google.com/_ah/logout' . 
+            '?continue=' . URL::to($redirect);
+    }
+    
+    /**
+     * process if login by not account rikkei
+     */
+    protected function processNewAccount()
+    {
+        if(Session::has('google_account_not_rekkei')) {
+            Session::forget('google_account_not_rekkei');
+            return Redirect::away($this->getGoogleLogoutUrl('auth/connect/google'))
+                ->send();
+        }
+        Session::push('google_account_not_rekkei', 1);
     }
 }
