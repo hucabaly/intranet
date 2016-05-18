@@ -1,0 +1,10 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+.navbar-header img {
+    height: 50px;
+}
+.navbar-brand {
+    padding: 0;
+}
