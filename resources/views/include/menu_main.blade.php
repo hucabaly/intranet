@@ -5,11 +5,6 @@ use Rikkei\Core\View\Menu;
 <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
     <ul class="nav navbar-nav">
         <li
-            @if(Menu::isActive('home'))
-                class="active"
-            @endif
-        ><a href="{{ URL::to('/') }}">Home</a></li>
-        <li
             @if(Menu::isActive('profile'))
                 class="active"
             @endif
