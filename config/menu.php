@@ -43,7 +43,19 @@ return [
             'team.list' => [
                 'path' => 'team/list',
                 'label' => 'List team',
-                'active' => '1'
+                'active' => '1',
+                'child' => [
+                    'team.sub1' => [
+                        'path' => 'team/list/sub',
+                        'label' => 'sub',
+                        'active' => '1'
+                    ],
+                    'team.sub2' => [
+                        'path' => 'team/list/sub',
+                        'label' => 'sub',
+                        'active' => '1'
+                    ]
+                ]
             ]
         ]
     ],

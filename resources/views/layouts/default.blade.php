@@ -21,7 +21,9 @@
         <!-- Theme style -->
         <link rel="stylesheet" href="{{ URL::asset('adminlte/dist/css/AdminLTE.min.css') }}" />
         <link rel="stylesheet" href="{{ URL::asset('adminlte/dist/css/skins/_all-skins.min.css') }}" />
-
+        <!-- common style -->
+        <link rel="stylesheet" href="{{ URL::asset('common/css/style.css') }}" />
+        
         @yield('css')
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -36,7 +38,7 @@
                 <nav class="navbar navbar-static-top">
                     <div class="container">
                         <div class="navbar-header">
-                            <a href="{{ URL::to('/') }}" class="navbar-brand"><b>Rikeisoft</b></a>
+                            <a href="{{ URL::to('/') }}" class="navbar-brand"><b><img src="{{ asset('/common/images/intranet_logo.png') }}" /></b></a>
                             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
                                 <i class="fa fa-bars"></i>
                             </button>
@@ -87,6 +89,7 @@
         <!-- Slimscroll -->
         <script src="{{ URL::asset('adminlte/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
         
+        <script src="{{ URL::asset('common/js/script.js') }}"></script>
         <!-- Add custom script follow page -->
         @yield('script')
         @yield('scriptCode')

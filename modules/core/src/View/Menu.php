@@ -59,7 +59,7 @@ class Menu
         if(!$menu) {
             return;
         }
-        return self::getChildMenu($menu);
+        return self::getChildMenu($menu, 0);
     }
     
     /**
@@ -69,7 +69,7 @@ class Menu
      * @param array $menu
      * @return string
      */
-    protected static function getChildMenu($menu)
+    protected static function getChildMenu($menu, $level = 0)
     {
         $html = '';
         foreach ($menu as $key => $value) {
@@ -83,6 +83,10 @@ class Menu
                 $classLi .= ' dropdown';
                 $classA .= 'dropdown-toggle';
                 $optionA .= ' data-toggle="dropdown"';
+                $htmlMenuChild = self::getChildMenu($value['child'], $level+1);
+                if ($level > 0) {
+                    $classLi .= ' dropdown-submenu';
+                }
             }
             $classLi = $classLi ? " class=\"{$classLi}\"" : '';
             $classA = $classA ? " class=\"{$classA}\"" : '';
@@ -92,7 +96,7 @@ class Menu
             $html .= '</a>';
             if (isset($value['child']) && count($value['child'])) {
                 $html .= '<ul class="dropdown-menu" role="menu">';
-                $html .= self::getChildMenu($value['child']);
+                $html .= $htmlMenuChild;
                 $html .= '</ul>';
             }
             $html .= '</li>';
