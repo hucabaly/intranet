@@ -16,6 +16,7 @@ class CreateCssTeamTable extends Migration
             $table->increments('id');
             $table->integer('css_id');
             $table->integer('team_id');
+        
         });
     }
 
