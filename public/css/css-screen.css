@@ -1,0 +1,62 @@
+.page-header{text-align: left;}
+.container-fluid .row-fluid p{font-size:15px;}
+.container-fluid .row-fluid p.kinh-thu{float:right;}
+.table-create-css {font-size: 13px;}
+.table-create-css td{border-top: none !important;}
+.container-fluid .row-fluid button.btn-next{float: right; background-color: #690F8E; padding: 3px 28px;}
+.date {width:35% !important; display: inline !important;}
+.calendar-button{position: relative;top: -2px;left: 0;padding: 9px 15px !important;display: inline-block !important;width: auto !important; cursor: pointer;}
+.date{    left: -6px;    position: relative;    border-radius: 0 4px 4px 0 !important;}
+
+
+.container-button-css{text-align: center;}
+.container-button-css button{padding: 5px 35px;}
+
+/* hien popup chon team vao css */
+.modal-dialog {width: 533px !important;}
+#frm-add-teams{text-align: center;}
+.container-teams{width:200px; height:300px;background: #6e6e6e;float:left;}
+.btn-add-team{position: relative;top:134px;margin:0 16px; padding: 5px 15px;border: none;color: #fff;
+  float: left;
+  font-weight: bold;
+  background: -webkit-linear-gradient(#929292, #000); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#929292, #000); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#929292, #000); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#929292, #000); /* Standard syntax */
+}
+
+.modal-header{background-color:#424242; border-bottom: 1px solid #363636 !important;}
+.modal-header button.close span{color:#fff;}
+.modal-body,.modal-footer{background-color: #575757}
+.modal-body{font-size: 12px;}
+.modal-footer{border: none !important;}
+.modal-footer button.create-css{color: #000 ; font-weight: bold; background: #e3b019 ; padding: 3px 25px;    margin-top: 10px;}
+.modal-body ul.list-teams{
+  padding: 10px;
+    list-style: none;
+    text-align: left;
+    color: #fff;
+    font-weight: bold;
+}
+
+.modal-body ul.list-teams li{
+  cursor: pointer;
+    padding: 3px;
+}
+
+.modal-body .remove-team{
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+.modal-body .remove-team img{
+    cursor: pointer;
+}
+
+.width-300{width:300px;}
+.date{width: 100px !important;}
+.error{color:red;font-size: 13px;font-weight: 100;}
+.container-date{position: relative;}
+#start_date-error{    position: absolute;top:43px;left:8px;}
+#end_date-error{    position: absolute;top:61px;left:8px;}
+#team_id_check-error{display: block;}
