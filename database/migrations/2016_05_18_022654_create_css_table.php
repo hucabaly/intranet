@@ -25,7 +25,6 @@ class CreateCssTable extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->timestamps();
-            
         });
     }
 
