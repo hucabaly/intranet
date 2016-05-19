@@ -14,6 +14,7 @@ class AddJapaneseNameToUsers extends Migration
     {
         Schema::table('users', function($table) {
             $table->string('japanese_name');
+        
         });
     }
 
