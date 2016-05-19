@@ -16,7 +16,12 @@ class ThemeServiceProvider extends ServiceProvider
     {
         $this->publishes([
             base_path('/vendor/almasaeed2010/adminlte/') => public_path('adminlte/'),
+            app_path('/../config/menu/') => config_path(),
         ], 'assets');
+        
+        $this->publishes([
+            app_path('/../config/menu.php') => config_path('/menu.php'),
+        ], 'config');
     }
 
     /**

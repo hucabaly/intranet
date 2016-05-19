@@ -49,10 +49,58 @@ class Menu
     }
     
     /**
-     * get menu
+     * get menu html
+     * 
+     * @return string
      */
     public static function get()
     {
-        
+        $menu = config('menu');
+        if(!$menu) {
+            return;
+        }
+        return self::getChildMenu($menu, 0);
+    }
+    
+    /**
+     * get html menu tree
+     *  call recursive
+     * 
+     * @param array $menu
+     * @return string
+     */
+    protected static function getChildMenu($menu, $level = 0)
+    {
+        $html = '';
+        foreach ($menu as $key => $value) {
+            if(!$value['active']) {
+                continue;
+            }
+            $classLi = self::isActive($key) ? ' active' : '';
+            $classA = '';
+            $optionA = '';
+            if (isset($value['child']) && count($value['child'])) {
+                $classLi .= ' dropdown';
+                $classA .= 'dropdown-toggle';
+                $optionA .= ' data-toggle="dropdown"';
+                $htmlMenuChild = self::getChildMenu($value['child'], $level+1);
+                if ($level > 0) {
+                    $classLi .= ' dropdown-submenu';
+                }
+            }
+            $classLi = $classLi ? " class=\"{$classLi}\"" : '';
+            $classA = $classA ? " class=\"{$classA}\"" : '';
+            $html .= "<li{$classLi}>";
+            $html .= "<a href=\"{$value['path']}\"{$classA}{$optionA}>";
+            $html .= $value['label'];
+            $html .= '</a>';
+            if (isset($value['child']) && count($value['child'])) {
+                $html .= '<ul class="dropdown-menu" role="menu">';
+                $html .= $htmlMenuChild;
+                $html .= '</ul>';
+            }
+            $html .= '</li>';
+        }
+        return $html;
     }
 }

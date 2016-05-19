@@ -8,6 +8,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Route;
 
 class Handler extends ExceptionHandler
 {
@@ -45,6 +46,18 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($this->isHttpException($e)) {
+            $status = $e->getStatusCode();
+            switch ($status) {
+                case '404':
+                    $message = '404 - Not found route';
+                    break;
+                default:
+                    $message = 'Error system, view log details';
+            }
+            return response()->view('core::errors.exception', 
+                ['message' => $message]);
+        }
         return parent::render($request, $e);
     }
 }
