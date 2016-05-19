@@ -21,7 +21,7 @@ class CssController extends Controller
         $teams = Teams::all();
         
         return view(
-                    'sales::create_css', 
+                    'sales::css.create_css', 
                     [
                         'user'      => $user, 
                         "projects"  => $projects,
@@ -30,7 +30,7 @@ class CssController extends Controller
                 );
     }
 
-    public function createcss(){
+    public function savecss(){
         if(Auth::check() && $_POST){
             //echo "<pre>"; var_dump($_POST);die;
             $start_date = date('Y-m-d',strtotime($_POST["start_date"]));
@@ -68,7 +68,7 @@ class CssController extends Controller
                 );
             }
 
-            echo "success";
+            return redirect('/css/make/'.$css->token.'/'.$css->id);
         }
     }
 
@@ -80,7 +80,7 @@ class CssController extends Controller
         if($css){
             $user = User::find($css->user_id);
             return view(
-                    'sales::makecss', 
+                    'sales::css.makecss', 
                     [
                        'css'   => $css, 
                        "user"  => $user

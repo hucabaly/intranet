@@ -1,15 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-<style>
-.width-300{width:300px;}
-.date{width: 100px !important;}
-.error{color:red;font-size: 13px;font-weight: 100;}
-.container-date{position: relative;}
-#start_date-error{    position: absolute;top:43px;left:8px;}
-#end_date-error{    position: absolute;top:61px;left:8px;}
-#team_id_check-error{display: block;}
-</style>
+
 <div class="container content-container" style="background-color: #fff;">
     <div class="row">
         <div class="col-md-12">
@@ -20,10 +12,10 @@
                 <div class="row-fluid">
 
                     <div class="span12">
-                       <form id="frm_create_css" method="post" action="/css/createcss"  >
+                       <form id="frm_create_css" method="post" action="/css/savecss"  >
                           <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
                           <table class="table table-create-css">
-
+                          <input type="hidden" name="create_or_update" value="create">
                            <tr>
                                <td class="title">Họ và tên người gửi (Sales)</td>
                                <td>
@@ -147,7 +139,7 @@
 <!-- Script -->
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
-
+<script src="{{ asset('js/jquery.validate.min.js') }}"></script>
 <script type="text/javascript">
     /** 
         click img calendar to show calendar
@@ -255,7 +247,7 @@
          $("#frm_create_css").validate({
            rules: {
                 
-                team_id_check: "required",
+               team_id_check: "required",
                company_name: "required",
                customer_name: "required",
                project_name: "required",

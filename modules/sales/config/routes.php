@@ -5,7 +5,7 @@ Route::group([
 ], function() {
 	
 	Route::get('css/create', 'CssController@create');
-	Route::post('css/createcss', 'CssController@createcss');
+	Route::post('css/savecss', 'CssController@savecss');
 });
 //Route::get('css/welcome/{id}', 'CssController@index');
-Route::get('css/{token}/{id}', 'CssController@make') ;
+Route::get('css/make/{token}/{id}', 'CssController@make') ;
