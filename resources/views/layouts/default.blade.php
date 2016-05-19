@@ -89,6 +89,7 @@
         <!-- Slimscroll -->
         <script src="{{ URL::asset('adminlte/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
         
+        <script src="{{ URL::asset('common/js/script.js') }}"></script>
         <!-- Add custom script follow page -->
         @yield('script')
         @yield('scriptCode')
