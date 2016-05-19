@@ -90,6 +90,10 @@ class Menu
             }
             $classLi = $classLi ? " class=\"{$classLi}\"" : '';
             $classA = $classA ? " class=\"{$classA}\"" : '';
+            if($value['path'] != '#') {
+                $value['path'] = URL::to($value['path']);
+            }
+            
             $html .= "<li{$classLi}>";
             $html .= "<a href=\"{$value['path']}\"{$classA}{$optionA}>";
             $html .= $value['label'];
