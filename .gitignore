@@ -6,6 +6,8 @@
 /node_modules
 /public/storage
 /public/adminlte
+/public/team
+/database/migrations
 /.env
 
 # IDE and editor specific files #
