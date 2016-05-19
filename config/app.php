@@ -169,7 +169,7 @@ return [
         Rikkei\Core\ServiceProvider::class,
         Rikkei\Accounting\ServiceProvider::class,
         Rikkei\Assets\ServiceProvider::class,
-        Rikkei\Customer\ServiceProvider::class,
+        Rikkei\Sales\ServiceProvider::class,
         Rikkei\Employee\ServiceProvider::class,
         Rikkei\Music\ServiceProvider::class,
         Rikkei\News\ServiceProvider::class,

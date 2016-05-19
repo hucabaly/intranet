@@ -1,6 +1,6 @@
 <?php
 
-namespace Rikkei\Customer;
+namespace Rikkei\Sales;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
@@ -13,7 +13,7 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        //
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'sales');
     }
 
     /**
@@ -23,6 +23,13 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        //
+        $providers = [
+            
+            \Rikkei\Sales\Providers\RouteServiceProvider::class,
+        ];
+
+        foreach ($providers as $provider) {
+            $this->app->register($provider);
+        }
     }
 }
