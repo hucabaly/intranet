@@ -46,3 +46,29 @@ html, body {
     }
 }
 /*end menu*/
+
+/*login*/
+.login-wrapper {
+    text-align: center;
+    h1.login-title {
+        font-size: 45px;
+        a {
+            color: black;
+        }
+    }
+    .login-action {
+        margin-top: 50px;
+        .login-button {
+            background-color: white;
+            color: black;
+            border: 1px solid;
+            padding: 10px 20px;
+            border-radius: 10px;
+            -moz-border-radius:10px;
+            -webkit-border-radius: 10px;
+        }
+    }
+}
+.jumbotron {
+    background-color: transparent;
+}
