@@ -15,8 +15,7 @@ class ProjectTypeTableSeeder extends Seeder
 	        ->insert([
 	            'name' => 'OSDC',
 	        ]);
-
-	    DB::table('project_type')
+		DB::table('project_type')
 	        ->insert([
 	            'name' => 'Project base',
 	        ]);
