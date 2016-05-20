@@ -6,6 +6,8 @@
  */
 namespace Rikkei\Core\View;
 
+use URL;
+
 class Menu
 {
     /**
