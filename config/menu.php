@@ -62,7 +62,26 @@ return [
     'sales' => [
         'path' => 'sales',
         'label' => 'Sales',
-        'active' => '1'
+        'active' => '1',
+        'child' => [
+            'sales.css' => [
+                'path' => 'sale/css',
+                'label' => 'CSS',
+                'active' => '1',
+                'child' => [
+                    'css.list' => [
+                        'path' => 'sales/css/list',
+                        'label' => 'Danh sách CSS',
+                        'active' => '1'
+                    ],
+                    'css.create' => [
+                        'path' => 'css/create',
+                        'label' => 'Tạo CSS',
+                        'active' => '1'
+                    ]
+                ]
+            ]
+        ]        
     ],
     'qms' => [
         'path' => 'qms',

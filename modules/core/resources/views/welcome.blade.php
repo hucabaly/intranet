@@ -13,11 +13,6 @@ Login -
         <p>
             <a class="btn btn-primary btn-lg login-button" href="{{ url('auth/connect', ['google']) }}" role="button">{{ trans('core::view.Login with Rikkeisoft Account') }}</a>
         </p>
-        <div class="language-change">
-            <a class="btn btn-primary btn-md" href="{{ URL::route('core::change-locale', ['locale' => 'vi']) }}" role="button">{{ Config::get('app.locales.vi') }}</a>
-            <a class="btn btn-primary btn-md" href="{{ URL::route('core::change-locale', ['locale' => 'en']) }}" role="button">{{ Config::get('app.locales.en') }}</a>
-            <a class="btn btn-primary btn-md" href="{{ URL::route('core::change-locale', ['locale' => 'ko']) }}" role="button">Korean</a>
-        </div>
     </div><!-- /.login-box-action -->
 </div><!-- /.login-wrapper -->
 @endsection

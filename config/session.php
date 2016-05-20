@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'connection' => null,
+    'connection' => env('SESSION_DRIVER', 'file') == 'file' ? null : 'default',
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +109,7 @@ return [
     |
     */
 
-    'cookie' => 'laravel_session',
+    'cookie' => 'rikkei_session',
 
     /*
     |--------------------------------------------------------------------------
