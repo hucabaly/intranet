@@ -70,7 +70,11 @@
                     <div id="logo-rikkei"><img src="{{ URL::asset('img/logo') }}"></div>
                 </section>
                 <section>
-                    @include('sales::css.include.project_ODSC')
+                    <?php if($css->project_type_id == 1){ ?>
+                        @include('sales::css.include.project_ODSC')
+                    <?php }else{ ?> 
+                        @include('sales::css.include.project_base')
+                    <?php } ?>
                 </section>
             </div>
         </div>
