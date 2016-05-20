@@ -17,7 +17,10 @@
 }
 .team-list {
     .team-tree {
-            overflow-y: auto;
+        overflow-y: auto;
+        li a.active{
+            background-color: #b2b2b2;
+        }
     }
 }
 .form-group {
@@ -33,4 +36,8 @@
 }
 .form-group:after {
     clear: both;
+}
+.modal-dialog.modal-dialog-team {
+    width: 900px;
+    overflow-y: auto;
 }

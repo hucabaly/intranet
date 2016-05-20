@@ -1,15 +1,23 @@
 jQuery(document).ready(function ($) {
-    if($('input#is-function').is(':checked')) {
-            $('.team-group-function').show();
+    /**
+     * update check/uncheck function unit
+     * @param {type} dom
+     * @returns {undefined}
+     */
+    function updateCheckFunction(dom)
+    {
+        var dataId = dom.data('id');
+        if (dom.is(':checked')) {
+            $('.team-group-function[data-id=' + dataId + ']').show();
         } else {
-            $('.team-group-function').hide();
+            $('.team-group-function[data-id=' + dataId + ']').hide();
         }
-    $('input#is-function').on('change', function(event) {
-        if($(this).is(':checked')) {
-            $('.team-group-function').show();
-        } else {
-            $('.team-group-function').hide();
-        }
+    }
+    //update checkbox is-function
+    $('input.input-is-function').each( function( i, v ) {
+        updateCheckFunction($(this));
+    });
+    $('input.input-is-function').on('change', function (event) {
+        updateCheckFunction($(this));
     });
 });
-
