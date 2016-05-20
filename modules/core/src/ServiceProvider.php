@@ -30,6 +30,7 @@ class ServiceProvider extends BaseServiceProvider
             \Rikkei\Core\Providers\EventServiceProvider::class,
             \Rikkei\Core\Providers\RouteServiceProvider::class,
             \Rikkei\Core\Providers\ThemeServiceProvider::class,
+            \Rikkei\Core\Providers\DatabaseServiceProvider::class,
         ];
 
         foreach ($providers as $provider) {

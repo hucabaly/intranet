@@ -1,0 +1,36 @@
+.treeview {
+    margin: 10px 0 0 20px;
+}
+
+.treeview {
+    li {
+        padding: 2px 0 2px 16px;
+        > label {
+            margin-left: -20px;
+            padding-left: 20px;
+        }
+    }
+    li.last {
+        background-position: 0 -1766px;
+    }
+
+}
+.team-list {
+    .team-tree {
+            overflow-y: auto;
+    }
+}
+.form-group {
+    .form-label {
+        float: left;
+        width: 30%;
+    }
+    .form-data {
+        float: left;
+        width: 30%;
+    }
+    clear: both;
+}
+.form-group:after {
+    clear: both;
+}
