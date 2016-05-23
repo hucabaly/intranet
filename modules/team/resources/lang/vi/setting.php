@@ -17,7 +17,7 @@ return [
     'Save' => 'Lưu',
     'New' => 'Mới',
     'Permission following function unit' => 'Phân quyền theo đơn vị chức năng',
-    '' => '',
+    'Edit team' => 'Chỉnh sửa bộ phận',
     
     
 ];

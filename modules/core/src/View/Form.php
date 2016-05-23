@@ -11,14 +11,14 @@ class Form
      * 
      * @param array $data
      */
-    public static function setData($data = null)
+    public static function setData($data = null, $key = null)
     {
         if(!$data || is_string($data)) {
-            self::setDataInput($data);
+            self::setDataInput($data, $key);
         } elseif (is_array($data)) {
             self::setDataForm($data);
         } elseif (is_object($data)) {
-            self::setDataModel($data);
+            self::setDataModel($data, $key);
         }
     }
 
@@ -52,6 +52,7 @@ class Form
         if(Session::has('form_data.'.$key)) {
             return Session::pull('form_data.'.$key);
         }
+        return null;
     }
     
     /**
@@ -60,13 +61,17 @@ class Form
      * 
      * @param string $name
      */
-    public static function setDataInput($name = null)
+    public static function setDataInput($name = null, $key = null)
     {
         if(!$name) {
-            self::setDataForm((array)app('request')->all());
+            $data = (array)app('request')->all();
         } else {
-            self::setDataForm((array)app('request')->input($name));
+            $data = (array)app('request')->input($name);
         }
+        if ($key) {
+            $data = [$key => $data];
+        }
+        self::setDataForm($data);
     }
     
     /**
@@ -74,20 +79,32 @@ class Form
      *  data is model
      * 
      * @param type $model
+     * @param string key
      */
-    public static function setDataModel($model)
+    public static function setDataModel($model, $key = null)
     {
         if ($model instanceof \Illuminate\Contracts\Support\Arrayable) {
             $model = $model->toArray();
         } else {
             $model = [];
         }
+        if($key) {
+            $model = [$key => $model];
+        }
         self::setDataForm($model);
     }
     
-    public static function flush()
+    /**
+     * remove all form data
+     */
+    public static function forget($key = null)
     {
-        Session::flush('form_data');
+        if ($key) {
+            Session::forget('form_data.' . $key);
+        } else {
+            Session::forget('form_data');
+        }
+        
     }
     
     /**
@@ -101,7 +118,7 @@ class Form
             return;
         }
         foreach ($data as $key => $value) {
-            Session::flash('form_data.'.$key, $value);
+            Session::flash('form_data.' . $key, $value);
         }
     }
 }
