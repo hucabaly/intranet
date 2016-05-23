@@ -42,16 +42,25 @@ class AuthController extends Controller
     public function callback($provider)
     {
         $user = Socialite::driver($provider)->user();
-        
-        //add check email rikkei
         $email = $user->email;
         if (!$email) {
             redirect('/')->withErrors('Error Social connect');
         }
-        if (!preg_match('/@rikkeisoft\.com$/', $email)) {
-            $this->processNewAccount();
-            return redirect('/');
-        }        
+        //add check email allow
+        $domainAllow = Config::get('domain_logged');
+        if($domainAllow && count($domainAllow)) {
+            $matchCheck = false;
+            foreach ($domainAllow as $value) {
+                if (preg_match('/@'.$value.'$/', $email)) {
+                    $matchCheck = true;
+                    break;
+                }
+            }
+            if (!$matchCheck) {
+                $this->processNewAccount();
+                return redirect('/');
+            }
+        }
         
         $account = User::firstOrNew([
             'email'    => $user->email

@@ -15,3 +15,6 @@ Features
 
 #### add menu
 edit file `config.menu.php`
+
+#### Add domain allow logged
+edit file `config.domain_logged.php`
