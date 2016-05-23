@@ -7,6 +7,7 @@ use Rikkei\Team\Model\Team;
 use Lang;
 use Validator;
 use Rikkei\Core\View\Form;
+use Log;
 
 class TeamController extends TeamBaseController
 {
@@ -117,6 +118,35 @@ class TeamController extends TeamBaseController
                 ])->with('messages', [
                         'success' => [
                             Lang::get('team::messages.Move item success!')
+                        ]
+                    ]);
+        } catch (Exception $ex) {
+            return redirect()->route('team::setting.team.view', [
+                    'id' => $id
+                ])->withErrors($ex);
+        }
+    }
+    
+    /**
+     * Delete team
+     * @return type
+     */
+    public function delete()
+    {
+        $id = Input::get('id');
+        if (!$id) {
+            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        $model = Team::find($id);
+        if(!$model) {
+            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        try{
+            $model->delete();
+            return redirect()->route('team::setting.index')
+                ->with('messages', [
+                        'success' => [
+                            Lang::get('team::messages.Delete item success!')
                         ]
                     ]);
         } catch (Exception $ex) {

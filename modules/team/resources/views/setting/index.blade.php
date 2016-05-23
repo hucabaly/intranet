@@ -15,7 +15,7 @@ Team Setting
 @section('content')
 <div class="container content-container">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-6 team-wrapper">
             <h3>{{ Lang::get('team::setting.List team') }}</h3>
             <div class="row team-list-action">
                 <div class="col-sm-6 team-list">
@@ -29,9 +29,14 @@ Team Setting
                         <p><button type="button" class="btn btn-success btn-edit-team btn-action" data-target="#team-edit-form" data-toggle="modal">
                                 <span>{{ Lang::get('team::setting.Edit') }}</span>
                             </button></p>
-                    <p><button type="button" class="btn btn-danger btn-remove-team btn-action">
-                            <span>{{ Lang::get('team::setting.Remove') }}</span>
-                        </button></p>
+                        <form class="form" method="post" action="{{ URL::route('team::setting.team.delete') }}">
+                            {!! csrf_field() !!}
+                            <input type="hidden" name="_method" value="delete" />
+                            <input type="hidden" name="id" value="{{ Form::getData('id') }}" />
+                            <p><button type="submit" class="btn btn-danger btn-remove-team btn-action">
+                                <span>{{ Lang::get('team::setting.Remove') }}</span>
+                                </button></p>
+                        </form>
                     <form class="form" method="post" action="{{ URL::route('team::setting.team.move') }}">
                         {!! csrf_field() !!}
                         <input type="hidden" name="id" value="{{ Form::getData('id') }}" id="item-team-id" />
