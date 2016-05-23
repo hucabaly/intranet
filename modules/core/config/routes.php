@@ -8,3 +8,6 @@ Route::get('/logout', 'AuthController@logout');
 
 // Change locale
 Route::get('/set-locale/{locale}', 'LocaleController@change')->name('change-locale');
+
+//error page
+Route::get('/errors', 'ErrorController@view')->name('errors');

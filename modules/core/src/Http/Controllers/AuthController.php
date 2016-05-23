@@ -10,6 +10,9 @@ use Rikkei\Core\Model\User;
 use URL;
 use Session;
 use Redirect;
+use Illuminate\Support\ViewErrorBag;
+use Lang;
+use Illuminate\Support\MessageBag;
 
 class AuthController extends Controller
 {
@@ -47,7 +50,7 @@ class AuthController extends Controller
         }
         if (!preg_match('/@rikkeisoft\.com$/', $email)) {
             $this->processNewAccount();
-            return redirect('/')->withErrors('Please use Rikkisoft\'s Email!');
+            return redirect('/');
         }        
         
         $account = User::firstOrNew([
@@ -100,11 +103,13 @@ class AuthController extends Controller
      */
     protected function processNewAccount()
     {
-        if(Session::has('google_account_not_rekkei')) {
-            Session::forget('google_account_not_rekkei');
-            return Redirect::away($this->getGoogleLogoutUrl('auth/connect/google'))
+        $messageError = new MessageBag([
+            Lang::get('core::message.Please use Rikkisoft\'s Email!')
+        ]);
+        Session::flash(
+            'errors', Session::get('errors', new ViewErrorBag)->put('default', $messageError)
+        );
+        return Redirect::away($this->getGoogleLogoutUrl('/'))
                 ->send();
-        }
-        Session::push('google_account_not_rekkei', 1);
     }
 }
