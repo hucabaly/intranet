@@ -51,7 +51,6 @@
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "rm -rf public/team",
             "php artisan vendor:publish --tag=assets",
             "php artisan vendor:publish --tag=config",
             "php artisan vendor:publish --tag=database",
@@ -60,7 +59,6 @@
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "rm -rf public/team",
             "php artisan vendor:publish --tag=assets",
             "php artisan vendor:publish --tag=config",
             "php artisan vendor:publish --tag=database",
