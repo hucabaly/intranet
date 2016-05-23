@@ -10,6 +10,9 @@ use Rikkei\Core\Model\User;
 use URL;
 use Session;
 use Redirect;
+use Illuminate\Support\ViewErrorBag;
+use Lang;
+use Illuminate\Support\MessageBag;
 
 class AuthController extends Controller
 {
@@ -39,16 +42,25 @@ class AuthController extends Controller
     public function callback($provider)
     {
         $user = Socialite::driver($provider)->user();
-        
-        //add check email rikkei
         $email = $user->email;
         if (!$email) {
             redirect('/')->withErrors('Error Social connect');
         }
-        if (!preg_match('/@rikkeisoft\.com$/', $email)) {
-            $this->processNewAccount();
-            return redirect('/')->withErrors('Please use Rikkisoft\'s Email!');
-        }        
+        //add check email allow
+        $domainAllow = Config::get('domain_logged');
+        if($domainAllow && count($domainAllow)) {
+            $matchCheck = false;
+            foreach ($domainAllow as $value) {
+                if (preg_match('/@'.$value.'$/', $email)) {
+                    $matchCheck = true;
+                    break;
+                }
+            }
+            if (!$matchCheck) {
+                $this->processNewAccount();
+                return redirect('/');
+            }
+        }
         
         $account = User::firstOrNew([
             'email'    => $user->email
@@ -100,11 +112,13 @@ class AuthController extends Controller
      */
     protected function processNewAccount()
     {
-        if(Session::has('google_account_not_rekkei')) {
-            Session::forget('google_account_not_rekkei');
-            return Redirect::away($this->getGoogleLogoutUrl('auth/connect/google'))
+        $messageError = new MessageBag([
+            Lang::get('core::message.Please use Rikkisoft\'s Email!')
+        ]);
+        Session::flash(
+            'errors', Session::get('errors', new ViewErrorBag)->put('default', $messageError)
+        );
+        return Redirect::away($this->getGoogleLogoutUrl('/'))
                 ->send();
-        }
-        Session::push('google_account_not_rekkei', 1);
     }
 }
