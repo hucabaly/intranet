@@ -8,6 +8,11 @@ html, body {
 .navbar-brand {
     padding: 0;
 }
+.content {
+    .content-container {
+        background-color: #fff;
+    }
+}
 /*-------menu-------*/
 .dropdown-submenu {
     position: relative;
@@ -49,6 +54,11 @@ html, body {
     background: #367fa9;
 }
 /*end menu*/
+
+/*message alert*/
+.flash-message {
+    margin-top: 20px;
+}
 
 /*login*/
 .login-wrapper {
