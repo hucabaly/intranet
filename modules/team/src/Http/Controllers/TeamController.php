@@ -7,10 +7,18 @@ use Rikkei\Team\Model\Team;
 use Lang;
 use Validator;
 use Rikkei\Core\View\Form;
-use Log;
+use Rikkei\Core\View\Breadcrumb;
 
 class TeamController extends TeamBaseController
 {
+    /**
+     * construct more
+     */
+    protected function _construct() {
+        Breadcrumb::add('Setting');
+        Breadcrumb::add('Team');
+    }
+
     /**
      * view team
      * 

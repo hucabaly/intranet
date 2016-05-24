@@ -33,7 +33,7 @@ Team Setting
                             {!! csrf_field() !!}
                             <input type="hidden" name="_method" value="delete" />
                             <input type="hidden" name="id" value="{{ Form::getData('id') }}" />
-                            <p><button type="submit" class="btn-delete btn-action">
+                            <p><button type="submit" class="btn-delete btn-action delete-confirm">
                                 <span>{{ Lang::get('team::setting.Remove') }}</span>
                                 </button></p>
                         </form>
