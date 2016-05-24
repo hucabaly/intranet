@@ -48,10 +48,10 @@ class AuthController extends Controller
         }
         //add check email allow
         $domainAllow = Config::get('domain_logged');
-        if($domainAllow && count($domainAllow)) {
+        if ($domainAllow && count($domainAllow)) {
             $matchCheck = false;
             foreach ($domainAllow as $value) {
-                if (preg_match('/@'.$value.'$/', $email)) {
+                if (preg_match('/@' . $value . '$/', $email)) {
                     $matchCheck = true;
                     break;
                 }
@@ -61,9 +61,9 @@ class AuthController extends Controller
                 return redirect('/');
             }
         }
-        
+
         $account = User::firstOrNew([
-            'email'    => $user->email
+            'email' => $user->email
         ]);
 
         $account->name = $user->name;
@@ -72,15 +72,12 @@ class AuthController extends Controller
         $account->avatar = $user->avatar;
         $account->save();
         Auth::login($account);
-        
-
         return redirect('/');
     }
 
     /**
-     * User logout
-     *
-     * @param string $provider
+     * 
+     * @return redirect
      */
     public function logout()
     {
@@ -92,14 +89,14 @@ class AuthController extends Controller
         }
         Auth::logout();
         return Redirect::away($this->getGoogleLogoutUrl())
-                ->send();
+            ->send();
     }
     
     /**
      * google logout url
      * 
-     * @param type $redirect
-     * @return type
+     * @param string $redirect
+     * @return string
      */
     protected function getGoogleLogoutUrl($redirect = '/')
     {
@@ -110,6 +107,8 @@ class AuthController extends Controller
     
     /**
      * process if login by not account rikkei
+     * 
+     * @return redirect
      */
     protected function processNewAccount()
     {
@@ -120,6 +119,6 @@ class AuthController extends Controller
             'errors', Session::get('errors', new ViewErrorBag)->put('default', $messageError)
         );
         return Redirect::away($this->getGoogleLogoutUrl('/'))
-                ->send();
+            ->send();
     }
 }
