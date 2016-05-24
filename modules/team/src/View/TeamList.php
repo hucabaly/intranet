@@ -29,21 +29,21 @@ class TeamList
     protected static function getTreeDataRecursive($parentId = 0, $level = 0, $idActive = null) 
     {
         $teamList = Team::select('id', 'name', 'parent_id')
-            ->where('parent_id', $parentId)
-            ->orderBy('position', 'asc')
-            ->get();
+                ->where('parent_id', $parentId)
+                ->orderBy('position', 'asc')
+                ->get();
         $countCollection = count($teamList);
-        if(!$countCollection) {
+        if (!$countCollection) {
             return;
         }
         $html = '';
         $i = 0;
-        foreach($teamList as $team) {
+        foreach ($teamList as $team) {
             $classLi = '';
             $classLabel = 'team-item';
             $optionA = " data-id=\"{$team->id}\"";
             $classA = '';
-            if($i == $countCollection - 1) {
+            if ($i == $countCollection - 1) {
                 $classLi = 'last';
             }
             if ($team->id == $idActive) {
@@ -52,7 +52,7 @@ class TeamList
             $classLi = $classLi ? " class=\"{$classLi}\"" : '';
             $classLabel = $classLabel ? " class=\"{$classLabel}\"" : '';
             $classA = $classA ? " class=\"{$classA}\"" : '';
-            
+
             $hrefA = route('team::setting.team.view', ['id' => $team->id]);
             $html .= "<li{$classLi}>";
             $html .= "<label{$classLabel}>";
@@ -60,8 +60,8 @@ class TeamList
             $html .= $team->name;
             $html .= '</a>';
             $html .= '</label>';
-            $htmlChild = self::getTreeDataRecursive($team->id, $level+1, $idActive);
-            if($html) {
+            $htmlChild = self::getTreeDataRecursive($team->id, $level + 1, $idActive);
+            if ($html) {
                 $html .= '<ul>';
                 $html .= $htmlChild;
                 $html .= '</ul>';
@@ -89,7 +89,7 @@ class TeamList
                 'option' => '',
             ];
         }
-        self::toOptionFunctionRecursive($options, 0,  $skipId, $isFunction, $level = 0);
+        self::toOptionFunctionRecursive($options, 0, $skipId, $isFunction, $level = 0);
         return $options;
     }
     
@@ -105,22 +105,22 @@ class TeamList
     protected static function toOptionFunctionRecursive(&$options, $parentId, $skipId, $isFunction, $level)
     {
         $teamList = Team::select('id', 'name', 'parent_id', 'is_function', 'permission_as')
-            ->where('parent_id', $parentId)
-            ->orderBy('position', 'asc');
+                ->where('parent_id', $parentId)
+                ->orderBy('position', 'asc');
         if ($skipId) {
             $teamList = $teamList->where('id', '<>', $skipId);
         }
         $teamList = $teamList->get();
         $countCollection = count($teamList);
-        if(!$countCollection) {
+        if (!$countCollection) {
             return;
         }
         $prefixLabel = '';
-        for($i = 0 ; $i < $level ; $i++) {
+        for ($i = 0; $i < $level; $i++) {
             $prefixLabel .= '----&nbsp;&nbsp;';
         }
-        foreach($teamList as $team) {
-            if ($isFunction && (!$team->is_function || $team->permission_as))  {
+        foreach ($teamList as $team) {
+            if ($isFunction && (!$team->is_function || $team->permission_as)) {
                 $optionMore = ' disabled';
             } else {
                 $optionMore = '';
@@ -130,7 +130,7 @@ class TeamList
                 'value' => $team->id,
                 'option' => $optionMore
             ];
-            self::toOptionFunctionRecursive($options, $team->id,  $skipId, $isFunction, $level + 1);
+            self::toOptionFunctionRecursive($options, $team->id, $skipId, $isFunction, $level + 1);
         }
     }
 }

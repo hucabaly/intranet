@@ -1,3 +1,5 @@
+@import '_var.scss';
+
 html, body {
     margin: 0;
     padding: 0;
@@ -8,19 +10,13 @@ html, body {
 .navbar-brand {
     padding: 0 5px 0 30px;
 }
-.content {
-    .content-container {
-        background-color: #fff;
-        padding: 0 15px 20px 15px;
-        border-radius: 3px;
-        -moz-border-radius: 3px;
-        -webkit-border-radius: 3px;
-    }
+.skin-blue .main-header .navbar {
+    background-color: $menuColor;
 }
 /*breadcrumb*/
 .content-header {
     .breadcrumb {
-        top: 0px;
+        top: 5px;
         border-radius: 3px;
         -moz-border-radius: 3px;
         -webkit-border-radius: 3px;
@@ -63,8 +59,14 @@ html, body {
         border-radius: 6px 0 6px 6px;
     }
 }
-.skin-blue .main-header .navbar .nav > li > a:hover, .skin-blue .main-header .navbar .nav > li > a:active, .skin-blue .main-header .navbar .nav > li > a:focus, .skin-blue .main-header .navbar .nav .open > a, .skin-blue .main-header .navbar .nav .open > a:hover, .skin-blue .main-header .navbar .nav .open > a:focus, .skin-blue .main-header .navbar .nav > .active > a {
-    background: #367fa9;
+.main-header .navbar .nav>li>a:hover, 
+.main-header .navbar .nav>li>a:active,
+.main-header .navbar .nav>li>a:focus, 
+.main-header .navbar .nav .open>a, 
+.main-header .navbar .nav .open>a:hover, 
+.main-header .navbar .nav .open>a:focus, 
+.main-header .navbar .nav>.active>a {
+    background-color: $menuColorHover;
 }
 /*end menu*/
 
@@ -129,9 +131,17 @@ html, body {
     border: 1px solid transparent;
     border-radius: 4px;
 }
+button[disabled], 
+html input[disabled] {
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    opacity: .65;
+}
 .btn-add {
     @extend .btn-actions;
-    background-color: #3c8dbc;
+    background-color: #2e6da4;
     border-color: #367fa9;
     color: #fff;
 }
@@ -180,7 +190,7 @@ form{
     }
 }
 /*responsive*/
-@media (max-width: 991px) and  (min-width: 768px) {
+@media (max-width: 991px) and  (min-width: $mobile+1) {
     .navbar-collapse.pull-left+.navbar-custom-menu {
         position: relative;
         .nav.navbar-nav {
@@ -190,4 +200,13 @@ form{
             width: 146px;
         }
     }
+}
+@media (min-width: $mobile+1) {
+    li.dropdown:hover > ul.dropdown-menu {
+        display: block;
+        visibility: visible;
+    }
+}
+@media (max-width: $mobile) {
+
 }

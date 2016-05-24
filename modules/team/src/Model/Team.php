@@ -28,20 +28,20 @@ class Team extends CoreModel
             ->where('parent_id', $this->parent_id)
             ->orderBy('position')
             ->get();
-        if(count($siblings) < 2) {
+        if (count($siblings) < 2) {
             return true;
         }
         $dataOrder = $siblings->toArray();
         $flagIndexToCurrent = false;
         $countDataOrder = count($dataOrder);
-        if($up) {
+        if ($up) {
             if ($dataOrder[0]['id'] == $this->id) { //item move up is first
                 return true;
             }
-            for ($i = 1 ; $i < $countDataOrder ; $i++) {
-                if(!$flagIndexToCurrent) {
+            for ($i = 1; $i < $countDataOrder; $i++) {
+                if (!$flagIndexToCurrent) {
                     $dataOrder[$i]['position'] = $i;
-                    if($dataOrder[$i]['id'] == $this->id) {
+                    if ($dataOrder[$i]['id'] == $this->id) {
                         $dataOrder[$i]['position'] = $i - 1;
                         $dataOrder[$i - 1]['position'] = $i;
                         $flagIndexToCurrent = true;
@@ -54,10 +54,10 @@ class Team extends CoreModel
             if ($dataOrder[count($dataOrder) - 1]['id'] == $this->id) { //item move down is last
                 return true;
             }
-            for ($i = 0 ; $i < $countDataOrder - 1; $i++) {
-                if(!$flagIndexToCurrent) {
+            for ($i = 0; $i < $countDataOrder - 1; $i++) {
+                if (!$flagIndexToCurrent) {
                     $dataOrder[$i]['position'] = $i;
-                    if($dataOrder[$i]['id'] == $this->id) {
+                    if ($dataOrder[$i]['id'] == $this->id) {
                         $dataOrder[$i]['position'] = $i + 1;
                         $dataOrder[$i + 1]['position'] = $i;
                         $flagIndexToCurrent = true;
@@ -77,6 +77,33 @@ class Team extends CoreModel
                         'position' => $data['position']
                     ]);
             }
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            throw $ex;
+        }
+    }
+    
+    /**
+     * delete team and all child
+     * 
+     * @throws \Rikkei\Team\Model\Exception
+     */
+    public function delete()
+    {
+        $children = Team::select('id')
+            ->where('parent_id', $this->id)->get();
+        DB::beginTransaction();
+        try {
+            if (count($children)) {
+                foreach ($children as $child) {
+                    Team::find($child->id)->delete();
+                }
+            }
+            
+            // TO DO check table Relationship: team position, user, css, ...
+            
+            parent::delete();
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
