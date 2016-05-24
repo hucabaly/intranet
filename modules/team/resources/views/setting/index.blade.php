@@ -13,7 +13,7 @@ Team Setting
 @endsection
 
 @section('content')
-<div class="container content-container">
+<div class="content-container">
     <div class="row">
         <div class="col-sm-6 team-wrapper">
             <h3>{{ Lang::get('team::setting.List team') }}</h3>
@@ -22,18 +22,18 @@ Team Setting
                     {!! TeamList::getTreeHtml(Form::getData('id')) !!}
                 </div>
                 <div class="col-sm-6 team-action">
-                    <p><button type="button" class="btn btn-primary btn-add-team btn-action" data-target="#team-add-form" data-toggle="modal">
+                    <p><button type="button" class="btn-add btn-action" data-target="#team-add-form" data-toggle="modal">
                             <span>{{ Lang::get('team::setting.Add') }}</span>
                         </button></p>
                     @if(Form::getData('id'))
-                        <p><button type="button" class="btn btn-success btn-edit-team btn-action" data-target="#team-edit-form" data-toggle="modal">
+                        <p><button type="button" class="btn-edit btn-action" data-target="#team-edit-form" data-toggle="modal">
                                 <span>{{ Lang::get('team::setting.Edit') }}</span>
                             </button></p>
                         <form class="form" method="post" action="{{ URL::route('team::setting.team.delete') }}">
                             {!! csrf_field() !!}
                             <input type="hidden" name="_method" value="delete" />
                             <input type="hidden" name="id" value="{{ Form::getData('id') }}" />
-                            <p><button type="submit" class="btn btn-danger btn-remove-team btn-action">
+                            <p><button type="submit" class="btn-delete btn-action">
                                 <span>{{ Lang::get('team::setting.Remove') }}</span>
                                 </button></p>
                         </form>
@@ -41,10 +41,10 @@ Team Setting
                         {!! csrf_field() !!}
                         <input type="hidden" name="id" value="{{ Form::getData('id') }}" id="item-team-id" />
                         <p>
-                            <input type="submit" name="move_up" value="{{ Lang::get('team::setting.Move up') }}" class="btn btn-default btn-move-up-team btn-action" />
+                            <input type="submit" name="move_up" value="{{ Lang::get('team::setting.Move up') }}" class="btn-move btn-action" />
                         </p>
                         <p>
-                            <input type="submit" name="move_down" value="{{ Lang::get('team::setting.Move down') }}" class="btn btn-default btn-move-down-team btn-action" />
+                            <input type="submit" name="move_down" value="{{ Lang::get('team::setting.Move down') }}" class="btn-move btn-action" />
                         </p>
                     </form>
                     @endif

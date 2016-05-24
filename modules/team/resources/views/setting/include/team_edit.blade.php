@@ -42,7 +42,6 @@ if (Form::getData('id')) {
             </div>
         </div>
     </div>
-
     <div class="form-group">
         <label for="team-parent{{ $suffixId }}" class="form-label">{{ Lang::get('team::setting.Team parent') }}</label>
         <select class="input-select form-data" name="item[parent_id]" id="team-parent{{ $suffixId }}">
@@ -51,12 +50,12 @@ if (Form::getData('id')) {
             @endforeach
         </select>
     </div>
-
+    <div class="clearfix"></div>
 </div>
 <div class="modal-footer">
-    <button type="reset" class="btn btn-danger">{{ Lang::get('team::setting.Reset') }}</button>
-    <button type="button" class="btn btn-default" data-dismiss="modal">{{ Lang::get('team::setting.Close') }}</button>
-    <button type="submit" class="btn btn-primary">{{ Lang::get('team::setting.Save') }}</button>
+    <button type="reset" class="btn-delete">{{ Lang::get('team::setting.Reset') }}</button>
+    <button type="button" class="btn-move" data-dismiss="modal">{{ Lang::get('team::setting.Close') }}</button>
+    <button type="submit" class="btn-add">{{ Lang::get('team::setting.Save') }}</button>
 </div>
 
 <?php

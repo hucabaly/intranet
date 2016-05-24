@@ -1,10 +1,5 @@
 <?php
 return [
-    'profile' => [
-        'path' => 'profile',
-        'label' => 'Profile',
-        'active' => '1'
-    ],
     'hr' => [
         'path' => 'hr',
         'label' => 'HR',
