@@ -1,6 +1,6 @@
 @extends('layouts.default')
 <style>
-.page-header{text-align: center;}
+.box-header{text-align: center;margin-bottom: 20px;}
 .container-fluid .row-fluid p{font-size:15px;}
 .container-fluid .row-fluid p.kinh-thu{float:right;}
 @media (min-width: 992px){
@@ -24,11 +24,11 @@
 .table td{font-size: 13px;}
 </style>
 @section('content')
-<div class="container" style="background-color: #fff;min-height: 400px;">
+<div class="container box box-primary" style="background-color: #fff;min-height: 400px;">
     <div class="row">
         <div class="col-md-10 col-md-offset-1 welcome">
-            <div class="page-header">
-			  	<h1>Welcome to CSS page of Rikkeisoft</h1>
+            <div class="box-header with-border">
+			  	<h1 >Welcome to CSS page of Rikkeisoft</h1>
 			</div>
 			<div class="container-fluid">
 				<div class="row-fluid">
