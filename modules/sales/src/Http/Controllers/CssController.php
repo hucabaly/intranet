@@ -7,8 +7,9 @@ use Auth;
 use DB;
 use Rikkei\Core\Model\User;
 use Rikkei\Sales\Model\ProjectType;
-use Rikkei\Sales\Model\Teams;
 use Rikkei\Sales\Model\Css;
+use Rikkei\Team\Model\Team;
+use Rikkei\Team\View\TeamList;
 
 class CssController extends Controller
 {
@@ -16,7 +17,7 @@ class CssController extends Controller
     {
         $user = Auth::user();
         $projects = ProjectType::all();
-        $teams = Teams::all();
+        $teams = Team::all();
         
         return view(
             'sales::css.create_css', 
@@ -37,7 +38,7 @@ class CssController extends Controller
 
         //get list projects va teams
         $projects = ProjectType::all();
-        $teams = Teams::all();
+        $teams = Team::all();
 
         //get list team_id cua css theo css_id
         $team_ids = array();
@@ -48,7 +49,7 @@ class CssController extends Controller
         }
         
         //get team cua css
-        $teams_set = DB::table('teams')->whereIn('id', $team_ids)->get();
+        $teams_set = DB::table('team')->whereIn('id', $team_ids)->get();
 
         //text hien thi cac team cua CSS ra trang update
         //ngan cach nhau bang dau ','
