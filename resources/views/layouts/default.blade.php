@@ -36,7 +36,7 @@
         <div class="wrapper">
             <header class="main-header">
                 <nav class="navbar navbar-static-top">
-                    <div class="container">
+                    <div class="container-fluid">
                         <div class="navbar-header">
                             <a href="{{ URL::to('/') }}" class="navbar-brand"><b><img src="{{ asset('/common/images/intranet_logo.png') }}" /></b></a>
                             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
@@ -51,7 +51,7 @@
             </header>
             <!-- Full Width Column -->
             <div class="content-wrapper">
-                <div class="container">
+                <div class="container-fluid">
                     @include('messages.success')
                     @include('messages.errors')
                     <!-- Content Header (Page header) -->
@@ -59,16 +59,19 @@
                         <!-- Breadcrumb -->
                             @include('include.breadcrumb')
                         <!-- end Breadcrumb -->
+                        <div class="clearfix"></div>
                     </section>
 
                     <!-- Main content -->
                     <section class="content">
-                        @yield('content')
+                        <div class="content-container">
+                            @yield('content')
+                        </div>
                     </section><!-- /.content -->
                 </div><!-- /.container -->
             </div><!-- /.content-wrapper -->
             <footer class="main-footer">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="pull-right hidden-xs">
                         <b>Version</b> 1.0.0
                     </div>

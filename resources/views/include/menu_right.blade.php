@@ -5,7 +5,11 @@
         <!-- User Account Menu -->
         <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-user"></i>
+                @if(Auth::user()->avatar)
+                    <img src="{{ Auth::user()->avatar }}" class="user-image" alt="User Image">
+                @else
+                    <i class="fa fa-user"></i>
+                @endif
                 <span class="hidden-xs">{{ Auth::user()->nickname }}</span>
             </a>
             <ul class="dropdown-menu">
