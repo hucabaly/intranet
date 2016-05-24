@@ -83,4 +83,26 @@ class Team extends CoreModel
             throw $ex;
         }
     }
+    
+    /**
+     * delete team and all child
+     */
+    public function delete()
+    {
+        $children = Team::select('id')
+            ->where('parent_id', $this->id)->get();
+        DB::beginTransaction();
+        try {
+            if (count($children)) {
+                foreach ($children as $child) {
+                    Team::find($child->id)->delete();
+                }
+            }
+            parent::delete();
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            throw $ex;
+        }
+    }
 }
