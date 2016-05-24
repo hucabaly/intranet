@@ -1,4 +1,8 @@
 @extends('layouts.default')
+<?php
+use Rikkei\Team\View\TeamList;
+use Rikkei\Core\View\Form;
+?>
 
 @section('content')
 
@@ -113,18 +117,19 @@
             <div class="modal-body">
                 <form id="frm-add-teams">
                     <div class="remove-team"><img src="{{ URL::asset('img/remove_icon.png') }}" onclick="remove_team();"></div>
-                    <div class="container-teams">
-                        <ul class="list-teams left-list">
-                            @foreach($teams as $team)
-                            <li id="{{$team->id}}" onclick="set_true(this);">{{$team->name}}</li>
-                            @endforeach
-                        </ul>
+                    <div class="container-teams left-list">
+                        {!! TeamList::getTreeHtml(Form::getData('id')) !!}
                     </div>
                     <button class="btn-add-team" type="button" onclick="add_team();">Add >></button>
                     <div class="container-teams">
                         <ul class="list-teams right-list">
                             @foreach($teams_set as $team)
-                            <li id="{{$team->id}}" onclick="set_true(this);">{{$team->name}}</li>
+                            <li set="false">
+                              <label class="team-item">
+                                <a data-id="{{$team->id}}" onclick="set_true(this)">{{$team->name}}</a>
+                              </label>
+                          </li>
+
                             @endforeach
                         </ul>
                     </div>
@@ -172,26 +177,27 @@
         add team from left column to right column
         **/
         function add_team(){
-            if($(".modal-body ul.left-list li[set=true]").length > 0){
-                var team_id = $(".modal-body ul.left-list li[set=true]").attr("id");
+            if($(".team-tree ul a[set=true]").length > 0){
+                var team_id = $(".team-tree ul a[set=true]").attr("data-id");
                 var chosen = false;
 
-                $( ".modal-body ul.right-list li" ).each(function( index ) {
+                // $( ".modal-body ul.right-list li" ).each(function( index ) {
 
-                    if($(this).attr("id") == team_id){
-                        alert("Da add roi");
-                        chosen = true;
-                        return false;
-                    }
-                });
+                //     if($(this).attr("id") == team_id){
+                //         alert("Da add roi");
+                //         chosen = true;
+                //         return false;
+                //     }
+                // });
                 if(chosen == false){
-                    var element_add = $(".modal-body ul.left-list li[set=true]")[0].outerHTML;
-                    
+                    var element_add = $(".team-tree ul a[set=true]").parent().parent()[0].outerHTML;
 
                     $(".modal-body ul.right-list").append(element_add);
                     $(".modal-body ul.list-teams li").css("background-color","").attr("set","false");
                 }
-            }       
+
+            }
+
 
         }
 
@@ -203,12 +209,10 @@
         **/
 
         function remove_team(){
-            if($(".modal-body ul.right-list li[set=true]").length > 0){
-                
-                $(".modal-body ul.right-list li[set=true]").remove();
+            if($(".modal-body ul.right-list li a[set=true]").length > 0){
+
+                $(".modal-body ul.right-list li a[set=true]").parent().parent().remove();
             }
-
-
         }
 
         /** end remove_team() **/
@@ -219,8 +223,15 @@
         when click (choose) a team -> change bgcolor and set attribute set=true
         **/
         function set_true(x){
-            $(x).parent().find("li").css("background-color","").attr("set","false");
-            $(x).css("background-color","rgb(33, 42, 109)").attr("set","true");
+            $(".team-tree a").attr("set","false");
+            $(".team-tree ul li").css("background-color","").attr("set","false");
+            $(x).attr("set","true");
+            $(x).parent().parent().css("background-color","rgb(33, 42, 109)");
+
+            $(".right-list a").attr("set","false");
+            $(".right-list li").css("background-color","").attr("set","false");
+            $(x).attr("set","true");
+            $(x).parent().parent().css("background-color","rgb(33, 42, 109)");
         }
 
         /** end set_true **/
@@ -228,33 +239,20 @@
         function set_team(){
            var elements = "";
            var str = "";
-
-           teamArray = [];
-           if($( ".modal-body ul.right-list li" ).length > 0){
-              $( ".modal-body ul.right-list li" ).each(function( index ) {
-                var team_id = $(this).attr("id");
-                var team_name = $(this).html();
-                
-                elements += '<input class="team_id" type="hidden" name="teams['+team_id+']" value="'+team_name+'" />';    
-                if(str == ""){
-                     str = team_name;
-                 }else{
-                     str += ', ' + team_name; 
-                 }
-
-                teamArray.push([team_id,team_name]);
-
-              });
+           $(".team_id").remove();
+           $( ".modal-body ul.right-list li a" ).each(function( index ) {
+              var team_id = $(this).attr("data-id");
+              var team_name = $(this).html();
+              elements += '<input class="team_id" type="hidden" name="teams['+team_id+']" value="'+team_name+'" />';    
+              if(str == ""){
+               str = team_name;
+           }else{
+               str += ', ' + team_name; 
            }
-           
-           //get ra text hien ten cac team da add
+       });
+           console.log(elements);
            $(".set_team").html(str);
-
-           //xoa cac team_id cu, sau do append team moi
-           $(".set_team").parent().find(".team_id").remove();
            $(".set_team").parent().append(elements);
-
-           //#team_id_check de validate, "" -> chua chon team va nguoc lai
            if(str == ""){
                 $('#team_id_check').val("")
            }else{
@@ -265,6 +263,7 @@
         $('#teamsModal').modal('hide');
     }
 
+
     /*
        set team vao cot right cua popup team
     */
@@ -272,19 +271,20 @@
     function set_teams_popup(){
         $(".right-list").html("");
         for(var i=0; i<teamArray.length;i++){
-              $(".right-list").append('<li id="'+teamArray[i][0]+'" onclick="set_true(this);">'+teamArray[i][1]+'</li>');
+              $(".right-list").append('<li set="false"><label class="team-item"><a data-id="'+teamArray[i][0]+'" onclick="set_true(this)">'+teamArray[i][1]+'</a></label></li>');
+              //$(".right-list").append('<li id="'+teamArray[i][0]+'" onclick="set_true(this);">'+teamArray[i][1]+'</li>');
         }
     }
 
     $(document).ready(function(){
         $(".project_type input[type=radio]:first-child").prop('checked',true);
+        $(".team-tree a").removeAttr("href");
+        $(".team-tree li ul a").attr("onclick","set_true(this)");
     });
     
 
     $(document).ready(function() {
-
-         
-         $("#frm_create_css").validate({
+        $("#frm_create_css").validate({
            rules: {
                 
                 team_id_check: "required",

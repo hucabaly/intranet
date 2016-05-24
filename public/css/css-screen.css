@@ -247,3 +247,42 @@
   font-size: 40px;
   text-align: center;
 }
+
+.team-tree{
+  padding: 0;
+  list-style-type: disc;
+  padding-left: 30px;
+  text-align: left;
+}
+
+.team-tree li{
+  padding-left: 0;
+}
+
+.team-tree li ul{
+  padding-left: 15px;
+}
+
+.team-tree label{
+  width: 100%;
+}
+
+.team-tree a{
+  color:#fff;
+  font-weight: bold;
+  width: 100%;
+  padding-left: 8px;
+}
+
+.team-tree ul .team-item{
+
+}
+
+.modal-body .right-list a{
+  color: #fff;
+  font-weight: bold;
+}
+
+.modal-body .right-list label{
+  width:100%;
+}
