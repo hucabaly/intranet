@@ -32,13 +32,16 @@ class Team extends CoreModel
             return true;
         }
         $dataOrder = $siblings->toArray();
-        $i = 0;
         $flagIndexToCurrent = false;
+        $countDataOrder = count($dataOrder);
         if($up) {
-            foreach ($dataOrder as $team) {
+            if ($dataOrder[0]['id'] == $this->id) { //item move up is first
+                return true;
+            }
+            for ($i = 1 ; $i < $countDataOrder ; $i++) {
                 if(!$flagIndexToCurrent) {
                     $dataOrder[$i]['position'] = $i;
-                    if($team['id'] == $this->id) {
+                    if($dataOrder[$i]['id'] == $this->id) {
                         $dataOrder[$i]['position'] = $i - 1;
                         $dataOrder[$i - 1]['position'] = $i;
                         $flagIndexToCurrent = true;
@@ -46,13 +49,15 @@ class Team extends CoreModel
                 } else {
                     unset($dataOrder[$i]);
                 }
-                $i++;
             }
         } else {
-            foreach ($dataOrder as $team) {
+            if ($dataOrder[count($dataOrder) - 1]['id'] == $this->id) { //item move down is last
+                return true;
+            }
+            for ($i = 0 ; $i < $countDataOrder - 1; $i++) {
                 if(!$flagIndexToCurrent) {
                     $dataOrder[$i]['position'] = $i;
-                    if($team['id'] == $this->id) {
+                    if($dataOrder[$i]['id'] == $this->id) {
                         $dataOrder[$i]['position'] = $i + 1;
                         $dataOrder[$i + 1]['position'] = $i;
                         $flagIndexToCurrent = true;
@@ -61,7 +66,6 @@ class Team extends CoreModel
                 } else {
                     unset($dataOrder[$i]);
                 }
-                $i++;
             }
         }
         DB::beginTransaction();

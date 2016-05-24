@@ -14,9 +14,9 @@ class ThemeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            RIKKEI_TEAM_PATH . 'public' => public_path(),
-        ], 'assets');
+//        $this->publishes([
+//            RIKKEI_TEAM_PATH . 'public' => public_path(),
+//        ], 'assets');
     }
 
     /**

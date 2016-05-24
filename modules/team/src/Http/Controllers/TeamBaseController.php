@@ -2,7 +2,10 @@
 
 namespace Rikkei\Team\Http\Controllers;
 
-class AuthBaseController extends \Rikkei\Core\Http\Controllers\Controller
+/**
+ * class Team module base
+ */
+class TeamBaseController extends \Rikkei\Core\Http\Controllers\Controller
 {
     /**
      * constructor

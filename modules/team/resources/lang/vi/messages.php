@@ -4,4 +4,5 @@ return [
     'Save data success!' => 'Lưu dữ liệu thành công!',
     'Not found item.' => 'Không tìm thấy đối tương.',
     'Move item success!' => 'Di chuyển đối tượng thành công!',
+    'Delete item success!' => "Xóa đối tượng thành công!",
 ];

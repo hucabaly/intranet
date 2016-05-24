@@ -20,7 +20,17 @@
         overflow-y: auto;
         li a.active{
             background-color: #b2b2b2;
+            padding: 2px 10px;
         }
+        a {
+            display: inline-block;
+            white-space: nowrap;
+        }
+    }
+}
+.team-action {
+    .btn-action {
+        width: 120px;
     }
 }
 .form-group {

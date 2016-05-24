@@ -53,7 +53,7 @@ class TeamList
             $classLabel = $classLabel ? " class=\"{$classLabel}\"" : '';
             $classA = $classA ? " class=\"{$classA}\"" : '';
             
-            $hrefA = route('team::setting.viewTeam', ['id' => $team->id]);
+            $hrefA = route('team::setting.team.view', ['id' => $team->id]);
             $html .= "<li{$classLi}>";
             $html .= "<label{$classLabel}>";
             $html .= "<a href=\"{$hrefA}\"{$classA}{$optionA}>";
