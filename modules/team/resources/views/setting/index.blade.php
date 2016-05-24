@@ -1,5 +1,6 @@
 @extends('layouts.default')
 <?php
+
 use Rikkei\Team\View\TeamList;
 use Rikkei\Core\View\Form;
 ?>
@@ -13,40 +14,52 @@ Team Setting
 @endsection
 
 @section('content')
-<div class="content-container">
-    <div class="row">
-        <div class="col-sm-6 team-wrapper">
-            <h3>{{ Lang::get('team::setting.List team') }}</h3>
-            <div class="row team-list-action">
-                <div class="col-sm-6 team-list">
+<div class="row">
+    <div class="col-sm-6 team-wrapper">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ Lang::get('team::setting.List team') }}</h3>
+            </div>
+            <div class="row team-list-action box-body">
+                <div class="col-sm-9 team-list">
                     {!! TeamList::getTreeHtml(Form::getData('id')) !!}
                 </div>
-                <div class="col-sm-6 team-action">
+                <div class="col-sm-3 team-action">
                     <p><button type="button" class="btn-add btn-action" data-target="#team-add-form" data-toggle="modal">
                             <span>{{ Lang::get('team::setting.Add') }}</span>
                         </button></p>
+                    <p><button type="button" class="btn-edit btn-action" data-target="#team-edit-form" data-toggle="modal"<?php
+                        if(!Form::getData('id')): ?> disabled<?php endif; ?>>
+                            <span>{{ Lang::get('team::setting.Edit') }}</span>
+                        </button></p>
                     @if(Form::getData('id'))
-                        <p><button type="button" class="btn-edit btn-action" data-target="#team-edit-form" data-toggle="modal">
-                                <span>{{ Lang::get('team::setting.Edit') }}</span>
-                            </button></p>
                         <form class="form" method="post" action="{{ URL::route('team::setting.team.delete') }}">
                             {!! csrf_field() !!}
                             <input type="hidden" name="_method" value="delete" />
                             <input type="hidden" name="id" value="{{ Form::getData('id') }}" />
-                            <p><button type="submit" class="btn-delete btn-action delete-confirm">
+                    @endif
+                        <p><button type="submit" class="btn-delete btn-action delete-confirm"<?php
+                                if(!Form::getData('id')): ?> disabled<?php endif; ?>>
                                 <span>{{ Lang::get('team::setting.Remove') }}</span>
-                                </button></p>
+                            </button></p>
+                    @if(Form::getData('id'))
                         </form>
-                    <form class="form" method="post" action="{{ URL::route('team::setting.team.move') }}">
-                        {!! csrf_field() !!}
-                        <input type="hidden" name="id" value="{{ Form::getData('id') }}" id="item-team-id" />
+                    @endif
+                    @if(Form::getData('id'))
+                        <form class="form" method="post" action="{{ URL::route('team::setting.team.move') }}">
+                            {!! csrf_field() !!}
+                            <input type="hidden" name="id" value="{{ Form::getData('id') }}" id="item-team-id" />
+                    @endif
                         <p>
-                            <input type="submit" name="move_up" value="{{ Lang::get('team::setting.Move up') }}" class="btn-move btn-action" />
+                            <input type="submit" name="move_up" value="{{ Lang::get('team::setting.Move up') }}" 
+                                class="btn-move btn-action"<?php if(!Form::getData('id')): ?> disabled<?php endif; ?> />
                         </p>
                         <p>
-                            <input type="submit" name="move_down" value="{{ Lang::get('team::setting.Move down') }}" class="btn-move btn-action" />
+                            <input type="submit" name="move_down" value="{{ Lang::get('team::setting.Move down') }}"
+                                class="btn-move btn-action"<?php if(!Form::getData('id')): ?> disabled<?php endif; ?> />
                         </p>
-                    </form>
+                    @if(Form::getData('id'))
+                        </form>
                     @endif
                 </div>
             </div>
@@ -55,7 +68,7 @@ Team Setting
 </div>
 <!-- modal add/edit team -->
 @if(Form::getData('id'))
-    <!-- modal edit team -->
+<!-- modal edit team -->
 <div class="modal fade" id="team-edit-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-dialog-team" role="document">
         <div class="modal-content">

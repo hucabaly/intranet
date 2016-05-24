@@ -69,6 +69,7 @@ class AuthController extends Controller
         $account->name = $user->name;
         $account->nickname = !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email);
         $account->token = $user->token;
+        $account->avatar = $user->avatar;
         $account->save();
         Auth::login($account);
         

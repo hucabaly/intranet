@@ -8,6 +8,7 @@ use Lang;
 use Validator;
 use Rikkei\Core\View\Form;
 use Rikkei\Core\View\Breadcrumb;
+use URL;
 
 class TeamController extends TeamBaseController
 {
@@ -16,7 +17,7 @@ class TeamController extends TeamBaseController
      */
     protected function _construct() {
         Breadcrumb::add('Setting');
-        Breadcrumb::add('Team');
+        Breadcrumb::add('Team', URL::route('team::setting.index'));
     }
 
     /**
