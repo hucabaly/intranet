@@ -28,15 +28,19 @@ if (Form::getData('id')) {
                     <label for="permission-type-new{{ $suffixId }}">{{ Lang::get('team::setting.New') }}</label>
                 </p>
                 <p>
-                    <input type="radio" name="permission_same" id="permission-type-same{{ $suffixId }}" value="1"<?php if (Form::getData('permission_as') != 0): ?> checked<?php endif; ?> />
-                    <label for="permission-type-same{{ $suffixId }}">{{ Lang::get('team::setting.Permission following function unit') }}</label>&nbsp;&nbsp;&nbsp;
-                    <select class="input-select" name="item[permission_as]">
-                        @foreach(Rikkei\Team\View\TeamList::toOption(Form::getData('id'), true) as $option)
-                        <option value="{{ $option['value'] }}"
-                            <?php if (Form::getData('permission_as') == $option['value']): ?> selected<?php endif; ?>
-                                {{ $option['option'] }}>{{ $option['label'] }}</option>
-                        @endforeach
-                    </select>
+                    <p class="permission-alias-label">
+                        <input type="radio" name="permission_same" id="permission-type-same{{ $suffixId }}" value="1"<?php if (Form::getData('permission_as') != 0): ?> checked<?php endif; ?> />
+                        <label for="permission-type-same{{ $suffixId }}">{{ Lang::get('team::setting.Permission following function unit') }}</label>&nbsp;&nbsp;&nbsp;
+                    </p>
+                    <p class="permission-alias-data">
+                        <select class="input-select" name="item[permission_as]">
+                            @foreach(Rikkei\Team\View\TeamList::toOption(Form::getData('id'), true) as $option)
+                            <option value="{{ $option['value'] }}"
+                                <?php if (Form::getData('permission_as') == $option['value']): ?> selected<?php endif; ?>
+                                    {{ $option['option'] }}>{{ $option['label'] }}</option>
+                            @endforeach
+                        </select>
+                    </p>
                 </p>
             </div>
             <div class="clearfix"></div>
