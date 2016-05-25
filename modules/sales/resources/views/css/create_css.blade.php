@@ -10,7 +10,7 @@ use Rikkei\Core\View\Form;
     <div class="row">
         <div class="col-md-12">
             <div class="box-header with-border">
-                <h3 class="box-title">{{ trans('sales::create_css.Create CSS title') }}</h3>
+                <h3 class="box-title">{{ trans('sales::view.Create CSS title') }}</h3>
             </div>
             <div class="container-fluid">
                 <div class="row-fluid">
@@ -21,49 +21,49 @@ use Rikkei\Core\View\Form;
                           <table class="table table-create-css">
                           <input type="hidden" name="create_or_update" value="create">
                            <tr>
-                               <td class="title"><label>{{ trans('sales::create_css.Sale name') }} </label></td>
+                               <td class="title"><label>{{ trans('sales::view.Sale name') }} </label></td>
                                <td>
                                    <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}">
                                    <input type="text" class="form-control width-300" id="user_name" name="user_name" value="{{$user->name}}" disabled="disabled">
                                </td>
                                <td style="width:50px"></td>
-                               <td class="title2"><label class="project_name">{{ trans('sales::create_css.Project base name') }}</label> <span class="required">*</label></td>
+                               <td class="title2"><label class="project_name">{{ trans('sales::view.Project base name') }}</label> <span class="required">*</label></td>
                                <td><input type="text" class="form-control width-300" id="project_name" name="project_name" tabindex=4 ></td>
 
                            </tr>
                            <tr>
-                               <td class="title"><label>{{ trans('sales::create_css.Sale name jp') }}</label></td>
+                               <td class="title"><label>{{ trans('sales::view.Sale name jp') }}</label></td>
                                <td><input type="text" class="form-control width-300" id="japanese_name" name="japanese_name" value="{{$user->japanese_name}}" <?php if($user->japanese_name != ""){ echo 'disabled="disabled"'; } ?> ></td>
                                <td></td>
-                               <td class="title2"><label>{{ trans('sales::create_css.Team relate') }}</label> <span class="required">*</span></td>
+                               <td class="title2"><label>{{ trans('sales::view.Team relate') }}</label> <span class="required">*</span></td>
                                <td>
-                                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teamsModal" data-whatever="@mdo" onclick="set_teams_popup();">{{ trans('sales::create_css.Set team') }}</button>
+                                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teamsModal" data-whatever="@mdo" onclick="set_teams_popup();">{{ trans('sales::view.Set team') }}</button>
                                    <label class="set_team"></label>
                                    <input id="team_id_check" name="team_id_check" type="text" value="" style="visibility: hidden;">
                                </td>
 
                            </tr>
                            <tr>
-                               <td class="title"><label>{{ trans('sales::create_css.Customer company') }}</label> <span class="required">*</span></td>
+                               <td class="title"><label>{{ trans('sales::view.Customer company') }}</label> <span class="required">*</span></td>
                                <td><input type="text" class="form-control width-300" id="company_name" name="company_name" tabindex=2 ></td>
                                <td ></td>
-                               <td class="title2"><label>{{ trans('sales::create_css.PM name') }}</label> <span class="required">*</span></td>
+                               <td class="title2"><label>{{ trans('sales::view.PM name') }}</label> <span class="required">*</span></td>
                                <td><input type="text" class="form-control width-300" id="pm_name" name="pm_name" tabindex=5></td>
 
                            </tr>
                            <tr>
-                               <td class="title"><label>{{ trans('sales::create_css.Customer name') }}</label> <span class="required">*</span></td>
+                               <td class="title"><label>{{ trans('sales::view.Customer name') }}</label> <span class="required">*</span></td>
                                <td class="customer_name_td">
                                    <input type="text" class="form-control width-300" id="customer_name" name="customer_name" tabindex=3 >
                                    <label class="sama_label">様</label>
                                </td>
                                <td ></td>
-                               <td class="title2"><label>{{ trans('sales::create_css.BrSE name') }}</label> <span class="required">*</span></td>
+                               <td class="title2"><label>{{ trans('sales::view.BrSE name') }}</label> <span class="required">*</span></td>
                                <td><input type="text" class="form-control width-300" id="brse_name" name="brse_name" tabindex=6 ></td>
 
                            </tr>
                            <tr>
-                               <td class="title"><label>{{ trans('sales::create_css.Project type') }}</label> <span class="required">*</span></td>
+                               <td class="title"><label>{{ trans('sales::view.Project type') }}</label> <span class="required">*</span></td>
                                <td class="project_type">
                                    @foreach($projects as $pj)
                                    <label class="radio-inline">
@@ -72,7 +72,7 @@ use Rikkei\Core\View\Form;
                                   @endforeach 
                               </td>
                               <td ></td>
-                              <td class="title2"><label>{{ trans('sales::create_css.Project date') }}</label> <span class="required">*</span></td>
+                              <td class="title2"><label>{{ trans('sales::view.Project date') }}</label> <span class="required">*</span></td>
                               <td class="container-date ">
                                <div class="input-group-addon calendar-button" target="start_date" onclick="showCalendar(this);">
                                    <i class="fa fa-calendar">
@@ -90,7 +90,7 @@ use Rikkei\Core\View\Form;
                        </tr>
                        <tr>
                            <td colspan="5" class="container-button-css" style="text-align: center;">
-                               <button class="btn btn-primary" type="submit" >{{ trans('sales::create_css.Create CSS') }}</button>
+                               <button class="btn btn-primary" type="submit" >{{ trans('sales::view.Create CSS') }}</button>
                            </td>
                        </tr>
                    </table>
@@ -116,7 +116,7 @@ use Rikkei\Core\View\Form;
                     <div class="container-teams left-list">
                         {!! TeamList::getTreeHtml(Form::getData('id')) !!}
                     </div>
-                    <button class="btn-add-team" type="button" onclick="add_team();">{{ trans('sales::create_css.Add >>') }}</button>
+                    <button class="btn-add-team" type="button" onclick="add_team();">{{ trans('sales::view.Add >>') }}</button>
                     <div class="container-teams">
                         <ul class="list-teams right-list">
 
@@ -126,7 +126,7 @@ use Rikkei\Core\View\Form;
             </div>
             <div class="modal-footer">
 
-                <button type="button" class="btn btn-primary create-css" onclick="set_team_to_css();">{{ trans('sales::create_css.OK') }}</button>
+                <button type="button" class="btn btn-primary create-css" onclick="set_team_to_css();">{{ trans('sales::view.OK') }}</button>
             </div>
         </div>
     </div>
@@ -148,9 +148,9 @@ use Rikkei\Core\View\Form;
     $(document).ready(function(){
         $('input[type=radio][name=project_type_id]').change(function () {
             if (this.value == '1') {
-                $(".project_name").text('<?php echo trans('sales::create_css.Project OSDC name') ?>');
+                $(".project_name").text('<?php echo trans('sales::view.Project OSDC name') ?>');
             } else if (this.value == '2') {
-                $(".project_name").text('<?php echo trans('sales::create_css.Project base name') ?>');
+                $(".project_name").text('<?php echo trans('sales::view.Project base name') ?>');
             }
         });
     });
