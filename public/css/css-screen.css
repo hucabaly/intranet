@@ -1,277 +1,275 @@
 .page-header{
-  text-align: left; 
-  border-bottom: none;
+    text-align: left; 
+    border-bottom: none;
 }
 .container-fluid .row-fluid p{
-  font-size:15px;
+    font-size:15px;
 }
 .container-fluid .row-fluid p.kinh-thu{
-  float:right;
+    float:right;
 }
-.table-create-css {
-  font-size: 13px;
-}
+
 .table-create-css td{
-  border-top: none !important;
+    border-top: none !important;
 }
 .container-fluid .row-fluid button.btn-next{
-  float: right; 
-  background-color: #690F8E; 
-  padding: 3px 28px;
+    float: right; 
+    background-color: #690F8E; 
+    padding: 3px 28px;
 }
 .date {
-  width:35% !important; 
-  display: inline !important;
+    width:35% !important; 
+    display: inline !important;
 }
 .calendar-button{
-  position: relative;
-  top: -2px;left: 0;
-  padding: 9px 15px !important;
-  display: inline-block !important;
-  width: auto !important; 
-  cursor: pointer;
+    position: relative;
+    top: -2px;left: 0;
+    padding: 9px 15px !important;
+    display: inline-block !important;
+    width: auto !important; 
+    cursor: pointer;
 }
 .date{    
-  left: -6px;    
-  position: relative;    
-  border-radius: 0 4px 4px 0 !important;
+    left: -6px;    
+    position: relative;    
+    border-radius: 0 4px 4px 0 !important;
 }
 .container-button-css{
-  text-align: center;
+    text-align: center;
 }
 .container-button-css button{
-  padding: 5px 35px;
+    padding: 5px 35px;
 }
 
 /* hien popup chon team vao css */
 .modal-dialog {
-  width: 533px !important;
+    width: 533px !important;
 }
 #frm-add-teams{
-  text-align: center;
+    text-align: center;
 }
 .container-teams{
-  width:200px; 
-  height:300px;
-  background: #6e6e6e;
-  float:left;}
+    width:200px; 
+    height:300px;
+    background: #6e6e6e;
+    float:left;}
 .btn-add-team{
-  position: relative;
-  top:134px;
-  margin:0 16px; 
-  padding: 5px 15px;
-  border: none;
-  color: #fff;
-  float: left;
-  font-weight: bold;
-  background: -webkit-linear-gradient(#929292, #000); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(#929292, #000); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(#929292, #000); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(#929292, #000); /* Standard syntax */
+    position: relative;
+    top:134px;
+    margin:0 16px; 
+    padding: 5px 15px;
+    border: none;
+    color: #fff;
+    float: left;
+    font-weight: bold;
+    background: -webkit-linear-gradient(#929292, #000); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#929292, #000); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#929292, #000); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#929292, #000); /* Standard syntax */
 }
 
 .modal-header{
-  background-color:#424242; 
-  border-bottom: 1px solid #363636 !important;
+    background-color:#424242; 
+    border-bottom: 1px solid #363636 !important;
 }
 .modal-header button.close span{
-  color:#fff;
+    color:#fff;
 }
 .modal-body,.modal-footer{
-  background-color: #575757
+    background-color: #575757
 }
 .modal-body{
-  font-size: 12px;
+    font-size: 12px;
 }
 .modal-footer{
-  border: none !important;
+    border: none !important;
 }
 .modal-footer button.create-css{
-  color: #000 ; 
-  font-weight: bold; 
-  background: #e3b019 ; 
-  padding: 3px 25px;    
-  margin-top: 10px;}
+    color: #000 ; 
+    font-weight: bold; 
+    background: #e3b019 ; 
+    padding: 3px 25px;    
+    margin-top: 10px;}
 .modal-body ul.list-teams{
-  padding: 10px;
-  list-style: none;
-  text-align: left;
-  color: #fff;
-  font-weight: bold;
+    padding: 10px;
+    list-style: none;
+    text-align: left;
+    color: #fff;
+    font-weight: bold;
 }
 
 .modal-body ul.list-teams li{
-  cursor: pointer;
-  padding: 3px;
+    cursor: pointer;
+    padding: 3px;
 }
 
 .modal-body .remove-team{
-  margin-bottom: 10px;
-  text-align: right;
+    margin-bottom: 10px;
+    text-align: right;
 }
 
 .modal-body .remove-team img{
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .width-300{
-  width:300px;
+    width:325px;
 }
 .date{
-  width: 100px !important;
+    width: 100px !important;
 }
 .error{
-  color:red;
-  font-size: 13px;
-  font-weight: 100;
+    color:red;
+    font-size: 13px;
+    font-weight: 100;
 }
 .container-date{
-  position: relative;
+    position: relative;
 }
 #start_date-error{    
-  position: absolute;
-  top:43px;
-  left:8px;
+    position: absolute;
+    top:43px;
+    left:8px;
 }
 #end_date-error{    
-  position: absolute;
-  top:61px;
-  left:8px;
+    position: absolute;
+    top:61px;
+    left:8px;
 }
 #team_id_check-error{
-  display: block;
+    display: block;
 }
 
 .url_make{
-  width: 100%;
-  text-align: center; 
-  padding-bottom: 30px;
+    width: 100%;
+    text-align: center; 
+    padding-bottom: 30px;
 }
 .url_make h2{
-  color: #0230BF; 
-  text-decoration: underline; 
-  margin-top: 30px; 
-  margin-bottom:30px;
+    color: #0230BF; 
+    text-decoration: underline; 
+    margin-top: 30px; 
+    margin-bottom:30px;
 }
 
 .hr{
-  border-top: 1px solid #8c8b8b;
-  width: 95%;
+    border-top: 1px solid #8c8b8b;
+    width: 95%;
 }
 
 /* ------------- trang preview -------------------------*/
 @media (min-width: 992px){
-  .welcome {
-      margin-left: 11.333333%;
-      width: 75.333333%;
-  }
+    .welcome {
+        margin-left: 11.333333%;
+        width: 75.333333%;
+    }
 }
 .welcome .welcome-title{
-  text-align: center;
-  margin-bottom: 30px;
+    text-align: center;
+    margin-bottom: 30px;
 }
 
 .make-css{
-  padding: 20px;
-  margin-left: -16px;
+    padding: 20px;
+    margin-left: -16px;
 }
 #header-makecss {
-  margin-top: 20px;    
-  margin-bottom: 90px;
+    margin-top: 20px;    
+    margin-bottom: 90px;
 }
 #header-makecss #chu-trai{
-  float:left;width: 300px;
-  background-color:rgb(24, 52, 93);
-  text-align: center;width: 500px;
+    float:left;width: 300px;
+    background-color:rgb(24, 52, 93);
+    text-align: center;width: 500px;
 }
 #header-makecss #chu-trai h2{
-  color:#fff; 
-  margin:5px 0; 
-  font-size: 25px;
-  font-weight: bold;
+    color:#fff; 
+    margin:5px 0; 
+    font-size: 25px;
+    font-weight: bold;
 }
 #header-makecss #logo-rikkei{
-  float: right;
-  margin-top: -20px;
+    float: right;
+    margin-top: -20px;
 }
 
 .make-css .bang1 tr:first-child td,.bang2 tr:first-child {
-  color:#fff;  
-  background-color: rgb(24, 52, 93);
+    color:#fff;  
+    background-color: rgb(24, 52, 93);
 }
 
 .make-css .bang1 input[type=text],.bang2 input[type=text] {
-  outline: none;
-  border: none;
-  width: 100%
+    outline: none;
+    border: none;
+    width: 100%
 }
 .make-css .bang1 .tongdiem{
-  text-align: center; 
-  width: 25%;
+    text-align: center; 
+    width: 25%;
 }
 .make-css .table td{
-  font-size: 12px;    
-  border: 1px solid #2A4577;
+    font-size: 12px;    
+    border: 1px solid #2A4577;
 }
 .make-css .bang2 .header{
-  text-align: center;
+    text-align: center;
 }
 .make-css .bang2 td:first-child{
-  width:25%;
+    width:25%;
 }
 .make-css .bang2 .comment {
-  width:30%;
+    width:30%;
 }
 .make-css .bang2 .reply {
-  width:15%;
+    width:15%;
 }
 .make-css .bang2 .mucto {
-  font-weight: bold;
-  background-color: #d99796;
+    font-weight: bold;
+    background-color: #d99796;
 }
 .make-css .bang2.table-osdc .mucto {
-  background-color: #96b4d6;
+    background-color: #96b4d6;
 }
 .make-css .bang2 .mucbe {
-  font-weight: bold;
-  
+    font-weight: bold;
+
 }
 .make-css .diemso-osdc{
-  color: #0070bf;
+    color: #0070bf;
 }
 .make-css .diemso-base{
-  color: #ff0000;
+    color: #ff0000;
 }
 .make-css .diem {
-  
-  font-size: 40px;
-  text-align: center;
+
+    font-size: 40px;
+    text-align: center;
 }
 
 .team-tree{
-  padding: 0;
-  list-style-type: disc;
-  padding-left: 30px;
-  text-align: left;
+    padding: 0;
+    list-style-type: disc;
+    padding-left: 30px;
+    text-align: left;
 }
 
 .team-tree li{
-  padding-left: 0;
+    padding-left: 0;
 }
 
 .team-tree li ul{
-  padding-left: 15px;
+    padding-left: 15px;
 }
 
 .team-tree label{
-  width: 100%;
+    width: 100%;
 }
 
 .team-tree a{
-  color:#fff;
-  font-weight: bold;
-  width: 100%;
-  padding-left: 8px;
+    color:#fff;
+    font-weight: bold;
+    width: 100%;
+    padding-left: 8px;
 }
 
 .team-tree ul .team-item{
@@ -279,10 +277,32 @@
 }
 
 .modal-body .right-list a{
-  color: #fff;
-  font-weight: bold;
+    color: #fff;
+    font-weight: bold;
 }
 
 .modal-body .right-list label{
-  width:100%;
+    width:100%;
+}
+
+.required{
+    color:red;
+}
+
+.customer_name_td{
+    position: relative;
+}
+
+.customer_name_td #customer_name{
+    padding-right: 30px;
+}
+
+.sama_label{
+    position: absolute;
+    top: 16px;
+    left: 310px;
+}
+
+label{
+    display:inline;
 }

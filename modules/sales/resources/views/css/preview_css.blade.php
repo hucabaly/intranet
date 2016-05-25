@@ -2,11 +2,11 @@
 
 @section('content')
 
-<div class="container content-container" style="background-color: #fff;">
+<div class="container content-container box box-primary" style="background-color: #fff;">
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header">
-                <h3>Url của CSS</h3>
+            <div class="box-header with-border">
+                <h3 box-title>Url của CSS</h3>
             </div>
             <div class="container-fluid">
                 <div class="row-fluid">
@@ -32,8 +32,8 @@
 
   <div class="row">
     <div class="col-md-12">
-        <div class="page-header">
-            <h3>Preview</h3>
+        <div class="box-header with-border">
+            <h3 class="box-title">Preview</h3>
             <h4>Trang chào mừng</h4>
         </div>
         <div class="container-fluid">
@@ -58,9 +58,9 @@
     <div class="row">
       <hr class="hr">
     </div>
-    <div class="make-css container">
-        <div class="page-header">
-            <h3>Preview</h3>
+    <div class="make-css ">
+        <div class="box-header with-border">
+            <h3 box-title>Preview</h3>
             <h4>Trang làm CSS</h4>
         </div>
         <div class="row">
