@@ -52,15 +52,19 @@
             <!-- Full Width Column -->
             <div class="content-wrapper">
                 <div class="container-fluid">
-                    @include('messages.success')
-                    @include('messages.errors')
                     <!-- Content Header (Page header) -->
                     <section class="content-header">
+                        <h1>
+                            @yield('title')
+                        </h1>
                         <!-- Breadcrumb -->
                             @include('include.breadcrumb')
                         <!-- end Breadcrumb -->
                         <div class="clearfix"></div>
                     </section>
+                    
+                    @include('messages.success')
+                    @include('messages.errors')
 
                     <!-- Main content -->
                     <section class="content">
@@ -79,7 +83,26 @@
                 </div><!-- /.container -->
             </footer>
         </div><!-- ./wrapper -->
-
+        
+        <!-- modal delete cofirm -->
+        <div class="modal fade modal-danger" id="modal-delete-confirm" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">{{ Lang::get('core::view.Confirm') }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-default">{{ Lang::get('core::view.Are you sure delete item(s)?') }}</p>
+                        <p class="text-change"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline btn-close" data-dismiss="modal">{{ Lang::get('core::view.Close') }}</button>
+                        <button type="button" class="btn btn-outline btn-ok">{{ Lang::get('core::view.OK') }}</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div> <!-- modal delete cofirm -->
 
         <!-- jQuery 2.2.0 -->
         <script src="{{ URL::asset('adminlte/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>

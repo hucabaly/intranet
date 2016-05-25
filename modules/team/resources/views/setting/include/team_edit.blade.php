@@ -10,7 +10,10 @@ if (Form::getData('id')) {
 <div class="modal-body">
     <div class="form-group">
         <label for="team-name{{ $suffixId }}" class="form-label">{{ Lang::get('team::setting.Team name') }}</label>
-        <input type="text" class="form-control form-data" id="team-name{{ $suffixId }}" name="item[name]" value="{{ Form::getData('name') }}" />
+        <div class="form-data">
+        <input type="text" class="form-control" id="team-name{{ $suffixId }}" name="item[name]" 
+            value="{{ Form::getData('name') }}" required />
+        </div>
     </div>
 
     <div class="form-group">
