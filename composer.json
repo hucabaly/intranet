@@ -55,6 +55,7 @@
             "php artisan vendor:publish --tag=config",
             "php artisan vendor:publish --tag=database",
             "php artisan migrate",
+            "php artisan db:seed",
             "php artisan optimize"
         ],
         "post-update-cmd": [
@@ -63,6 +64,7 @@
             "php artisan vendor:publish --tag=config",
             "php artisan vendor:publish --tag=database",
             "php artisan migrate",
+            "php artisan db:seed",
             "php artisan optimize"
         ]
     },

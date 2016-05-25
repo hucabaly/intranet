@@ -21,10 +21,10 @@ Route::group([
             'prefix' => 'position',
             'as' => 'position.',
         ], function() {
-            Route::get('view/{id}','TeamPositionController@view')->name('view')->where('id', '[0-9]+');
-            Route::post('move','TeamPositionController@move')->name('move');
-            Route::post('save','TeamPositionController@save')->name('save');
-            Route::delete('delete','TeamPositionController@delete')->name('delete');
+            Route::get('view/{id}','PositionController@view')->name('view')->where('id', '[0-9]+');
+            Route::post('move','PositionController@move')->name('move');
+            Route::post('save','PositionController@save')->name('save');
+            Route::delete('delete','PositionController@delete')->name('delete');
         });
     });
 });

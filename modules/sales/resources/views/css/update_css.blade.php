@@ -6,10 +6,10 @@ use Rikkei\Core\View\Form;
 
 @section('content')
 
-<div class="container content-container" style="background-color: #fff;">
+<div class="container content-container box box-primary" style="background-color: #fff;">
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header">
+            <div class="box-header with-border">
                 <h3>Cập nhật CSS</h3>
             </div>
             <div class="container-fluid">
@@ -23,21 +23,21 @@ use Rikkei\Core\View\Form;
                           <table class="table table-create-css">
 
                            <tr>
-                               <td class="title">Họ và tên người gửi (Sales)</td>
+                               <td class="title"><label>Họ và tên người gửi (Sales)</label></td>
                                <td>
                                    <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}">
                                    <input type="text" class="form-control width-300" id="user_name" name="user_name" value="{{$user->name}}" disabled="disabled">
                                </td>
                                <td style="width:50px"></td>
-                               <td class="title2">Tên dự án</td>
+                               <td class="title2"><label class="project_name">Tên dự án</label> <span class="required">*</label></td>
                                <td><input type="text" class="form-control width-300" id="project_name" name="project_name" value="{{$css->project_name}}"  ></td>
 
                            </tr>
                            <tr>
-                               <td class="title">Họ và tên người gửi (Tiếng Nhật)</td>
+                               <td class="title"><label>Họ và tên người gửi (Tiếng Nhật)</label></td>
                                <td><input type="text" class="form-control width-300" id="japanese_name" name="japanese_name" value="{{$user->japanese_name}}" <?php if($user->japanese_name != ""){ echo 'disabled="disabled"'; } ?> ></td>
                                <td></td>
-                               <td class="title2">Các team liên quan</td>
+                               <td class="title2"><label>Các team liên quan</label> <span class="required">*</label></td>
                                <td>
                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teamsModal" data-whatever="@mdo" onclick="set_teams_popup();">Set team</button>
                                    <label class="set_team">
@@ -51,23 +51,23 @@ use Rikkei\Core\View\Form;
 
                            </tr>
                            <tr>
-                               <td class="title">Tên công ty khách hàng</td>
+                               <td class="title"><label>Tên công ty khách hàng</label> <span class="required">*</label></td>
                                <td><input type="text" class="form-control width-300" id="company_name" name="company_name" value="{{$css->company_name}}" ></td>
                                <td ></td>
-                               <td class="title2">Người phụ trách dự án (PM)</td>
+                               <td class="title2"><label>Người phụ trách dự án (PM)</label> <span class="required">*</label></td>
                                <td><input type="text" class="form-control width-300" id="pm_name" name="pm_name" value="{{$css->pm_name}}" ></td>
 
                            </tr>
                            <tr>
-                               <td class="title">Khách hàng</td>
+                               <td class="title"><label>Khách hàng</label> <span class="required">*</label></td>
                                <td><input type="text" class="form-control width-300" id="customer_name" name="customer_name" value="{{$css->customer_name}}" ></td>
                                <td ></td>
-                               <td class="title2">BrSE của dự án</td>
+                               <td class="title2"><label>BrSE của dự án</label> <span class="required">*</label></td>
                                <td><input type="text" class="form-control width-300" id="brse_name" name="brse_name" value="{{$css->brse_name}}" ></td>
 
                            </tr>
                            <tr>
-                               <td class="title">Project type</td>
+                               <td class="title"><label>Project type</label> <span class="required">*</label></td>
                                <td class="project_type">
                                    @foreach($projects as $pj)
                                    <label class="radio-inline">
@@ -76,7 +76,7 @@ use Rikkei\Core\View\Form;
                                   @endforeach 
                               </td>
                               <td ></td>
-                              <td class="title2">Thơì gian dự án</td>
+                              <td class="title2"><label>Thơì gian dự án</label> <span class="required">*</label></td>
                               <td class="container-date ">
                                <div class="input-group-addon calendar-button" target="start_date" onclick="showCalendar(this);">
                                    <i class="fa fa-calendar">
@@ -160,7 +160,6 @@ use Rikkei\Core\View\Form;
     <?php foreach($teams_set as $team): ?>
       teamArray.push([<?php echo $team->id ?>, '<?php echo $team->name ?>']); 
     <?php endforeach; ?>
-    
     
     /** 
         click img calendar to show calendar

@@ -84,7 +84,7 @@ class TeamList
         $options = [];
         if ($valueNull) {
             $options[] = [
-                'label' => Lang::get('team::setting.--Please choose--'),
+                'label' => Lang::get('team::view.--Please choose--'),
                 'value' => '',
                 'option' => '',
             ];

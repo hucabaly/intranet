@@ -9,7 +9,7 @@ if (Form::getData('position.id')) {
 ?>
 <div class="modal-body">
     <div class="form-group">
-        <label for="position-name{{ $suffixId }}" class="form-label">{{ Lang::get('team::setting.Position name') }}</label>
+        <label for="position-name{{ $suffixId }}" class="form-label required">{{ trans('team::view.Position name') }} <em>*</em></label>
         <div class="form-data">
         <input type="text" class="form-control" id="position-name{{ $suffixId }}" name="position[name]" 
             value="{{ Form::getData('position.name') }}" required />
@@ -18,7 +18,7 @@ if (Form::getData('position.id')) {
     <div class="clearfix"></div>
 </div>
 <div class="modal-footer">
-    <button type="submit" class="btn-add">{{ Lang::get('team::setting.Save') }}</button>
+    <button type="submit" class="btn-add btn-large">{{ trans('team::view.Save') }}</button>
 </div>
 
 <?php
