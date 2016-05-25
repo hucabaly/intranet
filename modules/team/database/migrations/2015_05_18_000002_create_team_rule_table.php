@@ -13,14 +13,18 @@ class CreateTeamRuleTable extends Migration
     public function up()
     {
         Schema::create('team_rule', function (Blueprint $table) {
-            $table->integer('team_position_id')->unsigned();
+            $table->integer('team_id')->unsigned();
+            $table->integer('position_id')->unsigned();
             $table->string('rule');
             $table->enum('scope', \Rikkei\Team\Model\TeamRule::getScopes())
                 ->default(\Rikkei\Team\Model\TeamRule::getScopeDefault());
             $table->unique(['team_position_id', 'rule']);
-            $table->foreign('team_position_id')
+            $table->foreign('team_id')
                 ->references('id')
-                ->on('team_position');
+                ->on('team');
+            $table->foreign('position_id')
+                ->references('id')
+                ->on('position');
         });
     }
 

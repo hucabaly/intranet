@@ -9,8 +9,9 @@ use Validator;
 use Rikkei\Core\View\Form;
 use Rikkei\Core\View\Breadcrumb;
 use URL;
+use Rikkei\Team\Model\Position;
 
-class TeamController extends TeamBaseController
+class PositionController extends TeamBaseController
 {
     /**
      * construct more
@@ -22,37 +23,37 @@ class TeamController extends TeamBaseController
     }
 
     /**
-     * view team
+     * view team position
      * 
      * @param int $id
      */
     public function view($id)
     {
-        $model = Team::find($id);
-        if (!$model) {
+        $model = Position::find($id);
+        if (! $model) {
             return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
-        Form::setData($model);
+        Form::setData($model, 'position');
         return view('team::setting.index');
     }
     
     /**
-     * save team
+     * save team positon
      */
     public function save()
     {
-        if ($id = Input::get('item.id')) {
-            $model = Team::find($id);
+        $id = Input::get('position.id');
+        $dataItem = Input::get('position');
+        if ($id) {
+            $model = Position::find($id);
+            if(!count($model)) {
+                return redirect()->route('team::setting.index')
+                    ->withErrors(Lang::get('team::messages.Please choose team to do this action'));
+            }
         } else {
-            $model = new Team();
+            $model = new Position();
         }
-        $dataItem = Input::get('item');
-        if (!Input::get('item.is_function')) {
-            $dataItem['is_function'] = 0;
-            $dataItem['permission_as'] = 0;
-        } elseif (!Input::get('permission_same')) {
-            $dataItem['permission_as'] = 0;
-        }
+        
         $validator = Validator::make($dataItem, [
             'name' => 'required|max:255',
         ]);
@@ -60,30 +61,25 @@ class TeamController extends TeamBaseController
             Form::setData($dataItem);
             Form::setData();
             if ($model->id) {
-                return redirect()->route('team::setting.team.view', [
-                            'id' => $model->id
-                        ])->withErrors($validator);
+                return redirect()->route('team::setting.team.position.view', [
+                        'id' => $model->id
+                    ])->withErrors($validator);
             }
-            return redirect()->route('team::setting.index')
-                ->withErrors($validator);
+            return redirect()->route('team::setting.index')->withErrors($validator);
         }
-        //calculate position
-        if (!$model->id) { //team new
-            $parentId = 0;
-            if ($dataItem['parent_id']) {
-                $parentId = $dataItem['parent_id'];
-            }
-            $teamSameParent = Team::select('id', 'position')
-                    ->where('parent_id', $parentId)
-                    ->orderBy('position', 'desc')
-                    ->first();
-            if (count($teamSameParent)) {
-                $dataItem['position'] = $teamSameParent->position + 1;
+        
+        //calculate position level
+        if (! $id) { //position new
+            $positionLast = Position::select('level')
+                ->orderBy('level', 'desc')
+                ->first();
+            if (count($positionLast)) {
+                $dataItem['level'] = $positionLast->level + 1;
             } else {
-                $dataItem['position'] = 0;
+                $dataItem['level'] = 1;
             }
         }
-
+        
         try {
             $model->setData($dataItem);
             $result = $model->save();
@@ -91,7 +87,7 @@ class TeamController extends TeamBaseController
                 return redirect()->route('team::setting.index')
                     ->withErrors(Lang::get('team::messages.Error save data, please try again!'));
             }
-            return redirect()->route('team::setting.team.view', [
+            return redirect()->route('team::setting.team.position.view', [
                     'id' => $model->id
                 ])->with('messages', [
                     'success' => [
@@ -99,46 +95,13 @@ class TeamController extends TeamBaseController
                     ]
                 ]);
         } catch (Exception $ex) {
-            return redirect()->route('team::setting.index')->withErrors($ex);
+            return redirect()->route('team::setting.index')
+                    ->withErrors($ex);
         }
     }
     
     /**
-     * move team
-     */
-    public function move()
-    {
-        $id = Input::get('id');
-        if (!$id) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
-        }
-        $model = Team::find($id);
-        if (!$model) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
-        }
-        try {
-            if (Input::get('move_up')) {
-                $model->move(true);
-            } else {
-                $model->move(false);
-            }
-
-            return redirect()->route('team::setting.team.view', [
-                    'id' => $id
-                ])->with('messages', [
-                    'success' => [
-                        Lang::get('team::messages.Move item success!')
-                    ]
-                ]);
-        } catch (Exception $ex) {
-            return redirect()->route('team::setting.team.view', [
-                    'id' => $id
-                ])->withErrors($ex);
-        }
-    }
-    
-    /**
-     * Delete team
+     * Delete team position
      * @return type
      */
     public function delete()
@@ -147,7 +110,7 @@ class TeamController extends TeamBaseController
         if (!$id) {
             return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
-        $model = Team::find($id);
+        $model = Position::find($id);
         if (!$model) {
             return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
@@ -160,7 +123,41 @@ class TeamController extends TeamBaseController
                     ]
                 ]);
         } catch (Exception $ex) {
-            return redirect()->route('team::setting.team.view', [
+            return redirect()->route('team::setting.team.position.view', [
+                    'id' => $id
+                ])->withErrors($ex);
+        }
+    }
+    
+    /**
+     * move team
+     */
+    public function move()
+    {
+        $id = Input::get('id');
+        if (!$id) {
+            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        $model = Position::find($id);
+        if (!$model) {
+            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        try {
+            if (Input::get('move_up')) {
+                $model->move(true);
+            } else {
+                $model->move(false);
+            }
+
+            return redirect()->route('team::setting.team.position.view', [
+                    'id' => $id
+                ])->with('messages', [
+                    'success' => [
+                        Lang::get('team::messages.Move item success!')
+                    ]
+                ]);
+        } catch (Exception $ex) {
+            return redirect()->route('team::setting.team.position.view', [
                     'id' => $id
                 ])->withErrors($ex);
         }

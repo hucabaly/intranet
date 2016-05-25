@@ -180,6 +180,10 @@ html input[disabled] {
     color: #333;
     border-color: #adadad;
 }
+.btn-large {
+    padding: 3px 30px;
+    font-size: 18px;
+}
 /* form*/
 form{
     label {
@@ -193,6 +197,11 @@ form{
     color: red;
     font-size: 13px;
     font-weight: 100;
+}
+.required {
+    em {
+        color: red;
+    }
 }
 /*responsive*/
 @media (max-width: 991px) and  (min-width: $mobile+1) {
