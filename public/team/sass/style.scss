@@ -1,3 +1,5 @@
+@import '_var.scss';
+
 .treeview {
     margin: 10px 0 0 20px;
 }
@@ -21,12 +23,25 @@
     .team-tree {
         overflow-y: auto;
         li a.active{
-            background-color: #b2b2b2;
-            padding: 2px 10px;
+            background-color: $activeColor;
+            padding: 0px 10px;
+            color: $activeTextColor;
         }
         a {
             display: inline-block;
             white-space: nowrap;
+        }
+    }
+}
+.team-position-wrapper {
+    .position-list {
+        a {
+            display: block;
+            padding: 5px 20px;
+        }
+        a.active {
+            background-color: $activeColor;
+            color: $activeTextColor;
         }
     }
 }

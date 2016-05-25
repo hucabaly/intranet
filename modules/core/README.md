@@ -18,3 +18,8 @@ edit file `config.menu.php`
 
 #### Add domain allow logged
 edit file `config.domain_logged.php`
+
+#### delete confirm modal
+- Button click has class `delete-confirm`
+- option: 
+    + data-noti: text show body modal, default text is "Are you sure delete item?"

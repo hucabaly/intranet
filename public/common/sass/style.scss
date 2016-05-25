@@ -189,6 +189,11 @@ form{
         font-weight: 700;
     }
 }
+.error {
+    color: red;
+    font-size: 13px;
+    font-weight: 100;
+}
 /*responsive*/
 @media (max-width: 991px) and  (min-width: $mobile+1) {
     .navbar-collapse.pull-left+.navbar-custom-menu {

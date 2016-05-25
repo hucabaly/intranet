@@ -18,6 +18,12 @@ return [
     'New' => 'Mới',
     'Permission following function unit' => 'Phân quyền theo đơn vị chức năng',
     'Edit team' => 'Chỉnh sửa bộ phận',
-    
-    
+    'Position of team' => 'Chứa vụ trong team',
+    'Please choose team to view position' => 'Vui lòng chọn team để xem các chức vụ trong team',
+    'Not found position of team' => 'Không tìm thấy chức vụ của team',
+    'Edit team position' => 'Chỉnh sửa chức vụ của team',
+    'Create team position' => 'Tạo chức vụ của team',
+    'Position name' => 'Tên chức vụ',
+    'position name' => 'tên chức vụ',
+    'team name' => 'tên bộ phận',
 ];
