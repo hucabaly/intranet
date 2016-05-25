@@ -102,6 +102,7 @@ function set_team_to_css() {
     });
 
     $(".set_team").html(str);
+    $(".set_team").parent().find('.team_id').remove();
     $(".set_team").parent().append(elements);
     if (str == "") {
         $('#team_id_check').val("")
