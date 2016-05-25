@@ -108,7 +108,8 @@ Team Setting
                             <input type="hidden" name="id" value="{{ Form::getData('position.id') }}" />
                     @endif
                         <p><button type="submit" class="btn-delete btn-action delete-confirm"<?php
-                                if(!Form::getData('position.id')): ?> disabled<?php endif; ?>>
+                                if(!Form::getData('position.id')): ?> disabled<?php endif; ?> 
+                                data-noti="{{ Lang::get('team::setting.Are you sure delete postion team?') }}">
                                 <span>{{ Lang::get('team::setting.Remove') }}</span>
                             </button></p>
                     @if(Form::getData('position.id'))

@@ -24,4 +24,12 @@ class TeamPosition extends CoreModel
     {
         return Team::find($this->team_id);
     }
+    
+    public function delete()
+    {
+        
+        // TODO check action relasionship rule
+        
+        return parent::delete();
+    }
 }

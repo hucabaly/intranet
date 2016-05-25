@@ -26,4 +26,5 @@ return [
     'Position name' => 'Tên chức vụ',
     'position name' => 'tên chức vụ',
     'team name' => 'tên bộ phận',
+    'Are you sure delete postion team?' => 'Bạn có chắc chắn xóa vị trí của team không?',
 ];

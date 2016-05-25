@@ -127,4 +127,38 @@ class TeamPositionController extends TeamBaseController
                 ])->withErrors($ex);
         }
     }
+    
+    /**
+     * Delete team position
+     * @return type
+     */
+    public function delete()
+    {
+        $id = Input::get('id');
+        if (!$id) {
+            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        $model = TeamPosition::find($id);
+        if (!$model) {
+            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        $team = $model->getTeam();
+        if (! $team) {
+            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        try {
+            $model->delete();
+            return redirect()->route('team::setting.team.view', [
+                    'id' => $team->id
+                ])->with('messages', [
+                    'success' => [
+                        Lang::get('team::messages.Delete item success!')
+                    ]
+                ]);
+        } catch (Exception $ex) {
+            return redirect()->route('team::setting.team.position.view', [
+                    'id' => $id
+                ])->withErrors($ex);
+        }
+    }
 }
