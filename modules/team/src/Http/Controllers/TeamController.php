@@ -33,7 +33,9 @@ class TeamController extends TeamBaseController
             return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         Form::setData($model);
-        return view('team::setting.index');
+        return view('team::setting.index', [
+            'teamPosition' => $model->getPosition()
+        ]);
     }
     
     /**
@@ -89,7 +91,7 @@ class TeamController extends TeamBaseController
             $result = $model->save();
             if (!$result) {
                 return redirect()->route('team::setting.index')
-                    ->withErrors(Lang::get('team::messages.Error save date, please try again!'));
+                    ->withErrors(Lang::get('team::messages.Error save data, please try again!'));
             }
             return redirect()->route('team::setting.team.view', [
                     'id' => $model->id
