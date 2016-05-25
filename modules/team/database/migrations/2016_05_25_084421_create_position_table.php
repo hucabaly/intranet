@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCssTeamTable extends Migration
+class CreatePositionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,11 @@ class CreateCssTeamTable extends Migration
      */
     public function up()
     {
-        Schema::create('css_team', function (Blueprint $table) {
+        Schema::create('position', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('css_id');
-            $table->integer('team_id');
-        
+            $table->string('name');
+            $table->integer('level');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +27,6 @@ class CreateCssTeamTable extends Migration
      */
     public function down()
     {
-        Schema::drop('css_team');
+        //
     }
 }

@@ -3,6 +3,9 @@
 
 use Rikkei\Team\View\TeamList;
 use Rikkei\Core\View\Form;
+use Rikkei\Team\Model\Position;
+
+$positionAll = Position::getAll();
 ?>
 
 @section('title')
@@ -19,7 +22,7 @@ Team Setting
     <div class="col-sm-6 team-wrapper">
         <div class="box box-info">
             <div class="box-header with-border">
-                <h3 class="box-title">{{ Lang::get('team::setting.List team') }}</h3>
+                <h3 class="box-title">{{ trans('team::view.List team') }}</h3>
             </div>
             <div class="row team-list-action box-body">
                 <div class="col-sm-9 team-list">
@@ -27,11 +30,11 @@ Team Setting
                 </div>
                 <div class="col-sm-3 team-action">
                     <p><button type="button" class="btn-add btn-action" data-target="#team-add-form" data-toggle="modal">
-                            <span>{{ Lang::get('team::setting.Add') }}</span>
+                            <span>{{ trans('team::view.Add') }}</span>
                         </button></p>
                     <p><button type="button" class="btn-edit btn-action" data-target="#team-edit-form" data-toggle="modal"<?php
                         if(!Form::getData('id')): ?> disabled<?php endif; ?>>
-                            <span>{{ Lang::get('team::setting.Edit') }}</span>
+                            <span>{{ trans('team::view.Edit') }}</span>
                         </button></p>
                     @if(Form::getData('id'))
                         <form class="form" method="post" action="{{ URL::route('team::setting.team.delete') }}">
@@ -41,7 +44,7 @@ Team Setting
                     @endif
                         <p><button type="submit" class="btn-delete btn-action delete-confirm"<?php
                                 if(!Form::getData('id')): ?> disabled<?php endif; ?>>
-                                <span>{{ Lang::get('team::setting.Remove') }}</span>
+                                <span>{{ trans('team::view.Remove') }}</span>
                             </button></p>
                     @if(Form::getData('id'))
                         </form>
@@ -52,11 +55,11 @@ Team Setting
                             <input type="hidden" name="id" value="{{ Form::getData('id') }}" id="item-team-id" />
                     @endif
                         <p>
-                            <input type="submit" name="move_up" value="{{ Lang::get('team::setting.Move up') }}" 
+                            <input type="submit" name="move_up" value="{{ trans('team::view.Move up') }}" 
                                 class="btn-move btn-action"<?php if(!Form::getData('id')): ?> disabled<?php endif; ?> />
                         </p>
                         <p>
-                            <input type="submit" name="move_down" value="{{ Lang::get('team::setting.Move down') }}"
+                            <input type="submit" name="move_down" value="{{ trans('team::view.Move down') }}"
                                 class="btn-move btn-action"<?php if(!Form::getData('id')): ?> disabled<?php endif; ?> />
                         </p>
                     @if(Form::getData('id'))
@@ -71,35 +74,32 @@ Team Setting
     <div class="col-sm-6 team-position-wrapper">
         <div class="box box-info">
             <div class="box-header with-border">
-                <h3 class="box-title">{{ Lang::get('team::setting.Position of team') }}</h3>
+                <h3 class="box-title">{{ trans('team::view.Position of team') }}</h3>
             </div>
             <div class="row team-list-action box-body">
                 <div class="col-sm-9 position-list">
-                    @if (!Form::getData('id'))
-                        <p class="alert alert-warning">{{ Lang::get('team::setting.Please choose team to view position') }}</p>
-                    @elseif (! isset($teamPosition) || ! count($teamPosition))
-                        <p class="alert alert-warning">{{ Lang::get('team::setting.Not found position of team') }}</p>
+                    @if (! count($positionAll))
+                        <p class="alert alert-warning">{{ trans('team::view.Not found position') }}</p>
                     @else
                         <table class="table table-bordered">
                             <tbody>
-                                @foreach ($teamPosition as $positionItem)
+                                @foreach ($positionAll as $positionItem)
                                 <tr><td>
                                     <a href="{{ URL::route('team::setting.team.position.view', ['id' => $positionItem->id]) }}"<?php
                                     if ($positionItem->id == Form::getData('position.id')): ?> class="active"<?php endif; ?>>{{ $positionItem->name }}</a>
                                 </td></tr>
                                 @endforeach
                             </tbody>
-                        </table>`
+                        </table>
                     @endif
                 </div>
                 <div class="col-sm-3 team-action">
-                    <p><button type="button" class="btn-add btn-action" data-target="#position-add-form" data-toggle="modal"<?php
-                    if(!Form::getData('id')): ?> disabled<?php endif; ?>>
-                            <span>{{ Lang::get('team::setting.Add') }}</span>
+                    <p><button type="button" class="btn-add btn-action" data-target="#position-add-form" data-toggle="modal">
+                            <span>{{ trans('team::view.Add') }}</span>
                         </button></p>
                     <p><button type="button" class="btn-edit btn-action" data-target="#position-edit-form" data-toggle="modal"<?php
                         if(!Form::getData('position.id')): ?> disabled<?php endif; ?>>
-                            <span>{{ Lang::get('team::setting.Edit') }}</span>
+                            <span>{{ trans('team::view.Edit') }}</span>
                         </button></p>
                     @if(Form::getData('position.id'))
                         <form class="form" method="post" action="{{ URL::route('team::setting.team.position.delete') }}">
@@ -109,8 +109,8 @@ Team Setting
                     @endif
                         <p><button type="submit" class="btn-delete btn-action delete-confirm"<?php
                                 if(!Form::getData('position.id')): ?> disabled<?php endif; ?> 
-                                data-noti="{{ Lang::get('team::setting.Are you sure delete postion team?') }}">
-                                <span>{{ Lang::get('team::setting.Remove') }}</span>
+                                data-noti="{{ trans('team::view.Are you sure delete postion team?') }}">
+                                <span>{{ trans('team::view.Remove') }}</span>
                             </button></p>
                     @if(Form::getData('position.id'))
                         </form>
@@ -118,17 +118,17 @@ Team Setting
                     @if(Form::getData('position.id'))
                         <form class="form" method="post" action="{{ URL::route('team::setting.team.position.move') }}">
                             {!! csrf_field() !!}
-                            <input type="hidden" name="id" value="{{ Form::getData('position.id') }}" id="item-team-id" />
+                            <input type="hidden" name="id" value="{{ Form::getData('position.id') }}" />
                     @endif
                         <p>
-                            <input type="submit" name="move_up" value="{{ Lang::get('team::setting.Move up') }}" 
+                            <input type="submit" name="move_up" value="{{ trans('team::view.Move up') }}" 
                                 class="btn-move btn-action"<?php if(!Form::getData('position.id')): ?> disabled<?php endif; ?> />
                         </p>
                         <p>
-                            <input type="submit" name="move_down" value="{{ Lang::get('team::setting.Move down') }}"
+                            <input type="submit" name="move_down" value="{{ trans('team::view.Move down') }}"
                                 class="btn-move btn-action"<?php if(!Form::getData('position.id')): ?> disabled<?php endif; ?> />
                         </p>
-                    @if(Form::getData('id'))
+                    @if(Form::getData('position.id'))
                         </form>
                     @endif
                 </div>
@@ -141,14 +141,14 @@ Team Setting
 @if(Form::getData('position.id'))
 <!-- modal edit team -->
 <div class="modal fade" id="position-edit-form" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-team" role="document">
+    <div class="modal-dialog modal-dialog" role="document">
         <div class="modal-content">
             <form class="form" method="post" action="{{ URL::route('team::setting.team.position.save') }}" id="form-position-edit">
                 {!! csrf_field() !!}
                 <input type="hidden" name="position[id]" value="{{ Form::getData('position.id') }}" />
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">{{ Lang::get('team::setting.Edit team position') }}</h4>
+                    <h4 class="modal-title">{{ trans('team::view.Edit team position') }}</h4>
                 </div>
                 @include('team::setting.include.position_edit')
             </form>
@@ -161,10 +161,9 @@ Team Setting
         <div class="modal-content">
             <form class="form" method="post" action="{{ URL::route('team::setting.team.position.save') }}" id="form-position-add">
                 {!! csrf_field() !!}
-                <input type="hidden" name="team[id]" value="{{ Form::getData('id') }}" />
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">{{ Lang::get('team::setting.Create team position') }}</h4>
+                    <h4 class="modal-title" id="myModalLabel">{{ trans('team::view.Create team position') }}</h4>
                 </div>
                 @include('team::setting.include.position_edit')
             </form>
@@ -184,7 +183,7 @@ Team Setting
                 <input type="hidden" name="item[id]" value="{{ Form::getData('id') }}" id="item-team-id" />
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">{{ Lang::get('team::setting.Edit team') }}</h4>
+                    <h4 class="modal-title" id="myModalLabel">{{ trans('team::view.Edit team') }}</h4>
                 </div>
                 @include('team::setting.include.team_edit')
             </form>
@@ -199,7 +198,7 @@ Team Setting
                 {!! csrf_field() !!}
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">{{ Lang::get('team::setting.Create team') }}</h4>
+                    <h4 class="modal-title" id="myModalLabel">{{ trans('team::view.Create team') }}</h4>
                 </div>
                 @include('team::setting.include.team_edit')
             </form>
@@ -216,8 +215,8 @@ Team Setting
 <script>
     jQuery(document).ready(function ($) {
         var messages = {
-            'item[name]': '<?php echo Lang::get('core::view.Please enter') . ' ' . Lang::get('team::setting.team name') ; ?>',
-            'position[name]': '<?php echo Lang::get('core::view.Please enter') . ' ' . Lang::get('team::setting.position name') ; ?>',
+            'item[name]': '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.team name') ; ?>',
+            'position[name]': '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.position name') ; ?>',
         }
         $('#form-team-add').validate({
             messages: messages

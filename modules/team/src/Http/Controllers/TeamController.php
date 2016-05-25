@@ -33,9 +33,7 @@ class TeamController extends TeamBaseController
             return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         Form::setData($model);
-        return view('team::setting.index', [
-            'teamPosition' => $model->getPosition()
-        ]);
+        return view('team::setting.index');
     }
     
     /**

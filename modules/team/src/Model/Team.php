@@ -110,17 +110,4 @@ class Team extends CoreModel
             throw $ex;
         }
     }
-    
-    /**
-     * get positions of team
-     * 
-     * @return array model
-     */
-    public function getPosition()
-    {
-        return TeamPosition::select('id', 'name')
-            ->where('team_id', $this->id)
-            ->orderBy('level')
-            ->get();
-    }
 }
