@@ -19,7 +19,7 @@ Team Setting
 @section('content')
 <div class="row">
     <!-- team manage -->
-    <div class="col-sm-6 team-wrapper">
+    <div class="col-sm-6 team-wrapper hight-same">
         <div class="box box-info">
             <div class="box-header with-border">
                 <h3 class="box-title">{{ trans('team::view.List team') }}</h3>
@@ -71,7 +71,7 @@ Team Setting
     </div> <!-- end team manage -->
     
     <!-- team position manage -->
-    <div class="col-sm-6 team-position-wrapper">
+    <div class="col-sm-6 team-position-wrapper hight-same">
         <div class="box box-info">
             <div class="box-header with-border">
                 <h3 class="box-title">{{ trans('team::view.Position of team') }}</h3>
@@ -210,8 +210,9 @@ Team Setting
 
 
 @section('script')
-<script src="{{ URL::asset('team/js/script.js') }}"></script>
 <script src="{{ URL::asset('js/jquery.validate.min.js') }}"></script>
+<script src="{{ URL::asset('js/jquery.match.height.addtional.js') }}"></script>
+<script src="{{ URL::asset('team/js/script.js') }}"></script>
 <script>
     jQuery(document).ready(function ($) {
         var messages = {
@@ -230,6 +231,9 @@ Team Setting
         });
         $('#form-position-edit').validate({
             messages: messages
+        });
+        $('.hight-same').matchHeight({
+            child: '.box'
         });
     });
 </script>
