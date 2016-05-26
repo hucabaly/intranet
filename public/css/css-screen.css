@@ -208,7 +208,6 @@
     width: 25%;
 }
 .make-css .table td{
-    font-size: 12px;    
     border: 1px solid #2A4577;
 }
 .make-css .bang2 .header{
@@ -305,4 +304,46 @@
 
 label{
     display:inline;
+}
+
+.rate{
+    text-align: center;
+}
+
+.infomation{
+    font-weight: bold;
+    color: #074ED8;
+}
+
+.container-submit{
+    text-align: center;
+}
+
+.diem-fixed{
+    position: fixed;
+    right:10px;
+    bottom:10px;
+    background-color: #C32C09;
+    opacity: .7;
+    font-size: 25px;
+    padding: 10px 20px;
+    color: #fff;
+}
+
+.comment-question{
+    width: 100%;
+    outline: none;
+    border: none;
+    resize: none;
+    height:38px;
+}
+
+.make-css .bang2 td{
+    padding:0;
+    vertical-align: middle;
+    height: 38px;
+}
+
+.make-css .bang2 td:first-child{
+    padding: 0 5px;
 }
