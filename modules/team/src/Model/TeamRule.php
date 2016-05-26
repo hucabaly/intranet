@@ -1,7 +1,9 @@
 <?php
 namespace Rikkei\Team\Model;
 
-class TeamRule extends \Illuminate\Database\Eloquent\Model
+use DB;
+
+class TeamRule extends \Rikkei\Core\Model\CoreModel
 {
     const SCOPE_NONE = 0;
     const SCOPE_SELF = 1;
@@ -49,4 +51,32 @@ class TeamRule extends \Illuminate\Database\Eloquent\Model
             ['value' => self::SCOPE_COMPANY, 'label' => 'Company'],
         ];
     }
+    
+    /**
+     * save teamrule
+     * 
+     * @param array $data
+     * @param int $teamId
+     * @return type
+     */
+    public static function saveRule(array $data, $teamId) {
+        if (! $data || ! $teamId) {
+            return;
+        }
+        
+        foreach ($data as &$item) {
+            $item['team_id'] = $teamId;
+        }
+        
+        DB::beginTransaction();
+        try {
+            self::where('team_id', $teamId)->delete();
+            self::insert($data);
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            throw $ex;
+        }
+    }
+    
 }

@@ -18,7 +18,7 @@ class CreateTeamRuleTable extends Migration
             $table->string('rule');
             $table->enum('scope', \Rikkei\Team\Model\TeamRule::getScopes())
                 ->default(\Rikkei\Team\Model\TeamRule::getScopeDefault());
-            $table->unique(['team_position_id', 'rule']);
+            $table->unique(['team_id', 'position_id', 'rule']);
             $table->foreign('team_id')
                 ->references('id')
                 ->on('team');

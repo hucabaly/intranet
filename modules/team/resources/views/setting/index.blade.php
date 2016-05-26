@@ -142,17 +142,14 @@ Team Setting
                 <h2 class="box-title">{{ trans('team::view.Permission function') }}</h2>
             </div>
             <div class="box-body">
-                @if(Form::getData('id'))
-                    @include('team::setting.include.rule')
-                @else
+                @if (! Form::getData('id'))
                     <p class="alert alert-warning">{{ trans('team::view.Please choose team to set permission function') }}</p>
+                @elseif (! isset($positions) || ! count($positions))
+                    <p class="alert alert-warning">{{ trans('team::view.Not found position to set permission function') }}</p>
+                @else
+                    @include('team::setting.include.rule')
                 @endif
             </div>
-            @if(Form::getData('id'))
-                <div class="box-footer">
-                    <button type="submit" class="btn-add btn-large">Submit</button>
-                </div>
-            @endif
     </div>
 </div>
 

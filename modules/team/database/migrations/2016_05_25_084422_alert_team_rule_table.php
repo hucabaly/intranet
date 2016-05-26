@@ -28,6 +28,9 @@ class AlertTeamRuleTable extends Migration
         if (!Schema::hasTable('team_rule')) {
             return;
         }
+        Schema::table('team_rule', function (Blueprint $table) {
+            $table->dropUnique('team_rule_team_position_id_rule_unique');
+        });
         if (Schema::hasColumn('team_rule', 'team_position_id')) {
             Schema::table('team_rule', function (Blueprint $table) {
                 $table->dropColumn('team_position_id');
@@ -44,6 +47,7 @@ class AlertTeamRuleTable extends Migration
         if (!Schema::hasColumn('team_rule', 'position_id')) {
             Schema::table('team_rule', function (Blueprint $table) {
                 $table->integer('position_id')->unsigned()->after('team_id');
+                $table->unique(['team_id', 'position_id', 'rule']);
                 $table->foreign('position_id')
                     ->references('id')
                     ->on('position');

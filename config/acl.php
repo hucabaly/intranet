@@ -1,13 +1,6 @@
 <?php
 
 return [
-    'all' => [
-        'lable' => 'All',
-        'routes' => '*'
-    ],
-    'A-1' => [
-        'lable' => 'Home'
-    ],
     'A-2' => [
         'label' => 'Profile',
         'child' => [
@@ -170,4 +163,16 @@ return [
             ],
         ]
     ], //end B-3 Recruiment - summary
+    
+    'S-1' => [
+        'label' => 'Setting',
+        'child' => [
+            'edit.team' => [
+                'label' => 'Setting team',
+                'routes' => [
+                    'team::setting.team.*'
+                ]
+            ],
+        ]
+    ], //end S-1 setting
 ];

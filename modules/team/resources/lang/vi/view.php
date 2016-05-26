@@ -30,5 +30,10 @@ return [
     'Not found position' => 'Không tìm thấy chức vụ nào',
     'Permission function' => 'Phân quyền sử dụng các chức năng',
     'Please choose team to set permission function' => 'Vui lòng chọn team để cài đặt chức năng cho phép',
+    'Not found position to set permission function' => 'Không tìm thấy chức vụ nào để cài đặt chức năng',
+    'Screen' => 'Màn hình',
+    'Function' => 'Chức năng',
+    'Not found function' => 'Không tìm thấy chức năng',
+    'Not found team' => 'Không tìm thấy team',
     
 ];

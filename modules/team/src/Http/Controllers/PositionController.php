@@ -19,7 +19,7 @@ class PositionController extends TeamBaseController
     protected function _construct()
     {
         Breadcrumb::add('Setting');
-        Breadcrumb::add('Team', URL::route('team::setting.index'));
+        Breadcrumb::add('Team', URL::route('team::setting.team.index'));
     }
 
     /**
@@ -31,7 +31,7 @@ class PositionController extends TeamBaseController
     {
         $model = Position::find($id);
         if (! $model) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         Form::setData($model, 'position');
         return view('team::setting.index');
@@ -47,7 +47,7 @@ class PositionController extends TeamBaseController
         if ($id) {
             $model = Position::find($id);
             if(!count($model)) {
-                return redirect()->route('team::setting.index')
+                return redirect()->route('team::setting.team.index')
                     ->withErrors(Lang::get('team::messages.Please choose team to do this action'));
             }
         } else {
@@ -65,7 +65,7 @@ class PositionController extends TeamBaseController
                         'id' => $model->id
                     ])->withErrors($validator);
             }
-            return redirect()->route('team::setting.index')->withErrors($validator);
+            return redirect()->route('team::setting.team.index')->withErrors($validator);
         }
         
         //calculate position level
@@ -84,7 +84,7 @@ class PositionController extends TeamBaseController
             $model->setData($dataItem);
             $result = $model->save();
             if (!$result) {
-                return redirect()->route('team::setting.index')
+                return redirect()->route('team::setting.team.index')
                     ->withErrors(Lang::get('team::messages.Error save data, please try again!'));
             }
             return redirect()->route('team::setting.team.position.view', [
@@ -95,7 +95,7 @@ class PositionController extends TeamBaseController
                     ]
                 ]);
         } catch (Exception $ex) {
-            return redirect()->route('team::setting.index')
+            return redirect()->route('team::setting.team.index')
                     ->withErrors($ex);
         }
     }
@@ -108,15 +108,15 @@ class PositionController extends TeamBaseController
     {
         $id = Input::get('id');
         if (!$id) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         $model = Position::find($id);
         if (!$model) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         try {
             $model->delete();
-            return redirect()->route('team::setting.index')
+            return redirect()->route('team::setting.team.index')
                 ->with('messages', [
                     'success' => [
                         Lang::get('team::messages.Delete item success!')
@@ -136,11 +136,11 @@ class PositionController extends TeamBaseController
     {
         $id = Input::get('id');
         if (!$id) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         $model = Position::find($id);
         if (!$model) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         try {
             if (Input::get('move_up')) {
