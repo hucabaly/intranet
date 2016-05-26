@@ -28,4 +28,7 @@ return [
     'team name' => 'tên bộ phận',
     'Are you sure delete postion team?' => 'Bạn có chắc chắn xóa vị trí của team không?',
     'Not found position' => 'Không tìm thấy chức vụ nào',
+    'Permission function' => 'Phân quyền sử dụng các chức năng',
+    'Please choose team to set permission function' => 'Vui lòng chọn team để cài đặt chức năng cho phép',
+    
 ];

@@ -135,6 +135,25 @@ Team Setting
             </div>
         </div>
     </div> <!-- end team position manage -->
+    
+    <div class="col-sm-12 team-rule-wrapper">
+        <div class="box box-warning">
+            <div class="box-header with-border">
+                <h2 class="box-title">{{ trans('team::view.Permission function') }}</h2>
+            </div>
+            <div class="box-body">
+                @if(Form::getData('id'))
+                    @include('team::setting.include.rule')
+                @else
+                    <p class="alert alert-warning">{{ trans('team::view.Please choose team to set permission function') }}</p>
+                @endif
+            </div>
+            @if(Form::getData('id'))
+                <div class="box-footer">
+                    <button type="submit" class="btn-add btn-large">Submit</button>
+                </div>
+            @endif
+    </div>
 </div>
 
 <!-- modal add/edit team position-->

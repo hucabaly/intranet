@@ -7,3 +7,6 @@ Features
 ---
 
 - [ ] Manage teams
+
+#### Change acl
+Edit file `config/acl.php`

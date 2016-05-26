@@ -13,7 +13,7 @@ class User extends Model implements Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'nickname', 'email', 'employee_id', 'token', 'avatar',
+        'id', 'name', 'nickname', 'email', 'employee_id', 'token', 'avatar', 'team_id', 'position_id'
     ];
 
     /**

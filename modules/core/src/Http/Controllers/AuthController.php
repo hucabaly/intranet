@@ -6,7 +6,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Config;
 use Auth;
 use Socialite;
-use Rikkei\Core\Model\User;
+use Rikkei\Team\Model\User;
 use URL;
 use Session;
 use Redirect;
@@ -61,16 +61,21 @@ class AuthController extends Controller
                 return redirect('/');
             }
         }
-
-        $account = User::firstOrNew([
-            'email' => $user->email
-        ]);
-
-        $account->name = $user->name;
-        $account->nickname = !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email);
-        $account->token = $user->token;
-        $account->avatar = $user->avatar;
-        $account->save();
+        
+        $account = User::where('email', $user->email)
+            ->first();
+        if (! $account) {
+            $dataDefault = User::createTeamPositionDefault();
+            $account = User::create([
+                'email' => $user->email,
+                'name' => $user->name,
+                'nickname' => !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email),
+                'token' => $user->token,
+                'avatar' => $user->avatar,
+                'team_id' => $dataDefault['team']->id,
+                'position_id' => $dataDefault['position']->id,
+            ]);
+        }
         Auth::login($account);
         return redirect('/');
     }
