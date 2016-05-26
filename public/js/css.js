@@ -184,3 +184,114 @@ $(document).ready(function () {
     });
 });
 
+/**
+ * Trang lam danh gia
+ * Khi khach hang danh danh gia mot tieu chi
+ * Tinh tong diem realtime
+ * @returns void
+ */
+function totalMark() {
+    var tongSoCauDanhGia = 0;
+    var total = 0;
+    $(".rateit").each(function(){
+        var danhGia = parseInt($(this).rateit('value'));
+        if($(this).attr("id") != "tongquat"){
+            if(danhGia > 0){
+                tongSoCauDanhGia++;
+                total += danhGia;
+            }
+        }
+    });
+    
+    var diemTongQuat = parseInt($("#tongquat").rateit('value'));
+    if(tongSoCauDanhGia == 0){
+        total = diemTongQuat * 20;
+    }else{
+        total = diemTongQuat * 4 + total/(tongSoCauDanhGia * 5) * 80;
+    }
+    
+    total = total.toFixed(2);
+    $(".diem").html(total);
+    $(".diem-fixed").html(total);
+    
+}
+
+$(window).scroll(function(){
+    if($('.visible-check').visible()){
+        $(".diem-fixed").hide();
+    } else {
+        $(".diem-fixed").show();
+    }
+});
+
+
+function submitCss(token){
+    var makeName = $.trim($("#make_name").val());
+    var makeEmail = $.trim($("#make_email").val());
+    if(makeName == "" || makeEmail == ""){
+        alert("Bạn chưa điền Tên hoặc Email.");
+        if(makeName == ""){
+            $("#make_name").focus();
+        }else{
+            $("#make_email").focus();
+        }
+        return false;
+    }
+    
+    var diemTongQuat = parseInt($("#tongquat").rateit('value'));
+    if(diemTongQuat == 0){
+        alert("Chua chon diem tong quat");
+        return false;
+    }
+    
+    var arrValidate = [];
+    $(".rateit").each(function(){
+        var danhGia = parseInt($(this).rateit('value'));
+        if($(this).attr("id") != "tongquat"){
+            if(danhGia > 0 && danhGia < 3){
+                if($(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val() == ""){
+                    arrValidate.push($(this).attr("data-questionid"));
+                }
+                
+            }
+        }
+    }); 
+    
+    if(arrValidate.length > 0) {
+        /*for(var i=0; i<arrValidate.length; i++){
+            $(".comment-question[data-questionid='"+arrValidate[i]+"']").parent().css("border","1px solid red");
+            $(".comment-question[data-questionid='"+arrValidate[i]+"']").parent().parent().find("td:nth-child(2)").css("border-right","1px solid red");
+            $(".comment-question[data-questionid='"+arrValidate[i]+"']").parent().parent().prev().find("td:last-child").css("border-bottom","1px solid red");
+        }*/
+        alert("Bạn hãy comment các đánh giá là 1 hoặc 2 *");
+        return false;
+    }
+    
+    var make_name = $("#make_name").val();
+    var make_email = $("#make_email").val();
+    var tongquat = $(".diem").html();
+    var arrayQuestion = [];
+    $(".rateit").each(function(){
+        var danhGia = parseInt($(this).rateit('value'));
+        if($(this).attr("id") != "tongquat"){
+            if(danhGia > 0){
+                arrayQuestion.push([$(this).attr("data-questionid"),$(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val()]);
+            }
+        }
+    });
+    
+    
+    $.ajax({
+        url: '/css/saveResult',
+        type: 'post',
+        data: {_token: token, arrayQuestion: arrayQuestion, make_name: make_name, make_email: make_email, tongquat: tongquat},
+    })
+    .done(function (data) {
+        //alert(data);
+    })
+    .fail(function () {
+        alert("Ajax failed to fetch data");
+    })
+}
+
+
