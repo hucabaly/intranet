@@ -23,7 +23,7 @@ class CssController extends Controller {
         $teams = Team::all();
 
         return view(
-            'sales::css.create_css', [
+                'sales::css.create_css', [
             'user' => $user,
             "projects" => $projects,
             "teams" => $teams
@@ -170,18 +170,51 @@ class CssController extends Controller {
 
         if ($css) {
             $user = User::find($css->user_id);
-            $css_category = DB::table('css_category')->where('parent_id', $css->project_type_id)->get();
-               
-            echo "<pre>"; var_dump($css_category);die;
+            $cssCategory = DB::table('css_category')->where('parent_id', $css->project_type_id)->get();
+            $cssCate = array();
+            if ($cssCategory) {
+                foreach ($cssCategory as $item) {
+                    $cssCategoryChild = DB::table('css_category')->where('parent_id', $item->id)->get();
+                    $cssCateChild = array();
+                    if ($cssCategoryChild) {
+                        foreach ($cssCategoryChild as $item_child) {
+                            $cssQuestionChild = DB::table('css_question')->where('category_id', $item_child->id)->get();
+                            $cssCateChild[] = array(
+                                "id" => $item_child->id,
+                                "name" => $item_child->name,
+                                "parent_id" => $item->id,
+                                "questionsChild" => $cssQuestionChild,
+                            );
+                        }
+                    }
+
+                    $cssQuestion = DB::table('css_question')->where('category_id', $item->id)->get();
+                    $cssCate[] = array(
+                        "id" => $item->id,
+                        "name" => $item->name,
+                        "cssCateChild" => $cssCateChild,
+                        "questions" => $cssQuestion,
+                    );
+                }
+            }
+            
             return view(
-                'sales::css.makecss', [
+                    'sales::css.makecss', [
                 'css' => $css,
-                "user" => $user
+                "user" => $user,
+                "cssCate" => $cssCate
                     ]
             );
         } else {
             return redirect("/");
         }
+    }
+    
+    public function saveResult(){
+       $arrayQuestion = $_REQUEST['arrayQuestion'];
+       $makeName = $_REQUEST['make_name'];
+       $makeEmail = $_REQUEST['make_email'];
+       $tongQuat = $_REQUEST['tongquat'];
     }
 
 }
