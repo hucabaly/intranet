@@ -9,9 +9,10 @@ use Rikkei\Core\Model\User;
 use Rikkei\Sales\Model\ProjectType;
 use Rikkei\Sales\Model\Css;
 use Rikkei\Team\Model\Team;
-use Rikkei\Team\View\TeamList;
+use Rikkei\Sales\Model\CssCategory;
 
 class CssController extends Controller {
+
     /**
      * Hàm hiển thị form tạo CSS
      * @return objects
@@ -29,7 +30,7 @@ class CssController extends Controller {
                 ]
         );
     }
-    
+
     /**
      * Hàm hiển thị form sửa CSS
      * @param int $id
@@ -76,7 +77,6 @@ class CssController extends Controller {
         );
     }
 
-    
     /**
      * Hàm hiển thị trang preview sau khi tạo CSS
      * @param string $token
@@ -156,7 +156,7 @@ class CssController extends Controller {
             return redirect('/css/preview/' . $css->token . '/' . $css->id);
         }
     }
-    
+
     /**
      * Hàm hiển thị trang Welcome và trang làm CSS
      * @param string $token
@@ -170,8 +170,11 @@ class CssController extends Controller {
 
         if ($css) {
             $user = User::find($css->user_id);
+            $css_category = DB::table('css_category')->where('parent_id', $css->project_type_id)->get();
+               
+            echo "<pre>"; var_dump($css_category);die;
             return view(
-                    'sales::css.makecss', [
+                'sales::css.makecss', [
                 'css' => $css,
                 "user" => $user
                     ]
