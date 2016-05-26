@@ -4,7 +4,7 @@ namespace Rikkei\Sales\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectType extends Model
+class CssCategory extends Model
 {
-    protected $table = 'project_type';
+    protected $table = 'css_category';
 }
