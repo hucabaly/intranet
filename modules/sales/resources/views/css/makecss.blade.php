@@ -3,7 +3,7 @@
 @section('content')
 <div class="container box box-primary" style="background-color: #fff;min-height: 400px;">
     <div class="row">
-        <div class="col-md-10 col-md-offset-1 welcome" style="display:none;">
+        <div class="col-md-10 col-md-offset-1 welcome" style="display:none;" >
             <div class="box-header with-border">
                 <h1 >{{ trans('sales::view.Welcome title') }}</h1>
             </div>
@@ -24,7 +24,7 @@
             </div>
 
         </div>
-        <div class="make-css " style="display: block;">
+        <div class="make-css " style="display:block;">
             <div class="row">
                 <div class="col-md-12">
                     <section id="header-makecss">
@@ -46,15 +46,19 @@
 <!-- Styles -->
 @section('css')
 <link href="{{ asset('css/css-screen.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('css/rateit.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
 <!-- Script -->
 @section('script')
+<script src="{{ asset('js/jquery.rateit.js') }}"></script>
+<script src="{{ asset('js/jquery.visible.js') }}"></script>
+<script src="{{ asset('js/css.js') }}"></script>
 <script type="text/javascript">
     function goto_make() {
         $(".welcome").hide();
         $(".make-css").show();
     }
-
+    
 </script>
 @endsection
