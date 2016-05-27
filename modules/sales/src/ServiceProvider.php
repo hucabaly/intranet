@@ -25,7 +25,7 @@ class ServiceProvider extends BaseServiceProvider
     public function register()
     {
         $providers = [
-            
+            \Rikkei\Sales\Providers\DatabaseServiceProvider::class,
             \Rikkei\Sales\Providers\RouteServiceProvider::class,
         ];
 
