@@ -201,7 +201,9 @@
 .make-css .bang1 input[type=text],.bang2 input[type=text] {
     outline: none;
     border: none;
-    width: 100%
+    width: 100%;
+    font-weight: bold;
+    color: #074ED8;
 }
 .make-css .bang1 .tongdiem{
     text-align: center; 
@@ -346,4 +348,12 @@ label{
 
 .make-css .bang2 td:first-child{
     padding: 0 5px;
+}
+
+.proposed{
+    width: 100%;
+    height: 100%;
+    border: none;
+    resize: none;
+    outline: none;
 }
