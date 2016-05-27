@@ -12,5 +12,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(Rikkei\Team\Seeds\PositionSeeder::class);
+        $this->call(Rikkei\Sales\Seeds\CssQuestionSeeder::class);
+        $this->call(Rikkei\Sales\Seeds\CssCategorySeeder::class);
     }
 }

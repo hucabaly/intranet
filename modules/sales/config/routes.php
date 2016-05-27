@@ -7,6 +7,7 @@ Route::group([
 	Route::get('css/create', 'CssController@create');
 	Route::get('css/update/{id}', 'CssController@update');
 	Route::post('css/save', 'CssController@save');
+        Route::post('css/saveResult', 'CssController@saveResult');
 	Route::get('css/preview/{token}/{id}', 'CssController@preview');
 });
 
