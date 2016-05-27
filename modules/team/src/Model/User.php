@@ -46,4 +46,58 @@ class User extends BaseUser
             'position' => $position,
         ];
     }
+    
+    /**
+     * get team of user
+     * 
+     * @return model
+     */
+    public function getTeam()
+    {
+        return Team::find($this->team_id);
+    }
+    
+    /**
+     * get position of user
+     * 
+     * @return model
+     */
+    public function getPosition()
+    {
+        return Position::find($this->position_id);
+    }
+    
+    /**
+     * get acl of user
+     * acl is array route name allowed
+     * 
+     * @return array
+     */
+    public function getAcl()
+    {
+        $team = $this->getTeam();
+        $position = $this->getPosition();
+        if (! $team || ! $position) {
+            return [];
+        }
+        $teamAs = $team->getTeamPermissionAs();
+        if ($teamAs) {
+            $team = $teamAs;
+        }
+        $teamRule = TeamRule::select('rule', 'scope')
+            ->where('team_id', $team->id)
+            ->where('position_id', $position->id)
+            ->get();
+        $routesAllow = [];
+        foreach ($teamRule as $item) {
+            $routes = \Rikkei\Team\View\Acl::getRoutesNameFromKey($item->rule);
+            if (! $routes) {
+                continue;
+            }
+            foreach ($routes as $route) {
+                $routesAllow[$route] = $item->scope;
+            }
+        }
+        return $routesAllow;
+    }
 }

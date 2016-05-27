@@ -10,6 +10,12 @@ $i = 0;
 <form action="{{ URL::route('team::setting.team.rule.save') }}" method="post">
     {!! csrf_field() !!}
     <input type="hidden" name="team[id]" value="{{ Form::getData('id') }}" />
+    <div class="actions">
+        <button type="submit" class="btn-add btn-large">
+            <span>{{ trans('team::view.Save') }}</span>
+        </button>
+    </div>
+    
     <table class="table table-bordered table-striped table-team-rule">
         <thead>
             <tr>

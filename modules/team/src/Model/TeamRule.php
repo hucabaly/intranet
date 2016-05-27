@@ -59,13 +59,14 @@ class TeamRule extends \Rikkei\Core\Model\CoreModel
      * @param int $teamId
      * @return type
      */
-    public static function saveRule(array $data, $teamId) {
+    public static function saveRule(array $data, $teamId, $addTeamId = true) {
         if (! $data || ! $teamId) {
             return;
         }
-        
-        foreach ($data as &$item) {
-            $item['team_id'] = $teamId;
+        if ($addTeamId) {
+            foreach ($data as &$item) {
+                $item['team_id'] = $teamId;
+            }
         }
         
         DB::beginTransaction();
