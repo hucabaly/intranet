@@ -12,7 +12,7 @@
         <td class="infomation">{{$user->name}}</td>
         <td class="title2"><label>{{ trans('sales::view.Customer name') }}</label></td>
         <td class="infomation">{{$css->customer_name}}</td>
-        <td rowspan="3" class="diemso-base">
+        <td rowspan="3" class="<?php echo ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' ?>">
             <div>{{ trans('sales::view.Total mark') }}</div>
             <div class="diem">00.00</div>
         </td>
@@ -33,7 +33,7 @@
     </tr>
 </table>
 <div class="visible-check"></div>
-<table class="table table-bordered bang2 table-base">
+<table class="table table-bordered bang2 <?php echo ($css->project_type_id == 1) ? 'table-osdc' : 'table-base' ?>">
   <!-- header -->
   <tr class="header">
       <td><label>{{ trans('sales::view.No.') }}</label></td>
@@ -75,7 +75,7 @@
 @endforeach
     <!-- muc to 4 -->
     <tr class="mucto">
-        <td class="title" colspan="4">{{ trans('sales::view.Overview') }}</td>
+        <td class="title" colspan="4"><?php echo trans('sales::view.Overview',["number" => ($css->project_type_id==1) ? "V" : "IV"]) ?></td>
     </tr>
 
     <!-- cau tong quat -->
@@ -92,9 +92,49 @@
             {{ trans('sales::view.Proposed') }}
         </td>
         
-        <td class="title2" colspan="2"></td>
+        <td class="title2" colspan="2"><textarea class="proposed" id="proposed"></textarea></td>
         <td class="title2"></td>
     </tr>
 </table>
-<div class="container-submit"><button type="button" class="btn btn-primary" onclick="submitCss('{{ Session::token() }}');">Submit</button></div>
+<div class="container-submit"><button type="button" class="btn btn-primary" onclick="confirm();">Submit</button></div>
 <div class="diem-fixed">00.00</div>
+<div class="modal modal-danger" id="modal-alert">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Error</h4>
+            </div>
+            <div class="modal-body">
+                <p>One fine body…</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal modal-danger" id="modal-confirm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <p>One fine body…</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-outline" onclick="submit('{{ Session::token() }}',{{$css->id}},'{{$arrayValidate}}');">Submit</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
