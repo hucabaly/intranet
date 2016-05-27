@@ -118,7 +118,7 @@
     <!-- /.modal-dialog -->
 </div>
 
-<div class="modal modal-danger" id="modal-confirm">
+<div class="modal modal-primary" id="modal-confirm">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
