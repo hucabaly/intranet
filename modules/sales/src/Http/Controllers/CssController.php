@@ -9,7 +9,7 @@ use Rikkei\Core\Model\User;
 use Rikkei\Sales\Model\ProjectType;
 use Rikkei\Sales\Model\Css;
 use Rikkei\Team\Model\Team;
-use Rikkei\Sales\Model\CssCategory;
+use Lang;
 
 class CssController extends Controller {
 
@@ -198,23 +198,65 @@ class CssController extends Controller {
                 }
             }
             
+            $arrayValidate = array(
+                "nameRequired" => Lang::get('sales::message.Name validate required'),
+                "emailRequired" => Lang::get('sales::message.Email validate required'),
+                "emailAddress" => Lang::get('sales::message.Email validate address'),
+                "totalMarkValidateRequired" => Lang::get('sales::message.Total mark validate required'),
+                "questionCommentRequired" => Lang::get('sales::message.Question comment required'),
+            );
+            
             return view(
-                    'sales::css.makecss', [
-                'css' => $css,
-                "user" => $user,
-                "cssCate" => $cssCate
-                    ]
+                'sales::css.makecss', [
+                    'css' => $css,
+                    "user" => $user,
+                    "cssCate" => $cssCate,
+                    "arrayValidate" => json_encode($arrayValidate)
+                ]
             );
         } else {
             return redirect("/");
         }
     }
     
+    /**
+     * Hàm insert bai lam CSS vao database
+     * @return void
+     */
     public function saveResult(){
-       $arrayQuestion = $_REQUEST['arrayQuestion'];
-       $makeName = $_REQUEST['make_name'];
-       $makeEmail = $_REQUEST['make_email'];
-       $tongQuat = $_REQUEST['tongquat'];
+        $arrayQuestion = $_REQUEST['arrayQuestion'];
+        $name = $_REQUEST['make_name'];
+        $email = $_REQUEST['make_email'];
+        $avgPoint = $_REQUEST['totalMark'];
+        $comment = $_REQUEST['proposed'];
+        $cssId = $_REQUEST['cssId'];
+       
+        DB::table('css_result')->insert(
+            array(
+                'css_id' => $cssId,
+                'name' => $name,
+                'email' => $email,
+                'comment' => $comment,
+                'avg_point' => $avgPoint,
+                'name' => $name,
+                'created_at' => date('Y-m-d'),
+                'updated_at' => date('Y-m-d'),
+            )
+        );
+       
+        if(count($arrayQuestion) > 0){
+           $countQuestion = count($arrayQuestion);
+           for($i=0; $i<$countQuestion; $i++){
+                DB::table('css_result_detail')->insert(
+                    array(
+                        'css_id' => $cssId,
+                        'question_id' => $arrayQuestion[$i][0],
+                        'point' => $arrayQuestion[$i][1],
+                        'comment' => $arrayQuestion[$i][2],
+                    )
+                );
+            }
+        }
     }
 
 }
