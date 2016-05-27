@@ -9,9 +9,10 @@ use Rikkei\Core\Model\User;
 use Rikkei\Sales\Model\ProjectType;
 use Rikkei\Sales\Model\Css;
 use Rikkei\Team\Model\Team;
-use Rikkei\Team\View\TeamList;
+use Lang;
 
 class CssController extends Controller {
+
     /**
      * Hàm hiển thị form tạo CSS
      * @return objects
@@ -22,14 +23,14 @@ class CssController extends Controller {
         $teams = Team::all();
 
         return view(
-            'sales::css.create_css', [
+                'sales::css.create_css', [
             'user' => $user,
             "projects" => $projects,
             "teams" => $teams
                 ]
         );
     }
-    
+
     /**
      * Hàm hiển thị form sửa CSS
      * @param int $id
@@ -76,7 +77,6 @@ class CssController extends Controller {
         );
     }
 
-    
     /**
      * Hàm hiển thị trang preview sau khi tạo CSS
      * @param string $token
@@ -156,7 +156,7 @@ class CssController extends Controller {
             return redirect('/css/preview/' . $css->token . '/' . $css->id);
         }
     }
-    
+
     /**
      * Hàm hiển thị trang Welcome và trang làm CSS
      * @param string $token
@@ -170,14 +170,92 @@ class CssController extends Controller {
 
         if ($css) {
             $user = User::find($css->user_id);
+            $cssCategory = DB::table('css_category')->where('parent_id', $css->project_type_id)->get();
+            $cssCate = array();
+            if ($cssCategory) {
+                foreach ($cssCategory as $item) {
+                    $cssCategoryChild = DB::table('css_category')->where('parent_id', $item->id)->get();
+                    $cssCateChild = array();
+                    if ($cssCategoryChild) {
+                        foreach ($cssCategoryChild as $item_child) {
+                            $cssQuestionChild = DB::table('css_question')->where('category_id', $item_child->id)->get();
+                            $cssCateChild[] = array(
+                                "id" => $item_child->id,
+                                "name" => $item_child->name,
+                                "parent_id" => $item->id,
+                                "questionsChild" => $cssQuestionChild,
+                            );
+                        }
+                    }
+
+                    $cssQuestion = DB::table('css_question')->where('category_id', $item->id)->get();
+                    $cssCate[] = array(
+                        "id" => $item->id,
+                        "name" => $item->name,
+                        "cssCateChild" => $cssCateChild,
+                        "questions" => $cssQuestion,
+                    );
+                }
+            }
+            
+            $arrayValidate = array(
+                "nameRequired" => Lang::get('sales::message.Name validate required'),
+                "emailRequired" => Lang::get('sales::message.Email validate required'),
+                "emailAddress" => Lang::get('sales::message.Email validate address'),
+                "totalMarkValidateRequired" => Lang::get('sales::message.Total mark validate required'),
+                "questionCommentRequired" => Lang::get('sales::message.Question comment required'),
+            );
+            
             return view(
-                    'sales::css.makecss', [
-                'css' => $css,
-                "user" => $user
-                    ]
+                'sales::css.makecss', [
+                    'css' => $css,
+                    "user" => $user,
+                    "cssCate" => $cssCate,
+                    "arrayValidate" => json_encode($arrayValidate)
+                ]
             );
         } else {
             return redirect("/");
+        }
+    }
+    
+    /**
+     * Hàm insert bai lam CSS vao database
+     * @return void
+     */
+    public function saveResult(){
+        $arrayQuestion = $_REQUEST['arrayQuestion'];
+        $name = $_REQUEST['make_name'];
+        $email = $_REQUEST['make_email'];
+        $avgPoint = $_REQUEST['totalMark'];
+        $comment = $_REQUEST['proposed'];
+        $cssId = $_REQUEST['cssId'];
+       
+        DB::table('css_result')->insert(
+            array(
+                'css_id' => $cssId,
+                'name' => $name,
+                'email' => $email,
+                'comment' => $comment,
+                'avg_point' => $avgPoint,
+                'name' => $name,
+                'created_at' => date('Y-m-d'),
+                'updated_at' => date('Y-m-d'),
+            )
+        );
+       
+        if(count($arrayQuestion) > 0){
+           $countQuestion = count($arrayQuestion);
+           for($i=0; $i<$countQuestion; $i++){
+                DB::table('css_result_detail')->insert(
+                    array(
+                        'css_id' => $cssId,
+                        'question_id' => $arrayQuestion[$i][0],
+                        'point' => $arrayQuestion[$i][1],
+                        'comment' => $arrayQuestion[$i][2],
+                    )
+                );
+            }
         }
     }
 

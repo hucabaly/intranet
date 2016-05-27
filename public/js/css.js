@@ -184,3 +184,169 @@ $(document).ready(function () {
     });
 });
 
+/**
+ * Trang lam danh gia
+ * Khi khach hang danh danh gia mot tieu chi
+ * Tinh tong diem realtime
+ * @returns void
+ */
+function totalMark() {
+    var tongSoCauDanhGia = 0;
+    var total = 0;
+    $(".rateit").each(function(){
+        var danhGia = parseInt($(this).rateit('value'));
+        if($(this).attr("id") != "tongquat"){
+            if(danhGia > 0){
+                tongSoCauDanhGia++;
+                total += danhGia;
+            }
+        }
+    });
+    
+    var diemTongQuat = parseInt($("#tongquat").rateit('value'));
+    if(tongSoCauDanhGia == 0){
+        total = diemTongQuat * 20;
+    }else{
+        total = diemTongQuat * 4 + total/(tongSoCauDanhGia * 5) * 80;
+    }
+    
+    total = total.toFixed(2);
+    $(".diem").html(total);
+    $(".diem-fixed").html(total);
+    
+}
+
+$(window).scroll(function(){
+    if($('.visible-check').visible()){
+        $(".diem-fixed").hide();
+    } else {
+        $(".diem-fixed").show();
+    }
+});
+
+/**
+ * Function confirm CSS
+ * @returns void
+ */
+function confirm(){
+    $('#modal-confirm .modal-body').html("Số điểm hiện tại của CSS là "+$(".diem").html()+" Điểm. Bạn có chắc muốn hoàn thành CSS tại đây không?");
+    $('#modal-confirm').modal('show');
+}
+
+/**
+ * Function validate va insert CSS vao database
+ * @param string token
+ * @param int cssId
+ * @param json arrayValidate
+ * @returns void
+ */
+function submit(token, cssId, arrayValidate){ 
+    $('#modal-confirm').modal('hide');
+    $(".comment-question").css("border","none");
+    
+    var arrayValidate = $.parseJSON(arrayValidate);
+    var makeName = $.trim($("#make_name").val());
+    var makeEmail = $.trim($("#make_email").val());
+    if(makeName == "" || makeEmail == ""){
+        if(makeName == ""){
+            $('#modal-alert .modal-body').html(arrayValidate['nameRequired']);
+            $("#make_name").focus();
+            $("#make_name").css("border","1px solid red");
+        }else{
+            $('#modal-alert .modal-body').html(arrayValidate['emailRequired']);
+            $("#make_email").focus();
+            $("#make_email").css("border","1px solid red");
+        }
+        $('#modal-alert').modal('show');
+        return false;
+    }
+    
+    if( !isValidEmailAddress( makeEmail ) ){
+        $('#modal-alert .modal-body').html(arrayValidate['emailAddress']);
+        $("#make_email").focus();
+        $("#make_email").css("border","1px solid red");
+        $('#modal-alert').modal('show');
+        return false;
+    }
+    
+    var diemTongQuat = parseInt($("#tongquat").rateit('value'));
+    if(diemTongQuat == 0){
+        $('#modal-alert .modal-body').html(arrayValidate['totalMarkValidateRequired']);
+        $('#modal-alert').modal('show');
+        return false;
+    }
+    
+    var arrValidate = [];
+    $(".rateit").each(function(){
+        var danhGia = parseInt($(this).rateit('value'));
+        if($(this).attr("id") != "tongquat"){
+            if(danhGia > 0 && danhGia < 3){
+                if($(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val() == ""){
+                    arrValidate.push($(this).attr("data-questionid"));
+                }
+                
+            }
+        }
+    }); 
+    
+    if(arrValidate.length > 0) {
+        for(var i=0; i<arrValidate.length; i++){
+            $(".comment-question[data-questionid='"+arrValidate[i]+"']").css("border","1px solid red");
+            //$(".comment-question[data-questionid='"+arrValidate[i]+"']").parent().parent().find("td:nth-child(2)").css("border-right","1px solid red");
+            //$(".comment-question[data-questionid='"+arrValidate[i]+"']").parent().parent().prev().find("td:last-child").css("border-bottom","1px solid red");
+        }
+        $('#modal-alert .modal-body').html(arrayValidate['questionCommentRequired']);
+        $('#modal-alert').modal('show');
+        return false;
+    }
+    
+    var make_name = $("#make_name").val();
+    var make_email = $("#make_email").val();
+    var totalMark = $(".diem").html();
+    var proposed = $("#proposed").val();
+    var arrayQuestion = [];
+    $(".rateit").each(function(){
+        var danhGia = parseInt($(this).rateit('value'));
+        if($(this).attr("id") != "tongquat"){
+            if(danhGia > 0){
+                var questionId = $(this).attr("data-questionid");
+                var diem = danhGia;
+                var comment = $(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val();
+                arrayQuestion.push([questionId,diem,comment]);
+            }
+        }
+    });
+    
+    
+    $.ajax({
+        url: '/css/saveResult',
+        type: 'post',
+        data: {
+            _token: token, 
+            arrayQuestion: arrayQuestion, 
+            make_name: make_name, 
+            make_email: make_email, 
+            totalMark: totalMark,
+            proposed: proposed,
+            cssId: cssId
+        },
+    })
+    .done(function (data) {
+        console.log(data);
+    })
+    .fail(function () {
+        alert("Ajax failed to fetch data");
+    })
+}
+
+/**
+ * Function validate email address
+ * @param string emailAddress
+ * @returns boolean
+ */
+function isValidEmailAddress(emailAddress) {
+    var pattern = /^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
+    return pattern.test(emailAddress);
+};
+
+
