@@ -83,7 +83,7 @@
         <td class="title" colspan="2">{{ trans('sales::view.Overview content') }}</td>
         
         <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" onclick="totalMark();"></div></td>
-        <td class="title2"></td>
+        <td class="title2"><textarea class="comment-question" rows="1" type="text" id="comment-tongquat"  ></textarea></td>
     </tr>
 
     <!-- danh gia chung -->
@@ -110,7 +110,7 @@
                 <p>One fine body…</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">Close</button>
             </div>
         </div>
         <!-- /.modal-content -->
