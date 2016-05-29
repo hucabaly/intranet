@@ -216,6 +216,9 @@ function totalMark() {
     
 }
 
+/**
+ * show or hide total point at bottom right make css page
+ */
 $(window).scroll(function(){
     if($('.visible-check').visible()){
         $(".diem-fixed").hide();
@@ -274,6 +277,14 @@ function submit(token, cssId, arrayValidate){
         $('#modal-alert .modal-body').html(arrayValidate['totalMarkValidateRequired']);
         $('#modal-alert').modal('show');
         return false;
+    }else if(diemTongQuat < 3){
+        var comment_tong = $.trim($("#comment-tongquat").val());
+        if(comment_tong == ""){
+            $('#modal-alert .modal-body').html(arrayValidate['questionCommentRequired']);
+            $('#modal-alert').modal('show');
+            return false;
+        }
+        
     }
     
     var arrValidate = [];
@@ -302,18 +313,16 @@ function submit(token, cssId, arrayValidate){
     
     var make_name = $("#make_name").val();
     var make_email = $("#make_email").val();
-    var totalMark = $(".diem").html();
+    var totalMark = parseInt($("#tongquat").rateit('value'));
     var proposed = $("#proposed").val();
     var arrayQuestion = [];
     $(".rateit").each(function(){
         var danhGia = parseInt($(this).rateit('value'));
         if($(this).attr("id") != "tongquat"){
-            if(danhGia > 0){
-                var questionId = $(this).attr("data-questionid");
-                var diem = danhGia;
-                var comment = $(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val();
-                arrayQuestion.push([questionId,diem,comment]);
-            }
+            var questionId = $(this).attr("data-questionid");
+            var diem = danhGia;
+            var comment = $(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val();
+            arrayQuestion.push([questionId,diem,comment]);
         }
     });
     
@@ -327,6 +336,7 @@ function submit(token, cssId, arrayValidate){
             make_name: make_name, 
             make_email: make_email, 
             totalMark: totalMark,
+            comment : $.trim($("#comment-tongquat").val()),
             proposed: proposed,
             cssId: cssId
         },
