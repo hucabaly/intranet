@@ -25,26 +25,148 @@ function showCalendar(x) {
  * hàm thực hiện việc add team từ cột trái sang cột phải trong popup team
  **/
 function add_team() {
-    if ($(".team-tree ul a[set=true]").length > 0) {
-        var team_id = $(".team-tree ul a[set=true]").attr("data-id");
+    if ($(".team-tree  a[set=true]").length > 0) {
+        var current = $(".team-tree a[set=true]");
+        var level_current = current.attr("level");
         var chosen = false;
-
-        $(".modal-body ul.right-list li").each(function (index) {
-
-            if ($(this).attr("id") == team_id) {
-                alert("Da add roi");
-                chosen = true;
-                return false;
+        if(current.parent().parent().find("ul a[level="+(parseInt(level_current) + 1)+"]").length > 0){
+            if(level_current == 1){
+                var parent = current.parent().parent().parent().parent().find("a[level=0]"); 
+                current.parent().parent().find("ul a[level="+(parseInt(level_current) + 1)+"]").each(function(){
+                    var string_name = current.text() + " -> " + $(this).text();
+                    if($(this).parent().parent().find("ul a[level="+(parseInt(level_current) + 2)+"]").length > 0){
+                        $(this).parent().parent().find("ul a[level="+(parseInt(level_current) + 2)+"]").each(function(){
+                            var string_name_child = parent.text() + " -> " + string_name + " -> " + $(this).text();
+                            console.log(string_name_child);
+                            var team_id = $(this).attr("data-id");
+                            $(".modal-body ul.right-list .store-id").each(function(){
+                                if ($(this).val() == team_id) {
+                                    //alert("Da add roi");
+                                    chosen = true;
+                                    return false;
+                                }
+                            });
+                            if(!chosen){
+                                $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+string_name_child+'</div>');
+                                $(".modal-body ul.right-list").append('<input class="store-id" type="hidden" value="'+$(this).attr("data-id")+'">');   
+                            }
+                            
+                        });
+                    }else{
+                        console.log(parent.text() + " -> " +string_name);
+                        var team_id = $(this).attr("data-id");
+                        $(".modal-body ul.right-list .store-id").each(function(){
+                            if ($(this).val() == team_id) {
+                                //alert("Da add roi");
+                                chosen = true;
+                                return false;
+                            }
+                        });
+                        if(!chosen){
+                            $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+parent.text() + " -> " + string_name+'</div>');
+                            $(".modal-body ul.right-list").append('<input class="store-id" type="hidden" value="'+$(this).attr("data-id")+'">');   
+                        }
+                    }
+                     
+                });
+            }else{
+                current.parent().parent().find("ul a[level="+(parseInt(level_current) + 1)+"]").each(function(){
+                    var string_name = current.text() + " -> " + $(this).text();
+                    if($(this).parent().parent().find("ul a[level="+(parseInt(level_current) + 2)+"]").length > 0){
+                        $(this).parent().parent().find("ul a[level="+(parseInt(level_current) + 2)+"]").each(function(){
+                            var string_name_child = string_name + " -> " + $(this).text();
+                            console.log(string_name_child);
+                            var team_id = $(this).attr("data-id");
+                            $(".modal-body ul.right-list .store-id").each(function(){
+                                if ($(this).val() == team_id) {
+                                    //alert("Da add roi");
+                                    chosen = true;
+                                    return false;
+                                }
+                            });
+                            if(!chosen){
+                                $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+string_name_child+'</div>');
+                                $(".modal-body ul.right-list").append('<input class="store-id" type="hidden" value="'+$(this).attr("data-id")+'">');   
+                            }
+                            
+                        });
+                    }else{
+                        console.log(string_name);
+                        var team_id = $(this).attr("data-id");
+                        $(".modal-body ul.right-list .store-id").each(function(){
+                            if ($(this).val() == team_id) {
+                                //alert("Da add roi");
+                                chosen = true;
+                                return false;
+                            }
+                        });
+                        if(!chosen){
+                            $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+string_name+'</div>');
+                            $(".modal-body ul.right-list").append('<input class="store-id" type="hidden" value="'+$(this).attr("data-id")+'">');   
+                        }
+                        
+                    }
+                    
+                });
             }
-        });
-        if (chosen == false) {
-            var element_add = $(".team-tree ul a[set=true]").parent().parent()[0].outerHTML;
-            //$(".team-tree ul a[set=true]")
-
-            $(".modal-body ul.right-list").append(element_add);
-            $(".modal-body ul li a[set=true]").attr("set", "false");
-            $(".modal-body ul li").css("background-color", "");
+            
+        }else{
+            var team_id = current.attr("data-id");
+            if(current.parent().parent().parent().parent().find("a[level="+(parseInt(level_current) - 1)+"]").length > 0){
+                var parent = current.parent().parent().parent().parent().find("a[level="+(parseInt(level_current) - 1)+"]");
+                if(parent.parent().parent().parent().parent().find("a[level="+(parseInt(level_current) - 2)+"]").length > 0){
+                    var parent_parent = parent.parent().parent().parent().parent().find("a[level="+(parseInt(level_current) - 2)+"]");
+                    $(".modal-body ul.right-list .store-id").each(function(){
+                        if ($(this).val() == team_id) {
+                            //alert("Da add roi");
+                            chosen = true;
+                            return false;
+                        }
+                    });
+                    if(!chosen){
+                        $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+parent_parent.text() + " -> " +parent.text() + " -> " +current.text()+'</div>');
+                    }
+                    
+                }else{
+                    $(".modal-body ul.right-list .store-id").each(function(){
+                        if ($(this).val() == team_id) {
+                            //alert("Da add roi");
+                            chosen = true;
+                            return false;
+                        }
+                    });
+                    if(!chosen){
+                        $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+parent.text() + " -> " +current.text()+'</div>');
+                    }
+                    
+                }
+            }else{
+                $(".modal-body ul.right-list .store-id").each(function(){
+                    if ($(this).val() == team_id) {
+                        //alert("Da add roi");
+                        chosen = true;
+                        return false;
+                    }
+                });
+                if(!chosen){
+                    $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+current.text()+'</div>');
+                }
+            }
+            
+            $(".modal-body ul.right-list .store-id").each(function(){
+                if ($(this).val() == team_id) {
+                    //alert("Da add roi");
+                    chosen = true;
+                    return false;
+                }
+            });
+            if(!chosen){
+                $(".modal-body ul.right-list").append('<input class="store-id" type="hidden" value="'+current.attr("data-id")+'">');
+            }
+            
+            
         }
+        
     }
 }
 
@@ -54,8 +176,10 @@ function add_team() {
  **/
 
 function remove_team() {
-    if ($(".modal-body ul.right-list li a[set=true]").length > 0) {
-        $(".modal-body ul.right-list li a[set=true]").parent().parent().remove();
+    if ($(".modal-body .right-list div[set=true]").length > 0) {
+        var data_id = $(".modal-body .right-list div[set=true]").attr("data-id");
+        $(".modal-body .right-list div[set=true]").remove();
+        $(".store-id[value="+data_id+"]").remove();
     }
 }
 
@@ -66,16 +190,16 @@ function remove_team() {
  */
 function change_bgcolor_element(x) {
     $(".team-tree a").attr("set", "false");
-    $(".team-tree ul li").css("background-color", "");
+    $(".team-tree li").css("background-color", "");
+    $(".right-list div").css("background-color", "").attr("set", "false");
     $(x).attr("set", "true");
-    $(x).parent().parent().css("background-color", "rgb(33, 42, 109)");
-
-    $(".right-list a").attr("set", "false");
-    $(".right-list li").css("background-color", "").attr("set", "false");
-    $(x).attr("set", "true");
-    $(x).parent().parent().css("background-color", "rgb(33, 42, 109)");
+    if($(x).parent().hasClass("right-list")){
+        $(x).css("background-color", "rgb(33, 42, 109)");
+    }else{
+        
+        $(x).parent().parent().css("background-color", "rgb(33, 42, 109)");
+    }
     
-    console.log(abc(x,parseInt($(x).attr("level"))));
 }
 
 /**
@@ -88,7 +212,7 @@ function set_team_to_css() {
     var str = "";
     teamArray = [];
 
-    $(".modal-body ul.right-list li a").each(function (index) {
+    $(".modal-body .right-list div").each(function (index) {
         var team_id = $(this).attr("data-id");
         var team_name = $(this).html();
         elements += '<input class="team_id" type="hidden" name="teams[' + team_id + ']" value="' + team_name + '" />';
@@ -129,7 +253,7 @@ function set_teams_popup() {
 $(document).ready(function () {
     $(".project_type input[type=radio]:first-child").prop('checked', true);
     $(".team-tree a").removeAttr("href");
-    $(".team-tree li ul a").attr("onclick", "change_bgcolor_element(this)");
+    $(".team-tree a").attr("onclick", "change_bgcolor_element(this)");
 
     //hide calendar sau khi select
     $('#start_date').on('changeDate', function (ev) {
@@ -357,6 +481,7 @@ function submit(token, cssId, arrayValidate){
 function isValidEmailAddress(emailAddress) {
     var pattern = /^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
     return pattern.test(emailAddress);
-};
+}
+
 
 
