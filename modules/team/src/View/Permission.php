@@ -31,7 +31,11 @@ class Permission
      */
     protected static $rules;
     
-    public function __construct() {
+    /**
+     * contructor
+     */
+    public function __construct() 
+    {
         $this->initUser();
         $this->initRules();
     }

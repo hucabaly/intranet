@@ -43,6 +43,7 @@ class AuthController extends Controller
      */
     public function callback($provider)
     {
+        Session::forget('permission');
         $user = Socialite::driver($provider)->user();
         $email = $user->email;
         if (!$email) {

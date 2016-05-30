@@ -12,6 +12,9 @@ class CreateTeamRuleTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('team_rule')) {
+            return;
+        }
         Schema::create('team_rule', function (Blueprint $table) {
             $table->integer('team_id')->unsigned();
             $table->integer('position_id')->unsigned();
