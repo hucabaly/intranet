@@ -263,7 +263,7 @@ class CssController extends Controller {
         
         $css = Css::find($cssId);
         $user = DB::table('users')->where('id', $css->user_id)->first();
-        $email = $user->email; echo $email;die;
+        $email = $user->email; 
         $data = array(
             'href' => url('/') . "/css/detail/" . $css_result_id,
             'project_name' => $css->project_name,
