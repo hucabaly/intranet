@@ -28,7 +28,6 @@ class TeamController extends TeamBaseController
      */
     public function view($id)
     {
-                \Rikkei\Team\View\Permission::getInstance();
         $model = Team::find($id);
         if (!$model) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));

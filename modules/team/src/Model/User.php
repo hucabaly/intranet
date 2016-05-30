@@ -2,6 +2,7 @@
 namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\User as BaseUser;
+use Rikkei\Team\View\Acl;
 
 class User extends BaseUser
 {
@@ -52,50 +53,45 @@ class User extends BaseUser
      * 
      * @return model
      */
-    public function getTeam()
+    public function getTeams()
     {
-        return Team::find($this->team_id);
-    }
-    
-    /**
-     * get position of user
-     * 
-     * @return model
-     */
-    public function getPosition()
-    {
-        return Position::find($this->position_id);
+        return TeamMembers::select('team_id', 'position_id')
+            ->where('user_id', $this->id)
+            ->get();
     }
     
     /**
      * get acl of user
-     * acl is array route name allowed
+     * acl is array route name allowed follow each team
      * 
      * @return array
      */
     public function getAcl()
     {
-        $team = $this->getTeam();
-        $position = $this->getPosition();
-        if (! $team || ! $position) {
+        $teams = $this->getTeams();
+        if (! $teams || ! count($teams)) {
             return [];
         }
-        $teamAs = $team->getTeamPermissionAs();
-        if ($teamAs) {
-            $team = $teamAs;
-        }
-        $teamRule = TeamRule::select('rule', 'scope')
-            ->where('team_id', $team->id)
-            ->where('position_id', $position->id)
-            ->get();
         $routesAllow = [];
-        foreach ($teamRule as $item) {
-            $routes = \Rikkei\Team\View\Acl::getRoutesNameFromKey($item->rule);
-            if (! $routes) {
-                continue;
+        foreach ($teams as $teamMember) {
+            $team = Team::find($teamMember->team_id);
+            $position = Position::find($teamMember->position_id);
+            $teamAs = $team->getTeamPermissionAs();
+            if ($teamAs) {
+                $team = $teamAs;
             }
-            foreach ($routes as $route) {
-                $routesAllow[$route] = $item->scope;
+            $teamRule = TeamRule::select('rule', 'scope')
+                ->where('team_id', $team->id)
+                ->where('position_id', $position->id)
+                ->get();
+            foreach ($teamRule as $item) {
+                $routes = Acl::getRoutesNameFromKey($item->rule);
+                if (! $routes) {
+                    continue;
+                }
+                foreach ($routes as $route) {
+                    $routesAllow['team'][$team->id][$route] = $item->scope;
+                }
             }
         }
         return $routesAllow;

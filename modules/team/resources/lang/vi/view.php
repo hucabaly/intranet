@@ -37,4 +37,6 @@ return [
     'Not found team' => 'Không tìm thấy team',
     'Team is not function' => 'Team không phải là đơn vị chức năng',
     'Team permisstion as team' => 'Team phân quyền theo team',
+    'Permission function' => 'Phân quyền sử dụng chức năng',
+    
 ];

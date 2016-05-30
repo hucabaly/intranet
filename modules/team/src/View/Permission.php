@@ -65,33 +65,73 @@ class Permission
         return $this;
     }
     
-    public function getScopeCurrent()
+    /**
+     * get scopes current of teams 
+     * 
+     * @param int $teamId
+     * @return int|array
+     */
+    public function getScopeCurrent($teamId = null)
     {
         $routeCurrent = Route::getCurrentRoute()->getName();
-        foreach (self::$rules as $route => $scope) {
-            if (preg_match('/' . $route . '/', $routeCurrent)) {
-                return $scope;
+        
+        // TODO role another
+        
+        if (! self::$rules || ! isset(self::$rules['team'])) {
+            return TeamRule::SCOPE_NONE;
+        }
+        $scopes = [];
+        foreach (self::$rules['team'] as $teamIdRule => $rules) {
+            if ($teamId && $teamId != $teamIdRule) {
+                continue;
+            }
+            foreach ($rules as $route => $scope) {
+                if ($route == '*') {
+                    $route = '.*';
+                }
+                if (preg_match('/' . $route . '/', $routeCurrent)) {
+                    if ($teamId) {
+                        return $scope;
+                    }
+                    $scopes[$teamIdRule] = $scope;
+                }
             }
         }
-        return TeamRule::SCOPE_NONE;
-    }
-    
-    public function isAllow()
-    {
-        if($this->isScopeNone()) {
-            return false;
-        }
-        return true;
+        return $scopes;
     }
     
     /**
-     * check is scope none
+     * check allow access to route current
      * 
+     * @param int $teamId
      * @return boolean
      */
-    public function isScopeNone()
+    public function isAllow($teamId = null)
     {
-        if($this->getScopeCurrent() == TeamRule::SCOPE_NONE) {
+        $scopeCurrent = $this->getScopeCurrent($teamId);
+        if (is_numeric($scopeCurrent)) { //exsits teamId
+            if ($scopeCurrent == TeamRule::SCOPE_NONE) {
+                return false;
+            }
+            return true;
+        }
+        foreach ($scopeCurrent as $teamId => $scope) {
+            if ($scope != TeamRule::SCOPE_NONE) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * check is scope none of a team
+     * 
+     * @param int $teamId
+     * @return boolean
+     */
+    public function isScopeNone($teamId)
+    {
+        if ($this->getScopeCurrent($teamId) == TeamRule::SCOPE_NONE) {
             return true;
         }
         return false;
@@ -100,11 +140,12 @@ class Permission
     /**
      * check is scope self
      * 
+     * @param int $teamId
      * @return boolean
      */
-    public function isScopeSelf()
+    public function isScopeSelf($teamId)
     {
-        if($this->getScopeCurrent() == TeamRule::SCOPE_SELF) {
+        if($this->getScopeCurrent($teamId) == TeamRule::SCOPE_SELF) {
             return true;
         }
         return false;
@@ -113,11 +154,12 @@ class Permission
     /**
      * check is scope team
      * 
+     * @param int $teamId
      * @return boolean
      */
-    public function isScopeTeam()
+    public function isScopeTeam($teamId)
     {
-        if($this->getScopeCurrent() == TeamRule::SCOPE_TEAM) {
+        if($this->getScopeCurrent($teamId) == TeamRule::SCOPE_TEAM) {
             return true;
         }
         return false;
@@ -125,12 +167,13 @@ class Permission
     
     /**
      * check is scope company
-     * 
+     *
+     * @param int $teamId
      * @return boolean
      */
-    public function isScopeCompany()
+    public function isScopeCompany($teamId)
     {
-        if($this->getScopeCurrent() == TeamRule::SCOPE_COMPANY) {
+        if($this->getScopeCurrent($teamId) == TeamRule::SCOPE_COMPANY) {
             return true;
         }
         return false;
@@ -143,7 +186,7 @@ class Permission
      */
     public function flushPermission()
     {
-        Session::flush('permission');
+        Session::forget('permission');
         return $this;
     }
     

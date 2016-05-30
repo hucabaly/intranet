@@ -3,11 +3,11 @@ namespace Rikkei\Team\Seeds;
 
 use Illuminate\Database\Seeder;
 use DB;
-use Rikkei\Team\Model\Team;
 use Rikkei\Team\Model\User;
 use Rikkei\Team\Model\Position;
 use Rikkei\Team\Model\TeamRule;
 use Rikkei\Team\View\Acl;
+use Rikkei\Team\Model\TeamMembers;
 
 class UserBodSeeder extends Seeder
 {
@@ -31,32 +31,30 @@ class UserBodSeeder extends Seeder
         if (! $positionLevelMax) {
             return;
         }
-        $user->update([
-            'team_id' => $bodTeam->id,
-            'position_id' => $positionLevelMax->id
-        ]);
+        $teamMember = TeamMembers::where('team_id', $bodTeam->id)
+            ->where('user_id', $user->id)
+            ->first();
+        if ($teamMember) {
+            $teamMember->position_id = $positionLevelMax->id;
+            $teamMember->save();
+        } else {
+            TeamMembers::create([
+                'team_id' => $bodTeam->id,
+                'position_id' => $positionLevelMax->id,
+                'user_id' => $user->id
+            ]);
+        }
         
-        $rules = Acl::getAclKey();
-        if (! $rules) {
+        $rule = Acl::getAclKeyAll();
+        if (! $rule) {
             return;
         }
-        $dataDemo = [];
-        foreach ($rules as $rule) {
-            $dataDemo[] = [
-                'position_id' => $positionLevelMax->id,
-                'scope' => TeamRule::SCOPE_COMPANY,
-                'rule' => $rule,
-                'team_id' => $bodTeam->id
-            ];
-        }
-        DB::beginTransaction();
-        try {
-            TeamRule::saveRule($dataDemo, $bodTeam->id, true);
-            DB::commit();
-        } catch (Exception $ex) {
-            DB::rollback();
-            throw $ex;
-        }
-        
+        $dataDemo[] = [
+            'position_id' => $positionLevelMax->id,
+            'scope' => TeamRule::SCOPE_COMPANY,
+            'rule' => $rule,
+            'team_id' => $bodTeam->id
+        ];
+        TeamRule::saveRule($dataDemo, $bodTeam->id, true);
     }
 }

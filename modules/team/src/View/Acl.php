@@ -42,6 +42,9 @@ class Acl
             }
         }
         if (isset($aclData['routes'])) {
+            if (! is_array($aclData['routes'])) {
+                return [$aclData['routes']];
+            }
             return $aclData['routes'];
         }
         return [];
@@ -133,5 +136,15 @@ class Acl
             }
         }
         return $keys;
+    }
+    
+    /**
+     * get all key acl
+     * 
+     * @return array
+     */
+    public static function getAclKeyAll()
+    {
+        return 'all:all';
     }
 }

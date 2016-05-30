@@ -26,12 +26,6 @@ class CreateUsersTable extends Migration
             $table->string('employee_id');
             $table->string('token');
             $table->timestamps();
-            $table->foreign('team_id')
-                ->references('id')
-                ->on('team');
-            $table->foreign('position_id')
-                ->references('id')
-                ->on('position');
         });
     }
 

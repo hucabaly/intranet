@@ -139,7 +139,11 @@ Team Setting
     <div class="col-sm-12 team-rule-wrapper">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h2 class="box-title">{{ trans('team::view.Permission function of') }} <b>{{ Form::getData('name') }}</b></h2>
+                @if (! Form::getData('id'))
+                    <h2 class="box-title">{{ trans('team::view.Permission function') }}</h2>
+                @else
+                    <h2 class="box-title">{{ trans('team::view.Permission function of') }} <b>{{ Form::getData('name') }}</b></h2>
+                @endif
             </div>
             <div class="box-body">
                 @if (! Form::getData('id'))
