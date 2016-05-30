@@ -4,14 +4,16 @@ Route::group([
 	'as' => 'css.'
 ], function() {
 	
-	Route::get('css/create', 'CssController@create');
-	Route::get('css/update/{id}', 'CssController@update');
-	Route::post('css/save', 'CssController@save');
-        Route::post('css/saveResult', 'CssController@saveResult');
-	Route::get('css/preview/{token}/{id}', 'CssController@preview');
-        Route::get('sales/css/list', 'CssController@grid');
-        Route::get('css/view/{id}', 'CssController@view');
-        Route::get('css/detail/{id}', 'CssController@detail');
+	Route::get('css/create', 'CssController@create')->name('create');
+	Route::get('css/update/{id}', 'CssController@update')->name('update');
+	Route::post('css/save', 'CssController@save')->name('save');
+        Route::post('css/saveResult', 'CssController@saveResult')->name('saveResult');
+	Route::get('css/preview/{token}/{id}', 'CssController@preview')->name('saveResult');
+        Route::get('sales/css/list', 'CssController@grid')->name('list');
+        Route::get('css/view/{id}', 'CssController@view')->name('view');
+        Route::get('css/detail/{id}', 'CssController@detail')->name('detail');
+        Route::get('css/success', 'CssController@success')->name('success');
+        Route::get('css/cancel', 'CssController@cancelMake')->name('cancel');
 });
 
-Route::get('css/make/{token}/{id}', 'CssController@make') ;
+Route::get('css/make/{token}/{id}', 'CssController@make')->name('make') ;
