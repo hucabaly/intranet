@@ -5,7 +5,7 @@
         <td class="infomation">{{$css->project_name}}</td>
         <td class="title2"><label>{{ trans('sales::view.Period') }}</label></td>
         <td class="infomation">{{date("d/m/Y",strtotime($css->start_date))}} - {{date("d/m/Y",strtotime($css->end_date))}}</td>
-        <td class="make_date"><label>{{ trans('sales::view.Make date') }} {{date("d/m/Y")}}</label></td>
+        <td class="make_date infomation"><label>{{ trans('sales::view.Make date') }} {{date("d/m/Y",strtotime($css_result->created_at))}}</label></td>
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.Sale name') }}</label></td>
@@ -14,21 +14,21 @@
         <td class="infomation">{{$css->customer_name}}</td>
         <td rowspan="3" class="<?php echo ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' ?>">
             <div>{{ trans('sales::view.Total mark') }}</div>
-            <div class="diem">00.00</div>
+            <div class="diem">{{number_format($css_result->mark,2)}}</div>
         </td>
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.PM name') }}</label></td>
         <td class="infomation">{{$css->pm_name}}</td>
         <td class="title2"><label>{{ trans('sales::view.Make name') }}</label></td>
-        <td><input type="text" id="make_name" name="make_name" ></td>
+        <td class="infomation"><label>{{$css_result->name}}</label></td>
 
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.BrSE name') }}</label></td>
         <td class="infomation">{{$css->brse_name}}</td>
         <td class="title2"><label>{{ trans('sales::view.Make email') }}</label></td>
-        <td><input type="text" id="make_email" name="make_email" ></td>
+        <td class="infomation"><label>{{$css_result->email}}</label></td>
 
     </tr>
 </table>
@@ -56,8 +56,8 @@
                 @foreach($itemChild['questionsChild'] as $questionChild)
                     <tr class="cau">
                         <td class="title" colspan="2">{{$questionChild->content}}</td>
-                        <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$questionChild->id}}" onclick="totalMark();"></div></td>
-                        <td class="title2"><textarea class="comment-question" rows="1" type="text" data-questionid="{{$questionChild->id}}"  ></textarea></td>
+                        <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-rateit-readonly="true" data-questionid="{{$questionChild->id}}" data-rateit-value="{{$questionChild->point}}" ></div></td>
+                        <td class="title2">{{$questionChild->comment}}</td>
                     </tr>
                 @endforeach
             @endif
@@ -66,8 +66,8 @@
         @foreach($item['questions'] as $question)
             <tr class="cau">
                 <td class="title" colspan="2">{{$question->content}}</td>
-                <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$question->id}}" onclick="totalMark();"></div></td>
-                <td class="title2"><textarea class="comment-question" rows="1" type="text" data-questionid="{{$question->id}}"  ></textarea></td>
+                <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-rateit-readonly="true" data-questionid="{{$question->id}}" data-rateit-value="{{$question->point}}"></div></td>
+                <td class="title2">{{$question->comment}}</td>
             </tr>
         @endforeach
     @endif
@@ -82,8 +82,8 @@
     <tr class="cau">
         <td class="title" colspan="2">{{ trans('sales::view.Overview content') }}</td>
         
-        <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" onclick="totalMark();"></div></td>
-        <td class="title2"><textarea class="comment-question" rows="1" type="text" id="comment-tongquat"  ></textarea></td>
+        <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-rateit-readonly="true" data-rateit-value="{{$css_result->avg_point}}"></div></td>
+        <td class="title2">{{$css_result->comment}}</td>
     </tr>
 
     <!-- danh gia chung -->
@@ -92,49 +92,11 @@
             {{ trans('sales::view.Proposed') }}
         </td>
         
-        <td class="title2" colspan="2"><textarea class="proposed" id="proposed"></textarea></td>
+        <td class="title2" colspan="2" style="vertical-align:top;">{{$css_result->survey_comment}}</td>
         <td class="title2"></td>
     </tr>
 </table>
-<div class="container-submit"><button type="button" class="btn btn-primary" onclick="confirm();">Submit</button></div>
-<div class="diem-fixed">00.00</div>
-<div class="modal modal-danger" id="modal-alert">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Error</h4>
-            </div>
-            <div class="modal-body">
-                <p>One fine body…</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
 
-<div class="modal modal-primary" id="modal-confirm">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Confirm</h4>
-            </div>
-            <div class="modal-body">
-                <p>One fine body…</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-outline" onclick="submit('{{ Session::token() }}',{{$css->id}},'{{$arrayValidate}}');">Submit</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
+<div class="diem-fixed">{{number_format($css_result->mark,2)}}</div>
+
+
