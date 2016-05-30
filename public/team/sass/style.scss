@@ -85,5 +85,19 @@
         }
     }
 }
+/* team rule*/
+.team-rule-wrapper {
+    margin-top: 20px;
+    .table-team-rule {
+        tbody {
+            td.col-screen-empty {
+                background-color: white;
+            }
+            td.col-screen {
+                background-color: #8e8e8e;
+            }
+        }
+    }
+}
 
 /*responsive*/
