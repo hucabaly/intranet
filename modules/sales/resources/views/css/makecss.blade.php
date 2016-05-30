@@ -59,6 +59,19 @@
         $(".welcome").hide();
         $(".make-css").show();
     }
+    <?php if(Auth::check()): ?>
+        //$(document).ready(function(){
+            $('#modal-confirm-make').show();
+        //});
+        
+    <?php endif; ?>
+        
+    function hideModalConfirmMake(){
+        $('#modal-confirm-make').hide();
+    }
     
+    function goToFinish(){
+        location.href = "/css/cancel";
+    }
 </script>
 @endsection
