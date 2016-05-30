@@ -42,7 +42,7 @@ return [
     'Overview'  => "IV. Tổng thể",
     'Overview content' => "Một cách tổng thể thì quý khách có hài lòng với dịch vụ và sản phẩm mà công ty chúng tôi cung cấp hay không?",
     'Proposed'  => "Ngoài ra để công ty chúng tôi phục vụ quý khách hàng được hơn nữa, nếu quý khách hàng có bất cứ đề xuất gì về phương pháp cải thiện chất lượng dự án, quản trị dự án cũng như communication trong dự án. Xin mời quý khách điền vào ô bên cạnh. \nXin liệt kê ra 3 điểm mà quý khách thấy quan trọng nhất cần phải cải thiện",
-    
+    "Css list"  => "Danh sách CSS",
     "STT" => "STT",
     'Sale name 2' => 'Tên nhân viên Sales phụ trách',
     'PM' => 'Tên PM phụ trách',
@@ -54,4 +54,6 @@ return [
     'View css' => 'Danh sách bài đánh giá',
     'View css detail' => 'Xem chi tiết',
     'Count make css' => 'Tổng số bài làm',
+    'Cancel make'   => "Bài làm của bạn chưa được làm và submit",
+    'Cancel make title'  => "Hủy yêu cầu",
 ];
