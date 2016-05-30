@@ -10,6 +10,7 @@ use Rikkei\Sales\Model\ProjectType;
 use Rikkei\Sales\Model\Css;
 use Rikkei\Team\Model\Team;
 use Lang;
+use Mail;
 
 class CssController extends Controller {
 
@@ -205,7 +206,7 @@ class CssController extends Controller {
                 "totalMarkValidateRequired" => Lang::get('sales::message.Total mark validate required'),
                 "questionCommentRequired" => Lang::get('sales::message.Question comment required'),
             );
-            
+            if(Auth::check()){}
             return view(
                 'sales::css.makecss', [
                     'css' => $css,
@@ -259,6 +260,22 @@ class CssController extends Controller {
                 );
             }
         }
+        
+        $css = Css::find($cssId);
+        $data = array(
+            'href' => url('/') . "/css/detail/" . $css_result_id,
+            'project_name' => $css->project_name,
+        );
+
+        Mail::send('sales::css.sendMail', $data, function ($message) {
+
+            $message->from('hucabaly@gmail.com', 'Rikkeisoft');
+
+            $message->to('hucabaly@gmail.com')->subject(Lang::get('sales::view.Subject email notification make css'));
+
+        });
+
+        
     }
     
     /**
@@ -266,7 +283,7 @@ class CssController extends Controller {
      * @return void
      */
     public function grid(){
-        $css = DB::table('css')->paginate(10);
+        $css = DB::table('css')->orderBy('id', 'desc')->paginate(10);
         
         $i = ($css->currentPage()-1) * $css->perPage() + 1;
         foreach($css as &$item){
@@ -307,7 +324,7 @@ class CssController extends Controller {
      */
     public function view($cssId){
         $css = Css::find($cssId);
-        $css_result_list = DB::table('css_result')->where("css_id",$cssId)->paginate(10);
+        $css_result_list = DB::table('css_result')->where("css_id",$cssId)->orderBy('id', 'desc')->paginate(10);
         $i = ($css_result_list->currentPage()-1) * $css_result_list->perPage() + 1;
         foreach($css_result_list as &$item){
             $item->stt = $i;
@@ -423,4 +440,29 @@ class CssController extends Controller {
             ]
         );
     }
+    
+    /**
+     * 
+     * @param int $cssId
+     * @return void
+     */
+    public function success($cssId){
+        $css = Css::find($cssId);
+       return view(
+            'sales::css.success', [
+                "css" => $css
+            ]
+        ); 
+    }
+    
+    /**
+     * Trang huy yeu cau lam css
+     * @return void
+     */
+    public function cancelMake(){
+        return view(
+            'sales::css.cancel', []
+        );
+    }
+    
 }
