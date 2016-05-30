@@ -262,16 +262,16 @@ class CssController extends Controller {
         }
         
         $css = Css::find($cssId);
+        $user = DB::table('users')->where('id', $css->user_id)->first();
+        $email = $user->email; echo $email;die;
         $data = array(
             'href' => url('/') . "/css/detail/" . $css_result_id,
             'project_name' => $css->project_name,
         );
 
-        Mail::send('sales::css.sendMail', $data, function ($message) {
-
-            $message->from('hucabaly@gmail.com', 'Rikkeisoft');
-
-            $message->to('hucabaly@gmail.com')->subject(Lang::get('sales::view.Subject email notification make css'));
+        Mail::send('sales::css.sendMail', $data, function ($message) use($email) {
+            $message->from('sales@rikkeisoft.com', 'Rikkeisoft');
+            $message->to($email)->subject(Lang::get('sales::view.Subject email notification make css'));
 
         });
 
