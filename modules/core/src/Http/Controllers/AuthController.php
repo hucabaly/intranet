@@ -6,13 +6,15 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Config;
 use Auth;
 use Socialite;
-use Rikkei\Core\Model\User;
+use Rikkei\Team\Model\User;
 use URL;
 use Session;
 use Redirect;
 use Illuminate\Support\ViewErrorBag;
 use Lang;
 use Illuminate\Support\MessageBag;
+use Rikkei\Team\Model\TeamMembers;
+use DB;
 
 class AuthController extends Controller
 {
@@ -41,6 +43,7 @@ class AuthController extends Controller
      */
     public function callback($provider)
     {
+        Session::forget('permission');
         $user = Socialite::driver($provider)->user();
         $email = $user->email;
         if (!$email) {
@@ -61,16 +64,38 @@ class AuthController extends Controller
                 return redirect('/');
             }
         }
-
-        $account = User::firstOrNew([
-            'email' => $user->email
-        ]);
-
-        $account->name = $user->name;
-        $account->nickname = !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email);
-        $account->token = $user->token;
-        $account->avatar = $user->avatar;
-        $account->save();
+        
+        $account = User::where('email', $user->email)
+            ->first();
+        if (! $account) {
+            DB::beginTransaction();
+            try {
+                $dataDefault = User::createTeamPositionDefault();
+                $account = User::create([
+                    'email' => $user->email,
+                    'name' => $user->name,
+                    'nickname' => !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email),
+                    'token' => $user->token,
+                    'avatar' => $user->avatar,
+                ]);
+                TeamMembers::create([
+                    'team_id' => $dataDefault['team']->id,
+                    'position_id' => $dataDefault['position']->id,
+                    'user_id' => $account->id
+                ]);
+                DB::commit();
+            } catch (Exception $ex) {
+                DB::rollback();
+                throw $ex;
+            }
+        } else {
+            $account->setData([
+                'name' => $user->name,
+                'nickname' => !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email),
+                'token' => $user->token,
+                'avatar' => $user->avatar,
+            ])->save();
+        }
         Auth::login($account);
         return redirect('/');
     }
@@ -81,13 +106,16 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        // TODO
+        if (! Auth::check()) {
+            return redirect('/');
+        }
         $user = Auth::user();
         if($user) {
             $user->token = '';
             $user->save();
         }
         Auth::logout();
+        Session::flush();
         return Redirect::away($this->getGoogleLogoutUrl())
             ->send();
     }

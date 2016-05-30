@@ -31,7 +31,7 @@
             </ul>
         </li>
         <li>
-            <a href="{{ URL::route('team::setting.index') }}"><i class="fa fa-gears"></i></a>
+            <a href="{{ URL::route('team::setting.team.index') }}"><i class="fa fa-gears"></i></a>
         </li>
     </ul>
 </div><!-- /.navbar-custom-menu -->

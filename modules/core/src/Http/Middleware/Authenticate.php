@@ -24,7 +24,11 @@ class Authenticate
                 return redirect()->guest('/');
             }
         }
-
+        // Check permission
+        if (! \Rikkei\Team\View\Permission::getInstance()->isAllow()) {
+            echo view('errors.permission');
+            exit;
+        }
         return $next($request);
     }
 }

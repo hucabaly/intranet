@@ -110,4 +110,21 @@ class Team extends CoreModel
             throw $ex;
         }
     }
+    
+    /**
+     * get team permission as
+     * 
+     * @return boolean|model
+     */
+    public function getTeamPermissionAs()
+    {
+        if (! $this->permission_as) {
+            return null;
+        }
+        $teamAs = Team::find($this->permission_as);
+        if (! $teamAs) {
+            return null;
+        }
+        return $teamAs;
+    }
 }
