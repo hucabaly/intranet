@@ -15,7 +15,7 @@
                         <p>Link đường dẫn URL đến trang CSS bạn cần gửi cho khách hàng ở bên dưới, bạn chỉ cần copy URL này và gửi qua mail cho khách hàng.</p>
                         <p>Bạn có thể xem trang preview lời chào mừng và chi tiết bài CSS ở bên dưới, đây chính xác là những gì khách hàng có thể nhìn thấy được, nếu chưa ok, bạn có thể bấm nút back để quay lại màn hình đăng ký thông tin cho CSS</p>
                         <div class="url_make">
-                            <h2>{{ url('/') }}/css/make/{{$css->token}}/{{$css->id}}</h2>
+                            <h2 id="link-make">{{ url('/') }}/css/make/{{$css->token}}/{{$css->id}}</h2>
                             <button type="button" class="btn btn-primary" onclick="location.href='/css/update/{{$css->id}}'">Back</button>
                         </div>
                         
@@ -90,9 +90,29 @@
 <!-- Script -->
 @section('script')
 <script src="{{ asset('js/jquery.rateit.js') }}"></script>
-
 <script type="text/javascript">
     $(function () { $('#rateit_star').rateit({min: 1, max: 10, step: 2}); });
+    $("#link-make").click(function(){
+        $("#link-make").selectText();
+    });
+    jQuery.fn.selectText = function(){
+        var doc = document;
+        var element = this[0];
+        console.log(this, element);
+        if (doc.body.createTextRange) {
+            var range = document.body.createTextRange();
+            range.moveToElementText(element);
+            range.select();
+        } else if (window.getSelection) {
+            var selection = window.getSelection();        
+            var range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+     }
+
+
 </script>
 - See more at: http://hocphp.info/danh-gia-dang-ngoi-sao-voi-jquery-rateit/#sthash.e8vhG2FN.dpuf
 @endsection
