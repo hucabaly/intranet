@@ -466,7 +466,7 @@ function submit(token, cssId, arrayValidate){
         },
     })
     .done(function (data) {
-        console.log(data);
+        location.href = "/css/success/"+cssId;
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
@@ -483,5 +483,11 @@ function isValidEmailAddress(emailAddress) {
     return pattern.test(emailAddress);
 }
 
-
+function exportExcel(projectName){
+    $(".make-css").table2excel({
+        exclude: ".noExl",
+        name: "Worksheet Name",
+        filename: projectName //do not include extension
+    });
+}
 
