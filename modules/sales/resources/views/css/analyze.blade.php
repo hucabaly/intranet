@@ -116,12 +116,25 @@
 <script src="{{ asset('rangeSlider/jQAllRangeSliders-min.js') }}"></script>
 <script src="{{ asset('rangeSlider/demo/sliderDemo.js') }}"></script>
 <script src="{{ asset('rangeSlider/demo/dateSliderDemo.js') }}"></script>
-<script src="{{ asset('rangeSlider/demo/demo.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/iCheck/icheck.js') }}"></script>
 <script>
 $('input').iCheck({
-            checkboxClass: 'icheckbox_minimal-blue',
-            radioClass: 'iradio_minimal-blue'
-        });    
+    checkboxClass: 'icheckbox_minimal-blue',
+    radioClass: 'iradio_minimal-blue'
+});   
+
+$("#dateRanger").dateRangeSlider({
+    range: {min: new Date(2016, 0, 1)}, //use minimum range
+    bounds: {
+           min: new Date(2016, 0, 1),
+           max: new Date(2017, 11, 31, 12, 59, 59)
+            },
+    defaultValues: {
+           min: new Date(2016, 1, 10),
+           max: new Date(2017, 4, 22)
+            }
+
+});
+
 </script>
 @endsection
