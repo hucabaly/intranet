@@ -16,6 +16,9 @@ class Menu
      */
     protected static $active;
     
+    protected static $menuHtml;
+
+
     /**
      * set active menu
      * 
@@ -57,11 +60,16 @@ class Menu
      */
     public static function get()
     {
+        if (self::$menuHtml) {
+            return self::$menuHtml;
+        }
+        
         $menu = config('menu');
         if(!$menu) {
             return;
         }
-        return self::getChildMenu($menu, 0);
+        self::$menuHtml = self::getChildMenu($menu, 0);
+        return self::$menuHtml;
     }
     
     /**
