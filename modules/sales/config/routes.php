@@ -12,6 +12,7 @@ Route::group([
         Route::get('css/view/{id}', 'CssController@view')->name('view');
         Route::get('css/detail/{id}', 'CssController@detail')->name('detail');
         Route::get('css/cancel', 'CssController@cancelMake')->name('cancel');
+        Route::get('css/analyze', 'CssController@analyze')->name('analyze');
 });
 Route::get('css/success/{id}', 'CssController@success')->name('success');
 Route::get('css/make/{token}/{id}', 'CssController@make')->name('make') ;
