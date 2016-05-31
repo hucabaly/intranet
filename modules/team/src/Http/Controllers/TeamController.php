@@ -32,14 +32,23 @@ class TeamController extends TeamBaseController
         if (!$model) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
-        $teamRule = \Rikkei\Team\Model\TeamRule::where('team_id', $id)->get();
         Form::setData($model);
-        $positions = \Rikkei\Team\Model\Position::select('id', 'name')
-            ->orderBy('level', 'desc')
-            ->get();
+        $positions = $teamRule = $permissionAs = null;
+        if ($model->is_function) {
+            if (! $model->permission_as) {
+                $teamRule = \Rikkei\Team\Model\TeamRule::where('team_id', $id)->get();        
+                $positions = \Rikkei\Team\Model\Position::select('id', 'name')
+                    ->orderBy('level', 'desc')
+                    ->get();
+            } else {
+                $permissionAs = $model->getTeamPermissionAs();
+            }
+        }
+        
         return view('team::setting.index', [
             'positions' => $positions,
             'teamRules' => $teamRule,
+            'permissionAs' => $permissionAs
         ]);
     }
     

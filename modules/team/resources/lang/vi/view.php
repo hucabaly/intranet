@@ -28,12 +28,15 @@ return [
     'team name' => 'tên bộ phận',
     'Are you sure delete postion team?' => 'Bạn có chắc chắn xóa vị trí của team không?',
     'Not found position' => 'Không tìm thấy chức vụ nào',
-    'Permission function' => 'Phân quyền sử dụng các chức năng',
+    'Permission function of' => 'Phân quyền sử dụng các chức năng của',
     'Please choose team to set permission function' => 'Vui lòng chọn team để cài đặt chức năng cho phép',
     'Not found position to set permission function' => 'Không tìm thấy chức vụ nào để cài đặt chức năng',
     'Screen' => 'Màn hình',
     'Function' => 'Chức năng',
     'Not found function' => 'Không tìm thấy chức năng',
     'Not found team' => 'Không tìm thấy team',
+    'Team is not function' => 'Team không phải là đơn vị chức năng',
+    'Team permisstion as team' => 'Team phân quyền theo team',
+    'Permission function' => 'Phân quyền sử dụng chức năng',
     
 ];

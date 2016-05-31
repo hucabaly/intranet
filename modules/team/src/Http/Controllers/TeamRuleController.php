@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Input;
 use Rikkei\Team\Model\Team;
 use Lang;
 use Rikkei\Team\Model\TeamRule;
+use Url;
 
 class TeamRuleController extends TeamBaseController
 {    
@@ -21,6 +22,18 @@ class TeamRuleController extends TeamBaseController
         $team = Team::find($teamId);
         if (! $team) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found team.'));
+        }
+        if (! $team->is_function) {
+            return redirect()->route('team::setting.team.view', ['id' => $teamId])
+                ->withErrors(Lang::get('team::view.Team is not function'));
+        }
+        if ($teamAs = $team->getTeamPermissionAs()) {
+            $message = Lang::get('team::view.Team permisstion as team') .' ';
+            $message .= '<a href="' . Url::route('team::setting.team.view', ['id' => $teamAs->id]) . '">';
+            $message .= $teamAs->name;
+            $message .= '</a>';
+            return redirect()->route('team::setting.team.view', ['id' => $teamId])
+                ->withErrors($message);
         }
         $rules = Input::get('rule');
         try {

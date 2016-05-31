@@ -7,11 +7,13 @@ return [
             'view.profile' => [
                 'label' => 'View thông tin ở trang cá nhân',
                 'routes' => [
+                    'profile.*'
                 ]
             ],
             'view.review.test.employee' => [
                 'label' => 'View thông tin ở trang cá nhân',
                 'routes' => [
+                    'employee.*'
                 ]
             ],
             'view.point.employee' => [
@@ -175,4 +177,14 @@ return [
             ],
         ]
     ], //end S-1 setting
+    
+    'all' => [
+        'label' => 'All',
+        'child' => [
+            'all' => [
+                'label' => 'All permission',
+                'routes' => '*'
+            ],
+        ]
+    ], //end all permission
 ];

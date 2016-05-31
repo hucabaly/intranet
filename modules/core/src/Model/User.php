@@ -2,10 +2,9 @@
 
 namespace Rikkei\Core\Model;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable;
 
-class User extends Model implements Authenticatable
+class User extends CoreModel implements Authenticatable
 {
     /**
      * The attributes that are mass assignable.

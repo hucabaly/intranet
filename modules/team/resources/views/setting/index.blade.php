@@ -139,11 +139,20 @@ Team Setting
     <div class="col-sm-12 team-rule-wrapper">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h2 class="box-title">{{ trans('team::view.Permission function') }}</h2>
+                @if (! Form::getData('id'))
+                    <h2 class="box-title">{{ trans('team::view.Permission function') }}</h2>
+                @else
+                    <h2 class="box-title">{{ trans('team::view.Permission function of') }} <b>{{ Form::getData('name') }}</b></h2>
+                @endif
             </div>
             <div class="box-body">
                 @if (! Form::getData('id'))
                     <p class="alert alert-warning">{{ trans('team::view.Please choose team to set permission function') }}</p>
+                @elseif (! Form::getData('is_function'))
+                    <p class="alert alert-warning">{{ trans('team::view.Team is not function') }}</p>
+                @elseif ($permissionAs)
+                    <p class="alert alert-warning">{{ trans('team::view.Team permisstion as team') }} 
+                        <a href="{{ Url::route('team::setting.team.view', ['id' => $permissionAs->id]) }}">{{ $permissionAs->name }}</a></p>
                 @elseif (! isset($positions) || ! count($positions))
                     <p class="alert alert-warning">{{ trans('team::view.Not found position to set permission function') }}</p>
                 @else
