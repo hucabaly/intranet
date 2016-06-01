@@ -4,9 +4,6 @@ namespace Rikkei\Team\Seeds;
 use Illuminate\Database\Seeder;
 use DB;
 use Rikkei\Team\Model\Team;
-use Rikkei\Team\Model\User;
-use Rikkei\Team\Model\Position;
-use Rikkei\Team\Model\TeamRule;
 
 class TeamSeeder extends Seeder
 {
