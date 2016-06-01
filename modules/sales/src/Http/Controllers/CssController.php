@@ -205,6 +205,7 @@ class CssController extends Controller {
                 "emailAddress" => Lang::get('sales::message.Email validate address'),
                 "totalMarkValidateRequired" => Lang::get('sales::message.Total mark validate required'),
                 "questionCommentRequired" => Lang::get('sales::message.Question comment required'),
+                "proposedRequired"  => Lang::get('sales::message.Proposed required'),
             );
             if(Auth::check()){}
             return view(
@@ -448,7 +449,7 @@ class CssController extends Controller {
      */
     public function success($cssId){
         $css = Css::find($cssId);
-       return view(
+        return view(
             'sales::css.success', [
                 "css" => $css
             ]
@@ -465,4 +466,13 @@ class CssController extends Controller {
         );
     }
     
+    /**
+     * Trang phan tich css
+     * @return void
+     */
+    public function analyze(){
+        return view(
+            'sales::css.analyze', []
+        );
+    }
 }

@@ -27,147 +27,22 @@ function showCalendar(x) {
 function add_team() {
     if ($(".team-tree  a[set=true]").length > 0) {
         var current = $(".team-tree a[set=true]");
-        var level_current = current.attr("level");
-        var chosen = false;
-        if(current.parent().parent().find("ul a[level="+(parseInt(level_current) + 1)+"]").length > 0){
-            if(level_current == 1){
-                var parent = current.parent().parent().parent().parent().find("a[level=0]"); 
-                current.parent().parent().find("ul a[level="+(parseInt(level_current) + 1)+"]").each(function(){
-                    var string_name = current.text() + " -> " + $(this).text();
-                    if($(this).parent().parent().find("ul a[level="+(parseInt(level_current) + 2)+"]").length > 0){
-                        $(this).parent().parent().find("ul a[level="+(parseInt(level_current) + 2)+"]").each(function(){
-                            var string_name_child = parent.text() + " -> " + string_name + " -> " + $(this).text();
-                            console.log(string_name_child);
-                            var team_id = $(this).attr("data-id");
-                            $(".modal-body ul.right-list .store-id").each(function(){
-                                if ($(this).val() == team_id) {
-                                    //alert("Da add roi");
-                                    chosen = true;
-                                    return false;
-                                }
-                            });
-                            if(!chosen){
-                                $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+string_name_child+'</div>');
-                                $(".modal-body ul.right-list").append('<input class="store-id" type="hidden" value="'+$(this).attr("data-id")+'">');   
-                            }
-                            
-                        });
-                    }else{
-                        console.log(parent.text() + " -> " +string_name);
-                        var team_id = $(this).attr("data-id");
-                        $(".modal-body ul.right-list .store-id").each(function(){
-                            if ($(this).val() == team_id) {
-                                //alert("Da add roi");
-                                chosen = true;
-                                return false;
-                            }
-                        });
-                        if(!chosen){
-                            $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+parent.text() + " -> " + string_name+'</div>');
-                            $(".modal-body ul.right-list").append('<input class="store-id" type="hidden" value="'+$(this).attr("data-id")+'">');   
-                        }
-                    }
-                     
-                });
-            }else{
-                current.parent().parent().find("ul a[level="+(parseInt(level_current) + 1)+"]").each(function(){
-                    var string_name = current.text() + " -> " + $(this).text();
-                    if($(this).parent().parent().find("ul a[level="+(parseInt(level_current) + 2)+"]").length > 0){
-                        $(this).parent().parent().find("ul a[level="+(parseInt(level_current) + 2)+"]").each(function(){
-                            var string_name_child = string_name + " -> " + $(this).text();
-                            console.log(string_name_child);
-                            var team_id = $(this).attr("data-id");
-                            $(".modal-body ul.right-list .store-id").each(function(){
-                                if ($(this).val() == team_id) {
-                                    //alert("Da add roi");
-                                    chosen = true;
-                                    return false;
-                                }
-                            });
-                            if(!chosen){
-                                $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+string_name_child+'</div>');
-                                $(".modal-body ul.right-list").append('<input class="store-id" type="hidden" value="'+$(this).attr("data-id")+'">');   
-                            }
-                            
-                        });
-                    }else{
-                        console.log(string_name);
-                        var team_id = $(this).attr("data-id");
-                        $(".modal-body ul.right-list .store-id").each(function(){
-                            if ($(this).val() == team_id) {
-                                //alert("Da add roi");
-                                chosen = true;
-                                return false;
-                            }
-                        });
-                        if(!chosen){
-                            $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+string_name+'</div>');
-                            $(".modal-body ul.right-list").append('<input class="store-id" type="hidden" value="'+$(this).attr("data-id")+'">');   
-                        }
-                        
-                    }
-                    
-                });
-            }
-            
-        }else{
-            var team_id = current.attr("data-id");
-            if(current.parent().parent().parent().parent().find("a[level="+(parseInt(level_current) - 1)+"]").length > 0){
-                var parent = current.parent().parent().parent().parent().find("a[level="+(parseInt(level_current) - 1)+"]");
-                if(parent.parent().parent().parent().parent().find("a[level="+(parseInt(level_current) - 2)+"]").length > 0){
-                    var parent_parent = parent.parent().parent().parent().parent().find("a[level="+(parseInt(level_current) - 2)+"]");
-                    $(".modal-body ul.right-list .store-id").each(function(){
-                        if ($(this).val() == team_id) {
-                            //alert("Da add roi");
-                            chosen = true;
-                            return false;
-                        }
-                    });
-                    if(!chosen){
-                        $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+parent_parent.text() + " -> " +parent.text() + " -> " +current.text()+'</div>');
-                    }
-                    
-                }else{
-                    $(".modal-body ul.right-list .store-id").each(function(){
-                        if ($(this).val() == team_id) {
-                            //alert("Da add roi");
-                            chosen = true;
-                            return false;
-                        }
-                    });
-                    if(!chosen){
-                        $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+parent.text() + " -> " +current.text()+'</div>');
-                    }
-                    
-                }
-            }else{
-                $(".modal-body ul.right-list .store-id").each(function(){
-                    if ($(this).val() == team_id) {
-                        //alert("Da add roi");
-                        chosen = true;
-                        return false;
-                    }
-                });
-                if(!chosen){
-                    $(".modal-body ul.right-list").append('<div data-id="'+team_id+'" onclick="change_bgcolor_element(this)">'+current.text()+'</div>');
-                }
-            }
-            
-            $(".modal-body ul.right-list .store-id").each(function(){
-                if ($(this).val() == team_id) {
-                    //alert("Da add roi");
-                    chosen = true;
-                    return false;
-                }
-            });
-            if(!chosen){
-                $(".modal-body ul.right-list").append('<input class="store-id" type="hidden" value="'+current.attr("data-id")+'">');
-            }
-            
-            
-        }
-        
+        strElem = '<li><span onclick="change_bgcolor_element(this);" data-id='+current.attr("data-id")+'>'+getTreeTeamNameSelected(current)+'</span></li>';
+        $(".right-list").append(strElem);
+        console.log(getTreeTeamNameSelected(current));
     }
+}
+
+function getTreeTeamNameSelected(current){
+    var current_level = parseInt(current.attr("level"));
+    var name = current.text();
+    if(current.parent().parent().parent().parent().find("a[level="+(current_level - 1)+"]").length > 0){
+        parent = current.parent().parent().parent().parent().find("a[level="+(current_level - 1)+"]");
+        if(parseInt(parent.attr("level")) > 0){
+            name = getTreeTeamNameSelected(parent) + " -> " + name;
+        }
+    }
+    return name;
 }
 
 /** 
@@ -176,10 +51,8 @@ function add_team() {
  **/
 
 function remove_team() {
-    if ($(".modal-body .right-list div[set=true]").length > 0) {
-        var data_id = $(".modal-body .right-list div[set=true]").attr("data-id");
-        $(".modal-body .right-list div[set=true]").remove();
-        $(".store-id[value="+data_id+"]").remove();
+    if ($(".modal-body .right-list li span[set=true]").length > 0) {
+        $(".modal-body .right-list li span[set=true]").parent().remove();
     }
 }
 
@@ -191,12 +64,12 @@ function remove_team() {
 function change_bgcolor_element(x) {
     $(".team-tree a").attr("set", "false");
     $(".team-tree li").css("background-color", "");
-    $(".right-list div").css("background-color", "").attr("set", "false");
+    $(".right-list li span").attr("set", "false");
+    $(".right-list li").css("background-color", "");
     $(x).attr("set", "true");
-    if($(x).parent().hasClass("right-list")){
-        $(x).css("background-color", "rgb(33, 42, 109)");
+    if($(x).parent().parent().hasClass("right-list")){
+        $(x).parent().css("background-color", "rgb(33, 42, 109)");
     }else{
-        
         $(x).parent().parent().css("background-color", "rgb(33, 42, 109)");
     }
     
@@ -212,7 +85,7 @@ function set_team_to_css() {
     var str = "";
     teamArray = [];
 
-    $(".modal-body .right-list div").each(function (index) {
+    $(".modal-body .right-list li span").each(function () {
         var team_id = $(this).attr("data-id");
         var team_name = $(this).html();
         elements += '<input class="team_id" type="hidden" name="teams[' + team_id + ']" value="' + team_name + '" />';
@@ -246,7 +119,7 @@ function set_team_to_css() {
 function set_teams_popup() {
     $(".right-list").html("");
     for (var i = 0; i < teamArray.length; i++) {
-        $(".right-list").append('<li set="false"><label class="team-item"><a data-id="' + teamArray[i][0] + '" onclick="change(this)">' + teamArray[i][1] + '</a></label></li>');
+        $(".right-list").append('<li ><span onclick="change_bgcolor_element(this);" data-id="' + teamArray[i][0] + '">' + teamArray[i][1] + '</span></li>');
     }
 }
 
@@ -336,7 +209,7 @@ function totalMark() {
     
     total = total.toFixed(2);
     $(".diem").html(total);
-    $(".diem-fixed").html(total);
+    $(".diem-fixed").html('Tổng điểm: ' + total);
     
 }
 
@@ -368,45 +241,50 @@ function confirm(){
  * @returns void
  */
 function submit(token, cssId, arrayValidate){ 
+    var invalid = false;
+    var strInvalid = "";
     $('#modal-confirm').modal('hide');
-    $(".comment-question").css("border","none");
+    $(".comment-question").css("border-color","#d2d6de");
+    $("#tongquat").css("border","none");
+    $("#comment-tongquat").css("border-color","#d2d6de");
     
     var arrayValidate = $.parseJSON(arrayValidate);
     var makeName = $.trim($("#make_name").val());
     var makeEmail = $.trim($("#make_email").val());
-    if(makeName == "" || makeEmail == ""){
-        if(makeName == ""){
-            $('#modal-alert .modal-body').html(arrayValidate['nameRequired']);
-            $("#make_name").focus();
-            $("#make_name").css("border","1px solid red");
-        }else{
-            $('#modal-alert .modal-body').html(arrayValidate['emailRequired']);
-            $("#make_email").focus();
-            $("#make_email").css("border","1px solid red");
-        }
-        $('#modal-alert').modal('show');
-        return false;
+    if(makeName == ""){
+        $("#make_name").css("border","1px solid red");
+        strInvalid += '<div>'+arrayValidate['nameRequired']+'</div>';
+        invalid = true;
+        $("#make_name").focus();
     }
     
-    if( !isValidEmailAddress( makeEmail ) ){
-        $('#modal-alert .modal-body').html(arrayValidate['emailAddress']);
-        $("#make_email").focus();
+    if(makeEmail == ""){
         $("#make_email").css("border","1px solid red");
-        $('#modal-alert').modal('show');
-        return false;
+        strInvalid += '<div>'+arrayValidate['emailRequired']+'</div>';
+        invalid = true;
+        if(makeName != ""){
+            $("#make_email").focus();
+        }
+    }else if( !isValidEmailAddress( makeEmail ) ){
+        $("#make_email").css("border","1px solid red");
+        strInvalid += '<div>'+arrayValidate['emailAddress']+'</div>';
+        invalid = true;
+        if(makeName != ""){
+            $("#make_email").focus();
+        }
     }
     
     var diemTongQuat = parseInt($("#tongquat").rateit('value'));
     if(diemTongQuat == 0){
-        $('#modal-alert .modal-body').html(arrayValidate['totalMarkValidateRequired']);
-        $('#modal-alert').modal('show');
-        return false;
+        invalid = true;
+        strInvalid += '<div>'+arrayValidate['totalMarkValidateRequired']+'</div>';
+        $("#tongquat").css("border","1px solid red");
     }else if(diemTongQuat < 3){
         var comment_tong = $.trim($("#comment-tongquat").val());
         if(comment_tong == ""){
-            $('#modal-alert .modal-body').html(arrayValidate['questionCommentRequired']);
-            $('#modal-alert').modal('show');
-            return false;
+            strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
+            $("#comment-tongquat").css("border","1px solid red");
+            invalid = true;
         }
         
     }
@@ -427,10 +305,27 @@ function submit(token, cssId, arrayValidate){
     if(arrValidate.length > 0) {
         for(var i=0; i<arrValidate.length; i++){
             $(".comment-question[data-questionid='"+arrValidate[i]+"']").css("border","1px solid red");
-            //$(".comment-question[data-questionid='"+arrValidate[i]+"']").parent().parent().find("td:nth-child(2)").css("border-right","1px solid red");
-            //$(".comment-question[data-questionid='"+arrValidate[i]+"']").parent().parent().prev().find("td:last-child").css("border-bottom","1px solid red");
         }
-        $('#modal-alert .modal-body').html(arrayValidate['questionCommentRequired']);
+        if(diemTongQuat > 2){
+            strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
+        }else {
+            var comment_tong = $.trim($("#comment-tongquat").val());
+            if(comment_tong != ""){
+                strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
+            }
+        }
+        invalid = true;
+    }
+    
+    var gopY = $.trim($("#proposed").val());
+    if(gopY == ""){
+        $("#proposed").css("border","1px solid red");
+        strInvalid += '<div>'+arrayValidate['proposedRequired']+'</div>';
+        invalid = true;
+    }
+    
+    if(invalid){
+        $('#modal-alert .modal-body').html(strInvalid);
         $('#modal-alert').modal('show');
         return false;
     }

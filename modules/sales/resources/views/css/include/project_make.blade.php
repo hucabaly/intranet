@@ -57,7 +57,7 @@
                     <tr class="cau">
                         <td class="title" colspan="2">{{$questionChild->content}}</td>
                         <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$questionChild->id}}" onclick="totalMark();"></div></td>
-                        <td class="title2"><textarea class="comment-question" rows="1" type="text" data-questionid="{{$questionChild->id}}"  ></textarea></td>
+                        <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" data-questionid="{{$questionChild->id}}"  ></textarea></td>
                     </tr>
                 @endforeach
             @endif
@@ -67,7 +67,7 @@
             <tr class="cau">
                 <td class="title" colspan="2">{{$question->content}}</td>
                 <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$question->id}}" onclick="totalMark();"></div></td>
-                <td class="title2"><textarea class="comment-question" rows="1" type="text" data-questionid="{{$question->id}}"  ></textarea></td>
+                <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" data-questionid="{{$question->id}}"  ></textarea></td>
             </tr>
         @endforeach
     @endif
@@ -92,19 +92,19 @@
             {{ trans('sales::view.Proposed') }}
         </td>
         
-        <td class="title2" colspan="2"><textarea class="proposed" id="proposed"></textarea></td>
+        <td class="title2" colspan="2"><textarea class="proposed form-control" id="proposed" placeholder="{{ trans('sales::view.Proposed placeholder') }}"></textarea></td>
         <td class="title2"></td>
     </tr>
 </table>
 <div class="container-submit"><button type="button" class="btn btn-primary" onclick="confirm();">Submit</button></div>
-<div class="diem-fixed">00.00</div>
+<div class="diem-fixed">Tổng điểm: 00.00</span></div>
 <div class="modal modal-danger" id="modal-alert">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Error</h4>
+                <h4 class="modal-title">{{ trans('sales::view.Error make css') }}</h4>
             </div>
             <div class="modal-body">
                 <p>One fine body…</p>
@@ -124,14 +124,14 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Confirm</h4>
+                <h4 class="modal-title">{{ trans('sales::view.Confirm make css') }}</h4>
             </div>
             <div class="modal-body">
                 <p>One fine body…</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-outline" onclick="submit('{{ Session::token() }}',{{$css->id}},'{{$arrayValidate}}');">Submit</button>
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">{{ trans('sales::view.Cancel make css') }}</button>
+                <button type="button" class="btn btn-outline" onclick="submit('{{ Session::token() }}',{{$css->id}},'{{$arrayValidate}}');">{{ trans('sales::view.Submit make css') }}</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -145,14 +145,14 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"></span></button>
-                <h4 class="modal-title">Warning!</h4>
+                <h4 class="modal-title">{{ trans('sales::view.Warning') }}</h4>
             </div>
             <div class="modal-body">
                 <p>{{ trans('sales::message.Make confirm') }}</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal" onclick="goToFinish();">No</button>
-                <button type="button" class="btn btn-outline" onclick="hideModalConfirmMake();">Yes</button>
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal" onclick="goToFinish();">{{ trans('sales::view.No') }}</button>
+                <button type="button" class="btn btn-outline" onclick="hideModalConfirmMake();">{{ trans('sales::view.Yes') }}</button>
             </div>
         </div>
         <!-- /.modal-content -->
