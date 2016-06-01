@@ -12,7 +12,7 @@ class User extends CoreModel implements Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'nickname', 'email', 'employee_id', 'token', 'avatar', 'team_id', 'position_id'
+        'id', 'name', 'nickname', 'email', 'employee_id', 'token', 'avatar'
     ];
 
     /**

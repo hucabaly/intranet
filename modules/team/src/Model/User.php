@@ -56,7 +56,7 @@ class User extends BaseUser
     public function getTeams()
     {
         return TeamMembers::select('team_id', 'position_id')
-            ->where('user_id', $this->id)
+            ->where('employee_id', $this->employee_id)
             ->get();
     }
     

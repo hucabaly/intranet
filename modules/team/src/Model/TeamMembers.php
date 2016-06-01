@@ -11,6 +11,6 @@ class TeamMembers extends \Rikkei\Core\Model\CoreModel
      * @var array
      */
     protected $fillable = [
-        'team_id', 'user_id', 'position_id'
+        'team_id', 'employee_id', 'position_id'
     ];
 }

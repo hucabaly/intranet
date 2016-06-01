@@ -32,7 +32,7 @@ class UserBodSeeder extends Seeder
             return;
         }
         $teamMember = TeamMembers::where('team_id', $bodTeam->id)
-            ->where('user_id', $user->id)
+            ->where('employee_id', $user->employee_id)
             ->first();
         if ($teamMember) {
             $teamMember->position_id = $positionLevelMax->id;
@@ -41,7 +41,7 @@ class UserBodSeeder extends Seeder
             TeamMembers::create([
                 'team_id' => $bodTeam->id,
                 'position_id' => $positionLevelMax->id,
-                'user_id' => $user->id
+                'employee_id' => $user->employee_id
             ]);
         }
         
@@ -55,6 +55,6 @@ class UserBodSeeder extends Seeder
             'rule' => $rule,
             'team_id' => $bodTeam->id
         ];
-        TeamRule::saveRule($dataDemo, $bodTeam->id, true);
+        TeamRule::saveRule($dataDemo, $bodTeam->id, false);
     }
 }
