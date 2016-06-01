@@ -15,6 +15,7 @@ return [
     'Reset' => 'Reset',
     'Close' => 'Đóng',
     'Save' => 'Lưu',
+    'Save And Continue' => 'Lưu và tiếp tục',
     'New' => 'Mới',
     'Permission following function unit' => 'Phân quyền theo đơn vị chức năng',
     'Edit team' => 'Chỉnh sửa bộ phận',
@@ -38,5 +39,15 @@ return [
     'Team is not function' => 'Team không phải là đơn vị chức năng',
     'Team permisstion as team' => 'Team phân quyền theo team',
     'Permission function' => 'Phân quyền sử dụng chức năng',
+    'Roles list' => 'Danh sách các vai trò',
+    'Create new' => 'Tạo mới',
+    'Showing :itemCount of :itemTotal entries / :pagerTotal pager' => 'Hiển thị :itemCount của :itemTotal đối tượng / :pagerTotal trang',
+    'Show' => "Hiển thị",
+    'Edit role: :roleName' => 'Chỉnh sửa role: :roleName',
+    'General' => 'Chung',
+    'Rules' => 'Luật phân quyền',
+    'Users' => 'Người dùng',
+    'Name' => 'Tên',
+    'role name' => 'tên vai trò',
     
 ];

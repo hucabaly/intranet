@@ -68,6 +68,19 @@ html, body {
 .main-header .navbar .nav>.active>a {
     background-color: $menuColorHover;
 }
+.navbar-custom-menu {
+    .nav.navbar-nav {
+        li.setting {
+            .dropdown-menu {
+                li {
+                    a {
+                        color: #333;
+                    }
+                }
+            }
+        }
+    }
+}
 /*end menu*/
 
 /*message alert*/
@@ -263,10 +276,8 @@ form{
     .navbar-custom-menu {
         .navbar-nav {
             margin: 0;
-            li {
-                float: left;;
-            }
             >li {
+                float: left;;
                 position: static;
                 >a {
                     padding-top: 15px;
