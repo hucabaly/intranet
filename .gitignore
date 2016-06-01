@@ -13,6 +13,7 @@
 #################################
 /nbproject
 /.idea
+/modules/sales/.netbeans.xml
 
 # OS generated files #
 ######################

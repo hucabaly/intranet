@@ -359,7 +359,7 @@ label{
 }
 
 .icheckbox-container {
-    width: 120px;
+    width: 99px;
     display: inline-block;
 }
 
@@ -379,4 +379,50 @@ label{
 .iradio-container{
     width: 160px;
     margin: 5px 0;
+}
+
+.small-title{
+    color:blue;
+    font-size:15px;
+}
+
+.box-select-question{
+    display: none;
+}
+
+.line-15{
+    margin-top: 20px;
+}
+
+.btn-apply{
+    padding: 6px 25px;
+}
+
+.btn-filter{
+    padding: 6px 25px;
+    margin-top: 20px;
+}
+
+table.tieuchi-theocauhoi{
+    display:none;
+}
+
+table.tieuchi-theocauhoi .No{
+    width:35px;
+}
+
+table.tieuchi-theocauhoi .question{
+    width:44%;
+}
+
+table.tieuchi-theocauhoi .point{
+    
+}
+
+table.tieuchi-theocauhoi .check{
+    width:40px;
+}
+
+select option.parent{
+    font-weight: bold;
 }
