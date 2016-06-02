@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 use Rikkei\Team\Model\User;
 use Rikkei\Team\Model\TeamRule;
 use Rikkei\Team\View\Acl;
-use Rikkei\Core\Model\Employee;
+use Rikkei\Team\Model\Employees;
 use Rikkei\Team\Model\Roles;
 use Rikkei\Team\Model\EmployeeRole;
 
@@ -23,18 +23,18 @@ class UserRootSeeder extends Seeder
             return;
         }
         $user = User::where('email', $email)->first();
-        $employee = Employee::where('email', $email)->first();
+        $employee = Employees::where('email', $email)->first();
         $name = preg_replace('/@.*$/', '', $email);
         if (! $employee) {
             $employee = Employees::create([
-                'email' => $user->email,
+                'email' => $email,
                 'name' => $name,
                 'nickname' => $name
             ]);
         }
         if (! $user) {
             $user = User::create([
-                'email' => $user->email,
+                'email' => $email,
                 'name' => $name,
                 'nickname' => $name,
                 'employee_id' => $employee->id
