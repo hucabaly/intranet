@@ -65,6 +65,9 @@ class Permission
             return $this;
         }
         self::$rules = self::$user->getAcl();
+        if (! self::$rules) {
+            self::$rules = ['checked' => true];
+        }
         Session::push('permission.rules', self::$rules);
         return $this;
     }
@@ -78,9 +81,6 @@ class Permission
     public function getScopeCurrent($teamId = null)
     {
         $routeCurrent = Route::getCurrentRoute()->getName();
-        
-        // TODO role another
-        
         if (! self::$rules || ! isset(self::$rules['team'])) {
             return TeamRule::SCOPE_NONE;
         }
@@ -105,6 +105,31 @@ class Permission
     }
     
     /**
+     * get scopes current of roles
+     * 
+     * @param int $teamId
+     * @return int|array
+     */
+    public function getScopeCurrentRole()
+    {
+        $routeCurrent = Route::getCurrentRoute()->getName();
+        if (! self::$rules || ! isset(self::$rules['role'])) {
+            return TeamRule::SCOPE_NONE;
+        }
+        foreach (self::$rules['role'] as $roleRuleId => $rules) {
+            foreach ($rules as $route => $scope) {
+                if ($route == '*') {
+                    $route = '.*';
+                }
+                if (preg_match('/' . $route . '/', $routeCurrent)) {
+                    return $scope;
+                }
+            }
+        }
+        return TeamRule::SCOPE_NONE;
+    }
+    
+    /**
      * check allow access to route current
      * 
      * @param int $teamId
@@ -112,6 +137,12 @@ class Permission
      */
     public function isAllow($teamId = null)
     {
+        //check scope role
+        $scopeCurrentRole = $this->getScopeCurrentRole();
+        if ($scopeCurrentRole !=TeamRule::SCOPE_NONE) {
+            return true;
+        }
+        //check scope team
         $scopeCurrent = $this->getScopeCurrent($teamId);
         if (is_numeric($scopeCurrent)) { //exsits teamId
             if ($scopeCurrent == TeamRule::SCOPE_NONE) {

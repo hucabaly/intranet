@@ -9,6 +9,7 @@ use Rikkei\Core\View\Form;
 use Lang;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
+use Rikkei\Team\Model\EmployeeRole;
 use Rikkei\Team\Model\RoleRule;
 
 class RoleController extends TeamBaseController
@@ -55,7 +56,8 @@ class RoleController extends TeamBaseController
         Breadcrumb::add($model->name, URL::route('team::setting.role.edit', ['id' => $id]));
         Form::setData($model);
         return view('team::role.edit', [
-            'roleRule' => RoleRule::where('role_id', $id)->get()
+            'roleRule' => RoleRule::where('role_id', $id)->get(),
+            'collectionModel' => EmployeeRole::getGridData($id)
         ]);
     }
     
@@ -64,6 +66,11 @@ class RoleController extends TeamBaseController
      */
     public function save()
     {
+        // if submit is delete
+        if (Input::get('delete')) {
+            return $this->delete();
+        }
+        // if submit is save
         $id = Input::get('id');
         $dataItem = Input::get('item');
         if ($id) {
@@ -107,8 +114,30 @@ class RoleController extends TeamBaseController
             }
             return redirect()->route('team::setting.role.index')->with('messages', $messages);
         } catch (Exception $ex) {
-            return redirect()->route('team::setting.role.index')
-                    ->withErrors($ex);
+            return redirect()->route('team::setting.role.index')->withErrors($ex);
+        }
+    }
+    
+    /**
+     * delete role
+     */
+    public function delete()
+    {
+        $id = Input::get('id');
+        $model = Roles::find($id);
+        if (! $model) {
+            return redirect()->route('team::setting.role.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        try {
+            $model->delete();
+            $messages = [
+                    'success'=> [
+                        Lang::get('team::messages.Delete item success!'),
+                    ]
+            ];
+            return redirect()->route('team::setting.role.index')->with('messages', $messages);
+        } catch (Exception $ex) {
+            return redirect()->route('team::setting.role.index')->withErrors($ex);
         }
     }
 }

@@ -81,7 +81,6 @@ class AuthController extends Controller
         if (! $account) {
             DB::beginTransaction();
             try {
-                $dataDefault = User::createTeamPositionDefault();
                 $account = User::create([
                     'email' => $user->email,
                     'name' => $user->name,
@@ -90,20 +89,16 @@ class AuthController extends Controller
                     'avatar' => $user->avatar,
                     'employee_id' => $employee->id
                 ]);
-                TeamMembers::create([
-                    'team_id' => $dataDefault['team']->id,
-                    'position_id' => $dataDefault['position']->id,
-                    'employee_id' => $employee->id
-                ]);
                 DB::commit();
             } catch (Exception $ex) {
                 DB::rollback();
                 throw $ex;
             }
         } else {
+            //update information of user
             $account = $account->setData([
                 'name' => $user->name,
-                'nickname' => !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email),
+                'nickname' => $nickName,
                 'token' => $user->token,
                 'avatar' => $user->avatar,
             ]);
@@ -113,6 +108,8 @@ class AuthController extends Controller
             $account->save();
         }
         Auth::login($account);
+        //contrutor permission;
+        \Rikkei\Team\View\Permission::getInstance();
         return redirect('/');
     }
 

@@ -57,4 +57,22 @@ class Roles extends CoreModel
         }
         return $result;
     }
+    
+    /**
+     * rewite delete role
+     */
+    public function delete()
+    {
+        DB::beginTransaction();
+        try {
+            EmployeeRole::where('role_id', $this->id)->delete();
+            RoleRule::where('role_id', $this->id)->delete();
+            $result = parent::delete();
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            throw $ex;
+        }
+        return $result;
+    }
 }

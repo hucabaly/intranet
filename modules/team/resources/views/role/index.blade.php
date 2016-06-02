@@ -33,7 +33,7 @@ use Rikkei\Core\View\Form;
                         <thead>
                             <tr>
                                 <th class="sorting {{ Config::getDirClass('id') }} col-id" onclick="window.location.href='{{Config::getUrlOrder('id')}}';">Id</th>
-                                <th class="sorting {{ Config::getDirClass('name') }} col-name" onclick="window.location.href='{{Config::getUrlOrder('name')}}';">Name</th>
+                                <th class="sorting {{ Config::getDirClass('name') }} col-name" onclick="window.location.href='{{Config::getUrlOrder('name')}}';">{{ trans('team::view.Name') }}</th>
                                 <th class="col-action">&nbsp;</th>
                             </tr>
                         </thead>
@@ -72,9 +72,16 @@ use Rikkei\Core\View\Form;
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->name }}</td>
                                         <td>
-                                            <a href="{{ route('team::setting.role.edit', ['id' => $item->id ]) }}" class="btn-edit">Edit</a>
+                                            <a href="{{ route('team::setting.role.edit', ['id' => $item->id ]) }}" class="btn-edit">{{ trans('team::view.Edit') }}</a>
                                             <span>|</span>
-                                            <a href="{{ route('team::setting.role.edit', ['id' => $item->id, 'token' => csrf_token() ]) }}" class="btn-delete delete-confirm">Delete</a>
+                                            <form method="post" action="{{ route('team::setting.role.delete') }}" class="form-inline">
+                                                {!! csrf_field() !!}
+                                                {!! method_field('delete') !!}
+                                                <input type="hidden" name="id" value="{{ $item->id }}" />
+                                                <button class="btn-delete delete-confirm" type="submit" data-noti="{{ trans('team::view.Are you sure delete this role and all link this role with employee?') }}">
+                                                    <span>{{ trans('team::view.Remove') }}</span>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

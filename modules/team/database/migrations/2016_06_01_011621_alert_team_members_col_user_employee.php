@@ -17,6 +17,7 @@ class AlertTeamMembersColUserEmployee extends Migration
             return;
         }
         if (Schema::hasColumn('team_members', 'user_id')) {
+            \Rikkei\Team\Model\TeamMembers::truncate();
             Schema::table('team_members', function (Blueprint $table) {
                 $table->dropForeign('team_members_user_id_foreign');
                 $table->dropUnique('team_members_user_id_team_id_unique');

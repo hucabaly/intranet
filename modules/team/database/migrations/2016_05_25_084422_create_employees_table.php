@@ -22,6 +22,7 @@ class CreateEmployeesTable extends Migration
             $table->string('nickname');
             $table->string('email')->unique();
             $table->integer('employee_card_id')->nullable();
+            $table->string('employee_code')->nullable();
             $table->date('join_date')->nullable();
             $table->date('leave_date')->nullable();
             $table->string('persional_email')->nullable();

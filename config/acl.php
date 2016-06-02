@@ -166,6 +166,36 @@ return [
         ]
     ], //end B-3 Recruiment - summary
     
+    'C-1' => [
+        'label' => 'Css',
+        'child' => [
+            'view.list' => [
+                'label' => 'Xem danh sách css',
+                'routes' => [
+                    'sales::css.list'
+                ]
+            ],
+            'view.detail' => [
+                'label' => 'Xem chi tiết css',
+                'routes' => [
+                    'sales::css.view'
+                ]
+            ],
+            'edit.detail' => [
+                'label' => 'Tạo và sửa css',
+                'routes' => [
+                    'sales::css.analyze',
+                    'sales::css.cancel',
+                    'sales::css.create',
+                    'sales::css.detail',
+                    'sales::css.saveResult',
+                    'sales::css.saveResult',
+                    'sales::css.update',
+                ]
+            ],
+        ]
+    ], //end css
+    
     'S-1' => [
         'label' => 'Setting',
         'child' => [
@@ -173,6 +203,12 @@ return [
                 'label' => 'Setting team',
                 'routes' => [
                     'team::setting.team.*'
+                ]
+            ],
+            'edit.role' => [
+                'label' => 'Setting role',
+                'routes' => [
+                    'team::setting.role.*'
                 ]
             ],
         ]

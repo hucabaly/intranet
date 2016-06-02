@@ -60,6 +60,17 @@ class User extends BaseUser
             ->get();
     }
     
+    public function getRole()
+    {
+        $employeeRole = EmployeeRole::select('role_id')
+            ->where('employee_id', $this->employee_id)
+            ->first();
+        if (! $employeeRole) {
+            return null;
+        }
+        return Roles::find($employeeRole->role_id);
+    }
+    
     /**
      * get acl of user
      * acl is array route name allowed follow each team
@@ -67,6 +78,25 @@ class User extends BaseUser
      * @return array
      */
     public function getAcl()
+    {
+        $aclTeam = $this->getAclTeam();
+        $aclRole = $this->getAclRole();
+        $result = [];
+        if ($aclTeam) {
+            $result['team'] = $aclTeam;
+        }
+        if ($aclRole) {
+            $result['role'] = $aclRole;
+        }
+        return $result;
+    }
+    
+    /**
+     * get Acl team of user
+     * 
+     * @return array
+     */
+    protected function getAclTeam()
     {
         $teams = $this->getTeams();
         if (! $teams || ! count($teams)) {
@@ -85,13 +115,46 @@ class User extends BaseUser
                 ->where('position_id', $position->id)
                 ->get();
             foreach ($teamRule as $item) {
+                if (! $item->scope) {
+                    continue;
+                }
                 $routes = Acl::getRoutesNameFromKey($item->rule);
                 if (! $routes) {
                     continue;
                 }
                 foreach ($routes as $route) {
-                    $routesAllow['team'][$team->id][$route] = $item->scope;
+                    $routesAllow[$team->id][$route] = $item->scope;
                 }
+            }
+        }
+        return $routesAllow;
+    }
+    
+    /**
+     * get acl role of rule
+     * 
+     * @return array
+     */
+    protected function getAclRole()
+    {
+        $role = $this->getRole();
+        if (! $role) {
+            return [];
+        }
+        $routesAllow = [];
+        $roleRule = RoleRule::select('rule', 'scope')
+            ->where('role_id', $role->id)
+            ->get();
+        foreach ($roleRule as $item) {
+            if (! $item->scope) {
+                continue;
+            }
+            $routes = Acl::getRoutesNameFromKey($item->rule);
+            if (! $routes) {
+                continue;
+            }
+            foreach ($routes as $route) {
+                $routesAllow[$role->id][$route] = $item->scope;
             }
         }
         return $routesAllow;

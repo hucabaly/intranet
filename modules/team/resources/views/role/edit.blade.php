@@ -8,6 +8,7 @@ use Rikkei\Core\View\Form;
 @endsection
 
 @section('css')
+<link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/datatables/dataTables.bootstrap.css') }}" />
 <link rel="stylesheet" href="{{ URL::asset('team/css/style.css') }}" />
 @endsection
 
@@ -24,7 +25,8 @@ use Rikkei\Core\View\Form;
                 <input type="submit" class="btn-edit" name="submit_continue" value="{{ trans('team::view.Save And Continue') }}" />
                 <a href="{{ app('request')->fullUrl() }}" class="btn-move">Reset</a>
                 @if(Form::getData('id'))
-                    <input type="submit" class="btn-delete delete-confirm" name="delete" value="{{ trans('team::view.Remove') }}" />
+                    <input type="submit" class="btn-delete delete-confirm" name="delete" value="{{ trans('team::view.Remove') }}"
+                           data-noti="{{ trans('team::view.Are you sure delete this role and all link this role with employee?') }}" />
                 @endif
             </div>
         </div>
@@ -49,14 +51,6 @@ use Rikkei\Core\View\Form;
                     </div>
                 @endif
             </div>
-        </div>
-        <div class="box-footer">
-            <input type="submit" class="btn-add" name="submit" value="{{ trans('team::view.Save') }}" />
-            <input type="submit" class="btn-edit" name="submit_continue" value="{{ trans('team::view.Save And Continue') }}" />
-            <a href="{{ app('request')->fullUrl() }}" class="btn-move">Reset</a>
-            @if(Form::getData('id'))
-                <input type="submit" class="btn-delete delete-confirm" name="delete" value="{{ trans('team::view.Remove') }}" />
-            @endif
         </div>
     </form>
 </div>

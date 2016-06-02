@@ -49,5 +49,7 @@ return [
     'Users' => 'Người dùng',
     'Name' => 'Tên',
     'role name' => 'tên vai trò',
+    'Are you sure delete this role and all link this role with employee?' => "Bạn có chắc chắn muốn xóa vai trò này và tất cả liên kết của vai trò này với nhân viên?",
+    'View' => 'Xem',
     
 ];
