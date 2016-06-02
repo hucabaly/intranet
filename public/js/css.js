@@ -25,27 +25,24 @@ function showCalendar(x) {
  * hàm thực hiện việc add team từ cột trái sang cột phải trong popup team
  **/
 function add_team() {
-    if ($(".team-tree ul a[set=true]").length > 0) {
-        var team_id = $(".team-tree ul a[set=true]").attr("data-id");
-        var chosen = false;
+    if ($(".team-tree  a[set=true]").length > 0) {
+        var current = $(".team-tree a[set=true]");
+        strElem = '<li><span onclick="change_bgcolor_element(this);" data-id='+current.attr("data-id")+'>'+getTreeTeamNameSelected(current)+'</span></li>';
+        $(".right-list").append(strElem);
+        console.log(getTreeTeamNameSelected(current));
+    }
+}
 
-        $(".modal-body ul.right-list li").each(function (index) {
-
-            if ($(this).attr("id") == team_id) {
-                alert("Da add roi");
-                chosen = true;
-                return false;
-            }
-        });
-        if (chosen == false) {
-            var element_add = $(".team-tree ul a[set=true]").parent().parent()[0].outerHTML;
-            //$(".team-tree ul a[set=true]")
-
-            $(".modal-body ul.right-list").append(element_add);
-            $(".modal-body ul li a[set=true]").attr("set", "false");
-            $(".modal-body ul li").css("background-color", "");
+function getTreeTeamNameSelected(current){
+    var current_level = parseInt(current.attr("level"));
+    var name = current.text();
+    if(current.parent().parent().parent().parent().find("a[level="+(current_level - 1)+"]").length > 0){
+        parent = current.parent().parent().parent().parent().find("a[level="+(current_level - 1)+"]");
+        if(parseInt(parent.attr("level")) > 0){
+            name = getTreeTeamNameSelected(parent) + " -> " + name;
         }
     }
+    return name;
 }
 
 /** 
@@ -54,8 +51,8 @@ function add_team() {
  **/
 
 function remove_team() {
-    if ($(".modal-body ul.right-list li a[set=true]").length > 0) {
-        $(".modal-body ul.right-list li a[set=true]").parent().parent().remove();
+    if ($(".modal-body .right-list li span[set=true]").length > 0) {
+        $(".modal-body .right-list li span[set=true]").parent().remove();
     }
 }
 
@@ -66,16 +63,16 @@ function remove_team() {
  */
 function change_bgcolor_element(x) {
     $(".team-tree a").attr("set", "false");
-    $(".team-tree ul li").css("background-color", "");
+    $(".team-tree li").css("background-color", "");
+    $(".right-list li span").attr("set", "false");
+    $(".right-list li").css("background-color", "");
     $(x).attr("set", "true");
-    $(x).parent().parent().css("background-color", "rgb(33, 42, 109)");
-
-    $(".right-list a").attr("set", "false");
-    $(".right-list li").css("background-color", "").attr("set", "false");
-    $(x).attr("set", "true");
-    $(x).parent().parent().css("background-color", "rgb(33, 42, 109)");
+    if($(x).parent().parent().hasClass("right-list")){
+        $(x).parent().css("background-color", "rgb(33, 42, 109)");
+    }else{
+        $(x).parent().parent().css("background-color", "rgb(33, 42, 109)");
+    }
     
-    console.log(abc(x,parseInt($(x).attr("level"))));
 }
 
 /**
@@ -88,7 +85,7 @@ function set_team_to_css() {
     var str = "";
     teamArray = [];
 
-    $(".modal-body ul.right-list li a").each(function (index) {
+    $(".modal-body .right-list li span").each(function () {
         var team_id = $(this).attr("data-id");
         var team_name = $(this).html();
         elements += '<input class="team_id" type="hidden" name="teams[' + team_id + ']" value="' + team_name + '" />';
@@ -122,14 +119,14 @@ function set_team_to_css() {
 function set_teams_popup() {
     $(".right-list").html("");
     for (var i = 0; i < teamArray.length; i++) {
-        $(".right-list").append('<li set="false"><label class="team-item"><a data-id="' + teamArray[i][0] + '" onclick="change(this)">' + teamArray[i][1] + '</a></label></li>');
+        $(".right-list").append('<li ><span onclick="change_bgcolor_element(this);" data-id="' + teamArray[i][0] + '">' + teamArray[i][1] + '</span></li>');
     }
 }
 
 $(document).ready(function () {
     $(".project_type input[type=radio]:first-child").prop('checked', true);
     $(".team-tree a").removeAttr("href");
-    $(".team-tree li ul a").attr("onclick", "change_bgcolor_element(this)");
+    $(".team-tree a").attr("onclick", "change_bgcolor_element(this)");
 
     //hide calendar sau khi select
     $('#start_date').on('changeDate', function (ev) {
@@ -183,4 +180,209 @@ $(document).ready(function () {
         }
     });
 });
+
+/**
+ * Trang lam danh gia
+ * Khi khach hang danh danh gia mot tieu chi
+ * Tinh tong diem realtime
+ * @returns void
+ */
+function totalMark() {
+    var tongSoCauDanhGia = 0;
+    var total = 0;
+    $(".rateit").each(function(){
+        var danhGia = parseInt($(this).rateit('value'));
+        if($(this).attr("id") != "tongquat"){
+            if(danhGia > 0){
+                tongSoCauDanhGia++;
+                total += danhGia;
+            }
+        }
+    });
+    
+    var diemTongQuat = parseInt($("#tongquat").rateit('value'));
+    if(tongSoCauDanhGia == 0){
+        total = diemTongQuat * 20;
+    }else{
+        total = diemTongQuat * 4 + total/(tongSoCauDanhGia * 5) * 80;
+    }
+    
+    total = total.toFixed(2);
+    $(".diem").html(total);
+    $(".diem-fixed").html('Tổng điểm: ' + total);
+    
+}
+
+/**
+ * show or hide total point at bottom right make css page
+ */
+$(window).scroll(function(){
+    if($('.visible-check').visible()){
+        $(".diem-fixed").hide();
+    } else {
+        $(".diem-fixed").show();
+    }
+});
+
+/**
+ * Function confirm CSS
+ * @returns void
+ */
+function confirm(){
+    $('#modal-confirm .modal-body').html("Số điểm hiện tại của CSS là "+$(".diem").html()+" Điểm. Bạn có chắc muốn hoàn thành CSS tại đây không?");
+    $('#modal-confirm').modal('show');
+}
+
+/**
+ * Function validate va insert CSS vao database
+ * @param string token
+ * @param int cssId
+ * @param json arrayValidate
+ * @returns void
+ */
+function submit(token, cssId, arrayValidate){ 
+    var invalid = false;
+    var strInvalid = "";
+    $('#modal-confirm').modal('hide');
+    $(".comment-question").css("border-color","#d2d6de");
+    $("#tongquat").css("border","none");
+    $("#comment-tongquat").css("border-color","#d2d6de");
+    
+    var arrayValidate = $.parseJSON(arrayValidate);
+    var makeName = $.trim($("#make_name").val());
+    var makeEmail = $.trim($("#make_email").val());
+    if(makeName == ""){
+        $("#make_name").css("border","1px solid red");
+        strInvalid += '<div>'+arrayValidate['nameRequired']+'</div>';
+        invalid = true;
+        $("#make_name").focus();
+    }
+    
+    if(makeEmail == ""){
+        $("#make_email").css("border","1px solid red");
+        strInvalid += '<div>'+arrayValidate['emailRequired']+'</div>';
+        invalid = true;
+        if(makeName != ""){
+            $("#make_email").focus();
+        }
+    }else if( !isValidEmailAddress( makeEmail ) ){
+        $("#make_email").css("border","1px solid red");
+        strInvalid += '<div>'+arrayValidate['emailAddress']+'</div>';
+        invalid = true;
+        if(makeName != ""){
+            $("#make_email").focus();
+        }
+    }
+    
+    var diemTongQuat = parseInt($("#tongquat").rateit('value'));
+    if(diemTongQuat == 0){
+        invalid = true;
+        strInvalid += '<div>'+arrayValidate['totalMarkValidateRequired']+'</div>';
+        $("#tongquat").css("border","1px solid red");
+    }else if(diemTongQuat < 3){
+        var comment_tong = $.trim($("#comment-tongquat").val());
+        if(comment_tong == ""){
+            strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
+            $("#comment-tongquat").css("border","1px solid red");
+            invalid = true;
+        }
+        
+    }
+    
+    var arrValidate = [];
+    $(".rateit").each(function(){
+        var danhGia = parseInt($(this).rateit('value'));
+        if($(this).attr("id") != "tongquat"){
+            if(danhGia > 0 && danhGia < 3){
+                if($(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val() == ""){
+                    arrValidate.push($(this).attr("data-questionid"));
+                }
+                
+            }
+        }
+    }); 
+    
+    if(arrValidate.length > 0) {
+        for(var i=0; i<arrValidate.length; i++){
+            $(".comment-question[data-questionid='"+arrValidate[i]+"']").css("border","1px solid red");
+        }
+        if(diemTongQuat > 2){
+            strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
+        }else {
+            var comment_tong = $.trim($("#comment-tongquat").val());
+            if(comment_tong != ""){
+                strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
+            }
+        }
+        invalid = true;
+    }
+    
+    var gopY = $.trim($("#proposed").val());
+    if(gopY == ""){
+        $("#proposed").css("border","1px solid red");
+        strInvalid += '<div>'+arrayValidate['proposedRequired']+'</div>';
+        invalid = true;
+    }
+    
+    if(invalid){
+        $('#modal-alert .modal-body').html(strInvalid);
+        $('#modal-alert').modal('show');
+        return false;
+    }
+    
+    var make_name = $("#make_name").val();
+    var make_email = $("#make_email").val();
+    var totalMark = parseInt($("#tongquat").rateit('value'));
+    var proposed = $("#proposed").val();
+    var arrayQuestion = [];
+    $(".rateit").each(function(){
+        var danhGia = parseInt($(this).rateit('value'));
+        if($(this).attr("id") != "tongquat"){
+            var questionId = $(this).attr("data-questionid");
+            var diem = danhGia;
+            var comment = $(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val();
+            arrayQuestion.push([questionId,diem,comment]);
+        }
+    });
+    
+    
+    $.ajax({
+        url: '/css/saveResult',
+        type: 'post',
+        data: {
+            _token: token, 
+            arrayQuestion: arrayQuestion, 
+            make_name: make_name, 
+            make_email: make_email, 
+            totalMark: totalMark,
+            comment : $.trim($("#comment-tongquat").val()),
+            proposed: proposed,
+            cssId: cssId
+        },
+    })
+    .done(function (data) {
+        location.href = "/css/success/"+cssId;
+    })
+    .fail(function () {
+        alert("Ajax failed to fetch data");
+    })
+}
+
+/**
+ * Function validate email address
+ * @param string emailAddress
+ * @returns boolean
+ */
+function isValidEmailAddress(emailAddress) {
+    var pattern = /^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
+    return pattern.test(emailAddress);
+}
+
+function exportExcel(projectName){
+    $(".make-css").table2excel({
+        exclude: ".noExl",
+        name: "Worksheet Name",
+        filename: projectName //do not include extension
+    });
+}
 

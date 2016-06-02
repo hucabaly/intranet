@@ -39,7 +39,7 @@
                     <div class="container-fluid">
                         <div class="navbar-header">
                             <a href="{{ URL::to('/') }}" class="navbar-brand"><b><img src="{{ asset('/common/images/intranet_logo.png') }}" /></b></a>
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                            <button type="button" class="navbar-toggle mmenu-toggle">
                                 <i class="fa fa-bars"></i>
                             </button>
                         </div>
@@ -103,9 +103,23 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div> <!-- modal delete cofirm -->
+        
+        <!-- menu mobile -->
+        <div class="menu-left-wraper">
+            <nav id="mmenu-left" class="left">
+                <div class="mmenu-close mmenu-toggle">
+                    <a href="#"><span></span></a>
+                </div>
+                <ul class="collapse-wrapper collapse-mmenu">
+                    {!! Rikkei\Core\View\Menu::get() !!}
+                </ul>
+            </nav>
+        </div> <!-- end menu mobile -->
 
         <!-- jQuery 2.2.0 -->
         <script src="{{ URL::asset('adminlte/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
+        <!-- jQuery UI -->
+        <script src="{{ URL::asset('adminlte/plugins/jQueryUI/jquery-ui.min.js') }}"></script>
         <!-- Bootstrap 3.3.6 -->
         <script src="{{ URL::asset('adminlte/bootstrap/js/bootstrap.min.js') }}"></script>
         <!-- FastClick -->

@@ -19,16 +19,16 @@ Team Setting
 @section('content')
 <div class="row">
     <!-- team manage -->
-    <div class="col-sm-6 team-wrapper hight-same">
+    <div class="col-md-6 team-wrapper hight-same">
         <div class="box box-info">
             <div class="box-header with-border">
                 <h3 class="box-title">{{ trans('team::view.List team') }}</h3>
             </div>
             <div class="row team-list-action box-body">
-                <div class="col-sm-9 team-list">
+                <div class="col-md-8 col-sm-8 team-list">
                     {!! TeamList::getTreeHtml(Form::getData('id')) !!}
                 </div>
-                <div class="col-sm-3 team-action">
+                <div class="col-md-4 col-sm-4 team-action">
                     <p><button type="button" class="btn-add btn-action" data-target="#team-add-form" data-toggle="modal">
                             <span>{{ trans('team::view.Add') }}</span>
                         </button></p>
@@ -71,13 +71,13 @@ Team Setting
     </div> <!-- end team manage -->
     
     <!-- team position manage -->
-    <div class="col-sm-6 team-position-wrapper hight-same">
+    <div class="col-md-6 team-position-wrapper hight-same">
         <div class="box box-info">
             <div class="box-header with-border">
                 <h3 class="box-title">{{ trans('team::view.Position of team') }}</h3>
             </div>
             <div class="row team-list-action box-body">
-                <div class="col-sm-9 position-list">
+                <div class="col-md-8 col-sm-8 position-list">
                     @if (! count($positionAll))
                         <p class="alert alert-warning">{{ trans('team::view.Not found position') }}</p>
                     @else
@@ -93,7 +93,7 @@ Team Setting
                         </table>
                     @endif
                 </div>
-                <div class="col-sm-3 team-action">
+                <div class="col-md-4 col-sm-4 team-action">
                     <p><button type="button" class="btn-add btn-action" data-target="#position-add-form" data-toggle="modal">
                             <span>{{ trans('team::view.Add') }}</span>
                         </button></p>
@@ -135,6 +135,31 @@ Team Setting
             </div>
         </div>
     </div> <!-- end team position manage -->
+    
+    <div class="col-sm-12 team-rule-wrapper">
+        <div class="box box-warning">
+            <div class="box-header with-border">
+                @if (! Form::getData('id'))
+                    <h2 class="box-title">{{ trans('team::view.Permission function') }}</h2>
+                @else
+                    <h2 class="box-title">{{ trans('team::view.Permission function of') }} <b>{{ Form::getData('name') }}</b></h2>
+                @endif
+            </div>
+            <div class="box-body">
+                @if (! Form::getData('id'))
+                    <p class="alert alert-warning">{{ trans('team::view.Please choose team to set permission function') }}</p>
+                @elseif (! Form::getData('is_function'))
+                    <p class="alert alert-warning">{{ trans('team::view.Team is not function') }}</p>
+                @elseif ($permissionAs)
+                    <p class="alert alert-warning">{{ trans('team::view.Team permisstion as team') }} 
+                        <a href="{{ Url::route('team::setting.team.view', ['id' => $permissionAs->id]) }}">{{ $permissionAs->name }}</a></p>
+                @elseif (! isset($positions) || ! count($positions))
+                    <p class="alert alert-warning">{{ trans('team::view.Not found position to set permission function') }}</p>
+                @else
+                    @include('team::setting.include.rule')
+                @endif
+            </div>
+    </div>
 </div>
 
 <!-- modal add/edit team position-->

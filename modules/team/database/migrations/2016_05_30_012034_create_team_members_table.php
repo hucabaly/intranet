@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTeamRuleTable extends Migration
+class CreateTeamMembersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,19 +12,22 @@ class CreateTeamRuleTable extends Migration
      */
     public function up()
     {
-        Schema::create('team_rule', function (Blueprint $table) {
+        Schema::create('team_members', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('team_id')->unsigned();
+            $table->integer('employee_id')->unsigned();
             $table->integer('position_id')->unsigned();
-            $table->string('rule');
-            $table->enum('scope', \Rikkei\Team\Model\TeamRule::getScopes())
-                ->default(\Rikkei\Team\Model\TeamRule::getScopeDefault());
-            $table->unique(['team_position_id', 'rule']);
+            $table->timestamps();
+            $table->unique(['employee_id', 'team_id']);
             $table->foreign('team_id')
                 ->references('id')
                 ->on('team');
             $table->foreign('position_id')
                 ->references('id')
                 ->on('position');
+            $table->foreign('employee_id')
+                ->references('id')
+                ->on('employees');
         });
     }
 
@@ -35,6 +38,6 @@ class CreateTeamRuleTable extends Migration
      */
     public function down()
     {
-        Schema::drop('team_rule');
+        Schema::drop('team_members');
     }
 }

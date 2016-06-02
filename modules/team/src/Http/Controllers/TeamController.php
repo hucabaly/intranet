@@ -18,7 +18,7 @@ class TeamController extends TeamBaseController
     protected function _construct()
     {
         Breadcrumb::add('Setting');
-        Breadcrumb::add('Team', URL::route('team::setting.index'));
+        Breadcrumb::add('Team', URL::route('team::setting.team.index'));
     }
 
     /**
@@ -30,10 +30,26 @@ class TeamController extends TeamBaseController
     {
         $model = Team::find($id);
         if (!$model) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         Form::setData($model);
-        return view('team::setting.index');
+        $positions = $teamRule = $permissionAs = null;
+        if ($model->is_function) {
+            if (! $model->permission_as) {
+                $teamRule = \Rikkei\Team\Model\TeamRule::where('team_id', $id)->get();
+                $positions = \Rikkei\Team\Model\Position::select('id', 'name')
+                    ->orderBy('level', 'desc')
+                    ->get();
+            } else {
+                $permissionAs = $model->getTeamPermissionAs();
+            }
+        }
+        
+        return view('team::setting.index', [
+            'positions' => $positions,
+            'teamRules' => $teamRule,
+            'permissionAs' => $permissionAs
+        ]);
     }
     
     /**
@@ -64,7 +80,7 @@ class TeamController extends TeamBaseController
                             'id' => $model->id
                         ])->withErrors($validator);
             }
-            return redirect()->route('team::setting.index')
+            return redirect()->route('team::setting.team.index')
                 ->withErrors($validator);
         }
         //calculate position
@@ -88,7 +104,7 @@ class TeamController extends TeamBaseController
             $model->setData($dataItem);
             $result = $model->save();
             if (!$result) {
-                return redirect()->route('team::setting.index')
+                return redirect()->route('team::setting.team.index')
                     ->withErrors(Lang::get('team::messages.Error save data, please try again!'));
             }
             return redirect()->route('team::setting.team.view', [
@@ -99,7 +115,7 @@ class TeamController extends TeamBaseController
                     ]
                 ]);
         } catch (Exception $ex) {
-            return redirect()->route('team::setting.index')->withErrors($ex);
+            return redirect()->route('team::setting.team.index')->withErrors($ex);
         }
     }
     
@@ -110,11 +126,11 @@ class TeamController extends TeamBaseController
     {
         $id = Input::get('id');
         if (!$id) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         $model = Team::find($id);
         if (!$model) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         try {
             if (Input::get('move_up')) {
@@ -145,15 +161,15 @@ class TeamController extends TeamBaseController
     {
         $id = Input::get('id');
         if (!$id) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         $model = Team::find($id);
         if (!$model) {
-            return redirect()->route('team::setting.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         try {
             $model->delete();
-            return redirect()->route('team::setting.index')
+            return redirect()->route('team::setting.team.index')
                 ->with('messages', [
                     'success' => [
                         Lang::get('team::messages.Delete item success!')
