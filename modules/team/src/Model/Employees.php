@@ -2,6 +2,7 @@
 namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\CoreModel;
+use Rikkei\Team\View\Config;
 
 class Employees extends CoreModel
 {
@@ -32,4 +33,17 @@ class Employees extends CoreModel
         'recruiment_apply_id',
     ];
     
+    /**
+     * get collection to show grid
+     * 
+     * @return type
+     */
+    public static function getGridData()
+    {
+        $pager = Config::getPagerData();
+        $collection = self::select('id','name')
+            ->orderBy($pager['order'], $pager['dir']);
+        $collection = $collection->paginate($pager['limit']);
+        return $collection;
+    }
 }
