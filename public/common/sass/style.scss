@@ -68,6 +68,19 @@ html, body {
 .main-header .navbar .nav>.active>a {
     background-color: $menuColorHover;
 }
+.navbar-custom-menu {
+    .nav.navbar-nav {
+        li.setting {
+            .dropdown-menu {
+                li {
+                    a {
+                        color: #333;
+                    }
+                }
+            }
+        }
+    }
+}
 /*end menu*/
 
 /*message alert*/
@@ -202,6 +215,9 @@ form{
         color: red;
     }
 }
+.form-inline {
+    display: inline-block;
+}
 /*responsive*/
 @media (max-width: 1160px) and  (min-width: $mobile+1) {
     .navbar-collapse.pull-left+.navbar-custom-menu {
@@ -263,10 +279,8 @@ form{
     .navbar-custom-menu {
         .navbar-nav {
             margin: 0;
-            li {
-                float: left;;
-            }
             >li {
+                float: left;;
                 position: static;
                 >a {
                     padding-top: 15px;

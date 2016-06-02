@@ -1,9 +1,11 @@
 <?php
 namespace Rikkei\Team\Model;
 
-class TeamMembers extends \Rikkei\Core\Model\CoreModel
+use Rikkei\Core\Model\CoreModel;
+
+class RoleRule extends CoreModel
 {
-    protected $table = 'team_members';
+    protected $table = 'role_rule';
     
     /**
      * The attributes that are mass assignable.
@@ -11,6 +13,6 @@ class TeamMembers extends \Rikkei\Core\Model\CoreModel
      * @var array
      */
     protected $fillable = [
-        'team_id', 'employee_id', 'position_id'
+        'role_id', 'rule', 'scope'
     ];
 }

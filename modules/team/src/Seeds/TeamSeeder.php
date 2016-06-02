@@ -4,9 +4,6 @@ namespace Rikkei\Team\Seeds;
 use Illuminate\Database\Seeder;
 use DB;
 use Rikkei\Team\Model\Team;
-use Rikkei\Team\Model\User;
-use Rikkei\Team\Model\Position;
-use Rikkei\Team\Model\TeamRule;
 
 class TeamSeeder extends Seeder
 {
@@ -23,79 +20,73 @@ class TeamSeeder extends Seeder
         $dataDemo = [
             [
                 'name' => 'BOD',
-                'permission_as' => '0',
                 'is_function' => '0',
+                'permission_as' => '0',
                 'child' => [
                     [
                         'name' => 'Rikkei - Hanoi',
-                        'permission_as' => '0',
                         'is_function' => '0',
+                        'permission_as' => '0',
                         'child' => [
                             [
                                 'name' => 'PTPM',
+                                'is_function' => '1',
                                 'permission_as' => '0',
-                                'is_function' => '0',
+                                'flag_permission_children' => 1,
                                 'child' => [
                                     [
                                         'name' => 'Web',
-                                        'permission_as' => '0',
                                         'is_function' => '1',
                                     ],
                                     [
                                         'name' => 'Mobile',
-                                        'permission_as' => '0',
                                         'is_function' => '1',
                                         'child' => [
                                             [
                                                 'name' => 'Android',
-                                                'permission_as' => '0',
                                                 'is_function' => '1',
                                             ],
                                             [
                                                 'name' => 'iOS',
-                                                'permission_as' => '0',
                                                 'is_function' => '1',
                                             ],
                                         ]
                                     ],
                                     [
                                         'name' => 'Finance',
-                                        'permission_as' => '0',
                                         'is_function' => '1',
                                     ],
                                     [
                                         'name' => 'Game',
-                                        'permission_as' => '0',
                                         'is_function' => '1',
                                     ],
                                     [
                                         'name' => 'QA',
-                                        'permission_as' => '0',
                                         'is_function' => '1',
                                     ],
                                 ]
                             ], //end PTPM
                             [
                                 'name' => 'Nhân sự',
-                                'permission_as' => '0',
                                 'is_function' => '1',
+                                'permission_as' => '0',
                             ],
                             [
                                 'name' => 'HC - TH',
-                                'permission_as' => '0',
                                 'is_function' => '1',
+                                'permission_as' => '0',
                             ],
                             [
                                 'name' => 'Sales',
-                                'permission_as' => '0',
                                 'is_function' => '1',
+                                'permission_as' => '0',
                             ],
                         ]
                     ], // end rikkei hanoi
                     [
                         'name' => 'Rikkei - Danang',
-                        'permission_as' => '0',
                         'is_function' => '0',
+                        'permission_as' => '0',
                     ],
                     [
                         'name' => 'Rikkei - Jappan',
@@ -107,7 +98,7 @@ class TeamSeeder extends Seeder
         ];
         DB::beginTransaction();
         try {
-            $this->createTeamRecursive($dataDemo, 0);
+            $this->createTeamRecursive($dataDemo, 0, 0);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
@@ -121,8 +112,9 @@ class TeamSeeder extends Seeder
      * 
      * @param array $data
      * @param int $parentId
+     * @param int $permissionAsId
      */
-    protected function createTeamRecursive($data, $parentId)
+    protected function createTeamRecursive($data, $parentId, $permissionAsId = 0)
     {
         foreach ($data as $key => $item) {
             $dataChild = null;
@@ -134,10 +126,20 @@ class TeamSeeder extends Seeder
                 'parent_id' => $parentId,
                 'position' => $key + 1
             ];
+            if (! isset($item['permission_as'])) {
+                $itemDataAddtional['permission_as'] = $permissionAsId;
+            }
+            if (isset($item['flag_permission_children']) && $item['flag_permission_children']) {
+                $permissionAsId = true;
+                unset($item['flag_permission_children']);
+            }
             $item = array_merge($item, $itemDataAddtional);
             $team = Team::create($item);
             if ($dataChild) {
-                $this->createTeamRecursive($dataChild, $team->id);
+                if ($permissionAsId === true) {
+                    $permissionAsId = $team->id;
+                }
+                $this->createTeamRecursive($dataChild, $team->id, $permissionAsId);
             }
         }
     }

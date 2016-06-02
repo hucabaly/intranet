@@ -36,7 +36,7 @@ class TeamController extends TeamBaseController
         $positions = $teamRule = $permissionAs = null;
         if ($model->is_function) {
             if (! $model->permission_as) {
-                $teamRule = \Rikkei\Team\Model\TeamRule::where('team_id', $id)->get();        
+                $teamRule = \Rikkei\Team\Model\TeamRule::where('team_id', $id)->get();
                 $positions = \Rikkei\Team\Model\Position::select('id', 'name')
                     ->orderBy('level', 'desc')
                     ->get();

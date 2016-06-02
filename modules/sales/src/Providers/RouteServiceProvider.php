@@ -53,7 +53,9 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes(Router $router)
     {
         $router->group([
-            'namespace' => $this->namespace, 'middleware' => 'web',
+            'namespace' => $this->namespace, 
+            'middleware' => 'web',
+            'as' => 'sales::'
         ], function ($router) {
             require __DIR__."/../../config/routes.php";
         });

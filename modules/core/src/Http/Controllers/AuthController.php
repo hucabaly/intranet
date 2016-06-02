@@ -15,6 +15,7 @@ use Lang;
 use Illuminate\Support\MessageBag;
 use Rikkei\Team\Model\TeamMembers;
 use DB;
+use Rikkei\Team\Model\Employees;
 
 class AuthController extends Controller
 {
@@ -64,24 +65,29 @@ class AuthController extends Controller
                 return redirect('/');
             }
         }
-        
+        $nickName = !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email);
         $account = User::where('email', $user->email)
             ->first();
+        $employee = Employees::where('email', $user->email)
+            ->first();
+        //add employee
+        if (! $employee) {
+            $employee = Employees::create([
+                'email' => $user->email,
+                'name' => $user->name,
+                'nickname' => $nickName
+            ]);
+        }
         if (! $account) {
             DB::beginTransaction();
             try {
-                $dataDefault = User::createTeamPositionDefault();
                 $account = User::create([
                     'email' => $user->email,
                     'name' => $user->name,
-                    'nickname' => !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email),
+                    'nickname' => $nickName,
                     'token' => $user->token,
                     'avatar' => $user->avatar,
-                ]);
-                TeamMembers::create([
-                    'team_id' => $dataDefault['team']->id,
-                    'position_id' => $dataDefault['position']->id,
-                    'user_id' => $account->id
+                    'employee_id' => $employee->id
                 ]);
                 DB::commit();
             } catch (Exception $ex) {
@@ -89,14 +95,21 @@ class AuthController extends Controller
                 throw $ex;
             }
         } else {
-            $account->setData([
+            //update information of user
+            $account = $account->setData([
                 'name' => $user->name,
-                'nickname' => !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email),
+                'nickname' => $nickName,
                 'token' => $user->token,
                 'avatar' => $user->avatar,
-            ])->save();
+            ]);
+            if (! $account->employee_id) {
+                $account->employee_id = $employee->id;
+            }
+            $account->save();
         }
         Auth::login($account);
+        //contrutor permission;
+        \Rikkei\Team\View\Permission::getInstance();
         return redirect('/');
     }
 
