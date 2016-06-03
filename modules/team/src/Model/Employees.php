@@ -41,8 +41,9 @@ class Employees extends CoreModel
     public static function getGridData()
     {
         $pager = Config::getPagerData();
-        $collection = self::select('id','name')
+        $collection = self::select('id','name','email')
             ->orderBy($pager['order'], $pager['dir']);
+        $collection = self::filterGrid($collection);
         $collection = $collection->paginate($pager['limit']);
         return $collection;
     }

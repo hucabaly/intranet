@@ -53,5 +53,11 @@ return [
     'View' => 'Xem',
     'Employee List' => 'Danh sách nhân viên',
     'Member list' => 'Danh sách thành viên',
+    'From' => 'Từ',
+    'To' => 'Đến',
+    'Reset filter' => 'Reset bộ lọc',
+    'Search' => 'Tìm kiếm',
+    'Edit employee: :employeeName' => 'Chỉnh sửa thông tin nhân viên: :employeeName',
+    'Personal Information' => 'Thông tin cá nhân',
     
 ];

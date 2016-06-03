@@ -31,13 +31,13 @@ return [
         'active' => '1'
     ],
     'team' => [
-        'path' => 'team',
+        'path' => '#',
         'label' => 'Team',
         'active' => '1',
         'child' => [
-            'team.create' => [
-                'path' => 'team/create',
-                'label' => 'Create team',
+            'team.member' => [
+                'path' => 'team/member',
+                'label' => 'Member',
                 'active' => '1'
             ],
             'team.list' => [
@@ -92,5 +92,22 @@ return [
         'path' => 'qms',
         'label' => 'QMS',
         'active' => '1'
+    ],
+    'setting' => [
+        'path' => '#',
+        'label' => 'Setting',
+        'active' => '1',
+        'child' => [
+            'team' => [
+                'path' => 'setting/team',
+                'label' => 'Team',
+                'active' => '1',
+            ],
+            'role' => [
+                'path' => 'setting/role',
+                'label' => 'Role',
+                'active' => '1',
+            ],
+        ]        
     ]
 ];

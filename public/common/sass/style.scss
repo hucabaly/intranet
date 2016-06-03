@@ -218,6 +218,23 @@ form{
 .form-inline {
     display: inline-block;
 }
+.form-label-left {
+    .control-label {
+        text-align: left;
+    }
+}
+.box {
+    .table-responsive {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+.tab-content {
+    margin-top: 10px;
+}
+.grid-pager {
+    margin-top: 12px;
+}
 /*responsive*/
 @media (max-width: 1160px) and  (min-width: $mobile+1) {
     .navbar-collapse.pull-left+.navbar-custom-menu {
