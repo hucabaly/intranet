@@ -29,8 +29,9 @@ return [
     'team name' => 'tên bộ phận',
     'Are you sure delete postion team?' => 'Bạn có chắc chắn xóa vị trí của team không?',
     'Not found position' => 'Không tìm thấy chức vụ nào',
-    'Permission function of' => 'Phân quyền sử dụng các chức năng của',
-    'Please choose team to set permission function' => 'Vui lòng chọn team để cài đặt chức năng cho phép',
+    'Permission function of team' => 'Phân quyền sử dụng các chức năng của team',
+    'Permission function of role' => 'Phân quyền sử dụng các chức năng của vai trò',
+    'Please choose team or role to set permission function' => 'Vui lòng chọn team hoặc vai trò đặc biệt để cài đặt chức năng cho phép',
     'Not found position to set permission function' => 'Không tìm thấy chức vụ nào để cài đặt chức năng',
     'Screen' => 'Màn hình',
     'Function' => 'Chức năng',
@@ -43,7 +44,8 @@ return [
     'Create new' => 'Tạo mới',
     'Showing :itemCount of :itemTotal entries / :pagerTotal pager' => 'Hiển thị :itemCount của :itemTotal đối tượng / :pagerTotal trang',
     'Show' => "Hiển thị",
-    'Edit role: :roleName' => 'Chỉnh sửa role: :roleName',
+    'Edit role: :roleName' => 'Chỉnh sửa vai trò: :roleName',
+    'Edit role' => 'Chỉnh sửa vai trò',
     'General' => 'Chung',
     'Rules' => 'Luật phân quyền',
     'Users' => 'Người dùng',
@@ -59,5 +61,10 @@ return [
     'Search' => 'Tìm kiếm',
     'Edit employee: :employeeName' => 'Chỉnh sửa thông tin nhân viên: :employeeName',
     'Personal Information' => 'Thông tin cá nhân',
+    'Role Special' => 'Vai trò đặc biệt',
+    'Not found role special' => 'Không tìm thấy vai trò đặc biệt nào',
+    'Create role' => 'Tạo mới vai trò',
+    'role name' => 'tên vai trò',
+    
     
 ];

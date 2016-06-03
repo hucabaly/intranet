@@ -93,21 +93,4 @@ return [
         'label' => 'QMS',
         'active' => '1'
     ],
-    'setting' => [
-        'path' => '#',
-        'label' => 'Setting',
-        'active' => '1',
-        'child' => [
-            'team' => [
-                'path' => 'setting/team',
-                'label' => 'Team',
-                'active' => '1',
-            ],
-            'role' => [
-                'path' => 'setting/role',
-                'label' => 'Role',
-                'active' => '1',
-            ],
-        ]        
-    ]
 ];

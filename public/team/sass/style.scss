@@ -52,7 +52,8 @@
 }
 .team-action {
     .btn-action {
-        width: 120px;
+        max-width: 120px;
+        width: 100%;
     }
 }
 .form-group {
@@ -88,12 +89,17 @@
 .team-rule-wrapper {
     margin-top: 20px;
     .table-team-rule {
+        margin-top: 15px;
         tbody {
             td.col-screen-empty {
                 background-color: white;
             }
-            td.col-screen {
-                background-color: #8e8e8e;
+            .tr-col-screen {
+                background-color: #3c8dbc;
+                color: white;
+                td {
+                    border: none;
+                }
             }
         }
     }

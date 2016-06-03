@@ -7,9 +7,9 @@ use Rikkei\Team\Model\TeamRule;
 $acl = Acl::getAclData();
 $i = 0;
 ?>
-<form action="{{ URL::route('team::setting.team.rule.save') }}" method="post">
+<form action="{{ URL::route('team::setting.role.rule.save') }}" method="post">
     {!! csrf_field() !!}
-    <input type="hidden" name="team[id]" value="{{ Form::getData('id') }}" />
+    <input type="hidden" name="role[id]" value="{{ Form::getData('role.id') }}" />
 
     <div class="actions">
         <button type="submit" class="btn-add btn-large">
@@ -22,9 +22,7 @@ $i = 0;
                 <tr>
                     <th class="col-screen">{{ trans('team::view.Screen') }}</th>
                     <th class="col-function">{{ trans('team::view.Function') }}</th>
-                    @foreach ($positions as $position)
-                        <th class="col-team">{{ $position->name }}</th>
-                    @endforeach
+                    <th class="team">&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,9 +33,7 @@ $i = 0;
                         <tr class="tr-col-screen">
                             <td class="col-screen">{{ $aclValue['label'] }}</td>
                             <td>&nbsp;</td>
-                            @foreach ($positions as $position)
-                                <td>&nbsp;</td>
-                            @endforeach
+                            <td>&nbsp;</td>
                         </tr>
                         @if ($aclValue['child'] && count($aclValue['child']))
                             @foreach ($aclValue['child'] as $aclItemKey => $aclItem)
@@ -45,23 +41,20 @@ $i = 0;
                                 <tr>
                                     <td class="col-screen-empty">&nbsp;</td>
                                     <td>{{ $aclItem['label'] }}</td>
-                                    @foreach ($positions as $position)
-                                        <td class="col-team">
-                                            <input type="hidden" name="rule[{{ $i }}][position_id]" value="{{ $position->id }}" />
-                                            <input type="hidden" name="rule[{{ $i }}][rule]" value="{{ $aclItemKey }}" />
-                                            <select name="rule[{{ $i }}][scope]">
-                                                @foreach (TeamRule::toOption() as $option)
-                                                    <option value="{{ $option['value'] }}"<?php
-                                                        if (Acl::findScope($teamRules, $aclItemKey, $position->id) == $option['value']) {
-                                                            echo ' selected';
-                                                        }
-                                                    ?>><?php echo $option['label']; ?><i class="fa fa-circle-o"></i></option>
-                                                @endforeach
-                                            </select>
-                                            <?php $i++; ?>
-                                        </td>
-                                    @endforeach
+                                    <td class="col-team">
+                                        <input type="hidden" name="rule[{{ $i }}][rule]" value="{{ $aclItemKey }}" />
+                                        <select name="rule[{{ $i }}][scope]">
+                                            @foreach (TeamRule::toOption() as $option)
+                                                <option value="{{ $option['value'] }}"<?php
+                                                    if (Acl::findScope($roleRule, $aclItemKey, '') == $option['value']) {
+                                                        echo ' selected';
+                                                    }
+                                                ?>>{{ $option['label'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
                                 </tr>
+                                <?php $i++; ?>
                             @endforeach
                         @endif
                     @endforeach

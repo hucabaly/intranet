@@ -48,7 +48,7 @@ class TeamRule extends \Rikkei\Core\Model\CoreModel
             ['value' => self::SCOPE_NONE, 'label' => 'None'],
             ['value' => self::SCOPE_SELF, 'label' => 'Self'],
             ['value' => self::SCOPE_TEAM, 'label' => 'Team'],
-            ['value' => self::SCOPE_COMPANY, 'label' => 'Company'],
+            ['value' => self::SCOPE_COMPANY, 'label' => '<i class="fa fa-circle-o"></i>'],
         ];
     }
     
