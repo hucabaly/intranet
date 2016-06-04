@@ -30,8 +30,18 @@
                 </li>
             </ul>
         </li>
-        <li>
-            <a href="{{ URL::route('team::setting.team.index') }}"><i class="fa fa-gears"></i></a>
+        <li class="setting">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-gears"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="{{ URL::route('team::setting.team.index') }}">Team</a>
+                </li>
+                <li>
+                    <a href="{{ URL::route('team::setting.role.index') }}">Role</a>
+                </li>
+            </ul>
         </li>
     </ul>
 </div><!-- /.navbar-custom-menu -->

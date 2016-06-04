@@ -32,3 +32,14 @@ Route::group([
         Route::post('save','TeamRuleController@save')->name('save');
     });
 });
+
+Route::group([
+    'prefix' => 'setting/role',
+    'as' => 'setting.role.'
+], function() {
+    Route::get('/','RoleController@index')->name('index');
+    Route::get('create','RoleController@create')->name('create');
+    Route::get('edit/{id}','RoleController@edit')->name('edit')->where('id', '[0-9]+');
+    Route::post('save','RoleController@save')->name('save');
+    Route::delete('delete','RoleController@delete')->name('delete');
+});

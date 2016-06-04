@@ -15,19 +15,19 @@ class CreateTeamMembersTable extends Migration
         Schema::create('team_members', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('team_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+            $table->integer('employee_id')->unsigned();
             $table->integer('position_id')->unsigned();
-            $table->unique(['user_id', 'team_id']);
             $table->timestamps();
+            $table->unique(['employee_id', 'team_id']);
             $table->foreign('team_id')
                 ->references('id')
                 ->on('team');
             $table->foreign('position_id')
                 ->references('id')
                 ->on('position');
-            $table->foreign('user_id')
+            $table->foreign('employee_id')
                 ->references('id')
-                ->on('users');
+                ->on('employees');
         });
     }
 
