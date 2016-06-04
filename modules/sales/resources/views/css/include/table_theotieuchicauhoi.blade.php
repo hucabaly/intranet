@@ -1,71 +1,3 @@
-<table class="table table-bordered table-hover dataTable tieuchi" >
-    <thead>
-        <tr>
-            <th>{{trans('sales::view.No.')}}</th>
-            <th class="hienthi-theotieuchi">{{trans('sales::view.Project type')}}</th>
-            <th>{{trans('sales::view.Count css')}}</th>
-            <th>{{trans('sales::view.Avg css')}}</th>
-            <th>{{trans('sales::view.Max css')}}</th>
-            <th>{{trans('sales::view.Min css')}}</th>
-            <th>{{trans('sales::view.Check')}}
-                <label class="label-normal">
-                    <div class="icheckbox">
-                        <input type="checkbox" name="team[4]" id="checkAll">
-                    </div>
-                </label>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>1</td>
-            <td>Web</td>
-            <td>18</td>
-            <td>99</td>
-            <td>100</td>
-            <td>98</td>
-            <td>
-                <label class="label-normal">
-                    <div class="icheckbox">
-                        <input type="checkbox" name="team[4]" class="checkItem">
-                    </div>
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>Web</td>
-            <td>18</td>
-            <td>99</td>
-            <td>100</td>
-            <td>98</td>
-            <td>
-                <label class="label-normal">
-                    <div class="icheckbox">
-                        <input type="checkbox" name="team[4]" class="checkItem">
-                    </div>
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Web</td>
-            <td>18</td>
-            <td>99</td>
-            <td>100</td>
-            <td>98</td>
-            <td>
-                <label class="label-normal">
-                    <div class="icheckbox">
-                        <input type="checkbox" name="team[4]" class="checkItem">
-                    </div>
-                </label>
-            </td>
-        </tr>
-    </tbody>
-</table> 
-
-<!-----------------------bang hien thi tieu chi theo cau hoi--------------------------------->
 <table class="tieuchi-theocauhoi" cellspacing="0" cellpadding="0" border="0" width="100%">
  <tr>
   <td>
@@ -80,7 +12,7 @@
             <th class="check">{{trans('sales::view.Check')}}
                 <label class="label-normal">
                     <div class="icheckbox">
-                        <input type="checkbox" name="team[4]" id="checkAllQuestion">
+                        <input type="checkbox" data-id='0' id="checkAllQuestion">
                     </div>
                 </label>
             </th>
@@ -90,7 +22,7 @@
  </tr>
 <tr>
 <td>
-    <div style="width:100%; height:300px; overflow:auto; margin-top: -21px;">
+    <div style="width:100%; height:343px; overflow:auto; margin-top: -21px;">
      <table class="table table-bordered table-hover dataTable"  width="100%" >
        <tr>
             <td class="No"></td>
