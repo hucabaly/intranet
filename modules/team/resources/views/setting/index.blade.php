@@ -45,7 +45,8 @@ Team Setting
                             <input type="hidden" name="id" value="{{ Form::getData('id') }}" />
                     @endif
                         <p><button type="submit" class="btn-delete btn-action delete-confirm"<?php
-                                if(!Form::getData('id')): ?> disabled<?php endif; ?>>
+                                if(!Form::getData('id')): ?> disabled<?php endif; ?> 
+                                data-noti="{{ Lang::get('team::view.Are you sure delete this team and children of this team?') }}">
                                 <span>{{ trans('team::view.Remove') }}</span>
                             </button></p>
                     @if(Form::getData('id'))

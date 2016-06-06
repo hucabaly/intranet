@@ -71,5 +71,5 @@ return [
     'Scope company' => 'Phạm vi toàn công ty',
     'Note' => 'Chú thích',
     'Permission' => 'Quyền',
-    
+    'Are you sure delete this team and children of this team?' => 'Bạn có chắc chắn xóa team này và tất cả team con cháu của team này?'
 ];
