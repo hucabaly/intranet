@@ -71,5 +71,11 @@ return [
     'Scope company' => 'Phạm vi toàn công ty',
     'Note' => 'Chú thích',
     'Permission' => 'Quyền',
-    'Are you sure delete this team and children of this team?' => 'Bạn có chắc chắn xóa team này và tất cả team con cháu của team này?'
+    'Are you sure delete this team and children of this team?' => 'Bạn có chắc chắn xóa team này và tất cả team con cháu của team này?',
+    'View profile' => 'Xem trang cá nhân',
+    'Profile of :employeeName' => 'Trang cá nhân của :employeeName',
+    'Employee code' => 'Mã nhân viên',
+    'Position' => 'Chức vụ',
+    
+    
 ];

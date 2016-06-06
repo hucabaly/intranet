@@ -1,10 +1,12 @@
 @extends('layouts.default')
 <?php
 use Rikkei\Core\View\Form;
+use Rikkei\Team\View\TeamList;
+use Rikkei\Team\Model\Position;
 ?>
 
 @section('title')
-{{ trans('team::view.Edit employee: :employeeName', ['employeeName' => Form::getData('name')]) }}
+{{ trans('team::view.Profile of :employeeName', ['employeeName' => Form::getData('name')]) }}
 @endsection
 
 @section('css')
@@ -21,10 +23,43 @@ use Rikkei\Core\View\Form;
             <div class="box-body">
                 <div class="form-horizontal form-label-left">
                     <div class="form-group">
-                        <label for="" class="col-md-3 control-label">{{ trans('team::view.') }}</label>
+                        <label class="col-md-3 control-label">{{ trans('team::view.Employee code') }}</label>
                         <div class="input-box col-md-9">
-                            <input type="text" class="form-control" id="" placeholder="{{ trans('team::view.') }}" />
+                            <input type="text" class="form-control" placeholder="{{ trans('team::view.Employee code') }}" value="{{ Form::getData('employee_card_id') }}" disabled/>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="box box-warning">
+            <div class="box-header with-border">
+                <h2 class="box-title">Team</h2>
+            </div>
+            <div class="box-body">
+                <div class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <div class="input-team-position input-team">
+                            <label class="control-label">Team</label>
+                            <div class="input-box">
+                                <select name="team[0][team]" class="form-control">
+                                    @foreach(TeamList::toOption(null, false, false) as $option)
+                                        <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-team-position input-position">
+                            <label class=" control-label">{{ trans('team::view.Position') }}</label>
+                            <div class="input-box">
+                                <select name="team[0][position]" class="form-control">
+                                    @foreach(Position::toOption() as $option)
+                                        <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
                 </div>
             </div>
