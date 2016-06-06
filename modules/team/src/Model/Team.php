@@ -3,6 +3,7 @@ namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\CoreModel;
 use DB;
+use Exception;
 
 class Team extends CoreModel
 {
@@ -91,10 +92,14 @@ class Team extends CoreModel
      */
     public function delete()
     {
+        if ($length = $this->getNumberMember()) {
+            throw new Exception("Team {$this->name} has {$length} members, can't delete!");
+        }
         $children = Team::select('id')
             ->where('parent_id', $this->id)->get();
         DB::beginTransaction();
         try {
+            //delete all children of team
             if (count($children)) {
                 foreach ($children as $child) {
                     Team::find($child->id)->delete();
@@ -103,12 +108,61 @@ class Team extends CoreModel
             
             // TO DO check table Relationship: team position, user, css, ...
             
+            //delete team rule
+            TeamRule::where('team_id', $this->id)->delete();
+            
+            //delete team item
             parent::delete();
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
             throw $ex;
         }
+    }
+    
+    /**
+     * rewrite vave the team to the database.
+     *
+     * @param  array  $options
+     * @return bool
+     */
+    public function save(array $options = array()) {
+        // update model
+        if ($this->id) {
+            //delete team rule of this team
+            if (! $this->is_function) {
+                TeamRule::where('team_id', $this->id)->delete();
+            } elseif ($this->permission_as) {
+                TeamRule::where('team_id', $this->id)->delete();
+            }
+        }
+        return parent::save($options);
+    }
+    
+    /**
+     * get number children of a team
+     * 
+     * @return int
+     */
+    public function getNumberChildren()
+    {
+        $children = self::select(DB::raw('count(*) as count'))
+            ->where('parent_id', $this->id)
+            ->first();
+        return $children->count;
+    }
+    
+    /**
+     * get number member of a team
+     * 
+     * @return int
+     */
+    public function getNumberMember()
+    {
+        $children = TeamMembers::select(DB::raw('count(*) as count'))
+            ->where('team_id', $this->id)
+            ->first();
+        return $children->count;
     }
     
     /**

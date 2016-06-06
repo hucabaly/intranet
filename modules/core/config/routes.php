@@ -11,3 +11,7 @@ Route::get('/set-locale/{locale}', 'LocaleController@change')->name('change-loca
 
 //error page
 Route::get('/errors', 'ErrorController@view')->name('errors');
+
+//grid filter action
+Route::get('/grid/filter/request', 'GridFilterController@request')->name('grid.filter.request');
+Route::get('/grid/filter/remove', 'GridFilterController@remove')->name('grid.filter.remove');

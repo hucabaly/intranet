@@ -4,7 +4,6 @@ use Rikkei\Core\View\Form;
 ?>
 
 @include('team::include.pager')
-</div>
 <div class="table-responsive">
     <table class="table table-striped dataTable table-bordered table-hover table-grid-data">
         <thead>

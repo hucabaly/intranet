@@ -121,4 +121,46 @@ class Form
             Session::flash('form_data.' . $key, $value);
         }
     }
+    
+    /**
+     * get filter data follow current url
+     * 
+     * @param string $key
+     * @param string $key2
+     * @return string
+     */
+    public static function getFilterData($key = null, $key2 = null)
+    {
+        $url = app('request')->url() . '/';
+        $url = md5($url);
+        $data = Session::get('filter.' . $url);
+        if (! isset($data[0])) {
+            return null;
+        }
+        $data = $data[0];
+        if (! $key) {
+            return $data;
+        }
+        if (! isset($data[$key])) {
+            return null;
+        }
+         $data = $data[$key];
+         if (! $key2) {
+             return $data;
+         }
+         if (! isset($data[$key2])) {
+             return null;
+         }
+         return $data[$key2];
+    }
+    
+    /**
+     * remove filter data follow current url
+     */
+    public static function forgetFilter()
+    {
+        $url = app('request')->url();
+        $url = md5($url);
+        Session::forget('filter.' . $url);
+    }
 }

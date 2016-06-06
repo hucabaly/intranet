@@ -4,8 +4,10 @@
 use Rikkei\Team\View\TeamList;
 use Rikkei\Core\View\Form;
 use Rikkei\Team\Model\Position;
+use Rikkei\Team\Model\Roles;
 
 $positionAll = Position::getAll();
+$roleAll = Roles::getAll();
 ?>
 
 @section('title')
@@ -19,7 +21,7 @@ Team Setting
 @section('content')
 <div class="row">
     <!-- team manage -->
-    <div class="col-md-6 team-wrapper hight-same">
+    <div class="col-md-4 team-wrapper hight-same">
         <div class="box box-info">
             <div class="box-header with-border">
                 <h3 class="box-title">{{ trans('team::view.List team') }}</h3>
@@ -43,7 +45,8 @@ Team Setting
                             <input type="hidden" name="id" value="{{ Form::getData('id') }}" />
                     @endif
                         <p><button type="submit" class="btn-delete btn-action delete-confirm"<?php
-                                if(!Form::getData('id')): ?> disabled<?php endif; ?>>
+                                if(!Form::getData('id')): ?> disabled<?php endif; ?> 
+                                data-noti="{{ Lang::get('team::view.Are you sure delete this team and children of this team?') }}">
                                 <span>{{ trans('team::view.Remove') }}</span>
                             </button></p>
                     @if(Form::getData('id'))
@@ -71,13 +74,13 @@ Team Setting
     </div> <!-- end team manage -->
     
     <!-- team position manage -->
-    <div class="col-md-6 team-position-wrapper hight-same">
+    <div class="col-md-4 team-position-wrapper hight-same">
         <div class="box box-info">
             <div class="box-header with-border">
                 <h3 class="box-title">{{ trans('team::view.Position of team') }}</h3>
             </div>
             <div class="row team-list-action box-body">
-                <div class="col-md-8 col-sm-8 position-list">
+                <div class="col-md-7 col-sm-7 position-list">
                     @if (! count($positionAll))
                         <p class="alert alert-warning">{{ trans('team::view.Not found position') }}</p>
                     @else
@@ -93,7 +96,7 @@ Team Setting
                         </table>
                     @endif
                 </div>
-                <div class="col-md-4 col-sm-4 team-action">
+                <div class="col-md-5 col-sm-5 team-action">
                     <p><button type="button" class="btn-add btn-action" data-target="#position-add-form" data-toggle="modal">
                             <span>{{ trans('team::view.Add') }}</span>
                         </button></p>
@@ -136,27 +139,85 @@ Team Setting
         </div>
     </div> <!-- end team position manage -->
     
+    <!-- roles manage -->
+    <div class="col-md-4 team-position-wrapper hight-same">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ trans('team::view.Role Special') }}</h3>
+            </div>
+            <div class="row team-list-action box-body">
+                <div class="col-md-7 col-sm-7 position-list">
+                    @if (! count($roleAll))
+                        <p class="alert alert-warning">{{ trans('team::view.Not found role special') }}</p>
+                    @else
+                        <table class="table table-bordered">
+                            <tbody>
+                                @foreach ($roleAll as $roleItem)
+                                <tr><td>
+                                    <a href="{{ URL::route('team::setting.role.view', ['id' => $roleItem->id]) }}"<?php
+                                    if ($roleItem->id == Form::getData('role.id')): ?> class="active"<?php endif; ?>>{{ $roleItem->name }}</a>
+                                </td></tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                </div>
+                <div class="col-md-5 col-sm-5 team-action">
+                    <p><button type="button" class="btn-add btn-action" data-target="#role-add-form" data-toggle="modal">
+                            <span>{{ trans('team::view.Add') }}</span>
+                        </button></p>
+                    <p><button type="button" class="btn-edit btn-action" data-target="#role-edit-form" data-toggle="modal"<?php
+                        if(!Form::getData('role.id')): ?> disabled<?php endif; ?>>
+                            <span>{{ trans('team::view.Edit') }}</span>
+                        </button></p>
+                    @if(Form::getData('role.id'))
+                        <form class="form" method="post" action="{{ URL::route('team::setting.role.delete') }}">
+                            {!! csrf_field() !!}
+                            <input type="hidden" name="_method" value="delete" />
+                            <input type="hidden" name="id" value="{{ Form::getData('role.id') }}" />
+                    @endif
+                        <p><button type="submit" class="btn-delete btn-action delete-confirm"<?php
+                                if(!Form::getData('role.id')): ?> disabled<?php endif; ?> 
+                                data-noti="{{ trans('team::view.Are you sure delete this role and all link this role with employee?') }}">
+                                <span>{{ trans('team::view.Remove') }}</span>
+                            </button></p>
+                    @if(Form::getData('role.id'))
+                        </form>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div> <!-- end role manage -->
+    
     <div class="col-sm-12 team-rule-wrapper">
         <div class="box box-warning">
             <div class="box-header with-border">
-                @if (! Form::getData('id'))
+                @if (! Form::getData('id') && ! Form::getData('role.id'))
                     <h2 class="box-title">{{ trans('team::view.Permission function') }}</h2>
+                @elseif (Form::getData('id'))
+                    <h2 class="box-title">{{ trans('team::view.Permission function of team') }} <b>{{ Form::getData('name') }}</b></h2>
                 @else
-                    <h2 class="box-title">{{ trans('team::view.Permission function of') }} <b>{{ Form::getData('name') }}</b></h2>
+                    <h2 class="box-title">{{ trans('team::view.Permission function of role') }} <b>{{ Form::getData('role.name') }}</b></h2>
                 @endif
             </div>
             <div class="box-body">
-                @if (! Form::getData('id'))
-                    <p class="alert alert-warning">{{ trans('team::view.Please choose team to set permission function') }}</p>
-                @elseif (! Form::getData('is_function'))
-                    <p class="alert alert-warning">{{ trans('team::view.Team is not function') }}</p>
-                @elseif ($permissionAs)
-                    <p class="alert alert-warning">{{ trans('team::view.Team permisstion as team') }} 
-                        <a href="{{ Url::route('team::setting.team.view', ['id' => $permissionAs->id]) }}">{{ $permissionAs->name }}</a></p>
-                @elseif (! isset($positions) || ! count($positions))
-                    <p class="alert alert-warning">{{ trans('team::view.Not found position to set permission function') }}</p>
+                @if (! Form::getData('id') && ! Form::getData('role.id'))
+                    <p class="alert alert-warning">{{ trans('team::view.Please choose team or role to set permission function') }}</p>
                 @else
-                    @include('team::setting.include.rule')
+                    @if (Form::getData('id'))
+                        @if (! Form::getData('is_function'))
+                            <p class="alert alert-warning">{{ trans('team::view.Team is not function') }}</p>
+                        @elseif ($permissionAs)
+                            <p class="alert alert-warning">{{ trans('team::view.Team permisstion as team') }} 
+                                <a href="{{ Url::route('team::setting.team.view', ['id' => $permissionAs->id]) }}">{{ $permissionAs->name }}</a></p>
+                        @elseif (! isset($positions) || ! count($positions))
+                            <p class="alert alert-warning">{{ trans('team::view.Not found position to set permission function') }}</p>
+                        @else
+                            @include('team::setting.include.rule')
+                        @endif
+                    @else
+                        @include('team::setting.include.rule_role')
+                    @endif
                 @endif
             </div>
     </div>
@@ -231,6 +292,41 @@ Team Setting
     </div>
 </div>
 <!-- //end modal add/edit team -->
+
+<!-- modal add/edit role-->
+@if(Form::getData('role.id'))
+<!-- modal edit role-->
+<div class="modal fade" id="role-edit-form" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="form" method="post" action="{{ URL::route('team::setting.role.save') }}" id="form-role-edit">
+                {!! csrf_field() !!}
+                <input type="hidden" name="role[id]" value="{{ Form::getData('role.id') }}" />
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ trans('team::view.Edit role') }}</h4>
+                </div>
+                @include('team::setting.include.role_edit')
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+<div class="modal fade" id="role-add-form" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="form" method="post" action="{{ URL::route('team::setting.role.save') }}" id="form-role-add">
+                {!! csrf_field() !!}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{{ trans('team::view.Create role') }}</h4>
+                </div>
+                @include('team::setting.include.role_edit')
+            </form>
+        </div>
+    </div>
+</div>
+<!-- //end modal add/edit role -->
 @endsection
 
 
@@ -243,6 +339,7 @@ Team Setting
         var messages = {
             'item[name]': '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.team name') ; ?>',
             'position[name]': '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.position name') ; ?>',
+            'role[name]': '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.role name') ; ?>',
         }
         $('#form-team-add').validate({
             messages: messages
@@ -255,6 +352,12 @@ Team Setting
             messages: messages
         });
         $('#form-position-edit').validate({
+            messages: messages
+        });
+        $('#form-role-add').validate({
+            messages: messages
+        });
+        $('#form-role-edit').validate({
             messages: messages
         });
         $('.hight-same').matchHeight({

@@ -218,6 +218,50 @@ form{
 .form-inline {
     display: inline-block;
 }
+.form-label-left {
+    .control-label {
+        text-align: left;
+    }
+}
+.box {
+    .table-responsive {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+.tab-content {
+    margin-top: 10px;
+}
+.grid-pager {
+    margin-top: 12px;
+}
+.form-input-dropdown {
+    .dropdown-toggle {
+        width: 37px;
+        height: 34px;
+    }
+    .dropdown-menu {
+        width: 37px;
+        min-width: auto;
+        li {
+            width: 35px;
+            height: 26px;
+            a {
+                padding-left: 12px;
+                width: 35px;
+                height: 26px;
+            }
+        }
+    }
+}
+.rule-noti {
+    b {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+    }
+    
+}
 /*responsive*/
 @media (max-width: 1160px) and  (min-width: $mobile+1) {
     .navbar-collapse.pull-left+.navbar-custom-menu {
