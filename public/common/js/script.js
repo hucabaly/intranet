@@ -83,6 +83,17 @@ jQuery(document).ready(function ($) {
         $('#modal-delete-confirm').modal('hide');
         return false;
     });
+    
+    /**
+     * form input dropdown
+     */
+    $('.form-input-dropdown .input-menu a').click(function(event) {
+        event.preventDefault();
+        var textHtml = $(this).html();
+        var dataValue = $(this).data('value');
+        $(this).parents('.form-input-dropdown').find('.input-show-data span').html(textHtml);
+        $(this).parents('.form-input-dropdown').find('.input').val(dataValue);
+    });
 });
 
 jQuery(document).ready(function($) {

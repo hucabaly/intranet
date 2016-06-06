@@ -2,6 +2,7 @@
 namespace Rikkei\Team\Model;
 
 use DB;
+use Lang;
 
 class TeamRule extends \Rikkei\Core\Model\CoreModel
 {
@@ -44,12 +45,54 @@ class TeamRule extends \Rikkei\Core\Model\CoreModel
      */
     public static function toOption()
     {
+        $scopeIcon = self::scopeIconArray();
         return [
-            ['value' => self::SCOPE_NONE, 'label' => 'None'],
-            ['value' => self::SCOPE_SELF, 'label' => 'Self'],
-            ['value' => self::SCOPE_TEAM, 'label' => 'Team'],
-            ['value' => self::SCOPE_COMPANY, 'label' => '<i class="fa fa-circle-o"></i>'],
+            ['value' => self::SCOPE_NONE, 'label' => $scopeIcon[self::SCOPE_NONE]],
+            ['value' => self::SCOPE_SELF, 'label' => $scopeIcon[self::SCOPE_SELF]],
+            ['value' => self::SCOPE_TEAM, 'label' => $scopeIcon[self::SCOPE_TEAM]],
+            ['value' => self::SCOPE_COMPANY, 'label' => $scopeIcon[self::SCOPE_COMPANY]],
         ];
+    }
+    
+    /**
+     * get scope format icon
+     * 
+     * @return array
+     */
+    public static function scopeIconArray()
+    {
+        return [
+            self::SCOPE_NONE => '',
+            self::SCOPE_SELF => '<i class="fa fa-times"></i>',
+            self::SCOPE_TEAM => '<i class="fa fa-caret-up"></i>',
+            self::SCOPE_COMPANY => '<i class="fa fa-circle-o"></i>',
+        ];
+    }
+    
+    /**
+     * get scope guide follow icon
+     * 
+     * @return string
+     */
+    public static function getScopeIconGuide()
+    {
+        $scopesLabel = [
+            self::SCOPE_NONE => 'none permission',
+            self::SCOPE_SELF => 'self',
+            self::SCOPE_TEAM => 'their management team',
+            self::SCOPE_COMPANY => 'company',
+        ];
+        $html = '<p>' . Lang::get('team::view.Note') . ':</p>';
+        $html .= '<ul>';
+        $scopeIcon = self::scopeIconArray();
+        foreach ($scopesLabel as $scopeValue =>$scopeLabel) {
+            $html .= '<li>';
+            $html .= '<b>' . $scopeIcon[$scopeValue] . '</b>: ';
+            $html .= '<span>' . Lang::get('team::view.Scope '. $scopeLabel) . '</span>';
+            $html .= '</li>';
+        }
+        $html .= '</ul>';
+        return $html;
     }
     
     /**
