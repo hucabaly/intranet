@@ -76,6 +76,7 @@ return [
     'Profile of :employeeName' => 'Trang cá nhân của :employeeName',
     'Employee code' => 'Mã nhân viên',
     'Position' => 'Chức vụ',
+    'Update information' => 'Cập nhật thông tin',
     
     
 ];

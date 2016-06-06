@@ -6,6 +6,7 @@ use Rikkei\Core\View\Breadcrumb;
 use URL;
 use Rikkei\Team\Model\Employees;
 use Rikkei\Core\View\Form;
+use Illuminate\Support\Facades\Input;
 
 class MemberController extends TeamBaseController
 {
@@ -58,7 +59,25 @@ class MemberController extends TeamBaseController
      */
     public function save()
     {
-        echo 'save';
+        $id = Input::get('id');
+        $model = Employees::find($id);
+        if (! $model) {
+            return redirect()->route('team::team.member.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        
+        //TODO permission
+        
+        $teamPostions = Input::get('team');
+        if ($teamPostions) {
+            $model->saveTeamPosition($teamPostions);
+        }
+        return redirect()->route('team::team.member.index', [
+                'id' => $model->id
+            ])->with('messages', [
+                'success' => [
+                    Lang::get('team::messages.Save data success!')
+                ]
+            ]);
     }
     
     /**

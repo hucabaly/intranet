@@ -14,61 +14,68 @@ use Rikkei\Team\Model\Position;
 @endsection
 
 @section('content')
-<div class="row">
-    <div class="col-md-5">
-        <div class="box box-info">
-            <div class="box-header with-border">
-                <h2 class="box-title">{{ trans('team::view.Personal Information') }}</h2>
-            </div>
-            <div class="box-body">
-                <div class="form-horizontal form-label-left">
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">{{ trans('team::view.Employee code') }}</label>
-                        <div class="input-box col-md-9">
-                            <input type="text" class="form-control" placeholder="{{ trans('team::view.Employee code') }}" value="{{ Form::getData('employee_card_id') }}" disabled/>
+<div class="row member-profile">
+    <form action="{{ route('team::team.member.save') }}" method="post">
+        {!! csrf_field() !!}
+        <input type="hidden" name="id" value="{{ Form::getData('id') }}" />
+        <div class=" col-md-12 box-action">
+            <input type="submit" class="btn-edit" name="submit" value="{{ trans('team::view.Update information') }}" />
+        </div>
+        <div class="col-md-5">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h2 class="box-title">{{ trans('team::view.Personal Information') }}</h2>
+                </div>
+                <div class="box-body">
+                    <div class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">{{ trans('team::view.Employee code') }}</label>
+                            <div class="input-box col-md-9">
+                                <input type="text" class="form-control" placeholder="{{ trans('team::view.Employee code') }}" value="{{ Form::getData('employee_card_id') }}" disabled/>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h2 class="box-title">Team</h2>
-            </div>
-            <div class="box-body">
-                <div class="form-horizontal form-label-left">
-                    <div class="form-group">
-                        <div class="input-team-position input-team">
-                            <label class="control-label">Team</label>
-                            <div class="input-box">
-                                <select name="team[0][team]" class="form-control">
-                                    @foreach(TeamList::toOption(null, false, false) as $option)
-                                        <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
-                                    @endforeach
-                                </select>
+
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h2 class="box-title">Team</h2>
+                </div>
+                <div class="box-body">
+                    <div class="form-horizontal form-label-left">
+                        <div class="form-group group-team-position">
+                            <div class="input-team-position input-team">
+                                <label class="control-label">Team</label>
+                                <div class="input-box">
+                                    <select name="team[0][team]" class="form-control">
+                                        @foreach(TeamList::toOption(null, false, false) as $option)
+                                            <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="input-team-position input-position">
-                            <label class=" control-label">{{ trans('team::view.Position') }}</label>
-                            <div class="input-box">
-                                <select name="team[0][position]" class="form-control">
-                                    @foreach(Position::toOption() as $option)
-                                        <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="input-team-position input-position">
+                                <label class=" control-label">{{ trans('team::view.Position') }}</label>
+                                <div class="input-box">
+                                    <select name="team[0][position]" class="form-control">
+                                        @foreach(Position::toOption() as $option)
+                                            <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="clearfix"></div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div> <!-- end edit memeber left col -->
-    
-    <div class="col-md-7">
-        
-    </div> <!-- end edit memeber right col -->
+        </div> <!-- end edit memeber left col -->
+
+        <div class="col-md-7">
+
+        </div> <!-- end edit memeber right col -->
+    </form>
 </div>
 @endsection
 
