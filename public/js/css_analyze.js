@@ -49,43 +49,41 @@ $(document).ready(function(){
         }
     });
     
-/** iCheck event team tree */   
-    /* Make team child checked if team parent are checked */
-    $('.team-tree-checkbox').on('ifChecked', function (event) {
-        var parent_id = $(this).attr('data-id');
-        $('.team-tree-checkbox[parent-id='+parent_id+']').iCheck('check');
-        triggeredByChild = false;
-    });
-    
-    /* Make team child unchecked if team parent are unchecked */
-    $('.team-tree-checkbox').on('ifUnchecked', function (event) {
-        if (!triggeredByChild) {
-            var parent_id = $(this).attr('data-id');
-            $('.team-tree-checkbox[parent-id='+parent_id+']').iCheck('uncheck');
-        }
-        triggeredByChild = false;
-    });
-    
-    // Remove the checked state from "All" if any checkbox is unchecked
-    $('.team-tree-checkbox').on('ifUnchecked', function (event) {
-        triggeredByChild = true;
-        var parent_id = $(this).attr('parent-id');
-        $('.team-tree-checkbox[data-id='+parent_id+']').iCheck('uncheck');
-    });
-
-    // Make "All" checked if all checkboxes are checked
-    $('.team-tree-checkbox').on('ifChecked', function (event) {
-        var parent_id = $(this).attr('parent-id');
-        if ($('.team-tree-checkbox[parent-id='+parent_id+']').filter(':checked').length == $('.team-tree-checkbox[parent-id='+parent_id+']').length) {
-            $('.team-tree-checkbox[data-id='+parent_id+']').iCheck('check');
-        }
+    jQuery(document).on("ifChanged","#tcProjectType", function () {
+        //show table project type
+        $('#tcProjectType').on('ifChecked', function (event) {
+            $('.tbl-criteria').hide(); 
+            $('table[data-id=tcProjectType]').show();
+        });
+        
+        //show table team
+        $('#tcTeam').on('ifChecked', function (event) {
+            $('.tbl-criteria').hide();
+            $('table[data-id=tcTeam]').show();
+        });
+        
+        //show table pm
+        $('#tcPm').on('ifChecked', function (event) {
+            $('.tbl-criteria').hide();
+            $('table[data-id=tcPm]').show();
+        });
     });
 });
+
+
 
 /**
 * click filter
 */
 function filterAnalyze(token){
+    //hidden and clear empty apply old result
+    $(".ketquaapply").hide();
+    $("#danhsachduan tbody").html('');
+    $("#duoi3sao tbody").html('');
+    
+    //get criteria type
+    var criteriaType = $("input[name=tieuchi]:checked").attr("id");
+    
     //get project type checked
     var projectTypeIds = "";
     $('input[type=checkbox][name=project_type]:checked').each(function(){
@@ -106,11 +104,32 @@ function filterAnalyze(token){
         }
     });
     
+    //check if don't any check project type or team
+    
+    if(projectTypeIds == ""){
+        if(teamIds == ""){
+            $('#modal-warning').modal('show');
+            $('#modal-warning .modal-body').html("Chưa chọn loại dự án và team");
+        }else{
+            $('#modal-warning').modal('show');
+            $('#modal-warning .modal-body').html("Chưa chọn loại dự án");
+        }
+        return false;
+    }else{
+        if(teamIds == ""){
+            $('#modal-warning').modal('show');
+            $('#modal-warning .modal-body').html("Chưa chọn team");
+            return false;
+        }
+    }
+
+    
+    
     var startDate = $('.ui-rangeSlider-leftLabel .ui-rangeSlider-label-value').text();
     var endDate = $('.ui-rangeSlider-rightLabel .ui-rangeSlider-label-value').text();
 
     $.ajax({
-        url: '/css/filterAnalyze',
+        url: '/css/filter_analyze',
         type: 'post',
         data: {
             _token: token, 
@@ -118,15 +137,20 @@ function filterAnalyze(token){
             endDate: endDate,
             projectTypeIds: projectTypeIds,
             teamIds: teamIds,
+            criteriaType: criteriaType,
         },
     })
     .done(function (data) { 
         $("div.theotieuchi").html(data);
+        $(".tbl-criteria").hide();
+        $("table[data-id="+criteriaType+"]").show();
+        
         $('input').iCheck({
             checkboxClass: 'icheckbox_minimal-blue',
             radioClass: 'iradio_minimal-blue'
-        });   
-        /** iCheck event theotieuchi (ngoai tru theo cau hoi) */
+        }); 
+        
+     /** iCheck event theotieuchi (ngoai tru theo cau hoi) */
         // Make "Item" checked if checkAll are checked
         $('#checkAll').on('ifChecked', function (event) {
             $('.checkItem').iCheck('check');
@@ -160,12 +184,16 @@ function filterAnalyze(token){
 }
 
 function apply(token){
-    var projectTypeIds = "";
-    $('input[class=checkItem]:checked').each(function(){
-        if(projectTypeIds == ""){
-            projectTypeIds = $(this).attr("data-id");
+    //get criteria type and id
+    var criteriaType = $("input[name=tieuchi]:checked").attr("id");
+    var criteriaIds = "";
+    
+    var classCriteriaCheck = getCriteriaChecked();
+    $('input[class='+classCriteriaCheck+']:checked').each(function(){
+        if(criteriaIds == ""){
+            criteriaIds = $(this).attr("data-id");
         } else{
-            projectTypeIds += "," + $(this).attr("data-id");
+            criteriaIds += "," + $(this).attr("data-id");
         }
     });
     
@@ -178,22 +206,38 @@ function apply(token){
             teamIds += "," + $(this).attr("data-id");
         }
     });
+    
+    //get project type checked
+    var projectTypeIds = "";
+    $('input[name=project_type]:checked').each(function(){
+        if(projectTypeIds == ""){
+            projectTypeIds = $(this).val();
+        } else{
+            projectTypeIds += "," + $(this).val();
+        }
+    });
+    
     var startDate = $('.ui-rangeSlider-leftLabel .ui-rangeSlider-label-value').text();
     var endDate = $('.ui-rangeSlider-rightLabel .ui-rangeSlider-label-value').text();
     
     $.ajax({
-        url: '/css/applyAnalyze',
+        url: '/css/apply_analyze',
         type: 'post',
         data: {
             _token: token, 
             startDate: startDate,
             endDate: endDate,
-            projectTypeIds: projectTypeIds,
+            criteriaIds: criteriaIds,
             teamIds: teamIds,
+            projectTypeIds: projectTypeIds,
+            criteriaType: criteriaType,
         },
     })
-    .done(function (data) { 
+    .done(function (data) {  console.log(data);
         $(".ketquaapply").show();
+        $('html, body').animate({
+            scrollTop: $(".ketquaapply").offset().top
+        }, 100);
         var countResult = data["cssResult"].length; 
         var html = "";
         for(var i=0; i<countResult; i++){
@@ -212,7 +256,6 @@ function apply(token){
         $('#chartAll').highcharts({
             title: {
                 text: 'Điểm CSS',
-
             },
 
             xAxis: {
@@ -277,31 +320,31 @@ function apply(token){
         });
         
         //danh sach cau hoi duoi 3 sao
-        var countResult = data["duoi3Sao"].length; 
+        var countResult = data["lessThreeStar"].length; 
         html = "";
         for(var i=0; i<countResult; i++){
             html += "<tr>";
-            html += "<td>"+data["duoi3Sao"][i]["stt"]+"</td>";
-            html += "<td>"+data["duoi3Sao"][i]["tenDuAn"]+"</td>";
-            html += "<td>"+data["duoi3Sao"][i]["tenCauHoi"]+"</td>";
-            html += "<td>"+data["duoi3Sao"][i]["soSao"]+"</td>";
-            html += "<td>"+data["duoi3Sao"][i]["comment"]+"</td>";
-            html += "<td>"+data["duoi3Sao"][i]["ngayLamCss"]+"</td>";
-            html += "<td>"+data["duoi3Sao"][i]["diemCss"]+"</td>";
+            html += "<td>"+data["lessThreeStar"][i]["no"]+"</td>";
+            html += "<td>"+data["lessThreeStar"][i]["projectName"]+"</td>";
+            html += "<td>"+data["lessThreeStar"][i]["questionName"]+"</td>";
+            html += "<td>"+data["lessThreeStar"][i]["stars"]+"</td>";
+            html += "<td>"+data["lessThreeStar"][i]["comment"]+"</td>";
+            html += "<td>"+data["lessThreeStar"][i]["makeDateCss"]+"</td>";
+            html += "<td>"+data["lessThreeStar"][i]["cssPoint"]+"</td>";
             html += "</tr>";   
         }
         $("#duoi3sao tbody").html(html);
         
         //danh sach de xuat
-        var countResult = data["danhSachDeXuat"].length; 
+        var countResult = data["proposes"].length; 
         html = "";
         for(var i=0; i<countResult; i++){
             html += "<tr>";
-            html += "<td>"+data["danhSachDeXuat"][i]["stt"]+"</td>";
-            html += "<td>"+data["danhSachDeXuat"][i]["tenDuAn"]+"</td>";
-            html += "<td>"+data["danhSachDeXuat"][i]["commentKhachHang"]+"</td>";
-            html += "<td>"+data["danhSachDeXuat"][i]["ngayLamCss"]+"</td>";
-            html += "<td>"+data["danhSachDeXuat"][i]["diemCss"]+"</td>";
+            html += "<td>"+data["proposes"][i]["no"]+"</td>";
+            html += "<td>"+data["proposes"][i]["projectName"]+"</td>";
+            html += "<td>"+data["proposes"][i]["customerComment"]+"</td>";
+            html += "<td>"+data["proposes"][i]["makeDateCss"]+"</td>";
+            html += "<td>"+data["proposes"][i]["cssPoint"]+"</td>";
             html += "</tr>";   
         }
         $("#danhsachdexuat tbody").html(html);
@@ -311,3 +354,25 @@ function apply(token){
         alert("Ajax failed to fetch data");
     })
 }
+
+function getCriteriaChecked(){
+    var criteriaType = $("input[name=tieuchi]:checked").attr("id");
+    if(criteriaType == "tcProjectType"){
+        return "checkProjectTypeItem";
+    }else if(criteriaType == "tcTeam"){
+        return "checkTeamItem";
+    }else if(criteriaType == "tcPm"){
+        return "checkPmItem";
+    }else if(criteriaType == "tcBrse"){
+        return "checkBrseItem";
+    }else if(criteriaType == "tcCustomer"){
+        return "checkCustomerItem";
+    }else if(criteriaType == "tcSale"){
+        return "checkSaleItem";
+    }else if(criteriaType == "tcQuestion"){
+        return "checkQuestionItem";
+    }
+}
+    
+    
+

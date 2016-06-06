@@ -184,13 +184,20 @@ return [
             'edit.detail' => [
                 'label' => 'Tạo và sửa css',
                 'routes' => [
-                    'sales::css.analyze',
                     'sales::css.cancel',
                     'sales::css.create',
                     'sales::css.detail',
                     'sales::css.saveResult',
                     'sales::css.saveResult',
                     'sales::css.update',
+                ]
+            ],
+            'view.analyze' => [
+                'label' => 'Phân tích css',
+                'routes' => [
+                    'sales::css.analyze',
+                    'sales::css.filterAnalyze',
+                    'sales::css.applyAnalyze',
                 ]
             ],
         ]
