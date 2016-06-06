@@ -471,8 +471,329 @@ class CssController extends Controller {
      * @return void
      */
     public function analyze(){
+        $projectTypes = ProjectType::all();
+        $htmlTeam = self::getTreeDataRecursive(0, 0, null);
         return view(
-            'sales::css.analyze', []
+            'sales::css.analyze', [
+                'projectTypes' => $projectTypes,
+                'htmlTeam'     => $htmlTeam,
+            ]
         );
+    }
+    
+    /**
+     * trang phan tich css, thuc hien apply sau khi filter
+     * @param string projectTypeIds
+     * @param datetime $startDate
+     * @param datetime $endDate
+     * return json
+     */
+    public function applyAnalyze(){
+        $projectTypeIds = $_POST["projectTypeIds"]; 
+        $startDate = $_POST["startDate"];
+        $endDate = $_POST["endDate"];
+        $teamIds = $_POST["teamIds"]; 
+        
+        //lay thong tin hien ket qua danh sach du an
+        $data = self::applyByProjectType($projectTypeIds,$startDate,$endDate,$teamIds); 
+        
+        return response()->json($data);
+    }
+    
+    protected function applyByProjectType($projectTypeIds, $startDate, $endDate,$teamIds){
+        //lay ra cac ban ghi tu bang css_result theo loai du an, ngay lam du an, team set theo css
+        $cssResult = Css::getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$teamIds);
+        $stt = 0;
+        
+        //$pointToHighchart -> luu diem hien thi tren bieu do all result
+        $pointToHighchart = [];
+        
+        //danh sach id cua css result
+        $cssResultIds = [];
+        
+        //loop cssResult de add them cac thong tin khac vao
+        foreach($cssResult as &$itemResult){
+            $cssResultIds[] = $itemResult->id;
+            $css = DB::table("css")->where("id",$itemResult->css_id)->first();
+            
+            //get team_id tu bang css_team
+            $teamName = "";
+            $team = DB::table("css_team")->where("css_id",$itemResult->css_id)->get();
+            
+            foreach($team as $teamId){
+                if($teamName == ""){
+                    $teamName = Css::getTeamNameById($teamId->team_id);
+                }else{
+                    $teamName .= ", " . Css::getTeamNameById($teamId->team_id);
+                }
+            }
+            
+            $itemResult->stt = ++$stt;
+            $itemResult->project_name = $css->project_name;
+            $itemResult->teamName = $teamName;
+            $itemResult->pmName = $css->pm_name;
+            $itemResult->css_created_at = date('d/m/Y',strtotime($css->created_at));
+            $itemResult->created_at = date('d/m/Y',strtotime($itemResult->created_at));
+            $itemResult->point = self::getPointCssResult($itemResult->id);
+            
+            //lay diem de show tren bieu do thoi gian all result
+            $pointToHighchart[] = (float)$itemResult->point;
+            $dateToHighchart[] = $itemResult->created_at;
+        }
+        
+        //lay diem theo tung loai du an de show tren bieu do phan loai theo tieu chi
+        $arrProjectTypeId = explode(",", $projectTypeIds);
+        $pointCompareChart = array();
+        foreach($arrProjectTypeId as $key => $project_type_id){
+            $projectTypeName = Css::getProjectTypeNameById($project_type_id);
+            $cssResultByProjectType = Css::getCssResultByProjectTypeId($project_type_id,$startDate,$endDate,$teamIds);
+            $pointToHighchartByProjectType = [];
+            $pointToHighchartByProjectType["name"] = $projectTypeName;
+            foreach($cssResultByProjectType as $item){
+                $pointToHighchartByProjectType["data"][] = (float)self::getPointCssResult($item->id);
+            }
+            $pointCompareChart[] = [
+                "name" => $pointToHighchartByProjectType["name"],
+                "data" => $pointToHighchartByProjectType["data"]
+            ];
+        }
+        
+        //Lay ra cac cau hoi duoi 3 sao theo cssResultIds
+        $duoi3Sao = self::layDanhSachCauDuoi3Sao($cssResultIds);
+        
+        //Lay ra cac de xuat  cua khach hang neu co
+        $danhSachDeXuat = self::layDanhSachDeXuat($cssResultIds);
+        
+        $data = [
+            "cssResult" => $cssResult,
+            "pointToHighchart" => $pointToHighchart,
+            "dateToHighchart" => $dateToHighchart,
+            "pointCompareChart" => $pointCompareChart,
+            "duoi3Sao" =>$duoi3Sao,
+            "danhSachDeXuat" => $danhSachDeXuat,
+        ];
+        return $data;
+    }
+
+
+    /**
+     * trang phan tich css, thuc hien B1. Filter
+     * @param string startDate
+     * @param string endDate
+     * @param string projectTypeIds
+     */
+    public function filterAnalyze(){
+        $startDate = $_POST["startDate"];
+        $endDate = $_POST["endDate"];
+        $projectTypeIds = $_POST["projectTypeIds"]; 
+        $teamIds = $_POST["teamIds"]; 
+        
+        $result = self::filterAnalyzeByProjectType($startDate, $endDate, $projectTypeIds,$teamIds);
+        $data = array(
+            "result" => $result,
+        );
+        
+        return response()->view('sales::css.include.table_theotieuchi', $data);
+    }
+    
+    /**
+     * trang phan tich css, thuc hien B2. Filter theo loai du an 
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $projectTypeIds
+     * @param string $teamIds
+     * return array
+     */
+    protected function filterAnalyzeByProjectType($startDate, $endDate, $projectTypeIds,$teamIds){
+        $arrProjectTypeId = explode(",", $projectTypeIds);
+        $css = array();
+        $result = array();
+        $stt = 0;
+        foreach($arrProjectTypeId as $k => $v){
+            $points = array();
+            
+            if($teamIds == ""){
+                $css = DB::table("css")->where("project_type_id",$v)->get();
+            }else{
+                $css = Css::getCssByProjectTypeAndTeam($v,$teamIds);
+            }
+            $countCss = 0;
+            foreach($css as $itemCss){
+                $css_result = DB::table("css_result")
+                        ->where("css_id",$itemCss->id)
+                        ->where("created_at", ">=", $startDate)
+                        ->where("created_at", "<=", $endDate)
+                        ->get();
+                if(count($css_result) > 0){
+                    $countCss += count($css_result);
+                    foreach($css_result as $itemCssResult){
+                        $points[] = self::getPointCssResult($itemCssResult->id);
+                    }
+                }
+            }
+            
+            if(count($points) > 0){
+                $projectType = ProjectType::find($v);
+                $avgPoint = array_sum($points) / count($points);
+                $stt++;
+                $result[] = [
+                    "stt"               => $stt,
+                    "project_type_id"   => $v,
+                    "project_type_name" => $projectType->name,
+                    "countCss"          => $countCss,
+                    "maxPoint"          => self::formatNumber(max($points)),
+                    "minPoint"          => self::formatNumber(min($points)),
+                    "avgPoint"          => self::formatNumber($avgPoint),
+                ];
+            }
+            
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * lay danh sach cau hoi duoi 3 sao theo cssResultIds
+     * @param array $cssResultIds
+     */
+    protected function layDanhSachCauDuoi3Sao($cssResultIds){
+        $cssResultIds = implode(",", $cssResultIds);
+        $danhSachDuoi3Sao = Css::layDanhSachCauDuoi3Sao($cssResultIds);
+        $result = [];
+        foreach($danhSachDuoi3Sao as $itemDuoi3Sao){
+            $cssResult = Css::getCssResultById($itemDuoi3Sao->css_id);
+            $diemCss = self::getPointCssResult($itemDuoi3Sao->css_id);
+            $question = Css::getQuestionById($itemDuoi3Sao->question_id);
+            $css = Css::find($cssResult->css_id);
+            
+            $result[] = [
+                "stt"   => 1,
+                "tenDuAn"   => $css->project_name,
+                "tenCauHoi" => $question->content,
+                "soSao" => $itemDuoi3Sao->point,
+                "comment"   => $itemDuoi3Sao->comment,
+                "ngayLamCss" => date('d/m/Y',strtotime($cssResult->created_at)),
+                "diemCss" => $diemCss,
+            ];
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * lay danh sach de xuat cua khach hang (nhung bai danh gia co de xuat) 
+     * @param array $cssResultIds
+     */
+    protected function layDanhSachDeXuat($cssResultIds){
+        $cssResultIds = implode(",", $cssResultIds);
+        $danhSachDeXuat = Css::layDanhSachDeXuat($cssResultIds);
+        $result =[];
+        foreach($danhSachDeXuat as $itemDeXuat){
+            $css = Css::find($itemDeXuat->css_id);
+            
+            $result[] = [
+                "stt"   => 1,
+                "diemCss"   => self::getPointCssResult($itemDeXuat->id),
+                "tenDuAn"   => $css->project_name,
+                "commentKhachHang" => $itemDeXuat->survey_comment,
+                "ngayLamCss" => date('d/m/Y',strtotime($itemDeXuat->created_at)),
+            ];
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * ham format number voi 2 so thap phan
+     * @param float $number
+     * @return float
+     */
+    protected function formatNumber($number){
+        return number_format($number, 2, ".",",");
+    }
+
+
+    /**
+     * Tinh diem cua mot bai danh gia (css_result)
+     * @param int $cssResultId
+     * @return int
+     */
+    protected function getPointCssResult($cssResultId){
+        $cssResult = DB::table("css_result")->where("id",$cssResultId)->first();
+        
+        $css_result_detail = DB::table('css_result_detail')->where("css_id",$cssResultId)->get();
+        $point_child = 0;
+        $tongSoCauDanhGia = 0;
+        foreach($css_result_detail as $item_detail){
+            $point_child += $item_detail->point;
+            if($item_detail->point > 0){
+                $tongSoCauDanhGia++;
+            }
+        }
+        if($point_child == 0){
+            $point = $cssResult->avg_point * 20;
+        }else{
+            $point = $cssResult->avg_point * 4 + $point_child/($tongSoCauDanhGia * 5) * 80;
+        }
+
+
+        return self::formatNumber($point);
+    }
+    
+    /**
+     * get team tree option recursive
+     * 
+     * @param int $id
+     * @param int $level
+     */
+    protected static function getTreeDataRecursive($parentId = 0, $level = 0, $idActive = null) 
+    {
+        $teamList = Team::select('id', 'name', 'parent_id')
+                ->where('parent_id', $parentId)
+                ->orderBy('position', 'asc')
+                ->get();
+        $countCollection = count($teamList);
+        if (!$countCollection) {
+            return;
+        }
+        $html = '';
+        $i = 0;
+        foreach ($teamList as $team) {
+            $classLi = '';
+            $classLabel = 'icheckbox-container label-normal';
+            $optionA = " data-id=\"{$team->id}\"";
+            $classA = '';
+            if ($i == $countCollection - 1) {
+                $classLi = 'last';
+            }
+            if ($team->id == $idActive) {
+                $classA .= 'active';
+            }
+            $classLi = $classLi ? " class=\"{$classLi}\"" : '';
+            $classLabel = $classLabel ? " class=\"{$classLabel}\"" : '';
+            $classA = $classA ? " class=\"{$classA}\"" : '';
+            
+            $htmlChild = self::getTreeDataRecursive($team->id, $level + 1, $idActive);
+            $hrefA = route('team::setting.team.view', ['id' => $team->id]);
+            $html .= "<li{$classLi}>";
+            $html .= "<label{$classLabel}>";
+            $html .= "<div class=\"icheckbox\">";
+            if($htmlChild == ""){
+                $html .= '<input type="checkbox" class="team-tree-checkbox" data-id="'.$team->id.'" parent-id="'.$parentId.'" name="team['.$team->id.']">&nbsp;&nbsp;' .$team->name;
+            }else{
+                $html .= '&nbsp;&nbsp;' .$team->name;
+            }
+            
+            $html .= '</div>';
+            $html .= '</label>';
+            
+            if ($html) {
+                $html .= '<ul>';
+                $html .= $htmlChild;
+                $html .= '</ul>';
+            }
+            $html .= '</li>';
+        }
+        return $html;
     }
 }
