@@ -4,4 +4,5 @@
  */
 return [
     'rikkeisoft.com',
+    'gmail.com'
 ];
