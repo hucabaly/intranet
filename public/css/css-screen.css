@@ -377,8 +377,9 @@ label{
 }
 
 .iradio-container{
-    width: 160px;
+    width: 145px;
     margin: 5px 0;
+    display: inline-block;
 }
 
 .small-title{
@@ -400,10 +401,10 @@ label{
 
 .btn-filter{
     padding: 6px 25px;
-    margin-top: 20px;
+    margin-top: 81px;
 }
 
-table.tieuchi-theocauhoi{
+div.theotieuchicauhoi{
     display:none;
 }
 
@@ -425,4 +426,21 @@ table.tieuchi-theocauhoi .check{
 
 select option.parent{
     font-weight: bold;
+}
+
+.analyze-body ul{
+    list-style: none;
+}
+
+.analyze-body ul label{
+    width:100%;
+}
+
+.analyze-body .list-team-tree{
+    height:300px;
+    overflow-y: auto; 
+}
+
+.ketquaapply{
+    display: none;
 }
