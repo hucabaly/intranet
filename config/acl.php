@@ -200,27 +200,12 @@ return [
         'label' => 'Setting',
         'child' => [
             'edit.team' => [
-                'label' => 'Setting team',
+                'label' => 'Setting team / role',
                 'routes' => [
-                    'team::setting.team.*'
-                ]
-            ],
-            'edit.role' => [
-                'label' => 'Setting role',
-                'routes' => [
-                    'team::setting.role.*'
+                    'team::setting.team.*',
+                    'team::setting.role.*',
                 ]
             ],
         ]
     ], //end S-1 setting
-    
-    'all' => [
-        'label' => 'All',
-        'child' => [
-            'all' => [
-                'label' => 'All permission',
-                'routes' => '*'
-            ],
-        ]
-    ], //end all permission
 ];

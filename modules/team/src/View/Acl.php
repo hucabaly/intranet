@@ -1,6 +1,8 @@
 <?php
 namespace Rikkei\Team\View;
 
+use Rikkei\Team\Model\TeamRule;
+
 class Acl
 {
     /**
@@ -63,19 +65,24 @@ class Acl
             return self::$scopeFind[$rule . '-r-' . $positionId];
         }
         if (isset(self::$scopeFind['flag_checked'])) {
-            return false;
+            return TeamRule::SCOPE_NONE;
         }
         if (! $collection && ! count($collection)) {
-            return false;
+            return TeamRule::SCOPE_NONE;
         }
         foreach ($collection as $item) {
-            self::$scopeFind[$item->rule . '-r-' . $item->position_id] = $item->scope;
+            if (! $item->scope) {
+                $scope = TeamRule::SCOPE_NONE;
+            } else {
+                $scope = (int) $item->scope;
+            }
+            self::$scopeFind[$item->rule . '-r-' . $item->position_id] = $scope;
         }
         self::$scopeFind['flag_checked'] = true;
         if (isset(self::$scopeFind[$rule . '-r-' . $positionId])) { 
             return self::$scopeFind[$rule . '-r-' . $positionId];
         }
-        return false;
+        return TeamRule::SCOPE_NONE;
     }
     
     /**

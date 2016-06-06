@@ -3,6 +3,7 @@ namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\CoreModel;
 use DB;
+use Exception;
 
 class Position extends CoreModel
 {
@@ -36,10 +37,19 @@ class Position extends CoreModel
      */
     public function delete()
     {
-        
-        // TODO check action relasionship rule
-        
-        return parent::delete();
+        if ($length = $this->getNumberMember()) {
+            throw new Exception("Position {$this->name} has {$length} members, can't delete!");
+        }
+        DB::beginTransaction();
+        try {
+            TeamRule::where('position_id', $this->id)->delete();
+            $result = parent::delete();
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            throw $ex;
+        }
+        return $result;
     }
     
     /**
@@ -98,5 +108,18 @@ class Position extends CoreModel
             DB::rollback();
             throw $ex;
         }
+    }
+    
+    /**
+     * get number member of a position
+     * 
+     * @return int
+     */
+    public function getNumberMember()
+    {
+        $children = TeamMembers::select(DB::raw('count(*) as count'))
+            ->where('position_id', $this->id)
+            ->first();
+        return $children->count;
     }
 }

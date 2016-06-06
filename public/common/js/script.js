@@ -83,5 +83,74 @@ jQuery(document).ready(function ($) {
         $('#modal-delete-confirm').modal('hide');
         return false;
     });
+    
+    /**
+     * form input dropdown
+     */
+    $('.form-input-dropdown .input-menu a').click(function(event) {
+        event.preventDefault();
+        var textHtml = $(this).html();
+        var dataValue = $(this).data('value');
+        $(this).parents('.form-input-dropdown').find('.input-show-data span').html(textHtml);
+        $(this).parents('.form-input-dropdown').find('.input').val(dataValue);
+    });
 });
 
+jQuery(document).ready(function($) {
+    /* filter-grid action */
+    // get params from filter input
+    function getSerializeFilter()
+    {
+        var valueFilter, nameFilter, params;
+        params = '';
+        $('.filter-grid').each(function(i,k) {
+            valueFilter = $(this).val();
+            nameFilter = $(this).attr('name');
+            if (valueFilter && nameFilter) {
+                params += nameFilter + '=' + valueFilter + '&';
+            }
+        });
+        params += 'current_url=' + currentUrl;
+        return params;
+    }    
+    //filter request with param filter
+    function filterRequest()
+    {
+        data = getSerializeFilter();
+        $('.btn-search-filter .fa').removeClass('hidden');
+        $.ajax({
+            url: baseUrl + 'grid/filter/request',
+            type: 'GET',
+            data: data,
+            success: function() {
+                window.location.href = currentUrl;
+            }
+        });
+    }
+    //input filter grid key down - request filter action
+    $(document).on('keydown','input.filter-grid',function(event) {
+        if(event.which == 13) {
+            filterRequest();
+            return false;
+        }
+    });
+    //reset filter
+    $(document).on('click','.btn-reset-filter',function(event) {
+        $('.btn-reset-filter .fa').removeClass('hidden');
+        $.ajax({
+            url: baseUrl + 'grid/filter/remove',
+            type: 'GET',
+            data: 'current_url=' + currentUrl,
+            success: function() {
+                window.location.href = currentUrl;
+            }
+        });
+        return false;
+    });
+    
+    //search filter button
+    $(document).on('click','.btn-search-filter',function(event) {
+        filterRequest();
+        return false;
+    });
+});

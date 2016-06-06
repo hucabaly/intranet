@@ -6,11 +6,16 @@ use Rikkei\Team\Model\TeamRule;
 
 $acl = Acl::getAclData();
 $i = 0;
+$scopeIcon = TeamRule::scopeIconArray();
 ?>
 <form action="{{ URL::route('team::setting.team.rule.save') }}" method="post">
     {!! csrf_field() !!}
     <input type="hidden" name="team[id]" value="{{ Form::getData('id') }}" />
-
+    
+    <div class="rule-noti">
+        {!! TeamRule::getScopeIconGuide() !!}
+    </div>
+    
     <div class="actions">
         <button type="submit" class="btn-add btn-large">
             <span>{{ trans('team::view.Save') }}</span>
@@ -32,8 +37,12 @@ $i = 0;
                     <p class="alert alert-warning">{{ trans('team::view.Not found function') }}</p>
                   @else
                     @foreach ($acl as $aclKey => $aclValue)
-                        <tr>
+                        <tr class="tr-col-screen">
                             <td class="col-screen">{{ $aclValue['label'] }}</td>
+                            <td>&nbsp;</td>
+                            @foreach ($positions as $position)
+                                <td>&nbsp;</td>
+                            @endforeach
                         </tr>
                         @if ($aclValue['child'] && count($aclValue['child']))
                             @foreach ($aclValue['child'] as $aclItemKey => $aclItem)
@@ -45,15 +54,19 @@ $i = 0;
                                         <td class="col-team">
                                             <input type="hidden" name="rule[{{ $i }}][position_id]" value="{{ $position->id }}" />
                                             <input type="hidden" name="rule[{{ $i }}][rule]" value="{{ $aclItemKey }}" />
-                                            <select name="rule[{{ $i }}][scope]">
-                                                @foreach (TeamRule::toOption() as $option)
-                                                    <option value="{{ $option['value'] }}"<?php
-                                                        if (Acl::findScope($teamRules, $aclItemKey, $position->id) == $option['value']) {
-                                                            echo ' selected';
-                                                        }
-                                                    ?>>{{ $option['label'] }}</option>
-                                                @endforeach
-                                            </select>
+                                            <div class="btn-group form-input-dropdown">
+                                                <input type="hidden" name="rule[{{ $i }}][scope]" value="{{ Acl::findScope($teamRules, $aclItemKey, $position->id) }}" class="input" />
+                                                <button type="button" class="btn btn-default dropdown-toggle input-show-data" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span>{!! $scopeIcon[Acl::findScope($teamRules, $aclItemKey, $position->id)] !!}</span>
+                                                </button>
+                                                <ul class="dropdown-menu input-menu">
+                                                    @foreach (TeamRule::toOption() as $option)
+                                                        <li>
+                                                            <a href="#" data-value="{{ $option['value'] }}">{!! $option['label'] !!}</a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
                                             <?php $i++; ?>
                                         </td>
                                     @endforeach
@@ -72,3 +85,4 @@ $i = 0;
         </button>
     </div>
 </form>
+

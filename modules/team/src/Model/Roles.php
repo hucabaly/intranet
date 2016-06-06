@@ -31,31 +31,11 @@ class Roles extends CoreModel
         return $collection;
     }
     
-    /**
-     * rewrite save role
-     * 
-     * @param array $rules
-     * @return boolean
-     */
-    public function save(array $rules = [], array $options = [])
+    public static function getAll()
     {
-        if (! count($rules) ) {
-            return parent::save($options);
-        }
-        foreach ($rules as &$item) {
-            $item['role_id'] = $this->id;
-        }
-        DB::beginTransaction();
-        try {
-            $result = parent::save($options);
-            RoleRule::where('role_id', $this->id)->delete();
-            RoleRule::insert($rules);
-            DB::commit();
-        } catch (Exception $ex) {
-            DB::rollback();
-            throw $ex;
-        }
-        return $result;
+        return self::select('id', 'name')
+            ->orderBy('name')
+            ->get();
     }
     
     /**
@@ -74,5 +54,31 @@ class Roles extends CoreModel
             throw $ex;
         }
         return $result;
+    }
+    
+    /**
+     * save rule
+     * 
+     * @param array $rules
+     * @return boolean
+     */
+    public function saveRule(array $rules = [], array $options = [])
+    {
+        if (! count($rules) ) {
+            return true;
+        }
+        foreach ($rules as &$item) {
+            $item['role_id'] = $this->id;
+        }
+        DB::beginTransaction();
+        try {
+            RoleRule::where('role_id', $this->id)->delete();
+            RoleRule::insert($rules);
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            throw $ex;
+        }
+        return true;
     }
 }
