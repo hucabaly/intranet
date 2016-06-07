@@ -11,9 +11,11 @@ use Rikkei\Sales\Model\Css;
 use Rikkei\Team\Model\Team;
 use Lang;
 use Mail;
+use Session;
 
 class CssController extends Controller {
 
+    static $perPage = 2;
     /**
      * Hàm hiển thị form tạo CSS
      * @return objects
@@ -500,47 +502,134 @@ class CssController extends Controller {
         $data = [];
         switch ($criteriaType){
             case 'tcProjectType':
-                $data = self::applyByProjectType($criteriaIds,$startDate,$endDate,$teamIds); 
+                $data = self::applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,'projectType'); 
                 break;
             case 'tcTeam':
-                $data = self::applyByTeam($criteriaIds,$startDate,$endDate,$projectTypeIds);
+                $data = self::applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,'team');
                 break;
             case 'tcPm':
-                $data = self::applyByPm($criteriaIds,$teamIds,$startDate,$endDate,$projectTypeIds);
+                $data = self::applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,'pm');
+                break;
+            case 'tcBrse':
+                $data = self::applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,'brse');
+                break;
+            case 'tcCustomer':
+                $data = self::applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,'customer');
+                break;
+            case 'tcSale':
+                $data = self::applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,'sale');
                 break;
         }
-        
         
         return response()->json($data);
     }
     
     /**
-     * 
+     * @param string $criteriaIds
      * @param string $projectTypeIds
      * @param string $startDate
      * @param string $endDate
      * @param string $teamIds
      * @return array
      */
-    protected function applyByProjectType($projectTypeIds, $startDate, $endDate,$teamIds){
+    protected function applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria){
         //lay ra cac ban ghi tu bang css_result theo loai du an, ngay lam du an, team set theo css
-        $cssResult = Css::getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$teamIds);
-        $stt = 0;
+        if($criteria == 'projectType'){
+            //all result to show charts
+            $cssResult = Css::getCssResultByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds);
+        }else if($criteria == 'team'){
+            $cssResult = Css::getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds);
+        }else if($criteria == 'pm'){
+            $cssResult = Css::getCssResultByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+        }else if($criteria == 'brse'){
+            $cssResult = Css::getCssResultByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+        }else if($criteria == 'customer'){
+            $cssResult = Css::getCssResultByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+        }else if($criteria == 'sale'){
+            $cssResult = Css::getCssResultByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+        }
         
         //$pointToHighchart -> luu diem hien thi tren bieu do all result
         $pointToHighchart = [];
         
-        //danh sach id cua css result
+        //cssResultIds list
         $cssResultIds = [];
         
-        //loop cssResult de add them cac thong tin khac vao
-        foreach($cssResult as &$itemResult){
+        //Get data chart all result 
+        foreach($cssResult as $itemResult){
             $cssResultIds[] = $itemResult->id;
-            $css = DB::table("css")->where("id",$itemResult->css_id)->first();
+            
+            //lay diem de show tren bieu do thoi gian all result
+            $pointToHighchart[] = (float)self::getPointCssResult($itemResult->id);
+            $dateToHighchart[] = date('d/m/Y',strtotime($itemResult->created_at));
+        }
+        
+        //Get data fill to table project list 
+        $cssResultPaginate = self::showAnalyzeListProject($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria,1);
+       
+        //Get data fill to compare charts in analyze page
+        $pointCompareChart = self::getCompareCharts($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria);
+        
+        //Get data fill to table criteria less 3 star
+        $lessThreeStar = self::getListLessThreeStar($cssResultIds);
+        
+        //Get data fill to table customer's proposes
+        $proposes = self::getProposes($cssResultIds);
+        
+        $data = [
+            "cssResult" => $cssResult,
+            "cssResultPaginate" => $cssResultPaginate,
+            "pointToHighchart" => $pointToHighchart,
+            "dateToHighchart" => $dateToHighchart,
+            "pointCompareChart" => $pointCompareChart,
+            "lessThreeStar" =>$lessThreeStar,
+            "proposes" => $proposes,
+        ];
+        return $data;
+    }
+    
+    /**
+     * Get data fill to table project list in analyze page
+     * @param string $criteriaIds
+     * @param string $teamIds
+     * @param string $projectTypeIds
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $criteria
+     * @param int $curPage
+     * @return object list
+     */
+    public function showAnalyzeListProject($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria,$curPage){
+        $offset = ($curPage-1) * self::$perPage; 
+        
+        if($criteria == 'projectType'){
+            //all result to show charts
+            $cssResult = Css::getCssResultByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds);
+            //result by pagination
+            $cssResultPaginate = Css::getCssResultPaginateByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+        }else if($criteria == 'team'){
+            $cssResult = Css::getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds);
+            $cssResultPaginate = Css::getCssResultPaginateByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds,$offset,self::$perPage);
+        }else if($criteria == 'pm'){
+            $cssResult = Css::getCssResultByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = Css::getCssResultPaginateByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+        }else if($criteria == 'brse'){
+            $cssResult = Css::getCssResultByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = Css::getCssResultPaginateByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+        }else if($criteria == 'customer'){
+            $cssResult = Css::getCssResultByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = Css::getCssResultPaginateByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+        }else if($criteria == 'sale'){
+            $cssResult = Css::getCssResultByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = Css::getCssResultPaginateByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+        }
+        //echo "<pre>"; var_dump($cssResultPaginate);die;
+        foreach($cssResultPaginate as &$itemResultPaginate){
+            $css = DB::table("css")->where("id",$itemResultPaginate->css_id)->first();
             
             //get team_id tu bang css_team
             $teamName = "";
-            $team = DB::table("css_team")->where("css_id",$itemResult->css_id)->get();
+            $team = DB::table("css_team")->where("css_id",$itemResultPaginate->css_id)->get();
             
             foreach($team as $teamId){
                 if($teamName == ""){
@@ -550,28 +639,84 @@ class CssController extends Controller {
                 }
             }
             
-            $itemResult->stt = ++$stt;
-            $itemResult->project_name = $css->project_name;
-            $itemResult->teamName = $teamName;
-            $itemResult->pmName = $css->pm_name;
-            $itemResult->css_created_at = date('d/m/Y',strtotime($css->created_at));
-            $itemResult->created_at = date('d/m/Y',strtotime($itemResult->created_at));
-            $itemResult->point = self::getPointCssResult($itemResult->id);
-            
-            //lay diem de show tren bieu do thoi gian all result
-            $pointToHighchart[] = (float)$itemResult->point;
-            $dateToHighchart[] = $itemResult->created_at;
+            $itemResultPaginate->stt = ++$offset;
+            $itemResultPaginate->project_name = $css->project_name;
+            $itemResultPaginate->teamName = $teamName;
+            $itemResultPaginate->pmName = $css->pm_name;
+            $itemResultPaginate->css_created_at = date('d/m/Y',strtotime($css->created_at));
+            $itemResultPaginate->created_at = date('d/m/Y',strtotime($itemResultPaginate->created_at));
+            $itemResultPaginate->point = self::getPointCssResult($itemResultPaginate->id);
         }
         
+        //Get html pagination render
+        $totalPage = ceil(count($cssResult) / self::$perPage);
+        $html = "";
+        if($totalPage > 1){
+            if($curPage == 1){
+                $html .= '<li class="disabled"><span>«</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="showAnalyzeListProject('.($curPage-1).',\''.Session::token().'\');" rel="back">«</a></li>';
+            }
+            for($i=1; $i<=$totalPage; $i++){
+                if($i == $curPage){
+                    $html .= '<li class="active"><span>'.$i.'</span></li>';
+                }else{
+                    $html .= '<li><a href="javascript:void(0)" onclick="showAnalyzeListProject('.$i.',\''.Session::token().'\');">'.$i.'</a></li>';
+                }
+            }
+            if($curPage == $totalPage){
+                $html .= '<li class="disabled"><span>»</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="showAnalyzeListProject('.($curPage+1).',\''.Session::token().'\');" rel="next">»</a></li>';
+            }
+        }
+        
+        return $data = [
+            "cssResultdata" => $cssResultPaginate,
+            "paginationRender"  => $html,
+        ];
+    }
+    
+    /**
+     * Get data fill to compare charts in analyze page
+     * @param string $criteriaIds
+     * @param string $teamIds
+     * @param string $projectTypeIds
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $criteria
+     * @return array list
+     */
+    public function getCompareCharts($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria){
         //lay diem theo tung loai du an de show tren bieu do phan loai theo tieu chi
-        $arrProjectTypeId = explode(",", $projectTypeIds);
+        $criteriaIds = explode(",", $criteriaIds);
+        
         $pointCompareChart = array();
-        foreach($arrProjectTypeId as $key => $project_type_id){
-            $projectTypeName = Css::getProjectTypeNameById($project_type_id);
-            $cssResultByProjectType = Css::getCssResultByProjectTypeId($project_type_id,$startDate,$endDate,$teamIds);
+        foreach($criteriaIds as $key => $criteriaId){
+            if($criteria == 'projectType'){
+                $name = Css::getProjectTypeNameById($criteriaId);
+                $cssResultByCriteria = Css::getCssResultByProjectTypeId($criteriaId,$startDate,$endDate,$teamIds);
+            }else if($criteria == 'team'){
+                $team = Team::find($criteriaId);
+                $name = $team->name;
+                $cssResultByCriteria = Css::getCssResultByTeamId($criteriaId,$startDate,$endDate,$projectTypeIds);
+            }else if($criteria == 'pm'){
+                $name = $criteriaId;
+                $cssResultByCriteria = Css::getCssResultByPmName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+            }else if($criteria == 'brse'){
+                $name = $criteriaId;
+                $cssResultByCriteria = Css::getCssResultByBrseName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+            }else if($criteria == 'customer'){
+                $name = $criteriaId;
+                $cssResultByCriteria = Css::getCssResultByCustomerName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+            }else if($criteria == 'sale'){
+                $name = $criteriaId;
+                $cssResultByCriteria = Css::getCssResultBySale($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+            }
+            
             $pointToHighchartByProjectType = [];
-            $pointToHighchartByProjectType["name"] = $projectTypeName;
-            foreach($cssResultByProjectType as $item){
+            $pointToHighchartByProjectType["name"] = $name;
+            foreach($cssResultByCriteria as $item){
                 $pointToHighchartByProjectType["data"][] = (float)self::getPointCssResult($item->id);
             }
             $pointCompareChart[] = [
@@ -580,188 +725,7 @@ class CssController extends Controller {
             ];
         }
         
-        //get list less three star by cssResultIds
-        $lessThreeStar = self::getListLessThreeStar($cssResultIds);
-        
-        //get customer's proposes
-        $proposes = self::getProposes($cssResultIds);
-        
-        $data = [
-            "cssResult" => $cssResult,
-            "pointToHighchart" => $pointToHighchart,
-            "dateToHighchart" => $dateToHighchart,
-            "pointCompareChart" => $pointCompareChart,
-            "lessThreeStar" =>$lessThreeStar,
-            "proposes" => $proposes,
-        ];
-        return $data;
-    }
-    
-    /**
-     * 
-     * @param string $projectTypeIds
-     * @param string $startDate
-     * @param string $endDate
-     * @param string $teamIds
-     * @return array
-     */
-    protected function applyByTeam($teamIds, $startDate, $endDate,$projectTypeIds){
-        //Get list css by list team id, start date, end date and list project type id
-        $cssResult = Css::getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$teamIds);
-        $no = 0;
-        
-        //$pointToHighchart -> luu diem hien thi tren bieu do all result
-        $pointToHighchart = [];
-        
-        //danh sach id cua css result
-        $cssResultIds = [];
-        
-        //loop cssResult de add them cac thong tin khac vao
-        foreach($cssResult as &$itemResult){
-            $cssResultIds[] = $itemResult->id;
-            $css = DB::table("css")->where("id",$itemResult->css_id)->first();
-            
-            //get team_id tu bang css_team
-            $teamName = "";
-            $team = DB::table("css_team")->where("css_id",$itemResult->css_id)->get();
-            
-            foreach($team as $teamId){
-                if($teamName == ""){
-                    $teamName = Css::getTeamNameById($teamId->team_id);
-                }else{
-                    $teamName .= ", " . Css::getTeamNameById($teamId->team_id);
-                }
-            }
-            
-            $itemResult->stt = ++$no;
-            $itemResult->project_name = $css->project_name;
-            $itemResult->teamName = $teamName;
-            $itemResult->pmName = $css->pm_name;
-            $itemResult->css_created_at = date('d/m/Y',strtotime($css->created_at));
-            $itemResult->created_at = date('d/m/Y',strtotime($itemResult->created_at));
-            $itemResult->point = self::getPointCssResult($itemResult->id);
-            
-            //lay diem de show tren bieu do thoi gian all result
-            $pointToHighchart[] = (float)$itemResult->point;
-            $dateToHighchart[] = $itemResult->created_at;
-        }
-        
-        //lay diem theo tung loai du an de show tren bieu do phan loai theo tieu chi
-        $arrTeamId = explode(",", $teamIds);
-        $pointCompareChart = array();
-        foreach($arrTeamId as $key => $teamId){
-            $team = Team::find($teamId);
-            $teamName = $team->name;
-            $cssResultByTeam = Css::getCssResultByTeamId($teamId,$startDate,$endDate,$projectTypeIds);
-            $pointToHighchartByTeam = [];
-            $pointToHighchartByTeam["name"] = $teamName;
-            foreach($cssResultByTeam as $item){
-                $pointToHighchartByTeam["data"][] = (float)self::getPointCssResult($item->id);
-            }
-            $pointCompareChart[] = [
-                "name" => $pointToHighchartByTeam["name"],
-                "data" => $pointToHighchartByTeam["data"]
-            ];
-        }
-        
-        //get list less three star by cssResultIds
-        $lessThreeStar = self::getListLessThreeStar($cssResultIds);
-        
-        //get customer's proposes
-        $proposes = self::getProposes($cssResultIds);
-        
-        $data = [
-            "cssResult" => $cssResult,
-            "pointToHighchart" => $pointToHighchart,
-            "dateToHighchart" => $dateToHighchart,
-            "pointCompareChart" => $pointCompareChart,
-            "lessThreeStar" =>$lessThreeStar,
-            "proposes" => $proposes,
-        ];
-        return $data;
-    }
-    
-    /**
-     * 
-     * @param string $projectTypeIds
-     * @param string $startDate
-     * @param string $endDate
-     * @param string $teamIds
-     * @return array
-     */
-    protected function applyByPm($listPmName,$teamIds, $startDate, $endDate,$projectTypeIds){
-        //Get list css by list pm name, list team id, start date, end date and list project type id
-        $cssResult = Css::getCssResultByListPm($listPmName,$projectTypeIds, $startDate, $endDate,$teamIds);
-        
-        $no = 0;
-        
-        //$pointToHighchart -> luu diem hien thi tren bieu do all result
-        $pointToHighchart = [];
-        
-        //danh sach id cua css result
-        $cssResultIds = [];
-        
-        //loop cssResult de add them cac thong tin khac vao
-        foreach($cssResult as &$itemResult){
-            $cssResultIds[] = $itemResult->id;
-            $css = DB::table("css")->where("id",$itemResult->css_id)->first();
-            
-            //get team_id tu bang css_team
-            $teamName = "";
-            $team = DB::table("css_team")->where("css_id",$itemResult->css_id)->get();
-            
-            foreach($team as $teamId){
-                if($teamName == ""){
-                    $teamName = Css::getTeamNameById($teamId->team_id);
-                }else{
-                    $teamName .= ", " . Css::getTeamNameById($teamId->team_id);
-                }
-            }
-            
-            $itemResult->stt = ++$no;
-            $itemResult->project_name = $css->project_name;
-            $itemResult->teamName = $teamName;
-            $itemResult->pmName = $css->pm_name;
-            $itemResult->css_created_at = date('d/m/Y',strtotime($css->created_at));
-            $itemResult->created_at = date('d/m/Y',strtotime($itemResult->created_at));
-            $itemResult->point = self::getPointCssResult($itemResult->id);
-            
-            //lay diem de show tren bieu do thoi gian all result
-            $pointToHighchart[] = (float)$itemResult->point;
-            $dateToHighchart[] = $itemResult->created_at;
-        }
-        
-        //lay diem theo tung loai du an de show tren bieu do phan loai theo tieu chi
-        $arrPmName = explode(",", $listPmName);
-        $pointCompareChart = array();
-        foreach($arrPmName as $key => $pmName){
-            $cssResultByTeam = Css::getCssResultByPmName($pmName,$teamIds,$startDate,$endDate,$projectTypeIds);
-            $pointToHighchartByTeam = [];
-            $pointToHighchartByTeam["name"] = $pmName;
-            foreach($cssResultByTeam as $item){
-                $pointToHighchartByTeam["data"][] = (float)self::getPointCssResult($item->id);
-            }
-            $pointCompareChart[] = [
-                "name" => $pointToHighchartByTeam["name"],
-                "data" => $pointToHighchartByTeam["data"]
-            ];
-        }
-        
-        //get list less three star by cssResultIds
-        $lessThreeStar = self::getListLessThreeStar($cssResultIds);
-        
-        //get customer's proposes
-        $proposes = self::getProposes($cssResultIds);
-        
-        $data = [
-            "cssResult" => $cssResult,
-            "pointToHighchart" => $pointToHighchart,
-            "dateToHighchart" => $dateToHighchart,
-            "pointCompareChart" => $pointCompareChart,
-            "lessThreeStar" =>$lessThreeStar,
-            "proposes" => $proposes,
-        ];
-        return $data;
+        return $pointCompareChart;
     }
 
 
@@ -779,13 +743,12 @@ class CssController extends Controller {
         
         $result["projectType"] = self::filterAnalyzeByProjectType($startDate, $endDate, $projectTypeIds,$teamIds);
         $result["team"] = self::filterAnalyzeByTeam($startDate, $endDate, $projectTypeIds,$teamIds);
-        $result["pm"] = self::filterAnalyzeByPm($startDate, $endDate, $projectTypeIds,$teamIds);
-                
-        $data = array(
-            "result" => $result,
-        );
+        $result["pm"] = self::filterAnalyzeByPmOrBrseOrCustomerOrSale($startDate, $endDate, $projectTypeIds,$teamIds,'pm');
+        $result["brse"] = self::filterAnalyzeByPmOrBrseOrCustomerOrSale($startDate, $endDate, $projectTypeIds,$teamIds,'brse');
+        $result["customer"] = self::filterAnalyzeByPmOrBrseOrCustomerOrSale($startDate, $endDate, $projectTypeIds,$teamIds,'customer');        
+        $result["sale"] = self::filterAnalyzeByPmOrBrseOrCustomerOrSale($startDate, $endDate, $projectTypeIds,$teamIds,'sale');        
         
-        return response()->view('sales::css.include.table_theotieuchi', $data);
+        return response()->view('sales::css.include.table_theotieuchi', $result);
     }
     
     /**
@@ -924,22 +887,40 @@ class CssController extends Controller {
     }
     
     /**
-     * Show data filter by PM
+     * Show data filter by PM or BrSE or Customer
      * @param string $startDate
      * @param string $endDate
      * @param string $projectTypeIds
      * @param string $teamIds
+     * @param string $criteria
      * return array
      */
-    protected function filterAnalyzeByPm($startDate, $endDate, $projectTypeIds,$teamIds){
+    protected function filterAnalyzeByPmOrBrseOrCustomerOrSale($startDate, $endDate, $projectTypeIds,$teamIds,$criteria){
         $css = array();
         $result = array();
         $no = 0;
         
-        $listPm = CSS::getListPm();
-        foreach($listPm as $pm){
+        if($criteria == "pm"){
+            $listResult = CSS::getListPm();
+        }else if($criteria == "brse"){
+            $listResult = CSS::getListBrse();
+        }else if($criteria == "customer"){
+            $listResult = CSS::getListCustomer();
+        }else if($criteria == "sale"){
+            $listResult = CSS::getListSale();
+        }
+        
+        foreach($listResult as $itemList){
             $points = array();
-            $css = Css::getCssByPmAndTeamIdsAndListProjectType($pm->pm_name, $teamIds,$projectTypeIds);
+            if($criteria == "pm"){
+                $css = Css::getCssByPmAndTeamIdsAndListProjectType($itemList->pm_name, $teamIds,$projectTypeIds);
+            }else if($criteria == "brse"){
+                $css = Css::getCssByBrseAndTeamIdsAndListProjectType($itemList->brse_name, $teamIds,$projectTypeIds);
+            }else if($criteria == "customer"){
+                $css = Css::getCssByCustomerAndTeamIdsAndListProjectType($itemList->customer_name, $teamIds,$projectTypeIds);
+            }else if($criteria == "sale"){
+                $css = Css::getCssBySaleAndTeamIdsAndListProjectType($itemList->user_id, $teamIds,$projectTypeIds);
+            }
             
             $countCss = 0;
             foreach($css as $itemCss){
@@ -957,13 +938,28 @@ class CssController extends Controller {
                 }
             }
             
+            if($criteria == "pm"){
+                $id = $itemList->pm_name;
+                $name = $itemList->pm_name;
+            } else if($criteria == "brse"){
+                $id = $itemList->brse_name;
+                $name = $itemList->brse_name;
+            } else if($criteria == "customer"){
+                $id = $itemList->customer_name; 
+                $name = $itemList->customer_name; 
+            } else if($criteria == "sale"){
+                $user = User::find($itemList->user_id);
+                $id = $itemList->user_id;
+                $name = $user->name; 
+            } 
+            
             if(count($points) > 0){
                 $avgPoint = array_sum($points) / count($points);
                 $no++;
                 $result[] = [
                     "no"                => $no,
-                    "pmId"              => $pm->pm_name,
-                    "pmName"            => $pm->pm_name,
+                    "id"                => $id,
+                    "name"              => $name,
                     "countCss"          => $countCss,
                     "maxPoint"          => self::formatNumber(max($points)),
                     "minPoint"          => self::formatNumber(min($points)),
@@ -973,8 +969,8 @@ class CssController extends Controller {
                 $no++;
                 $result[] = [
                     "no"                => $no,
-                    "pmId"              => $pm->pm_name,
-                    "pmName"            => $pm->pm_name,
+                    "id"                => $id,
+                    "name"              => $name,
                     "countCss"          => 0,
                     "maxPoint"          => 0,
                     "minPoint"          => 0,

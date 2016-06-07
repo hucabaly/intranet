@@ -198,6 +198,7 @@ return [
                     'sales::css.analyze',
                     'sales::css.filterAnalyze',
                     'sales::css.applyAnalyze',
+                    'sales::css.showAnalyzeListProject',
                 ]
             ],
         ]

@@ -67,6 +67,24 @@ $(document).ready(function(){
             $('.tbl-criteria').hide();
             $('table[data-id=tcPm]').show();
         });
+        
+        //show table brse
+        $('#tcBrse').on('ifChecked', function (event) {
+            $('.tbl-criteria').hide();
+            $('table[data-id=tcBrse]').show();
+        });
+                
+        //show table customer
+        $('#tcCustomer').on('ifChecked', function (event) {
+            $('.tbl-criteria').hide();
+            $('table[data-id=tcCustomer]').show();
+        });    
+        
+        //show table sale
+        $('#tcSale').on('ifChecked', function (event) {
+            $('.tbl-criteria').hide();
+            $('table[data-id=tcSale]').show();
+        }); 
     });
 });
 
@@ -233,26 +251,33 @@ function apply(token){
             criteriaType: criteriaType,
         },
     })
-    .done(function (data) {  console.log(data);
+    .done(function (data) {  console.log(data); 
+        $("#startDate_val").val(startDate);
+        $("#endDate_val").val(endDate);
+        $("#criteriaIds_val").val(criteriaIds);
+        $("#teamIds_val").val(teamIds);
+        $("#projectTypeIds_val").val(projectTypeIds);
+        $("#criteriaType_val").val(criteriaType);
+        
         $(".ketquaapply").show();
         $('html, body').animate({
             scrollTop: $(".ketquaapply").offset().top
         }, 100);
-        var countResult = data["cssResult"].length; 
+        var countResult = data["cssResultPaginate"]["cssResultdata"].length; 
         var html = "";
         for(var i=0; i<countResult; i++){
             html += "<tr>";
-            html += "<td>"+data["cssResult"][i]["stt"]+"</td>";
-            html += "<td>"+data["cssResult"][i]["project_name"]+"</td>";
-            html += "<td>"+data["cssResult"][i]["teamName"]+"</td>";
-            html += "<td>"+data["cssResult"][i]["pmName"]+"</td>";
-            html += "<td>"+data["cssResult"][i]["css_created_at"]+"</td>";
-            html += "<td>"+data["cssResult"][i]["created_at"]+"</td>";
-            html += "<td>"+data["cssResult"][i]["point"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["stt"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["project_name"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["teamName"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["pmName"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["css_created_at"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["created_at"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["point"]+"</td>";
             html += "</tr>";   
         }
         $("#danhsachduan tbody").html(html);
-        
+        $("#danhsachduan").parent().find(".pagination").html(data["cssResultPaginate"]["paginationRender"]);
         $('#chartAll').highcharts({
             title: {
                 text: 'Điểm CSS',
@@ -372,6 +397,63 @@ function getCriteriaChecked(){
     }else if(criteriaType == "tcQuestion"){
         return "checkQuestionItem";
     }
+}
+
+function showAnalyzeListProject(curpage,token){
+    var startDate = $("#startDate_val").val();
+    var endDate = $("#endDate_val").val();
+    var criteriaIds = $("#criteriaIds_val").val();
+    var teamIds = $("#teamIds_val").val();
+    var projectTypeIds = $("#projectTypeIds_val").val();
+    var criteriaType = "";
+     
+    switch($("#criteriaType_val").val()){
+        case 'tcProjectType':
+            criteriaType = "projectType";
+            break;
+        case 'tcTeam':
+            criteriaType = "team";
+            break;
+        case 'tcPm':
+            criteriaType = "pm";
+            break;
+        case 'tcBrse':
+            criteriaType = "brse";
+            break;
+        case 'tcCustomer':
+            criteriaType = "customer";
+            break;
+        case 'tcSale':
+            criteriaType = "sale";
+            break;
+    }
+    $.ajax({
+        url: baseUrl + 'css/show_analyze_list_project/'+criteriaIds+'/'+teamIds+'/'+ projectTypeIds+'/'+startDate+'/'+endDate+'/'+criteriaType+'/'+curpage,
+        type: 'post',
+        data: {
+            _token: token, 
+        },
+    })
+    .done(function (data) {  console.log(data); 
+        var countResult = data["cssResultdata"].length; 
+        var html = "";
+        for(var i=0; i<countResult; i++){
+            html += "<tr>";
+            html += "<td>"+data["cssResultdata"][i]["stt"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["project_name"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["teamName"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["pmName"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["css_created_at"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["created_at"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["point"]+"</td>";
+            html += "</tr>";   
+        }
+        $("#danhsachduan tbody").html(html);
+        $("#danhsachduan").parent().find(".pagination").html(data["paginationRender"]);
+    })
+    .fail(function () {
+        alert("Ajax failed to fetch data");
+    })
 }
     
     
