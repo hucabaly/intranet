@@ -4,8 +4,8 @@ namespace Rikkei\Team\View;
 use Rikkei\Team\Model\User;
 use Auth;
 use Rikkei\Team\Model\TeamRule;
-use Session;
 use Route;
+use Config;
 
 /**
  * class permission
@@ -290,24 +290,13 @@ class Permission
     }
     
     /**
-     * flush session permission
-     * 
-     * @return \Rikkei\Team\View\Permission
-     */
-    public function flushPermission()
-    {
-        Session::forget('permission');
-        return $this;
-    }
-    
-    /**
      * get root account from file .env
      * 
      * @return string|null
      */
     public function getRootAccount()
     {
-        return env('ACCOUNT_ROOT', null);
+        return trim(Config('services.account_root'));
     }
     
     /**
