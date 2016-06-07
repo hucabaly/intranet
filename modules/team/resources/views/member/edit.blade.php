@@ -3,6 +3,9 @@
 use Rikkei\Core\View\Form;
 use Rikkei\Team\View\TeamList;
 use Rikkei\Team\Model\Position;
+
+$postionsOption = Position::toOption();
+$teamsOption = TeamList::toOption(null, false, false);
 ?>
 
 @section('title')
@@ -27,14 +30,7 @@ use Rikkei\Team\Model\Position;
                     <h2 class="box-title">{{ trans('team::view.Personal Information') }}</h2>
                 </div>
                 <div class="box-body">
-                    <div class="form-horizontal form-label-left">
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">{{ trans('team::view.Employee code') }}</label>
-                            <div class="input-box col-md-9">
-                                <input type="text" class="form-control" placeholder="{{ trans('team::view.Employee code') }}" value="{{ Form::getData('employee_card_id') }}" disabled/>
-                            </div>
-                        </div>
-                    </div>
+                    @include('team::member.edit.base')
                 </div>
             </div>
 
@@ -43,31 +39,7 @@ use Rikkei\Team\Model\Position;
                     <h2 class="box-title">Team</h2>
                 </div>
                 <div class="box-body">
-                    <div class="form-horizontal form-label-left">
-                        <div class="form-group group-team-position">
-                            <div class="input-team-position input-team">
-                                <label class="control-label">Team</label>
-                                <div class="input-box">
-                                    <select name="team[0][team]" class="form-control">
-                                        @foreach(TeamList::toOption(null, false, false) as $option)
-                                            <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="input-team-position input-position">
-                                <label class=" control-label">{{ trans('team::view.Position') }}</label>
-                                <div class="input-box">
-                                    <select name="team[0][position]" class="form-control">
-                                        @foreach(Position::toOption() as $option)
-                                            <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
+                    @include('team::member.edit.team')
                 </div>
             </div>
         </div> <!-- end edit memeber left col -->
@@ -80,15 +52,5 @@ use Rikkei\Team\Model\Position;
 @endsection
 
 @section('script')
-<script src="{{ URL::asset('js/jquery.validate.min.js') }}"></script>
-<script>
-    jQuery(document).ready(function ($) {
-        var messages = {
-            'item[name]': '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.role name') ; ?>'
-        }
-        $('#form-role-edit').validate({
-            messages: messages
-        });
-    });
-</script>
+<script src="{{ URL::asset('team/js/script.js') }}"></script>
 @endsection

@@ -31,33 +31,9 @@ return [
         'active' => '1'
     ],
     'team' => [
-        'path' => '#',
+        'path' => 'team/member',
         'label' => 'Team',
         'active' => '1',
-        'child' => [
-            'team.member' => [
-                'path' => 'team/member',
-                'label' => 'Member',
-                'active' => '1'
-            ],
-            'team.list' => [
-                'path' => 'team/list',
-                'label' => 'List team',
-                'active' => '1',
-                'child' => [
-                    'team.sub1' => [
-                        'path' => 'team/list/sub',
-                        'label' => 'sub',
-                        'active' => '1'
-                    ],
-                    'team.sub2' => [
-                        'path' => 'team/list/sub',
-                        'label' => 'sub',
-                        'active' => '1'
-                    ]
-                ]
-            ]
-        ]
     ],
     'project' => [
         'path' => 'project',

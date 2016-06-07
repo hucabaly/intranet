@@ -88,6 +88,9 @@
 /* team rule*/
 .team-rule-wrapper {
     margin-top: 20px;
+    .actions {
+        text-align: right;
+    }
     .table-team-rule {
         margin-top: 15px;
         tbody {
@@ -159,12 +162,7 @@
         margin-bottom: 10px;
     }
 }
-.form-group.group-team-position {
-    margin-left: 0;
-}
 .input-team-position {
-    float: left;
-    margin-right: 20px;
     label {
         float: left;
         margin-right: 10px;

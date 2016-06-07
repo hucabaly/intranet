@@ -30,7 +30,8 @@ return [
             'edit.information.base' => [
                 'label' => 'Chỉnh sửa thông tin cơ bản, link facebook, upload CV',
                 'routes' => [
-                    'team::team.member.edit'
+                    'team::team.member.edit',
+                    'team::team.member.save',
                 ]
             ],
             'edit.team.position' => [

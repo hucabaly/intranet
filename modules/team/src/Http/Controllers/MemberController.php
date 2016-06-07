@@ -7,6 +7,7 @@ use URL;
 use Rikkei\Team\Model\Employees;
 use Rikkei\Core\View\Form;
 use Illuminate\Support\Facades\Input;
+use Lang;
 
 class MemberController extends TeamBaseController
 {
@@ -30,13 +31,6 @@ class MemberController extends TeamBaseController
     }
     
     /**
-     * create member
-     */
-    public function create()
-    {
-        echo 'create';
-    }
-    /**
      * view/edit member
      * 
      * @param int $id
@@ -47,10 +41,14 @@ class MemberController extends TeamBaseController
         if (! $model) {
             return redirect()->route('team::team.member.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
+        
+        //TODO permission check
+        
+        
         Breadcrumb::add($model->name, URL::route('team::team.member.edit', ['id' => $id]));
         Form::setData($model);
         return view('team::member.edit', [
-            
+            'employeeTeamPositions' => $model->getTeamPositons(),
         ]);
     }
     
@@ -65,27 +63,37 @@ class MemberController extends TeamBaseController
             return redirect()->route('team::team.member.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         
-        //TODO permission
+        //TODO permission check
         
         $teamPostions = Input::get('team');
-        if ($teamPostions) {
-            $model->saveTeamPosition($teamPostions);
+        $teamPostions = (array) $teamPostions;
+        if (isset($teamPostions[0])) {
+            unset($teamPostions[0]);
         }
-        return redirect()->route('team::team.member.index', [
-                'id' => $model->id
-            ])->with('messages', [
-                'success' => [
-                    Lang::get('team::messages.Save data success!')
+        $model->saveTeamPosition($teamPostions);
+        
+        $messages = [
+                'success'=> [
+                    Lang::get('team::messages.Save data success!'),
                 ]
-            ]);
+        ];
+        return redirect()->route('team::team.member.edit', ['id' => $model->id])->with('messages', $messages);
     }
     
     /**
      * delete member
      */
-    public function delete()
+    public function leave()
     {
-        echo 'delete';
+        echo 'leave';
+    }
+    
+    /**
+     * create member
+     */
+    public function create()
+    {
+        echo 'create';
     }
 }
 

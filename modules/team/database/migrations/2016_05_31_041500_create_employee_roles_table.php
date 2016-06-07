@@ -16,7 +16,6 @@ class CreateEmployeeRolesTable extends Migration
             return;
         }
         Schema::create('employee_roles', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('employee_id')->unsigned()->unique();
             $table->integer('role_id')->unsigned();
             $table->timestamp('start_at')->nullable();

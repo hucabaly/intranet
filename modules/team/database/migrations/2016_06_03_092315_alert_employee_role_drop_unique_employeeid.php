@@ -19,7 +19,7 @@ class AlertEmployeeRoleDropUniqueEmployeeid extends Migration
             Schema::table('employee_roles', function (Blueprint $table) {
                 $table->dropForeign('employee_roles_employee_id_foreign');
                 $table->dropUnique('employee_roles_employee_id_unique');
-                $table->unique(['employee_id', 'role_id']);
+                $table->primary(['employee_id', 'role_id']);
                 $table->foreign('employee_id')
                 ->references('id')
                 ->on('employees');

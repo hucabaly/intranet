@@ -77,6 +77,10 @@ return [
     'Employee code' => 'Mã nhân viên',
     'Position' => 'Chức vụ',
     'Update information' => 'Cập nhật thông tin',
+    'Add team' => 'Thêm team',
+    'Miss data team or position' => 'Thiếu dữ liệu của team hoặc chức vụ',
+    'Team same data' => 'Trùng dữ liệu của team',
+    'Remove team' => 'Xóa team',
     
     
 ];
