@@ -24,10 +24,10 @@ use Rikkei\Core\View\Form;
             <div class="box-body">
                 @include('team::include.pager')
                 <div class="filter-action">
-                    <button class="btn-move btn-reset-filter">
+                    <button class="btn btn-primary btn-reset-filter">
                         <span>{{ trans('team::view.Reset filter') }} <i class="fa fa-spin fa-refresh hidden"></i></span>
                     </button>
-                    <button class="btn-move btn-search-filter">
+                    <button class="btn btn-primary btn-search-filter">
                         <span>{{ trans('team::view.Search') }} <i class="fa fa-spin fa-refresh hidden"></i></span>
                     </button>
                 </div>

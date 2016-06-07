@@ -59,8 +59,15 @@ $teamsOption = TeamList::toOption(null, false, false);
         </div> <!-- end edit memeber right col -->
     </form>
 </div>
+<?php
+//remove flash session
+Form::forget();
+?>
 @endsection
 
 @section('script')
 <script src="{{ URL::asset('team/js/script.js') }}"></script>
+<script>
+    
+</script>
 @endsection

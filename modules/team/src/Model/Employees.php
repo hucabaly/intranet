@@ -90,6 +90,26 @@ class Employees extends CoreModel
         }
     }
     
+    public function saveRoles(array $roles = [])
+    {
+        DB::beginTransaction();
+        try {
+            EmployeeRole::where('employee_id', $this->id)->delete();
+            if (count($roles)) {
+                foreach ($roles as $role) {
+                    EmployeeRole::create([
+                        'role_id' => $role,
+                        'employee_id' => $this->id
+                    ]);
+                }
+            }
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            throw $ex;
+        }
+    }
+    
     /**
      * get team and position of employee
      * 
@@ -107,7 +127,11 @@ class Employees extends CoreModel
      */
     public function getRoles()
     {
-        return EmployeeRole::select('role_id')->where('employee_id', $this->id)->get();
+        return EmployeeRole::select('role_id', 'name')
+                ->join('roles', 'roles.id', '=', 'employee_roles.role_id')
+                ->where('employee_id', $this->id)
+                ->orderBy('name')
+                ->get();
     }
     
     /**

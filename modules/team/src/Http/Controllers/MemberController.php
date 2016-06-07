@@ -44,7 +44,6 @@ class MemberController extends TeamBaseController
         
         //TODO permission check
         
-        
         Breadcrumb::add($model->name, URL::route('team::team.member.edit', ['id' => $id]));
         Form::setData($model);
         return view('team::member.edit', [
@@ -67,11 +66,14 @@ class MemberController extends TeamBaseController
         //TODO permission check
         
         $teamPostions = Input::get('team');
+        $roles = Input::get('role');
         $teamPostions = (array) $teamPostions;
+        $roles = (array) $roles;
         if (isset($teamPostions[0])) {
             unset($teamPostions[0]);
         }
         $model->saveTeamPosition($teamPostions);
+        $model->saveRoles($roles);
         
         $messages = [
                 'success'=> [

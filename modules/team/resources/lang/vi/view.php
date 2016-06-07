@@ -82,5 +82,6 @@ return [
     'Team same data' => 'Trùng dữ liệu của team',
     'Remove team' => 'Xóa team',
     'Change' => 'Thay đổi',
+    'Change Role of employee' => 'Thay đổi vai trò của nhân viên',
     
 ];
