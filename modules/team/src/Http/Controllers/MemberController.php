@@ -49,6 +49,7 @@ class MemberController extends TeamBaseController
         Form::setData($model);
         return view('team::member.edit', [
             'employeeTeamPositions' => $model->getTeamPositons(),
+            'employeeRoles' => $model->getRoles()
         ]);
     }
     

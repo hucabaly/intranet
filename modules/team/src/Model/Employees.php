@@ -101,6 +101,16 @@ class Employees extends CoreModel
     }
     
     /**
+     * get roles of employee
+     * 
+     * @return collection
+     */
+    public function getRoles()
+    {
+        return EmployeeRole::select('role_id')->where('employee_id', $this->id)->get();
+    }
+    
+    /**
      * convert collection model to array with key is name column
      * 
      * @param model $collection
