@@ -88,6 +88,9 @@
 /* team rule*/
 .team-rule-wrapper {
     margin-top: 20px;
+    .actions {
+        text-align: right;
+    }
     .table-team-rule {
         margin-top: 15px;
         tbody {
