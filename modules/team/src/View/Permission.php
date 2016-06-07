@@ -307,7 +307,7 @@ class Permission
      */
     public function getRootAccount()
     {
-        return env('ACCOUNT_ROOT', null);
+        return trim(Config('services.account_root'));
     }
     
     /**
