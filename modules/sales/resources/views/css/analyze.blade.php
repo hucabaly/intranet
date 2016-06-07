@@ -44,31 +44,31 @@
                                 <div class="row">
                                     <div class="col-md-12" style="border-right: 1px solid #f4f4f4;">
                                         <div class="iradio-container">
-                                            <input type="radio" name="tieuchi" id="tcProjectType" onclick="chonTieuChi(this);" checked>
+                                            <input type="radio" name="tieuchi" id="tcProjectType"  checked>
                                             <label class="label-normal" for="tcProjectType">Theo loại dự án</label>
                                         </div>
                                         <div class="iradio-container">
-                                            <input type="radio" name="tieuchi" id="tcTeam" onclick="chonTieuChi(this);">
+                                            <input type="radio" name="tieuchi" id="tcTeam" >
                                             <label class="label-normal" for="tcTeam">Theo team</label>
                                         </div>
                                         <div class="iradio-container">
-                                            <input type="radio" name="tieuchi" id="tcPm" onclick="chonTieuChi(this);">
+                                            <input type="radio" name="tieuchi" id="tcPm" >
                                             <label class="label-normal" for="tcPm">Theo PM</label>
                                         </div>
                                         <div class="iradio-container">
-                                            <input type="radio" name="tieuchi" id="tcBrse" onclick="chonTieuChi(this);">
+                                            <input type="radio" name="tieuchi" id="tcBrse" >
                                             <label class="label-normal" for="tcBrse">Theo BrSE</label>
                                         </div>
                                         <div class="iradio-container">
-                                            <input type="radio" name="tieuchi" id="tcCustomer" onclick="chonTieuChi(this);">
+                                            <input type="radio" name="tieuchi" id="tcCustomer" 
                                             <label class="label-normal" for="tcCustomer">Theo khách hàng</label>
                                         </div>
                                         <div class="iradio-container">
-                                            <input type="radio" name="tieuchi" id="tcSale" onclick="chonTieuChi(this);">
+                                            <input type="radio" name="tieuchi" id="tcSale" >
                                             <label class="label-normal" for="tcSale">Theo nhân viên sale</label>
                                         </div>
                                         <div class="iradio-container">
-                                            <input type="radio" name="tieuchi" id="tcQuestion" onclick="chonTieuChi(this);">
+                                            <input type="radio" name="tieuchi" id="tcQuestion" >
                                             <label class="label-normal" for="tcQuestion">Theo Câu hỏi</label>
                                         </div>
                                     </div>
@@ -201,6 +201,25 @@
         <!-- /.box -->
     </div>
 </div>    
+<div class="modal modal-warning" id="modal-warning" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">{{ trans('sales::view.Notification') }}</h4>
+            </div>
+            <div class="modal-body">
+                <p>One fine body…</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">{{ trans('sales::view.Close') }}</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 @endsection
 
 <!-- Styles -->
@@ -221,64 +240,4 @@
 <script src="{{ asset('plugins/hightcharts/hightcharts.js') }}"></script>
 <script src="{{ asset('plugins/hightcharts/exporting.js') }}"></script>
 <script src="{{ asset('js/css_analyze.js') }}"></script>
-<script>
-$(document).ready(function(){
-    //tieu chi theo loai du an
-    $("#tcProjectType").on('ifChanged', function(event){
-        $('#tcProjectType').on('ifChecked', function (event) {
-            $('.hienthi-theotieuchi').text('<?php echo trans("sales::view.Project type") ?>');
-        });
-    });
-    
-    //tieu chi theo team
-    $("#tcTeam").on('ifChanged', function(event){
-        $('#tcTeam').on('ifChecked', function (event) {
-            $('.hienthi-theotieuchi').text('<?php echo trans("sales::view.Team") ?>');
-        });
-    });
-    
-    //tieu chi theo pm
-    $("#tcPm").on('ifChanged', function(event){
-        $('#tcPm').on('ifChecked', function (event) {
-            $('.hienthi-theotieuchi').text('<?php echo trans("sales::view.PM") ?>');
-        });
-    });
-    
-    //tieu chi theo BrSE
-    $("#tcBrse").on('ifChanged', function(event){
-        $('#tcBrse').on('ifChecked', function (event) {
-            $('.hienthi-theotieuchi').text('<?php echo trans("sales::view.BrSE") ?>');
-        });
-    });
-    
-    //tieu chi theo Customer
-    $("#tcCustomer").on('ifChanged', function(event){
-        $('#tcCustomer').on('ifChecked', function (event) {
-            $('.hienthi-theotieuchi').text('<?php echo trans("sales::view.Customer") ?>');
-        });
-    });
-    
-    //tieu chi theo Sale
-    $("#tcSale").on('ifChanged', function(event){
-        $('#tcSale').on('ifChecked', function (event) {
-            $('.hienthi-theotieuchi').text('<?php echo trans("sales::view.Sale name") ?>');
-        });
-    });
-
-    //tieu chi theo cau hoi CSS
-    $("#tcQuestion").on('ifChanged', function(event){
-        $('#tcQuestion').on('ifUnchecked', function (event) {
-            $('.box-select-question').hide();
-            $('div.theotieuchi').show();
-            $('div.theotieuchicauhoi').hide();
-        });
-        $('#tcQuestion').on('ifChecked', function (event) {
-            $('.box-select-question').show();
-            $('div.theotieuchi').hide();
-            $('div.theotieuchicauhoi').show();
-        });
-    });
-});
-
-</script>
 @endsection

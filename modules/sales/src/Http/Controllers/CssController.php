@@ -493,13 +493,35 @@ class CssController extends Controller {
         $startDate = $_POST["startDate"];
         $endDate = $_POST["endDate"];
         $teamIds = $_POST["teamIds"]; 
+        $criteriaType = $_POST["criteriaType"]; 
+        $criteriaIds = $_POST["criteriaIds"]; 
         
         //lay thong tin hien ket qua danh sach du an
-        $data = self::applyByProjectType($projectTypeIds,$startDate,$endDate,$teamIds); 
+        $data = [];
+        switch ($criteriaType){
+            case 'tcProjectType':
+                $data = self::applyByProjectType($criteriaIds,$startDate,$endDate,$teamIds); 
+                break;
+            case 'tcTeam':
+                $data = self::applyByTeam($criteriaIds,$startDate,$endDate,$projectTypeIds);
+                break;
+            case 'tcPm':
+                $data = self::applyByPm($criteriaIds,$teamIds,$startDate,$endDate,$projectTypeIds);
+                break;
+        }
+        
         
         return response()->json($data);
     }
     
+    /**
+     * 
+     * @param string $projectTypeIds
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $teamIds
+     * @return array
+     */
     protected function applyByProjectType($projectTypeIds, $startDate, $endDate,$teamIds){
         //lay ra cac ban ghi tu bang css_result theo loai du an, ngay lam du an, team set theo css
         $cssResult = Css::getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$teamIds);
@@ -558,19 +580,186 @@ class CssController extends Controller {
             ];
         }
         
-        //Lay ra cac cau hoi duoi 3 sao theo cssResultIds
-        $duoi3Sao = self::layDanhSachCauDuoi3Sao($cssResultIds);
+        //get list less three star by cssResultIds
+        $lessThreeStar = self::getListLessThreeStar($cssResultIds);
         
-        //Lay ra cac de xuat  cua khach hang neu co
-        $danhSachDeXuat = self::layDanhSachDeXuat($cssResultIds);
+        //get customer's proposes
+        $proposes = self::getProposes($cssResultIds);
         
         $data = [
             "cssResult" => $cssResult,
             "pointToHighchart" => $pointToHighchart,
             "dateToHighchart" => $dateToHighchart,
             "pointCompareChart" => $pointCompareChart,
-            "duoi3Sao" =>$duoi3Sao,
-            "danhSachDeXuat" => $danhSachDeXuat,
+            "lessThreeStar" =>$lessThreeStar,
+            "proposes" => $proposes,
+        ];
+        return $data;
+    }
+    
+    /**
+     * 
+     * @param string $projectTypeIds
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $teamIds
+     * @return array
+     */
+    protected function applyByTeam($teamIds, $startDate, $endDate,$projectTypeIds){
+        //Get list css by list team id, start date, end date and list project type id
+        $cssResult = Css::getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$teamIds);
+        $no = 0;
+        
+        //$pointToHighchart -> luu diem hien thi tren bieu do all result
+        $pointToHighchart = [];
+        
+        //danh sach id cua css result
+        $cssResultIds = [];
+        
+        //loop cssResult de add them cac thong tin khac vao
+        foreach($cssResult as &$itemResult){
+            $cssResultIds[] = $itemResult->id;
+            $css = DB::table("css")->where("id",$itemResult->css_id)->first();
+            
+            //get team_id tu bang css_team
+            $teamName = "";
+            $team = DB::table("css_team")->where("css_id",$itemResult->css_id)->get();
+            
+            foreach($team as $teamId){
+                if($teamName == ""){
+                    $teamName = Css::getTeamNameById($teamId->team_id);
+                }else{
+                    $teamName .= ", " . Css::getTeamNameById($teamId->team_id);
+                }
+            }
+            
+            $itemResult->stt = ++$no;
+            $itemResult->project_name = $css->project_name;
+            $itemResult->teamName = $teamName;
+            $itemResult->pmName = $css->pm_name;
+            $itemResult->css_created_at = date('d/m/Y',strtotime($css->created_at));
+            $itemResult->created_at = date('d/m/Y',strtotime($itemResult->created_at));
+            $itemResult->point = self::getPointCssResult($itemResult->id);
+            
+            //lay diem de show tren bieu do thoi gian all result
+            $pointToHighchart[] = (float)$itemResult->point;
+            $dateToHighchart[] = $itemResult->created_at;
+        }
+        
+        //lay diem theo tung loai du an de show tren bieu do phan loai theo tieu chi
+        $arrTeamId = explode(",", $teamIds);
+        $pointCompareChart = array();
+        foreach($arrTeamId as $key => $teamId){
+            $team = Team::find($teamId);
+            $teamName = $team->name;
+            $cssResultByTeam = Css::getCssResultByTeamId($teamId,$startDate,$endDate,$projectTypeIds);
+            $pointToHighchartByTeam = [];
+            $pointToHighchartByTeam["name"] = $teamName;
+            foreach($cssResultByTeam as $item){
+                $pointToHighchartByTeam["data"][] = (float)self::getPointCssResult($item->id);
+            }
+            $pointCompareChart[] = [
+                "name" => $pointToHighchartByTeam["name"],
+                "data" => $pointToHighchartByTeam["data"]
+            ];
+        }
+        
+        //get list less three star by cssResultIds
+        $lessThreeStar = self::getListLessThreeStar($cssResultIds);
+        
+        //get customer's proposes
+        $proposes = self::getProposes($cssResultIds);
+        
+        $data = [
+            "cssResult" => $cssResult,
+            "pointToHighchart" => $pointToHighchart,
+            "dateToHighchart" => $dateToHighchart,
+            "pointCompareChart" => $pointCompareChart,
+            "lessThreeStar" =>$lessThreeStar,
+            "proposes" => $proposes,
+        ];
+        return $data;
+    }
+    
+    /**
+     * 
+     * @param string $projectTypeIds
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $teamIds
+     * @return array
+     */
+    protected function applyByPm($listPmName,$teamIds, $startDate, $endDate,$projectTypeIds){
+        //Get list css by list pm name, list team id, start date, end date and list project type id
+        $cssResult = Css::getCssResultByListPm($listPmName,$projectTypeIds, $startDate, $endDate,$teamIds);
+        
+        $no = 0;
+        
+        //$pointToHighchart -> luu diem hien thi tren bieu do all result
+        $pointToHighchart = [];
+        
+        //danh sach id cua css result
+        $cssResultIds = [];
+        
+        //loop cssResult de add them cac thong tin khac vao
+        foreach($cssResult as &$itemResult){
+            $cssResultIds[] = $itemResult->id;
+            $css = DB::table("css")->where("id",$itemResult->css_id)->first();
+            
+            //get team_id tu bang css_team
+            $teamName = "";
+            $team = DB::table("css_team")->where("css_id",$itemResult->css_id)->get();
+            
+            foreach($team as $teamId){
+                if($teamName == ""){
+                    $teamName = Css::getTeamNameById($teamId->team_id);
+                }else{
+                    $teamName .= ", " . Css::getTeamNameById($teamId->team_id);
+                }
+            }
+            
+            $itemResult->stt = ++$no;
+            $itemResult->project_name = $css->project_name;
+            $itemResult->teamName = $teamName;
+            $itemResult->pmName = $css->pm_name;
+            $itemResult->css_created_at = date('d/m/Y',strtotime($css->created_at));
+            $itemResult->created_at = date('d/m/Y',strtotime($itemResult->created_at));
+            $itemResult->point = self::getPointCssResult($itemResult->id);
+            
+            //lay diem de show tren bieu do thoi gian all result
+            $pointToHighchart[] = (float)$itemResult->point;
+            $dateToHighchart[] = $itemResult->created_at;
+        }
+        
+        //lay diem theo tung loai du an de show tren bieu do phan loai theo tieu chi
+        $arrPmName = explode(",", $listPmName);
+        $pointCompareChart = array();
+        foreach($arrPmName as $key => $pmName){
+            $cssResultByTeam = Css::getCssResultByPmName($pmName,$teamIds,$startDate,$endDate,$projectTypeIds);
+            $pointToHighchartByTeam = [];
+            $pointToHighchartByTeam["name"] = $pmName;
+            foreach($cssResultByTeam as $item){
+                $pointToHighchartByTeam["data"][] = (float)self::getPointCssResult($item->id);
+            }
+            $pointCompareChart[] = [
+                "name" => $pointToHighchartByTeam["name"],
+                "data" => $pointToHighchartByTeam["data"]
+            ];
+        }
+        
+        //get list less three star by cssResultIds
+        $lessThreeStar = self::getListLessThreeStar($cssResultIds);
+        
+        //get customer's proposes
+        $proposes = self::getProposes($cssResultIds);
+        
+        $data = [
+            "cssResult" => $cssResult,
+            "pointToHighchart" => $pointToHighchart,
+            "dateToHighchart" => $dateToHighchart,
+            "pointCompareChart" => $pointCompareChart,
+            "lessThreeStar" =>$lessThreeStar,
+            "proposes" => $proposes,
         ];
         return $data;
     }
@@ -588,7 +777,10 @@ class CssController extends Controller {
         $projectTypeIds = $_POST["projectTypeIds"]; 
         $teamIds = $_POST["teamIds"]; 
         
-        $result = self::filterAnalyzeByProjectType($startDate, $endDate, $projectTypeIds,$teamIds);
+        $result["projectType"] = self::filterAnalyzeByProjectType($startDate, $endDate, $projectTypeIds,$teamIds);
+        $result["team"] = self::filterAnalyzeByTeam($startDate, $endDate, $projectTypeIds,$teamIds);
+        $result["pm"] = self::filterAnalyzeByPm($startDate, $endDate, $projectTypeIds,$teamIds);
+                
         $data = array(
             "result" => $result,
         );
@@ -597,7 +789,7 @@ class CssController extends Controller {
     }
     
     /**
-     * trang phan tich css, thuc hien B2. Filter theo loai du an 
+     * show data filter by project type
      * @param string $startDate
      * @param string $endDate
      * @param string $projectTypeIds
@@ -608,7 +800,7 @@ class CssController extends Controller {
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $css = array();
         $result = array();
-        $stt = 0;
+        $no = 0;
         foreach($arrProjectTypeId as $k => $v){
             $points = array();
             
@@ -617,13 +809,18 @@ class CssController extends Controller {
             }else{
                 $css = Css::getCssByProjectTypeAndTeam($v,$teamIds);
             }
+            
+            $projectType = ProjectType::find($v);
+            $projectTypeId = $projectType->id;
+            $projectTypeName = $projectType->name;
             $countCss = 0;
             foreach($css as $itemCss){
                 $css_result = DB::table("css_result")
-                        ->where("css_id",$itemCss->id)
-                        ->where("created_at", ">=", $startDate)
-                        ->where("created_at", "<=", $endDate)
-                        ->get();
+                ->where("css_id",$itemCss->id)
+                ->where("created_at", ">=", $startDate)
+                ->where("created_at", "<=", $endDate)
+                ->get();
+
                 if(count($css_result) > 0){
                     $countCss += count($css_result);
                     foreach($css_result as $itemCssResult){
@@ -633,47 +830,184 @@ class CssController extends Controller {
             }
             
             if(count($points) > 0){
-                $projectType = ProjectType::find($v);
                 $avgPoint = array_sum($points) / count($points);
-                $stt++;
+                $no++;
                 $result[] = [
-                    "stt"               => $stt,
-                    "project_type_id"   => $v,
-                    "project_type_name" => $projectType->name,
+                    "no"                => $no,
+                    "projectTypeId"     => $projectTypeId,
+                    "projectTypeName"   => $projectTypeName,
                     "countCss"          => $countCss,
                     "maxPoint"          => self::formatNumber(max($points)),
                     "minPoint"          => self::formatNumber(min($points)),
                     "avgPoint"          => self::formatNumber($avgPoint),
                 ];
+            }else{
+                $no++;
+                $result[] = [
+                    "no"                => $no,
+                    "projectTypeId"     => $projectTypeId,
+                    "projectTypeName"   => $projectTypeName,
+                    "countCss"          => 0,
+                    "maxPoint"          => 0,
+                    "minPoint"          => 0,
+                    "avgPoint"          => 0,
+                ];
             }
-            
         }
         
         return $result;
     }
     
     /**
-     * lay danh sach cau hoi duoi 3 sao theo cssResultIds
+     * Show data filter by team
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $projectTypeIds
+     * @param string $teamIds
+     * return array
+     */
+    protected function filterAnalyzeByTeam($startDate, $endDate, $projectTypeIds,$teamIds){
+        $arrTeamId = explode(",", $teamIds);
+        $css = array();
+        $result = array();
+        $no = 0;
+        foreach($arrTeamId as $k => $teamId){
+            $points = array();
+            $css = Css::getCssByTeamIdAndListProjectType($teamId,$projectTypeIds);
+            
+            $countCss = 0;
+            $team = Team::find($teamId);
+            $teamId = $team->id;
+            $teamName = $team->name;
+            foreach($css as $itemCss){
+                $css_result = DB::table("css_result")
+                ->where("css_id",$itemCss->id)
+                ->where("created_at", ">=", $startDate)
+                ->where("created_at", "<=", $endDate)
+                ->get();
+
+                if(count($css_result) > 0){
+                    $countCss += count($css_result);
+                    foreach($css_result as $itemCssResult){
+                        $points[] = self::getPointCssResult($itemCssResult->id);
+                    }
+                }
+            }
+            
+            if(count($points) > 0){
+                $avgPoint = array_sum($points) / count($points);
+                $no++;
+                $result[] = [
+                    "no"                => $no,
+                    "teamId"            => $teamId,
+                    "teamName"          => $teamName,
+                    "countCss"          => $countCss,
+                    "maxPoint"          => self::formatNumber(max($points)),
+                    "minPoint"          => self::formatNumber(min($points)),
+                    "avgPoint"          => self::formatNumber($avgPoint),
+                ];
+            }else{
+                $no++;
+                $result[] = [
+                    "no"                => $no,
+                    "teamId"            => $teamId,
+                    "teamName"          => $teamName,
+                    "countCss"          => 0,
+                    "maxPoint"          => 0,
+                    "minPoint"          => 0,
+                    "avgPoint"          => 0,
+                ];
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Show data filter by PM
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $projectTypeIds
+     * @param string $teamIds
+     * return array
+     */
+    protected function filterAnalyzeByPm($startDate, $endDate, $projectTypeIds,$teamIds){
+        $css = array();
+        $result = array();
+        $no = 0;
+        
+        $listPm = CSS::getListPm();
+        foreach($listPm as $pm){
+            $points = array();
+            $css = Css::getCssByPmAndTeamIdsAndListProjectType($pm->pm_name, $teamIds,$projectTypeIds);
+            
+            $countCss = 0;
+            foreach($css as $itemCss){
+                $css_result = DB::table("css_result")
+                ->where("css_id",$itemCss->id)
+                ->where("created_at", ">=", $startDate)
+                ->where("created_at", "<=", $endDate)
+                ->get();
+
+                if(count($css_result) > 0){
+                    $countCss += count($css_result);
+                    foreach($css_result as $itemCssResult){
+                        $points[] = self::getPointCssResult($itemCssResult->id);
+                    }
+                }
+            }
+            
+            if(count($points) > 0){
+                $avgPoint = array_sum($points) / count($points);
+                $no++;
+                $result[] = [
+                    "no"                => $no,
+                    "pmId"              => $pm->pm_name,
+                    "pmName"            => $pm->pm_name,
+                    "countCss"          => $countCss,
+                    "maxPoint"          => self::formatNumber(max($points)),
+                    "minPoint"          => self::formatNumber(min($points)),
+                    "avgPoint"          => self::formatNumber($avgPoint),
+                ];
+            }else{
+                $no++;
+                $result[] = [
+                    "no"                => $no,
+                    "pmId"              => $pm->pm_name,
+                    "pmName"            => $pm->pm_name,
+                    "countCss"          => 0,
+                    "maxPoint"          => 0,
+                    "minPoint"          => 0,
+                    "avgPoint"          => 0,
+                ];
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Get list less three star by cssResultIds
      * @param array $cssResultIds
      */
-    protected function layDanhSachCauDuoi3Sao($cssResultIds){
+    protected function getListLessThreeStar($cssResultIds){
         $cssResultIds = implode(",", $cssResultIds);
-        $danhSachDuoi3Sao = Css::layDanhSachCauDuoi3Sao($cssResultIds);
+        $lessThreeStar = Css::getListLessThreeStar($cssResultIds);
         $result = [];
-        foreach($danhSachDuoi3Sao as $itemDuoi3Sao){
-            $cssResult = Css::getCssResultById($itemDuoi3Sao->css_id);
-            $diemCss = self::getPointCssResult($itemDuoi3Sao->css_id);
-            $question = Css::getQuestionById($itemDuoi3Sao->question_id);
+        foreach($lessThreeStar as $item){
+            $cssResult = Css::getCssResultById($item->css_id);
+            $cssPoint = self::getPointCssResult($item->css_id);
+            $question = Css::getQuestionById($item->question_id);
             $css = Css::find($cssResult->css_id);
-            
+            $no = 0;
             $result[] = [
-                "stt"   => 1,
-                "tenDuAn"   => $css->project_name,
-                "tenCauHoi" => $question->content,
-                "soSao" => $itemDuoi3Sao->point,
-                "comment"   => $itemDuoi3Sao->comment,
-                "ngayLamCss" => date('d/m/Y',strtotime($cssResult->created_at)),
-                "diemCss" => $diemCss,
+                "no"   => ++$no,
+                "projectName"   => $css->project_name,
+                "questionName" => $question->content,
+                "stars" => $item->point,
+                "comment"   => $item->comment,
+                "makeDateCss" => date('d/m/Y',strtotime($cssResult->created_at)),
+                "cssPoint" => $cssPoint,
             ];
         }
         
@@ -681,22 +1015,23 @@ class CssController extends Controller {
     }
     
     /**
-     * lay danh sach de xuat cua khach hang (nhung bai danh gia co de xuat) 
+     * get customer's proposes
      * @param array $cssResultIds
      */
-    protected function layDanhSachDeXuat($cssResultIds){
+    protected function getProposes($cssResultIds){
         $cssResultIds = implode(",", $cssResultIds);
-        $danhSachDeXuat = Css::layDanhSachDeXuat($cssResultIds);
+        $proposes = Css::getProposes($cssResultIds);
         $result =[];
-        foreach($danhSachDeXuat as $itemDeXuat){
-            $css = Css::find($itemDeXuat->css_id);
+        $no = 0;
+        foreach($proposes as $propose){
+            $css = Css::find($propose->css_id);
             
             $result[] = [
-                "stt"   => 1,
-                "diemCss"   => self::getPointCssResult($itemDeXuat->id),
-                "tenDuAn"   => $css->project_name,
-                "commentKhachHang" => $itemDeXuat->survey_comment,
-                "ngayLamCss" => date('d/m/Y',strtotime($itemDeXuat->created_at)),
+                "no"   => ++$no,
+                "cssPoint"   => self::getPointCssResult($propose->id),
+                "projectName"   => $css->project_name,
+                "customerComment" => $propose->survey_comment,
+                "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),
             ];
         }
         
