@@ -45,7 +45,6 @@ return [
     "Css list"  => "Danh sách CSS",
     "STT" => "STT",
     'Sale name 2' => 'Tên nhân viên Sales phụ trách',
-    'PM' => 'Tên PM phụ trách',
     'BrSE' => 'Tên BrSE',
     "Create date css" => 'Ngày gửi CSS',
     'CSS status' => 'Trạng thái CSS',
@@ -97,4 +96,6 @@ return [
     'Max point' => 'Điểm cao nhất',
     'Min point' => 'Điểm thấp nhất',
     'Please choose question' => 'Mời bạn chọn câu hỏi',
+    'Close' => 'Đóng',
+    'Notification' => "Thông báo",
 ];

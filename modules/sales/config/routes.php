@@ -13,8 +13,8 @@ Route::group([
         Route::get('css/detail/{id}', 'CssController@detail')->name('detail');
         Route::get('css/cancel', 'CssController@cancelMake')->name('cancel');
         Route::get('css/analyze', 'CssController@analyze')->name('analyze');
-        Route::post('css/filterAnalyze', 'CssController@filterAnalyze')->name('filterAnalyze');
-        Route::post('css/applyAnalyze', 'CssController@applyAnalyze')->name('applyAnalyze');
+        Route::post('css/filter_analyze', 'CssController@filterAnalyze')->name('filterAnalyze');
+        Route::post('css/apply_analyze', 'CssController@applyAnalyze')->name('applyAnalyze');
 });
 Route::get('css/success/{id}', 'CssController@success')->name('success');
 Route::get('css/make/{token}/{id}', 'CssController@make')->name('make') ;

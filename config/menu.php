@@ -83,6 +83,11 @@ return [
                         'path' => 'css/create',
                         'label' => 'Tạo CSS',
                         'active' => '1'
+                    ],
+                    'css.analyze' => [
+                        'path' => 'css/analyze',
+                        'label' => 'Phân tích CSS',
+                        'active' => '1'
                     ]
                 ]
             ]

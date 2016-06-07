@@ -40,4 +40,6 @@ return [
         'client_secret' => env('GOOGLE_SECRET'),
         'redirect'      => env('GOOGLE_REDIRECT')
     ],
+    
+    'account_root' => env('ACCOUNT_ROOT'),
 ];

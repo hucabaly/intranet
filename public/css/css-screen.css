@@ -444,3 +444,7 @@ select option.parent{
 .ketquaapply{
     display: none;
 }
+
+.tbl-criteria{
+    display: none;
+}
