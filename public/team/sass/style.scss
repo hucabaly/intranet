@@ -88,6 +88,9 @@
 /* team rule*/
 .team-rule-wrapper {
     margin-top: 20px;
+    .actions {
+        text-align: right;
+    }
     .table-team-rule {
         margin-top: 15px;
         tbody {
@@ -153,4 +156,19 @@
     }
 }
 
+/*team edit*/
+.member-profile {
+    .box-action {
+        margin-bottom: 10px;
+    }
+}
+.input-team-position {
+    label {
+        float: left;
+        margin-right: 10px;
+    }
+    .input-box {
+        float: left;
+    }
+}
 /*responsive*/

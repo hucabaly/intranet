@@ -13,12 +13,11 @@ class CreateTeamMembersTable extends Migration
     public function up()
     {
         Schema::create('team_members', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('team_id')->unsigned();
             $table->integer('employee_id')->unsigned();
             $table->integer('position_id')->unsigned();
             $table->timestamps();
-            $table->unique(['employee_id', 'team_id']);
+            $table->primary(['employee_id', 'team_id']);
             $table->foreign('team_id')
                 ->references('id')
                 ->on('team');

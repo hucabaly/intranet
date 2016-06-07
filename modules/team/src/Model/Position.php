@@ -122,4 +122,22 @@ class Position extends CoreModel
             ->first();
         return $children->count;
     }
+    
+    /**
+     * to option array data
+     * 
+     * @return array
+     */
+    public static function toOption()
+    {
+        $data = self::select('id', 'name')->orderBy('level', 'desc')->get();
+        $result = [];
+        foreach ($data as $item) {
+            $result[] = [
+                'value' => $item->id,
+                'label' => $item->name
+            ];
+        }
+        return $result;
+    }
 }

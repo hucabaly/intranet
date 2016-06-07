@@ -3,6 +3,7 @@ namespace Rikkei\Team\Model;
 
 use DB;
 use Lang;
+use Cache;
 
 class TeamRule extends \Rikkei\Core\Model\CoreModel
 {
@@ -123,4 +124,24 @@ class TeamRule extends \Rikkei\Core\Model\CoreModel
         }
     }
     
+    /**
+     * get all data team rule
+     * 
+     * @return array
+     */
+    public static function getAllToArray()
+    {
+        if (Cache::has('rules.team')) {
+            return Cache::get('rules.team');
+        }
+        $teamRules = self::get();
+        if (! $teamRules || ! count($teamRules)) {
+            return [];
+        }
+        foreach ($teamRules as $teamRule) {
+            
+            //TODO
+            
+        }
+    }
 }

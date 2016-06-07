@@ -22,11 +22,6 @@ use Rikkei\Core\View\Form;
                 <h2 class="box-title">{{ trans('team::view.Member list') }}</h2>
             </div>
             <div class="box-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <a href="{{ route('team::team.member.create') }}" class="btn-add">{{ trans('team::view.Create new') }}</a>
-                    </div>
-                </div>
                 @include('team::include.pager')
                 <div class="filter-action">
                     <button class="btn-move btn-reset-filter">
@@ -91,7 +86,7 @@ use Rikkei\Core\View\Form;
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->email }}</td>
                             <td>
-                                <a href="{{ route('team::team.member.edit', ['id' => $item->id ]) }}" class="btn-edit">{{ trans('team::view.Edit') }}</a>
+                                <a href="{{ route('team::team.member.edit', ['id' => $item->id ]) }}" class="btn-edit">{{ trans('team::view.View profile') }}</a>
                             </td>
                         </tr>
                         @endforeach

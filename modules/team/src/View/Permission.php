@@ -4,8 +4,8 @@ namespace Rikkei\Team\View;
 use Rikkei\Team\Model\User;
 use Auth;
 use Rikkei\Team\Model\TeamRule;
-use Session;
 use Route;
+use Config;
 
 /**
  * class permission
@@ -47,8 +47,10 @@ class Permission
      */
     public function initUser()
     {
-        $id = Auth::user()->id;
-        self::$user = User::find($id);
+        if (! self::$user) {
+            $id = Auth::user()->id;
+            self::$user = User::find($id);
+        }
         return $this;
     }
     
@@ -59,28 +61,29 @@ class Permission
      */
     public function initRules()
     {
-        if (Session::has('permission.rules')) {
-            self::$rules = Session::get('permission.rules');
-            self::$rules = self::$rules[0];
-            return $this;
-        }
-        self::$rules = self::$user->getAcl();
         if (! self::$rules) {
-            self::$rules = ['checked' => true];
+            self::$rules = self::$user->getAcl();
+            if (! self::$rules) {
+                self::$rules = ['checked' => true];
+            }
         }
-        Session::push('permission.rules', self::$rules);
         return $this;
     }
     
     /**
-     * get scopes current of teams 
+     * get scopes of teams in a route
      * 
      * @param int $teamId
+     * @param string|null $route route name
      * @return int|array
      */
-    public function getScopeCurrent($teamId = null)
+    public function getScopeCurrentOfTeam($teamId = null, $route = null)
     {
-        $routeCurrent = Route::getCurrentRoute()->getName();
+        if (! $route) {
+            $routeCurrent = Route::getCurrentRoute()->getName();
+        } else {
+            $routeCurrent = $route;
+        }
         if (! self::$rules || ! isset(self::$rules['team'])) {
             return TeamRule::SCOPE_NONE;
         }
@@ -89,11 +92,11 @@ class Permission
             if ($teamId && $teamId != $teamIdRule) {
                 continue;
             }
-            foreach ($rules as $route => $scope) {
-                if ($route == '*') {
-                    $route = '.*';
+            foreach ($rules as $routeAcl => $scope) {
+                if ($routeAcl == '*') {
+                    $routeAcl = '.*';
                 }
-                if (preg_match('/' . $route . '/', $routeCurrent)) {
+                if (preg_match('/' . $routeAcl . '/', $routeCurrent)) {
                     if ($teamId) {
                         return $scope;
                     }
@@ -101,87 +104,126 @@ class Permission
                 }
             }
         }
+        if (! $scopes) {
+            return TeamRule::SCOPE_NONE;
+        }
+        //get first element
+        if (count($scopes) == 1) {
+            return reset($scopes);
+        }
         return $scopes;
     }
-    
+
     /**
-     * get scopes current of roles
+     * get scopes of roles in a route
      * 
-     * @param int $teamId
-     * @return int|array
+     * @param string|null $route route name
+     * @return int
      */
-    public function getScopeCurrentRole()
+    public function getScopeCurrentOfRole($route = null)
     {
-        $routeCurrent = Route::getCurrentRoute()->getName();
+        if (! $route) {
+            $routeCurrent = Route::getCurrentRoute()->getName();
+        } else {
+            $routeCurrent = $route;
+        }
         if (! self::$rules || ! isset(self::$rules['role'])) {
             return TeamRule::SCOPE_NONE;
         }
+        $scopeResult = 0;
         foreach (self::$rules['role'] as $roleRuleId => $rules) {
-            foreach ($rules as $route => $scope) {
-                if ($route == '*') {
-                    $route = '.*';
+            foreach ($rules as $routeAcl => $scope) {
+                $scope = (int) $scope;
+                if ($routeAcl == '*') {
+                    $routeAcl = '.*';
                 }
-                if (preg_match('/' . $route . '/', $routeCurrent)) {
-                    return $scope;
+                if (preg_match('/' . $routeAcl . '/', $routeCurrent)) {
+                    if ($scope == TeamRule::SCOPE_COMPANY) {
+                        return TeamRule::SCOPE_COMPANY;
+                    }
+                    if ($scope > $scopeResult) {
+                        $scopeResult = $scope;
+                    }
                 }
             }
         }
-        return TeamRule::SCOPE_NONE;
+        return $scopeResult;
     }
     
     /**
      * check allow access to route current
      * 
-     * @param int $teamId
+     * @param string|null $route route name
      * @return boolean
      */
-    public function isAllow($teamId = null)
+    public function isAllow($route = null)
     {
-        //check scope role
-        $scopeCurrentRole = $this->getScopeCurrentRole();
-        if ($scopeCurrentRole !=TeamRule::SCOPE_NONE) {
+        if ($this->isRoot()) {
             return true;
         }
-        //check scope team
-        $scopeCurrent = $this->getScopeCurrent($teamId);
-        if (is_numeric($scopeCurrent)) { //exsits teamId
-            if ($scopeCurrent == TeamRule::SCOPE_NONE) {
+        if ($this->isScopeNone(null, $route)) {
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * check is scope none
+     * 
+     * @param int $teamId
+     * @param string|null $route route name
+     * @return boolean
+     */
+    public function isScopeNone($teamId = null, $route = null)
+    {
+        if ($this->isRoot()) {
+            return false;
+        }
+        if ($this->getScopeCurrentOfRole($route) != TeamRule::SCOPE_NONE) {
+            return false;
+        }
+        $scopeTeam = $this->getScopeCurrentOfTeam($teamId, $route);
+        // scope team is int
+        if (is_numeric($scopeTeam)) {
+            if ($scopeTeam != TeamRule::SCOPE_NONE) {
                 return false;
             }
             return true;
         }
-        foreach ($scopeCurrent as $teamId => $scope) {
+        // scope team is array
+        foreach ($scopeTeam as $scope) {
             if ($scope != TeamRule::SCOPE_NONE) {
-                return true;
+                return false;
             }
         }
-        return false;
-    }
-    
-    /**
-     * check is scope none of a team
-     * 
-     * @param int $teamId
-     * @return boolean
-     */
-    public function isScopeNone($teamId)
-    {
-        if ($this->getScopeCurrent($teamId) == TeamRule::SCOPE_NONE) {
-            return true;
-        }
-        return false;
+        return true;
     }
     
     /**
      * check is scope self
      * 
      * @param int $teamId
+     * @param string|null $route route name
      * @return boolean
      */
-    public function isScopeSelf($teamId)
+    public function isScopeSelf($teamId = null, $route = null)
     {
-        if($this->getScopeCurrent($teamId) == TeamRule::SCOPE_SELF) {
+        if ($this->getScopeCurrentOfRole($route) == TeamRule::SCOPE_SELF) {
             return true;
+        }
+        $scopeTeam = $this->getScopeCurrentOfTeam($teamId, $route);
+        // scope team is int
+        if (is_numeric($scopeTeam)) {
+            if ($scopeTeam == TeamRule::SCOPE_SELF) {
+                return true;
+            }
+            return false;
+        }
+        // scope team is array
+        foreach ($scopeTeam as $scope) {
+            if ($scope == TeamRule::SCOPE_SELF) {
+                return true;
+            }
         }
         return false;
     }
@@ -190,12 +232,27 @@ class Permission
      * check is scope team
      * 
      * @param int $teamId
+     * @param string|null $route route name
      * @return boolean
      */
-    public function isScopeTeam($teamId)
+    public function isScopeTeam($teamId = null, $route = null)
     {
-        if($this->getScopeCurrent($teamId) == TeamRule::SCOPE_TEAM) {
+        if ($this->getScopeCurrentOfRole($route) == TeamRule::SCOPE_TEAM) {
             return true;
+        }
+        $scopeTeam = $this->getScopeCurrentOfTeam($teamId, $route);
+        // scope team is int
+        if (is_numeric($scopeTeam)) {
+            if ($scopeTeam == TeamRule::SCOPE_TEAM) {
+                return true;
+            }
+            return false;
+        }
+        // scope team is array
+        foreach ($scopeTeam as $scope) {
+            if ($scope == TeamRule::SCOPE_TEAM) {
+                return true;
+            }
         }
         return false;
     }
@@ -204,25 +261,55 @@ class Permission
      * check is scope company
      *
      * @param int $teamId
+     * @param string|null $route route name
      * @return boolean
      */
-    public function isScopeCompany($teamId)
+    public function isScopeCompany($teamId = null, $route = null)
     {
-        if($this->getScopeCurrent($teamId) == TeamRule::SCOPE_COMPANY) {
+        if ($this->isRoot()) {
             return true;
+        }
+        if ($this->getScopeCurrentOfRole($route) == TeamRule::SCOPE_COMPANY) {
+            return true;
+        }
+        $scopeTeam = $this->getScopeCurrentOfTeam($teamId, $route);
+        // scope team is int
+        if (is_numeric($scopeTeam)) {
+            if ($scopeTeam == TeamRule::SCOPE_COMPANY) {
+                return true;
+            }
+            return false;
+        }
+        // scope team is array
+        foreach ($scopeTeam as $scope) {
+            if ($scope == TeamRule::SCOPE_COMPANY) {
+                return true;
+            }
         }
         return false;
     }
     
     /**
-     * flush session permission
+     * get root account from file .env
      * 
-     * @return \Rikkei\Team\View\Permission
+     * @return string|null
      */
-    public function flushPermission()
+    public function getRootAccount()
     {
-        Session::forget('permission');
-        return $this;
+        return trim(Config('services.account_root'));
+    }
+    
+    /**
+     * check current user is root
+     * 
+     * @return boolean
+     */
+    public function isRoot()
+    {
+        if ($this->getRootAccount() == self::$user->email) {
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -236,5 +323,6 @@ class Permission
             self::$instance = new static;
         }
         return self::$instance;
-    }   
+    }
+    
 }

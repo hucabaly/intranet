@@ -10,10 +10,16 @@ return [
                     'profile.*'
                 ]
             ],
-            'view.review.test.employee' => [
-                'label' => 'View thông tin ở trang cá nhân',
+            'view.team.member' => [
+                'label' => 'Xem danh sách các thành viên',
                 'routes' => [
-                    'employee.*'
+                    'team::team.member.index'
+                ]
+            ],
+            'view.review.test.employee' => [
+                'label' => 'Xem lại bài test của nhân viên',
+                'routes' => [
+                    
                 ]
             ],
             'view.point.employee' => [
@@ -24,11 +30,20 @@ return [
             'edit.information.base' => [
                 'label' => 'Chỉnh sửa thông tin cơ bản, link facebook, upload CV',
                 'routes' => [
+                    'team::team.member.edit',
+                    'team::team.member.save',
                 ]
             ],
             'edit.team.position' => [
                 'label' => 'Chỉnh sửa thông tin về team, vị trí',
                 'routes' => [
+                    'team::team.member.edit.team.position'
+                ]
+            ],
+            'edit.role' => [
+                'label' => 'Chỉnh sửa thông tin vai trò đặc biệt',
+                'routes' => [
+                    'team::team.member.edit.role'
                 ]
             ],
             'edit.point' => [
