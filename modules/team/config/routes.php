@@ -58,6 +58,6 @@ Route::group([
         Route::get('create','MemberController@create')->name('create');
         Route::get('edit/{id}','MemberController@edit')->name('edit')->where('id', '[0-9]+');
         Route::post('save','MemberController@save')->name('save');
-        Route::delete('delete','MemberController@delete')->name('delete');
+        Route::delete('leave','MemberController@leave')->name('leave');
     });
 });

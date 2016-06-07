@@ -20,4 +20,26 @@ jQuery(document).ready(function ($) {
     $('input.input-is-function').on('change', function (event) {
         updateCheckFunction($(this));
     });
+    
+    /**
+     * add / remove team action
+     */
+    htmlAddTeamPositonOrigin = $('.group-team-position-orgin').html();
+        $('.group-team-position-orgin').remove();
+        dataIdLast = jQuery('.box-form-team-position').children('.group-team-position').length;
+        if (!dataIdLast) {
+            dataIdLast = 0;
+        } else {
+            dataIdLast = parseInt(dataIdLast);
+        }
+        $(document).on('click', '.input-team-position.input-add-new button', function(event) {
+            dataIdLast++;
+            htmlAddTeamPositon = $(htmlAddTeamPositonOrigin);
+            htmlAddTeamPositon.find('.input-team-position.input-team select').attr('name', 'team[' + dataIdLast + '][team]');
+            htmlAddTeamPositon.find('.input-team-position.input-position select').attr('name', 'team[' + dataIdLast + '][position]');
+            $('.box-form-team-position').append(htmlAddTeamPositon);
+        });
+        $(document).on('click', '.input-team-position.input-remove button', function(event) {
+            $(this).parents('.group-team-position').remove();
+        });
 });

@@ -3,6 +3,9 @@ namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\CoreModel;
 use Rikkei\Team\View\Config;
+use DB;
+use Exception;
+use Lang;
 
 class Employees extends CoreModel
 {
@@ -48,16 +51,53 @@ class Employees extends CoreModel
         return $collection;
     }
     
-    public function saveTeamPosition(array $teamPostions)
+    public function saveTeamPosition(array $teamPostions = [])
     {
-        $teamPositionCurrent = TeamMembers::select('id', 'team_id', 'position_id')
-            ->where('employee_id', $this->id)
-            ->get();
-        $teamPositionCurrent = self::formatArray($teamPositionCurrent, 'team_id');
+        //check miss data
         foreach ($teamPostions as $teamPostion) {
-            
+            if (! isset($teamPostion['team']) || 
+                ! isset($teamPostion['position']) ||
+                ! $teamPostion['team'] ||
+                ! $teamPostion['position']) {
+                throw new Exception(Lang::get('team::view.Miss data team or position'));
+            }
         }
-        exit;
+        //check data team not same
+        $lengthTeamPostionsSubmit = count($teamPostions);
+        for ($i = 1 ; $i < $lengthTeamPostionsSubmit ;  $i++) {
+            for ($j = $i + 1 ; $j <= $lengthTeamPostionsSubmit ; $j ++) {
+                if ($teamPostions[$i]['team'] == $teamPostions[$j]['team']) {
+                    throw new Exception(Lang::get('team::view.Team same data'));
+                }
+            }
+        }
+        DB::beginTransaction();
+        try {
+            TeamMembers::where('employee_id', $this->id)->delete();
+            if (count($teamPostions)) {
+                foreach ($teamPostions as $teamPostion) {
+                    TeamMembers::create([
+                        'team_id' => $teamPostion['team'],
+                        'position_id' => $teamPostion['position'],
+                        'employee_id' => $this->id
+                    ]);
+                }
+            }
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            throw $ex;
+        }
+    }
+    
+    /**
+     * get team and position of employee
+     * 
+     * @return collection
+     */
+    public function getTeamPositons()
+    {
+        return TeamMembers::select('team_id', 'position_id')->where('employee_id', $this->id)->get();
     }
     
     /**

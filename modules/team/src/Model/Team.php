@@ -110,7 +110,10 @@ class Team extends CoreModel
             
             //delete team rule
             TeamRule::where('team_id', $this->id)->delete();
-            
+            //set permission as of  teams follow this team to 0
+            Team::where('permission_as', $this->id)->update([
+                'permission_as' => 0
+            ]);
             //delete team item
             parent::delete();
             DB::commit();
