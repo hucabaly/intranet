@@ -3,6 +3,7 @@ namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\User as BaseUser;
 use Rikkei\Team\View\Acl;
+use Illuminate\Support\Facades\Cache;
 
 class User extends BaseUser
 {
@@ -60,15 +61,11 @@ class User extends BaseUser
             ->get();
     }
     
-    public function getRole()
+    public function getRoles()
     {
-        $employeeRole = EmployeeRole::select('role_id')
+        return EmployeeRole::select('role_id')
             ->where('employee_id', $this->employee_id)
-            ->first();
-        if (! $employeeRole) {
-            return null;
-        }
-        return Roles::find($employeeRole->role_id);
+            ->get();
     }
     
     /**
@@ -105,14 +102,14 @@ class User extends BaseUser
         $routesAllow = [];
         foreach ($teams as $teamMember) {
             $team = Team::find($teamMember->team_id);
-            $position = Position::find($teamMember->position_id);
             $teamAs = $team->getTeamPermissionAs();
+            $teamIdOrgin = $team->id;
             if ($teamAs) {
                 $team = $teamAs;
             }
             $teamRule = TeamRule::select('rule', 'scope')
                 ->where('team_id', $team->id)
-                ->where('position_id', $position->id)
+                ->where('position_id', $teamMember->position_id)
                 ->get();
             foreach ($teamRule as $item) {
                 if (! $item->scope) {
@@ -123,7 +120,7 @@ class User extends BaseUser
                     continue;
                 }
                 foreach ($routes as $route) {
-                    $routesAllow[$team->id][$route] = $item->scope;
+                    $routesAllow[$teamIdOrgin][$route] = $item->scope;
                 }
             }
         }
@@ -137,24 +134,29 @@ class User extends BaseUser
      */
     protected function getAclRole()
     {
-        $role = $this->getRole();
-        if (! $role) {
+        $roles = $this->getRoles();
+        if (! $roles) {
             return [];
         }
         $routesAllow = [];
-        $roleRule = RoleRule::select('rule', 'scope')
-            ->where('role_id', $role->id)
-            ->get();
-        foreach ($roleRule as $item) {
-            if (! $item->scope) {
+        foreach ($roles as $role) {
+            $roleRule = RoleRule::select('rule', 'scope')
+                ->where('role_id', $role->role_id)
+                ->get();
+            if (! $roleRule || ! count($roleRule)) {
                 continue;
             }
-            $routes = Acl::getRoutesNameFromKey($item->rule);
-            if (! $routes) {
-                continue;
-            }
-            foreach ($routes as $route) {
-                $routesAllow[$role->id][$route] = $item->scope;
+            foreach ($roleRule as $item) {
+                if (! $item->scope) {
+                    continue;
+                }
+                $routes = Acl::getRoutesNameFromKey($item->rule);
+                if (! $routes) {
+                    continue;
+                }
+                foreach ($routes as $route) {
+                    $routesAllow[$role->role_id][$route] = $item->scope;
+                }
             }
         }
         return $routesAllow;

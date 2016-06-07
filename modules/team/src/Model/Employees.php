@@ -47,4 +47,39 @@ class Employees extends CoreModel
         $collection = $collection->paginate($pager['limit']);
         return $collection;
     }
+    
+    public function saveTeamPosition(array $teamPostions)
+    {
+        $teamPositionCurrent = TeamMembers::select('id', 'team_id', 'position_id')
+            ->where('employee_id', $this->id)
+            ->get();
+        $teamPositionCurrent = self::formatArray($teamPositionCurrent, 'team_id');
+        foreach ($teamPostions as $teamPostion) {
+            
+        }
+        exit;
+    }
+    
+    /**
+     * convert collection model to array with key is name column
+     * 
+     * @param model $collection
+     * @param string $collection
+     * @return array
+     */
+    protected static function formatArray($collection, $key = null)
+    {
+        if (!$collection instanceof \Illuminate\Contracts\Support\Arrayable) {
+            return [];
+        }
+        $collectionArray = $collection->toArray();
+        if (! $key) {
+            return $collectionArray;
+        }
+        $result = [];
+        foreach ($collectionArray as $item) {
+            $result[$item[$key]] = $item;
+        }
+        return $result;
+    }
 }
