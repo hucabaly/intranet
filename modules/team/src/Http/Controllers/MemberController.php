@@ -66,6 +66,9 @@ class MemberController extends TeamBaseController
         //TODO permission check
         
         $teamPostions = Input::get('team');
+        if (! $teamPostions || ! count($teamPostions)) {
+            return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
+        }
         $roles = Input::get('role');
         $teamPostions = (array) $teamPostions;
         $roles = (array) $roles;

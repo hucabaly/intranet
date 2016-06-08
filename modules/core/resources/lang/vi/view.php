@@ -11,4 +11,6 @@ return [
     'OK' => 'Đồng ý',
     'Close' => 'Đóng',
     'Please enter' => 'Vui lòng nhập',
+    'Not activity' => "Không hoạt động",
+    
 ];

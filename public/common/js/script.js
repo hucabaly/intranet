@@ -86,6 +86,26 @@ jQuery(document).ready(function ($) {
     });
     
     /**
+     * model warning
+     */
+    var buttonClickShowModalWarning;
+    $(document).on('click', '.warning-action', function (event) {
+        buttonClickShowModalWarning = $(this);
+        $('#modal-warning-notification').modal('show');
+        return false;
+    });
+    $('#modal-warning-notification').on('show.bs.modal', function (e) {
+        var notification = buttonClickShowModalWarning.data('noti');
+        if (notification) {
+            $(this).find('.modal-body .text-change').show().html(notification);
+            $(this).find('.modal-body .text-default').hide().html(notification);
+        } else {
+            $(this).find('.modal-body .text-change').hide();
+            $(this).find('.modal-body .text-default').show();
+        }
+    });
+    
+    /**
      * form input dropdown
      */
     $('.form-input-dropdown .input-menu a').click(function(event) {

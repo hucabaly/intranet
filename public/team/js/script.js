@@ -32,15 +32,29 @@ jQuery(document).ready(function ($) {
     } else {
         dataIdLast = parseInt(dataIdLast);
     }
+    if (dataIdLast == 1) {
+        $('.box-form-team-position .group-team-position .input-remove').addClass('warning-action');
+    }
     $(document).on('click', '.input-team-position.input-add-new button', function(event) {
         dataIdLast++;
         htmlAddTeamPositon = $(htmlAddTeamPositonOrigin);
         htmlAddTeamPositon.find('.input-team-position.input-team select').attr('name', 'team[' + dataIdLast + '][team]');
         htmlAddTeamPositon.find('.input-team-position.input-position select').attr('name', 'team[' + dataIdLast + '][position]');
         $('.box-form-team-position').append(htmlAddTeamPositon);
+        $('.box-form-team-position .group-team-position .input-remove').removeClass('warning-action');
+        
+        if ($('.box-form-team-position').children('.group-team-position').length == 1) {
+            $('.box-form-team-position .group-team-position .input-remove').addClass('warning-action');
+        }
     });
-    $(document).on('click', '.input-team-position.input-remove button', function(event) {
-        $(this).parents('.group-team-position').remove();
+    $(document).on('click', '.input-team-position.input-remove', function(event) {
+        teamLength = $('.box-form-team-position').children('.group-team-position').length;
+        if (teamLength > 1) {
+            $(this).parents('.group-team-position').remove();
+        }
+        if (teamLength == 2) {
+            $('.box-form-team-position .group-team-position .input-remove').addClass('warning-action');
+        }
     });
     
     /**
