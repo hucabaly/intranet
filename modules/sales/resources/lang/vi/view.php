@@ -15,6 +15,7 @@ return [
     'Project date' => 'Thơì gian dự án',
     'Set team' => 'Set team',
     'Create CSS' => 'Tạo CSS',
+    'Update CSS' => 'Cập nhật CSS',
     'Add >>' => 'Add >>',
     'OK' => 'OK',
     'Welcome title' => 'Welcome to CSS page of Rikkeisoft',

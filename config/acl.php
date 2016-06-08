@@ -214,6 +214,8 @@ return [
                     'sales::css.filterAnalyze',
                     'sales::css.applyAnalyze',
                     'sales::css.showAnalyzeListProject',
+                    'sales::css.getListLessThreeStar',
+                    'sales::css.getProposes',
                 ]
             ],
         ]

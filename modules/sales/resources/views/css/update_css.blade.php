@@ -6,7 +6,7 @@ use Rikkei\Core\View\Form;
 
 @section('content')
 
-<div class="container content-container box box-primary" style="background-color: #fff;">
+<div class="container content-container box box-primary css-update-page" style="background-color: #fff;">
     <div class="row">
         <div class="col-md-12">
             <div class="box-header with-border">
@@ -20,91 +20,95 @@ use Rikkei\Core\View\Form;
                           <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
                           <input type="hidden" name="create_or_update" value="update">
                           <input type="hidden" name="css_id" value="{{$css->id}}">
-                          <table class="table table-create-css">
-
-                           <tr>
-                               <td class="title"><label>Họ và tên người gửi (Sales)</label></td>
-                               <td>
-                                   <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}">
-                                   <input type="text" class="form-control width-300" id="user_name" name="user_name" value="{{$user->name}}" disabled="disabled">
-                               </td>
-                               <td style="width:50px"></td>
-                               <td class="title2"><label class="project_name">Tên dự án</label> <span class="required">*</label></td>
-                               <td><input type="text" class="form-control width-300" id="project_name" name="project_name" value="{{$css->project_name}}"  ></td>
-
-                           </tr>
-                           <tr>
-                               <td class="title"><label>Họ và tên người gửi (Tiếng Nhật)</label></td>
-                               <td><input type="text" class="form-control width-300" id="japanese_name" name="japanese_name" value="{{$user->japanese_name}}" <?php if($user->japanese_name != ""){ echo 'disabled="disabled"'; } ?> ></td>
-                               <td></td>
-                               <td class="title2"><label>Các team liên quan</label> <span class="required">*</label></td>
-                               <td>
-                                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teamsModal" data-whatever="@mdo" onclick="set_teams_popup();">Set team</button>
-                                   <label class="set_team">
-                                     {{$str_teams_set_name}}
-                                   </label>
-                                   <input id="team_id_check" name="team_id_check" type="text" value="1" style="visibility: hidden;">
-                                   @foreach($teams_set as $team)
-                                      <input class="team_id" type="hidden" name="teams[{{$team->id}}]" value="{{$team->name}}" />
-                                   @endforeach
-                               </td>
-
-                           </tr>
-                           <tr>
-                               <td class="title"><label>Tên công ty khách hàng</label> <span class="required">*</label></td>
-                               <td><input type="text" class="form-control width-300" id="company_name" name="company_name" value="{{$css->company_name}}" ></td>
-                               <td ></td>
-                               <td class="title2"><label>Người phụ trách dự án (PM)</label> <span class="required">*</label></td>
-                               <td><input type="text" class="form-control width-300" id="pm_name" name="pm_name" value="{{$css->pm_name}}" ></td>
-
-                           </tr>
-                           <tr>
-                               <td class="title"><label>Khách hàng</label> <span class="required">*</label></td>
-                               <td><input type="text" class="form-control width-300" id="customer_name" name="customer_name" value="{{$css->customer_name}}" ></td>
-                               <td ></td>
-                               <td class="title2"><label>BrSE của dự án</label> <span class="required">*</label></td>
-                               <td><input type="text" class="form-control width-300" id="brse_name" name="brse_name" value="{{$css->brse_name}}" ></td>
-
-                           </tr>
-                           <tr>
-                               <td class="title"><label>Project type</label> <span class="required">*</label></td>
-                               <td class="project_type">
-                                   @foreach($projects as $pj)
-                                   <label class="radio-inline">
-                                      <input type="radio" name="project_type_id" value="{{$pj->id}}">{{$pj->name}}
-                                  </label>
-                                  @endforeach 
-                              </td>
-                              <td ></td>
-                              <td class="title2"><label>Thơì gian dự án</label> <span class="required">*</label></td>
-                              <td class="container-date ">
-                               <div class="input-group-addon calendar-button" target="start_date" onclick="showCalendar(this);">
-                                   <i class="fa fa-calendar">
-                                   </i>
-                               </div>
-                               <input type='text' class="form-control date start-date" id="start_date" name="start_date" data-provide="datepicker" placeholder="DD/MM/YYYY" value="{{$css->start_date}}" />
-                               &nbsp; ~ &nbsp; &nbsp;
-                               <div class="input-group-addon calendar-button" target="end_date"  onclick="showCalendar(this);">
-                                   <i class="fa fa-calendar">
-                                   </i>
-                               </div>
-                               <input type='text' class="form-control date end-date" id="end_date" name="end_date" data-provide="datepicker" placeholder="DD/MM/YYYY" value="{{$css->end_date}}"  />
-                           </td>
-
-                       </tr>
-                       <tr>
-                           <td colspan="5" class="container-button-css" style="text-align: center;">
-                               <button class="btn btn-primary" type="submit" >Cập nhật CSS</button>
-                           </td>
-                       </tr>
-                   </table>
-               </form>  
-           </div>
-       </div>
-   </div>
-
-</div>
-</div>
+                          <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="form_name">{{ trans('sales::view.Sale name') }}</label>
+                                        <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}">
+                                        <input type="text" class="form-control" id="user_name" name="user_name" value="{{$user->name}}" disabled="disabled">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_name">{{ trans('sales::view.Sale name jp') }}</label>
+                                        <input type="text" class="form-control" id="japanese_name" name="japanese_name" value="{{$user->japanese_name}}" <?php if($user->japanese_name != ""){ echo 'disabled="disabled"'; } ?> >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_name">{{ trans('sales::view.Customer company') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="company_name" name="company_name" tabindex=2  value="{{$css->company_name}}" >
+                                    </div>
+                                    <div class="form-group" style="position: relative;">
+                                        <label for="form_name">{{ trans('sales::view.Customer name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="customer_name" name="customer_name" tabindex=3 value="{{$css->customer_name}}" >
+                                        <label class="sama_label">様</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_name">{{ trans('sales::view.Project type') }} <span class="required">*</span></label>
+                                        <div>
+                                        @foreach($projects as $pj)
+                                            <label class="radio-inline">
+                                                @if($pj->id == $css->project_type_id)
+                                                    <input type="radio" checked="checked" name="project_type_id" value="{{$pj->id}}">&nbsp;{{$pj->name}}
+                                                @else
+                                                    <input type="radio" name="project_type_id" value="{{$pj->id}}">&nbsp;{{$pj->name}}
+                                                @endif
+                                                
+                                            </label>
+                                        @endforeach 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="form_lastname">{{ trans('sales::view.Project base name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="project_name" name="project_name" tabindex=4 value="{{$css->project_name}}"  >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_lastname">{{ trans('sales::view.Team relate') }} <span class="required">*</span></label>
+                                        <div>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teamsModal" data-whatever="@mdo" onclick="set_teams_popup();">{{ trans('sales::view.Set team') }}</button>
+                                            <input id="team_id_check" name="team_id_check" type="text" value="1" style="visibility: hidden; position: absolute;">
+                                            <label class="set_team">{{$str_teams_set_name}}</label>
+                                            @foreach($teams_set as $team)
+                                                <input class="team_id" type="hidden" name="teams[{{$team->id}}]" value="{{$team->name}}" />
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_lastname">{{ trans('sales::view.PM name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="pm_name" name="pm_name" tabindex=5 value="{{$css->pm_name}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_lastname">{{ trans('sales::view.BrSE name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="brse_name" name="brse_name" tabindex=6 value="{{$css->brse_name}}" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_lastname">{{ trans('sales::view.Project date') }} <span class="required">*</span></label>
+                                        <div >
+                                            <div style="position: relative; display: inline;">
+                                                <div class="input-group-addon calendar-button" target="start_date" onclick="showCalendar(this);">
+                                                    <i class="fa fa-calendar"></i>
+                                                </div>
+                                                <input type='text' class="form-control date start-date" id="start_date" name="start_date" data-provide="datepicker" placeholder="DD/MM/YYYY" tabindex=7 value="{{date('m/d/Y',strtotime($css->start_date))}}" />
+                                                &nbsp; ~ &nbsp; &nbsp;
+                                            </div>
+                                            <div style="position: relative; display: inline;">
+                                                <div class="input-group-addon calendar-button" target="end_date"  onclick="showCalendar(this);">
+                                                    <i class="fa fa-calendar">
+                                                    </i>
+                                                </div>
+                                                <input type='text' class="form-control date end-date" id="end_date" name="end_date" data-provide="datepicker" placeholder="DD/MM/YYYY" tabindex=8 value="{{date('m/d/Y',strtotime($css->end_date))}}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="padding:20px; text-align: center;"><button class="btn btn-primary" type="submit" >{{ trans('sales::view.Update CSS') }}</button></div>
+                            </div>
+                          
+                    </form>  
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="teamsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
@@ -115,29 +119,11 @@ use Rikkei\Core\View\Form;
 
             </div>
             <div class="modal-body">
-                <form id="frm-add-teams">
-                    <div class="remove-team"><img src="{{ URL::asset('img/remove_icon.png') }}" onclick="remove_team();"></div>
-                    <div class="container-teams left-list">
-                        {!! TeamList::getTreeHtml(Form::getData('id')) !!}
-                    </div>
-                    <button class="btn-add-team" type="button" onclick="add_team();">Add >></button>
-                    <div class="container-teams">
-                        <ul class="list-teams right-list">
-                            @foreach($teams_set as $team)
-                            <li set="false">
-                              <label class="team-item">
-                                <a data-id="{{$team->id}}" onclick="set_true(this)">{{$team->name}}</a>
-                              </label>
-                          </li>
-
-                            @endforeach
-                        </ul>
-                    </div>
-                </form>
+                <ul class="list-team-tree">{!! $htmlTeam !!}</ul>
             </div>
             <div class="modal-footer">
 
-                <button type="button" class="btn btn-primary create-css" onclick="set_team();">OK</button>
+                <button type="button" class="btn btn-primary" onclick="set_team_to_css();">OK</button>
             </div>
         </div>
     </div>
@@ -148,168 +134,19 @@ use Rikkei\Core\View\Form;
 @section('css')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker.min.css" />
 <link href="{{ asset('css/css-screen.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('adminlte/plugins/iCheck/minimal/_all.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
 <!-- Script -->
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
+<script src="{{ asset('adminlte/plugins/iCheck/icheck.js') }}"></script>
 <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
-
+<script src="{{ asset('js/css.js') }}"></script>
 <script type="text/javascript">
-    var teamArray = []; // bien luu team set tren popup
+    var teamArray = []; 
     <?php foreach($teams_set as $team): ?>
       teamArray.push([<?php echo $team->id ?>, '<?php echo $team->name ?>']); 
     <?php endforeach; ?>
-    
-    /** 
-        click img calendar to show calendar
-        **/
-        function showCalendar(x){
-            var target = $(x).attr("target");
-            $("#"+target).focus();
-        }
-
-        /** end showCalendar() **/
-
-    /** 
-        in popup set team
-        add team from left column to right column
-        **/
-        function add_team(){
-            if($(".team-tree ul a[set=true]").length > 0){
-                var team_id = $(".team-tree ul a[set=true]").attr("data-id");
-                var chosen = false;
-
-                // $( ".modal-body ul.right-list li" ).each(function( index ) {
-
-                //     if($(this).attr("id") == team_id){
-                //         alert("Da add roi");
-                //         chosen = true;
-                //         return false;
-                //     }
-                // });
-                if(chosen == false){
-                    var element_add = $(".team-tree ul a[set=true]").parent().parent()[0].outerHTML;
-
-                    $(".modal-body ul.right-list").append(element_add);
-                    $(".modal-body ul.list-teams li").css("background-color","").attr("set","false");
-                }
-
-            }
-
-
-        }
-
-        /** end add_team() **/
-
-    /** 
-        in popup set team
-        remove team from right column
-        **/
-
-        function remove_team(){
-            if($(".modal-body ul.right-list li a[set=true]").length > 0){
-
-                $(".modal-body ul.right-list li a[set=true]").parent().parent().remove();
-            }
-        }
-
-        /** end remove_team() **/
-
-
-    /** 
-        in popup team
-        when click (choose) a team -> change bgcolor and set attribute set=true
-        **/
-        function set_true(x){
-            $(".team-tree a").attr("set","false");
-            $(".team-tree ul li").css("background-color","").attr("set","false");
-            $(x).attr("set","true");
-            $(x).parent().parent().css("background-color","rgb(33, 42, 109)");
-
-            $(".right-list a").attr("set","false");
-            $(".right-list li").css("background-color","").attr("set","false");
-            $(x).attr("set","true");
-            $(x).parent().parent().css("background-color","rgb(33, 42, 109)");
-        }
-
-        /** end set_true **/
-
-        function set_team(){
-           var elements = "";
-           var str = "";
-           $(".team_id").remove();
-           $( ".modal-body ul.right-list li a" ).each(function( index ) {
-              var team_id = $(this).attr("data-id");
-              var team_name = $(this).html();
-              elements += '<input class="team_id" type="hidden" name="teams['+team_id+']" value="'+team_name+'" />';    
-              if(str == ""){
-               str = team_name;
-           }else{
-               str += ', ' + team_name; 
-           }
-       });
-           console.log(elements);
-           $(".set_team").html(str);
-           $(".set_team").parent().append(elements);
-           if(str == ""){
-                $('#team_id_check').val("")
-           }else{
-                $('#team_id_check').val("1")
-           }
-           
-        //close popup
-        $('#teamsModal').modal('hide');
-    }
-
-
-    /*
-       set team vao cot right cua popup team
-    */
-
-    function set_teams_popup(){
-        $(".right-list").html("");
-        for(var i=0; i<teamArray.length;i++){
-              $(".right-list").append('<li set="false"><label class="team-item"><a data-id="'+teamArray[i][0]+'" onclick="set_true(this)">'+teamArray[i][1]+'</a></label></li>');
-              //$(".right-list").append('<li id="'+teamArray[i][0]+'" onclick="set_true(this);">'+teamArray[i][1]+'</li>');
-        }
-    }
-
-    $(document).ready(function(){
-        $(".project_type input[type=radio]:first-child").prop('checked',true);
-        $(".team-tree a").removeAttr("href");
-        $(".team-tree li ul a").attr("onclick","set_true(this)");
-    });
-    
-
-    $(document).ready(function() {
-        $("#frm_create_css").validate({
-           rules: {
-                
-                team_id_check: "required",
-               company_name: "required",
-               customer_name: "required",
-               project_name: "required",
-               pm_name: "required",
-               brse_name: "required",
-               start_date: "required",
-               end_date: "required",
-           },
-           messages: {
-               team_id_check: "Vui lòng chọn team cho dự án",
-               company_name: "Vui lòng nhập tên công ty",
-               customer_name: "Vui lòng nhập tên khách hàng",
-               project_name: "Vui lòng nhập tên dự án",
-               pm_name: "Vui lòng nhập tên PM",
-               brse_name: "Vui lòng nhập tên BrSE",
-               start_date: "Vui lòng nhập ngày bắt đầu dự án",
-               end_date: "Vui lòng nhập ngày kết thúc dự án",
-           }
-        });
-    });
-
-  
-
-    
 </script>
 @endsection

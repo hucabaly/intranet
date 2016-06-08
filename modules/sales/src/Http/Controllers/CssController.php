@@ -18,18 +18,20 @@ class CssController extends Controller {
     static $perPage = 2;
     /**
      * Hàm hiển thị form tạo CSS
-     * @return objects
      */
     public function create() {
         $user = Auth::user();
         $projects = ProjectType::all();
         $teams = Team::all();
+        $htmlTeam = self::getTreeDataRecursive(0, 0, null);
 
         return view(
-                'sales::css.create_css', [
-            'user' => $user,
-            "projects" => $projects,
-            "teams" => $teams
+                'sales::css.create_css', 
+                [
+                    'user'      => $user,
+                    "projects"  => $projects,
+                    "teams"     => $teams,
+                    "htmlTeam"  => $htmlTeam,
                 ]
         );
     }
@@ -37,7 +39,6 @@ class CssController extends Controller {
     /**
      * Hàm hiển thị form sửa CSS
      * @param int $id
-     * @return objects
      */
     public function update($id) {
         $css = Css::where('id', $id)->first();
@@ -66,17 +67,20 @@ class CssController extends Controller {
         foreach ($teams_set as $team) {
             $str_teams_set_name[] = $team->name;
         }
-        $str_teams_set_name = implode(',', $str_teams_set_name);
-
+        $str_teams_set_name = implode(', ', $str_teams_set_name);
+        
+        $htmlTeam = self::getTreeDataRecursive(0, 0, null);
         return view(
-                'sales::css.update_css', [
-            'css' => $css, //css by css_id
-            'user' => $user, //user by css_id
-            "projects" => $projects, // all project type
-            "teams" => $teams, //all team
-            "teams_set" => $teams_set, // team lien quan cua CSS
-            "str_teams_set_name" => $str_teams_set_name //text hien thi cac team cua CSS ra trang update
-                ]
+            'sales::css.update_css', 
+            [
+                'css' => $css, //css by css_id
+                'user' => $user, //user by css_id
+                "projects" => $projects, // all project type
+                "teams" => $teams, //all team
+                "teams_set" => $teams_set, // team lien quan cua CSS
+                "str_teams_set_name" => $str_teams_set_name, 
+                "htmlTeam"  => $htmlTeam,
+            ]
         );
     }
 
@@ -571,10 +575,10 @@ class CssController extends Controller {
         $pointCompareChart = self::getCompareCharts($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria);
         
         //Get data fill to table criteria less 3 star
-        $lessThreeStar = self::getListLessThreeStar($cssResultIds);
+        $lessThreeStar = self::getListLessThreeStar(implode(",", $cssResultIds),1);
         
         //Get data fill to table customer's proposes
-        $proposes = self::getProposes($cssResultIds);
+        $proposes = self::getProposes(implode(",", $cssResultIds),1);
         
         $data = [
             "cssResult" => $cssResult,
@@ -676,6 +680,114 @@ class CssController extends Controller {
             "paginationRender"  => $html,
         ];
     }
+    
+    /**
+     * Get list less three star by cssResultIds
+     * @param array $cssResultIds
+     */
+    protected function getListLessThreeStar($cssResultIds,$curPage){
+        $offset = ($curPage-1) * self::$perPage;
+        $lessThreeStar = Css::getListLessThreeStar($cssResultIds,$offset,self::$perPage);
+        $result = [];
+        foreach($lessThreeStar as $item){
+            $cssResult = Css::getCssResultById($item->css_id);
+            $cssPoint = self::getPointCssResult($item->css_id);
+            $question = Css::getQuestionById($item->question_id);
+            $css = Css::find($cssResult->css_id);
+            
+            $result[] = [
+                "no"   => ++$offset,
+                "projectName"   => $css->project_name,
+                "questionName" => $question->content,
+                "stars" => $item->point,
+                "comment"   => $item->comment,
+                "makeDateCss" => date('d/m/Y',strtotime($cssResult->created_at)),
+                "cssPoint" => $cssPoint,
+            ];
+        }
+        
+        //Get html pagination render
+        $count = Css::getCountListLessThreeStar($cssResultIds);
+        $totalPage = ceil($count / self::$perPage);
+        $html = "";
+        if($totalPage > 1){
+            if($curPage == 1){
+                $html .= '<li class="disabled"><span>«</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="getListLessThreeStar('.($curPage-1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="back">«</a></li>';
+            }
+            for($i=1; $i<=$totalPage; $i++){
+                if($i == $curPage){
+                    $html .= '<li class="active"><span>'.$i.'</span></li>';
+                }else{
+                    $html .= '<li><a href="javascript:void(0)" onclick="getListLessThreeStar('.$i.',\''.Session::token().'\',\''.$cssResultIds.'\');">'.$i.'</a></li>';
+                }
+            }
+            if($curPage == $totalPage){
+                $html .= '<li class="disabled"><span>»</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="getListLessThreeStar('.($curPage+1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="next">»</a></li>';
+            }
+        }
+        
+        $data = [
+            "cssResultdata" => $result,
+            "paginationRender" => $html,
+        ];
+        
+        return $data;
+    }
+    
+    /**
+     * get customer's proposes
+     * @param array $cssResultIds
+     */
+    protected function getProposes($cssResultIds,$curPage){
+        $offset = ($curPage-1) * self::$perPage;
+        $proposes = Css::getProposes($cssResultIds,$offset,self::$perPage);
+        $result =[];
+        foreach($proposes as $propose){
+            $css = Css::find($propose->css_id);
+            
+            $result[] = [
+                "no"   => ++$offset,
+                "cssPoint"   => self::getPointCssResult($propose->id),
+                "projectName"   => $css->project_name,
+                "customerComment" => $propose->survey_comment,
+                "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),
+            ];
+        }
+        //Get html pagination render
+        $count = Css::getCountProposes($cssResultIds); 
+        $totalPage = ceil($count / self::$perPage);
+        $html = "";
+        if($totalPage > 1){
+            if($curPage == 1){
+                $html .= '<li class="disabled"><span>«</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="getProposes('.($curPage-1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="back">«</a></li>';
+            }
+            for($i=1; $i<=$totalPage; $i++){
+                if($i == $curPage){
+                    $html .= '<li class="active"><span>'.$i.'</span></li>';
+                }else{
+                    $html .= '<li><a href="javascript:void(0)" onclick="getProposes('.$i.',\''.Session::token().'\',\''.$cssResultIds.'\');">'.$i.'</a></li>';
+                }
+            }
+            if($curPage == $totalPage){
+                $html .= '<li class="disabled"><span>»</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="getProposes('.($curPage+1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="next">»</a></li>';
+            }
+        }
+        
+        $data = [
+            "cssResultdata" => $result,
+            "paginationRender" => $html,
+        ];
+        return $data;
+    }
+    
     
     /**
      * Get data fill to compare charts in analyze page
@@ -887,7 +999,7 @@ class CssController extends Controller {
     }
     
     /**
-     * Show data filter by PM or BrSE or Customer
+     * Show data filter by PM or BrSE or Customer or Sale
      * @param string $startDate
      * @param string $endDate
      * @param string $projectTypeIds
@@ -983,58 +1095,6 @@ class CssController extends Controller {
     }
     
     /**
-     * Get list less three star by cssResultIds
-     * @param array $cssResultIds
-     */
-    protected function getListLessThreeStar($cssResultIds){
-        $cssResultIds = implode(",", $cssResultIds);
-        $lessThreeStar = Css::getListLessThreeStar($cssResultIds);
-        $result = [];
-        foreach($lessThreeStar as $item){
-            $cssResult = Css::getCssResultById($item->css_id);
-            $cssPoint = self::getPointCssResult($item->css_id);
-            $question = Css::getQuestionById($item->question_id);
-            $css = Css::find($cssResult->css_id);
-            $no = 0;
-            $result[] = [
-                "no"   => ++$no,
-                "projectName"   => $css->project_name,
-                "questionName" => $question->content,
-                "stars" => $item->point,
-                "comment"   => $item->comment,
-                "makeDateCss" => date('d/m/Y',strtotime($cssResult->created_at)),
-                "cssPoint" => $cssPoint,
-            ];
-        }
-        
-        return $result;
-    }
-    
-    /**
-     * get customer's proposes
-     * @param array $cssResultIds
-     */
-    protected function getProposes($cssResultIds){
-        $cssResultIds = implode(",", $cssResultIds);
-        $proposes = Css::getProposes($cssResultIds);
-        $result =[];
-        $no = 0;
-        foreach($proposes as $propose){
-            $css = Css::find($propose->css_id);
-            
-            $result[] = [
-                "no"   => ++$no,
-                "cssPoint"   => self::getPointCssResult($propose->id),
-                "projectName"   => $css->project_name,
-                "customerComment" => $propose->survey_comment,
-                "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),
-            ];
-        }
-        
-        return $result;
-    }
-    
-    /**
      * ham format number voi 2 so thap phan
      * @param float $number
      * @return float
@@ -1110,9 +1170,9 @@ class CssController extends Controller {
             $html .= "<label{$classLabel}>";
             $html .= "<div class=\"icheckbox\">";
             if($htmlChild == ""){
-                $html .= '<input type="checkbox" class="team-tree-checkbox" data-id="'.$team->id.'" parent-id="'.$parentId.'" name="team['.$team->id.']">&nbsp;&nbsp;' .$team->name;
+                $html .= '<input type="checkbox" class="team-tree-checkbox" data-id="'.$team->id.'" parent-id="'.$parentId.'" name="team['.$team->id.']">&nbsp;&nbsp;<span>' .$team->name. '</span>';
             }else{
-                $html .= '&nbsp;&nbsp;' .$team->name;
+                $html .= '<span>&nbsp;&nbsp;' .$team->name. '</span>';
             }
             
             $html .= '</div>';

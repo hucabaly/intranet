@@ -286,9 +286,22 @@ class Css extends Model
      * @param string $cssResultIds
      * return object
      */
-    public static function getListLessThreeStar($cssResultIds){
-        $result = DB::select('select * from css_result_detail where css_id IN ('.$cssResultIds.') and point between 1 and 2 ');
+    public static function getListLessThreeStar($cssResultIds,$offset,$perPage){
+        $result = DB::select('select * from css_result_detail '
+                . 'where css_id IN ('.$cssResultIds.') and point between 1 and 2 '
+                . 'limit ' . $offset . ',' . $perPage );
         return $result;
+    }
+    
+    /**
+     * Get count less 3* list
+     * @param string $cssResultIds
+     * return int
+     */
+    public static function getCountListLessThreeStar($cssResultIds){
+        $result = DB::select('select * from css_result_detail '
+                . 'where css_id IN ('.$cssResultIds.') and point between 1 and 2 ' );
+        return count($result);
     }
     
     /**
@@ -309,13 +322,25 @@ class Css extends Model
     }
     
     /**
-     * get list css's proposes
+     * get proposes list
      * @param string $cssResultIds
-     * @return type
+     * @return object list
      */
-    public static function getProposes($cssResultIds){
-        $cssResult = DB::select("Select * from css_result where id in ($cssResultIds) and survey_comment <> ''");
+    public static function getProposes($cssResultIds,$offset,$perPage){
+        $cssResult = DB::select("Select * from css_result "
+                . "where id in ($cssResultIds) and survey_comment <> '' "
+                . "limit " . $offset . "," . $perPage );
         return $cssResult;
+    }
+    
+    /**
+     * get count Proposes
+     * @param string $cssResultIds
+     * @return int
+     */
+    public static function getCountProposes($cssResultIds){
+        $cssResult = DB::select("Select * from css_result where id in ($cssResultIds) and survey_comment <> ''");
+        return count($cssResult);
     }
     
     /**
