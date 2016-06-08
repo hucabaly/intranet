@@ -50,7 +50,8 @@ jQuery(document).ready(function ($) {
 //        }
 //    });
     
-    //modal delete confirm .find('[data-target="#modal-delete-confirm"][data-toggle="modal"]')
+    //modal delete confirm
+    $('.delete-confirm').removeAttr('disabled');
     var buttonClickShowModal;
     $('.delete-confirm').on('click', function (event) {
         if($(this).hasClass('process')) { //check flag processed
