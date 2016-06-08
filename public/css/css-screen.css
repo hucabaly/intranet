@@ -448,3 +448,11 @@ select option.parent{
 .tbl-criteria{
     display: none;
 }
+
+.dataTables_paginate{
+    text-align: center;
+}
+
+.dataTables_paginate ul.pagination{
+    margin: 0;
+}

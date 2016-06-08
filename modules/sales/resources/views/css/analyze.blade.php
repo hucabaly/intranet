@@ -111,6 +111,9 @@
                                                 
                                             </tbody>
                                         </table>
+                                        <div class="dataTables_paginate paging_simple_numbers">
+                                            <ul class="pagination"></ul>
+                                        </div>
                                     </div>
                                 <!----------- Phan hien 2 bieu do ------------------->    
                                     <div class="col-md-7">
@@ -220,6 +223,13 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+    <input type="hidden" id="startDate_val" value="" />
+    <input type="hidden" id="endDate_val" value="" />
+    <input type="hidden" id="criteriaIds_val" value="" />
+    <input type="hidden" id="teamIds_val" value="" />
+    <input type="hidden" id="projectTypeIds_val" value="" />
+    <input type="hidden" id="criteriaType_val" value="" />
+    
 @endsection
 
 <!-- Styles -->
