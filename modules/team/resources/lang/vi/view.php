@@ -64,7 +64,7 @@ return [
     'Role Special' => 'Vai trò đặc biệt',
     'Not found role special' => 'Không tìm thấy vai trò đặc biệt nào',
     'Create role' => 'Tạo mới vai trò',
-    'role name' => 'tên vai trò',
+    'Role name' => 'Tên vai trò',
     'Scope none permission' => 'Phạm vi không có quyền',
     'Scope self' => 'Phạm vi cá nhân',
     'Scope their management team' => 'Phạm vi team mình quản lý',

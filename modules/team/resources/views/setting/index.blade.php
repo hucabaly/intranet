@@ -334,27 +334,56 @@ Team Setting
 <script>
     jQuery(document).ready(function ($) {
         var messages = {
-            'item[name]': '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.team name') ; ?>',
-            'position[name]': '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.position name') ; ?>',
-            'role[name]': '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.role name') ; ?>',
+            'item[name]': {
+                required: '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.team name') ; ?>',
+                rangelength: '<?php echo trans('team::view.Team name') . ' ' . trans('core::view.not be greater than :number characters', ['number' => 255]) ; ?>',
+              },
+            'position[name]': {
+                required: '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.position name') ; ?>',
+                rangelength: '<?php echo trans('team::view.Position name') . ' ' . trans('core::view.not be greater than :number characters', ['number' => 255]) ; ?>',
+            },
+            'role[name]': {
+                required: '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.role name') ; ?>',
+                rangelength: '<?php echo trans('team::view.Role name') . ' ' . trans('core::view.not be greater than :number characters', ['number' => 255]) ; ?>',
+            }
         }
+        var rules = {
+            'item[name]': {
+                required: true,
+                rangelength: [1, 255]
+            },
+            'position[name]': {
+                required: true,
+                rangelength: [1, 255]
+            },
+            'role[name]': {
+                required: true,
+                rangelength: [1, 255]
+            },
+        };
         $('#form-team-add').validate({
+            rules: rules,
             messages: messages
         });
         $('#form-team-edit').validate({
+            rules: rules,
             messages: messages
         });
         
         $('#form-position-add').validate({
+            rules: rules,
             messages: messages
         });
         $('#form-position-edit').validate({
+            rules: rules,
             messages: messages
         });
         $('#form-role-add').validate({
+            rules: rules,
             messages: messages
         });
         $('#form-role-edit').validate({
+            rules: rules,
             messages: messages
         });
         $('.hight-same').matchHeight({
