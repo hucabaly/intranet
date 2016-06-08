@@ -44,9 +44,8 @@ Team Setting
                             <input type="hidden" name="_method" value="delete" />
                             <input type="hidden" name="id" value="{{ Form::getData('id') }}" />
                     @endif
-                        <p><button type="submit" class="btn-delete btn-action delete-confirm"<?php
-                                if(!Form::getData('id')): ?> disabled<?php endif; ?> 
-                                data-noti="{{ Lang::get('team::view.Are you sure delete this team and children of this team?') }}">
+                        <p><button type="submit" class="btn-delete btn-action<?php if (Form::getData('id')): ?> delete-confirm<?php endif; ?>" 
+                                   disabled data-noti="{{ Lang::get('team::view.Are you sure delete this team and children of this team?') }}">
                                 <span>{{ trans('team::view.Remove') }}</span>
                             </button></p>
                     @if(Form::getData('id'))
@@ -110,9 +109,8 @@ Team Setting
                             <input type="hidden" name="_method" value="delete" />
                             <input type="hidden" name="id" value="{{ Form::getData('position.id') }}" />
                     @endif
-                        <p><button type="submit" class="btn-delete btn-action delete-confirm"<?php
-                                if(!Form::getData('position.id')): ?> disabled<?php endif; ?> 
-                                data-noti="{{ trans('team::view.Are you sure delete postion team?') }}">
+                        <p><button type="submit" class="btn-delete btn-action<?php if (Form::getData('position.id')): ?> delete-confirm<?php endif; ?>"
+                                   disabled data-noti="{{ trans('team::view.Are you sure delete postion team?') }}">
                                 <span>{{ trans('team::view.Remove') }}</span>
                             </button></p>
                     @if(Form::getData('position.id'))
@@ -176,9 +174,8 @@ Team Setting
                             <input type="hidden" name="_method" value="delete" />
                             <input type="hidden" name="id" value="{{ Form::getData('role.id') }}" />
                     @endif
-                        <p><button type="submit" class="btn-delete btn-action delete-confirm"<?php
-                                if(!Form::getData('role.id')): ?> disabled<?php endif; ?> 
-                                data-noti="{{ trans('team::view.Are you sure delete this role and all link this role with employee?') }}">
+                        <p><button type="submit" class="btn-delete btn-action<?php if (Form::getData('role.id')): ?> delete-confirm<?php endif; ?>"
+                                   disabled data-noti="{{ trans('team::view.Are you sure delete this role and all link this role with employee?') }}">
                                 <span>{{ trans('team::view.Remove') }}</span>
                             </button></p>
                     @if(Form::getData('role.id'))

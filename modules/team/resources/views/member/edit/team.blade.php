@@ -11,43 +11,37 @@
 if (! function_exists('teamHtmladdTeamPostion')) {
     function teamHtmladdTeamPostion($teamsOption, $postionsOption, $index = 0, $teamId = 0, $positionId = 0)
     { ?>
-        <div class="form-group group-team-position" data-id='{{ $index }}'>
-            <div class="input-team-position input-team col-md-5">
+        <div class="form-inline group-team-position form-inline-block">
+            <div class="input-team-position input-team form-group">
                 <label class="control-label">Team</label>
-                <div class="input-box">
-                    <select name="team[{{ $index }}][team]" class="form-control">
-                        @foreach($teamsOption as $option)
-                            <option value="{{ $option['value'] }}"<?php
-                                if ($option['value'] == $teamId): ?> selected<?php endif; 
-                            ?>>{{ $option['label'] }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <select name="team[{{ $index }}][team]" class="form-control">
+                    @foreach($teamsOption as $option)
+                        <option value="{{ $option['value'] }}"<?php
+                            if ($option['value'] == $teamId): ?> selected<?php endif; 
+                        ?>>{{ $option['label'] }}</option>
+                    @endforeach
+                </select>
             </div>
-            <div class="input-team-position input-position col-md-5">
+            <div class="input-team-position input-position form-group">
                 <label class=" control-label">{{ trans('team::view.Position') }}</label>
-                <div class="input-box">
-                    <select name="team[{{ $index }}][position]" class="form-control">
-                        @foreach($postionsOption as $option)
-                            <option value="{{ $option['value'] }}"<?php
-                                if ($option['value'] == $positionId): ?> selected<?php endif; 
-                            ?>>{{ $option['label'] }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <select name="team[{{ $index }}][position]" class="form-control">
+                    @foreach($postionsOption as $option)
+                        <option value="{{ $option['value'] }}"<?php
+                            if ($option['value'] == $positionId): ?> selected<?php endif; 
+                        ?>>{{ $option['label'] }}</option>
+                    @endforeach
+                </select>
             </div>
-            <div class="input-team-position input-remove col-md-2">
-                <button type="button" class="btn-delete" data-toggle="tooltip" data-placement="top" title="{{ trans('team::view.Remove team') }}">
-                    <i class="fa fa-minus"></i>
-                </button>
-            </div>
-            <div class="clearfix"></div>
+            <button type="button" class="btn-delete input-team-position input-remove" data-toggle="tooltip" 
+                    data-placement="top" title="{{ trans('team::view.Remove team') }}" data-noti="{{ trans('team::view.Employees must belong to at least one team') }}">
+                <i class="fa fa-minus"></i>
+            </button>
         </div>
 <?php }
 }
 ?>
 
-<div class="form-horizontal form-label-left box-form-team-position">
+<div class="form-label-left box-form-team-position">
     @if (isset($employeeTeamPositions) && $employeeTeamPositions)
         <?php $i = 1; ?>
         @foreach ($employeeTeamPositions as $employeeTeamPosition)

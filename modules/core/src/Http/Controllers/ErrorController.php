@@ -2,30 +2,31 @@
 
 namespace Rikkei\Core\Http\Controllers;
 
-use Lang;
+use Illuminate\Support\Facades\Auth;
 
 class ErrorController extends Controller
 {
     /**
-     * Display error page
+     * Display page 404
      *
      * @return \Illuminate\Http\Response
      */
-    public function view()
+    public function noRoute()
     {
-        $code = app('request')->input('code');
-        if (!$code) {
-            $code = 404;
+        if (Auth::guest()) {
+            return redirect('/');
         }
-        switch ($code) {
-            case 404:
-                $message = Lang::get('core::view.404 - Not found route');
-                break;
-            default:
-                $message = Lang::get('core::view.Error system, view log details');
+        return view('core::errors.404');
+    }
+    
+    /**
+     * error system
+     */
+    public function errors()
+    {
+        if (Auth::guest()) {
+            return redirect('/');
         }
-        return view('core::errors.exception', [
-            'message' => $message
-        ]);
+        return view('core::errors.exception');
     }
 }

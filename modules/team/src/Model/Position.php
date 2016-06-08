@@ -4,6 +4,7 @@ namespace Rikkei\Team\Model;
 use Rikkei\Core\Model\CoreModel;
 use DB;
 use Exception;
+use Lang;
 
 class Position extends CoreModel
 {
@@ -38,7 +39,10 @@ class Position extends CoreModel
     public function delete()
     {
         if ($length = $this->getNumberMember()) {
-            throw new Exception("Position {$this->name} has {$length} members, can't delete!");
+            throw new Exception(Lang::get("team::messages.Position :name has :number members, can't delete!",[
+                'name' => $this->name,
+                'number' => $length
+            ]));
         }
         DB::beginTransaction();
         try {

@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(Rikkei\Sales\Seeds\ProjectTypeSeeder::class);
 
         $this->call(Rikkei\Team\Seeds\TeamSeeder::class);
-        $this->call(Rikkei\Team\Seeds\UserRootSeeder::class);
 
     }
 }

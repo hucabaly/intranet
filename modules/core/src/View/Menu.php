@@ -7,6 +7,7 @@
 namespace Rikkei\Core\View;
 
 use URL;
+use Rikkei\Team\View\Permission;
 
 class Menu
 {
@@ -65,7 +66,7 @@ class Menu
         }
         
         $menu = config('menu');
-        if(!$menu) {
+        if (!$menu) {
             return;
         }
         self::$menuHtml = self::getChildMenu($menu, 0);
@@ -83,9 +84,15 @@ class Menu
     {
         $html = '';
         foreach ($menu as $key => $value) {
-            if(!$value['active']) {
+            if (!$value['active']) {
                 continue;
             }
+            if (isset($value['action']) && $value['action']) {
+                if (! Permission::getInstance()->isAllow($value['action'])) {
+                    continue;
+                }
+            }
+            
             $classLi = self::isActive($key) ? ' active' : '';
             $classA = '';
             $optionA = '';

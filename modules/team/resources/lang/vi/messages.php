@@ -5,5 +5,7 @@ return [
     'Not found item.' => 'Không tìm thấy đối tương.',
     'Move item success!' => 'Di chuyển đối tượng thành công!',
     'Delete item success!' => "Xóa đối tượng thành công!",
-    'Please choose team to do this action' => 'Vui lòng chọn team để thực hiện tác vụ này'
+    'Please choose team to do this action' => 'Vui lòng chọn team để thực hiện tác vụ này',
+    "Position :name has :number members, can't delete!" => 'Chức vụ :name đã có :number thành viên, không thể xóa!',
+    "Team :name has :number members, can't delete!" => "Team :name đã có :number thành viên, không thể xóa!"
 ];

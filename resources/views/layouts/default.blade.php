@@ -105,6 +105,28 @@
             </div><!-- /.modal-dialog -->
         </div> <!-- modal delete cofirm -->
         
+        <!-- modal warning cofirm -->
+        <div class="modal fade modal-warning" id="modal-warning-notification">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">{{ Lang::get('core::view.Warning') }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-default">{{ Lang::get('core::view.Not activity') }}</p>
+                        <p class="text-change"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline btn-close" data-dismiss="modal">{{ Lang::get('core::view.Close') }}</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div><!-- end modal warning cofirm -->
+        
         <!-- menu mobile -->
         <div class="menu-left-wraper">
             <nav id="mmenu-left" class="left">
