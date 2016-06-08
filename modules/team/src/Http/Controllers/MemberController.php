@@ -8,6 +8,7 @@ use Rikkei\Team\Model\Employees;
 use Rikkei\Core\View\Form;
 use Illuminate\Support\Facades\Input;
 use Lang;
+use Rikkei\Core\View\Menu;
 
 class MemberController extends TeamBaseController
 {
@@ -18,6 +19,7 @@ class MemberController extends TeamBaseController
     {
         Breadcrumb::add('Team');
         Breadcrumb::add('Member', URL::route('team::team.member.index'));
+        Menu::setActive('team');
     }
     
     /**

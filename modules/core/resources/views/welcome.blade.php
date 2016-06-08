@@ -1,7 +1,7 @@
 @extends('layouts.guest')
 
 @section('title')
-Login -
+Login
 @endsection
 
 @section('content')

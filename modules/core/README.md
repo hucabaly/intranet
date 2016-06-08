@@ -14,7 +14,22 @@ Features
 - [x] Integrate switch localization
 
 #### add menu
-edit file `config.menu.php`
+edit file `config.menu.php`, format file:
+
+    'menu.name' => [
+        'path' => 'path/url',
+        'label' => 'Menu Label',
+        'active' => '1',
+        'action' => 'route.name.permission',
+        'child' => [
+            'menu.name.child' => [
+                'path' => 'path/url',
+                'label' => 'Menu Child Label',
+                'active' => '1',
+                'action' => 'route.name.permission'
+            ]
+        ]
+    ];
 
 #### Add domain allow logged
 edit file `config.domain_logged.php`
