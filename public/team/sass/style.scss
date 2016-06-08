@@ -22,6 +22,9 @@
 .team-list {
     .team-tree {
         overflow-y: auto;
+        .team-item {
+            font-weight: normal;
+        }
         li a.active{
             background-color: $activeColor;
             padding: 0px 10px;
