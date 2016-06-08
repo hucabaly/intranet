@@ -69,4 +69,16 @@ jQuery(document).ready(function ($) {
         });
         $('ul.employee-roles').html(htmlRoleList);
     });
+    
+    /**
+     * padding table rule
+     */
+    $('.team-rule-wrapper table.table-team-rule tbody tr:last-child .form-input-dropdown').addClass('input-rule-last');
+    var paddingTableRule = $('.team-rule-wrapper .table-responsive').css('padding-bottom');
+    $('.input-rule-last').on('show.bs.dropdown', function () {
+        $('.team-rule-wrapper .table-responsive').css('padding-bottom', '90px');
+    });
+    $('.input-rule-last').on('hide.bs.dropdown', function () {
+        $('.team-rule-wrapper .table-responsive').css('padding-bottom', paddingTableRule);
+    });
 });
