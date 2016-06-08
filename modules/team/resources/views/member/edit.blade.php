@@ -42,6 +42,16 @@ $teamsOption = TeamList::toOption(null, false, false);
                     @include('team::member.edit.team')
                 </div>
             </div>
+            
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h2 class="box-title">{{ trans('team::view.Role Special') }}</h2>
+                </div>
+                <div class="box-body">
+                    @include('team::member.edit.role')
+                </div>
+            </div>
+            
         </div> <!-- end edit memeber left col -->
 
         <div class="col-md-7">
@@ -49,8 +59,15 @@ $teamsOption = TeamList::toOption(null, false, false);
         </div> <!-- end edit memeber right col -->
     </form>
 </div>
+<?php
+//remove flash session
+Form::forget();
+?>
 @endsection
 
 @section('script')
 <script src="{{ URL::asset('team/js/script.js') }}"></script>
+<script>
+    
+</script>
 @endsection
