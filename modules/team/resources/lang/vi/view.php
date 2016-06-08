@@ -83,5 +83,7 @@ return [
     'Remove team' => 'Xóa team',
     'Change' => 'Thay đổi',
     'Change Role of employee' => 'Thay đổi vai trò của nhân viên',
+    'Employees must belong to at least one team' => 'Nhân viên phải thuộc ít nhất 1 team',
+    "Team :name has :number members, can't delete!" => "Team :name đã có :number thành viên, không thể xóa!"
     
 ];

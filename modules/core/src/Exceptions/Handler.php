@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Log;
-use Illuminate\Support\Facades\Redirect;
 
 class Handler extends ExceptionHandler
 {
@@ -63,10 +62,10 @@ class Handler extends ExceptionHandler
             $status = $e->getStatusCode();
             switch ($status) {
                 case 404:
-                    return redirect()->route('core::errors');
+                    return redirect()->route('core::no.route');
             }
         }
         Log::info($e);
-        return Redirect::back()->withErrors($e->getMessage());
+        return redirect()->route('core::errors.system')->withErrors($e->getMessage());
     }
 }

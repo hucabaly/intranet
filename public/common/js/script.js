@@ -50,7 +50,8 @@ jQuery(document).ready(function ($) {
 //        }
 //    });
     
-    //modal delete confirm .find('[data-target="#modal-delete-confirm"][data-toggle="modal"]')
+    //modal delete confirm
+    $('.delete-confirm').removeAttr('disabled');
     var buttonClickShowModal;
     $('.delete-confirm').on('click', function (event) {
         if($(this).hasClass('process')) { //check flag processed
@@ -82,6 +83,26 @@ jQuery(document).ready(function ($) {
         }
         $('#modal-delete-confirm').modal('hide');
         return false;
+    });
+    
+    /**
+     * model warning
+     */
+    var buttonClickShowModalWarning;
+    $(document).on('click', '.warning-action', function (event) {
+        buttonClickShowModalWarning = $(this);
+        $('#modal-warning-notification').modal('show');
+        return false;
+    });
+    $('#modal-warning-notification').on('show.bs.modal', function (e) {
+        var notification = buttonClickShowModalWarning.data('noti');
+        if (notification) {
+            $(this).find('.modal-body .text-change').show().html(notification);
+            $(this).find('.modal-body .text-default').hide().html(notification);
+        } else {
+            $(this).find('.modal-body .text-change').hide();
+            $(this).find('.modal-body .text-default').show();
+        }
     });
     
     /**

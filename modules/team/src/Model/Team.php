@@ -4,6 +4,7 @@ namespace Rikkei\Team\Model;
 use Rikkei\Core\Model\CoreModel;
 use DB;
 use Exception;
+use Illuminate\Support\Facades\Lang;
 
 class Team extends CoreModel
 {
@@ -93,7 +94,10 @@ class Team extends CoreModel
     public function delete()
     {
         if ($length = $this->getNumberMember()) {
-            throw new Exception("Team {$this->name} has {$length} members, can't delete!");
+            throw new Exception(Lang::get("team::messages.Team :name has :number members, can't delete!",[
+                'name' => $this->name,
+                'number' => $length
+            ]));
         }
         $children = Team::select('id')
             ->where('parent_id', $this->id)->get();

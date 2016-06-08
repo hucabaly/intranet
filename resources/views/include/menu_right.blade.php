@@ -30,11 +30,13 @@
                 </li>
             </ul>
         </li>
-        <li class="setting">
-            <a href="{{ URL::route('team::setting.team.index') }}">
-                <i class="fa fa-gears"></i>
-            </a>
-        </li>
+        @if (\Rikkei\Team\View\Permission::getInstance()->isAllow('team::setting.team.index'))
+            <li class="setting">
+                <a href="{{ URL::route('team::setting.team.index') }}">
+                    <i class="fa fa-gears"></i>
+                </a>
+            </li>
+        @endif
     </ul>
 </div><!-- /.navbar-custom-menu -->
 @endif
