@@ -17,6 +17,7 @@ $("#dateRanger").dateRangeSlider({
 });
 
 $(document).ready(function(){
+    
  /** iCheck event theotieuchi la cau hoi */  
     // Make "Item" checked if checkAll are checked
     $('.checkItemQuestion').on('ifChecked', function (event) {
@@ -38,7 +39,7 @@ $(document).ready(function(){
     $('.checkItemQuestion').on('ifUnchecked', function (event) {
         triggeredByChild = true;
         var parent_id = $(this).attr('parent-id');
-        $('.checkItemQuestionx[data-id='+parent_id+']').iCheck('uncheck');
+        $('.checkItemQuestion[data-id='+parent_id+']').iCheck('uncheck');
     });
 
     // Make "All" checked if all checkboxes are checked
@@ -49,43 +50,6 @@ $(document).ready(function(){
         }
     });
     
-    jQuery(document).on("ifChanged","#tcProjectType", function () {
-        //show table project type
-        $('#tcProjectType').on('ifChecked', function (event) {
-            $('.tbl-criteria').hide(); 
-            $('table[data-id=tcProjectType]').show();
-        });
-        
-        //show table team
-        $('#tcTeam').on('ifChecked', function (event) {
-            $('.tbl-criteria').hide();
-            $('table[data-id=tcTeam]').show();
-        });
-        
-        //show table pm
-        $('#tcPm').on('ifChecked', function (event) {
-            $('.tbl-criteria').hide();
-            $('table[data-id=tcPm]').show();
-        });
-        
-        //show table brse
-        $('#tcBrse').on('ifChecked', function (event) {
-            $('.tbl-criteria').hide();
-            $('table[data-id=tcBrse]').show();
-        });
-                
-        //show table customer
-        $('#tcCustomer').on('ifChecked', function (event) {
-            $('.tbl-criteria').hide();
-            $('table[data-id=tcCustomer]').show();
-        });    
-        
-        //show table sale
-        $('#tcSale').on('ifChecked', function (event) {
-            $('.tbl-criteria').hide();
-            $('table[data-id=tcSale]').show();
-        }); 
-    });
 });
 
 
@@ -162,45 +126,17 @@ function filterAnalyze(token){
         $("div.theotieuchi").html(data);
         $(".tbl-criteria").hide();
         $("table[data-id="+criteriaType+"]").show();
-        
-        $('input').iCheck({
-            checkboxClass: 'icheckbox_minimal-blue',
-            radioClass: 'iradio_minimal-blue'
-        }); 
-        
-     /** iCheck event theotieuchi (ngoai tru theo cau hoi) */
-        // Make "Item" checked if checkAll are checked
-        $('#checkAll').on('ifChecked', function (event) {
-            $('.checkItem').iCheck('check');
-            triggeredByChild = false;
-        });
-
-        // Make "Item" unchecked if checkAll are unchecked
-        $('#checkAll').on('ifUnchecked', function (event) {
-            if (!triggeredByChild) {
-                $('.checkItem').iCheck('uncheck');
-            }
-            triggeredByChild = false;
-        });
-
-        // Remove the checked state from "All" if any checkbox is unchecked
-        $('.checkItem').on('ifUnchecked', function (event) {
-            triggeredByChild = true;
-            $('#checkAll').iCheck('uncheck');
-        });
-
-        // Make "All" checked if all checkboxes are checked
-        $('.checkItem').on('ifChecked', function (event) {
-            if ($('.checkItem').filter(':checked').length == $('.checkItem').length) {
-                $('#checkAll').iCheck('check');
-            }
-        });
+        $(document).trigger('icheck');
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
     })
 }
 
+/**
+ * apply filter
+ * @param string token
+ */
 function apply(token){
     //get criteria type and id
     var criteriaType = $("input[name=tieuchi]:checked").attr("id");
@@ -345,41 +281,45 @@ function apply(token){
         });
         
         //danh sach cau hoi duoi 3 sao
-        var countResult = data["lessThreeStar"].length; 
+        var countResult = data["lessThreeStar"]["cssResultdata"].length; 
         html = "";
         for(var i=0; i<countResult; i++){
             html += "<tr>";
-            html += "<td>"+data["lessThreeStar"][i]["no"]+"</td>";
-            html += "<td>"+data["lessThreeStar"][i]["projectName"]+"</td>";
-            html += "<td>"+data["lessThreeStar"][i]["questionName"]+"</td>";
-            html += "<td>"+data["lessThreeStar"][i]["stars"]+"</td>";
-            html += "<td>"+data["lessThreeStar"][i]["comment"]+"</td>";
-            html += "<td>"+data["lessThreeStar"][i]["makeDateCss"]+"</td>";
-            html += "<td>"+data["lessThreeStar"][i]["cssPoint"]+"</td>";
+            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["no"]+"</td>";
+            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["projectName"]+"</td>";
+            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["questionName"]+"</td>";
+            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["stars"]+"</td>";
+            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["comment"]+"</td>";
+            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["makeDateCss"]+"</td>";
+            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["cssPoint"]+"</td>";
             html += "</tr>";   
         }
         $("#duoi3sao tbody").html(html);
+        $("#duoi3sao").parent().find(".pagination").html(data["lessThreeStar"]["paginationRender"]);
         
         //danh sach de xuat
-        var countResult = data["proposes"].length; 
+        var countResult = data["proposes"]["cssResultdata"].length; 
         html = "";
         for(var i=0; i<countResult; i++){
             html += "<tr>";
-            html += "<td>"+data["proposes"][i]["no"]+"</td>";
-            html += "<td>"+data["proposes"][i]["projectName"]+"</td>";
-            html += "<td>"+data["proposes"][i]["customerComment"]+"</td>";
-            html += "<td>"+data["proposes"][i]["makeDateCss"]+"</td>";
-            html += "<td>"+data["proposes"][i]["cssPoint"]+"</td>";
+            html += "<td>"+data["proposes"]["cssResultdata"][i]["no"]+"</td>";
+            html += "<td>"+data["proposes"]["cssResultdata"][i]["projectName"]+"</td>";
+            html += "<td>"+data["proposes"]["cssResultdata"][i]["customerComment"]+"</td>";
+            html += "<td>"+data["proposes"]["cssResultdata"][i]["makeDateCss"]+"</td>";
+            html += "<td>"+data["proposes"]["cssResultdata"][i]["cssPoint"]+"</td>";
             html += "</tr>";   
         }
         $("#danhsachdexuat tbody").html(html);
-        
+        $("#danhsachdexuat").parent().find(".pagination").html(data["proposes"]["paginationRender"]);
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
     })
 }
 
+/**
+ * get checkbox in tables filter
+ */
 function getCriteriaChecked(){
     var criteriaType = $("input[name=tieuchi]:checked").attr("id");
     if(criteriaType == "tcProjectType"){
@@ -399,6 +339,11 @@ function getCriteriaChecked(){
     }
 }
 
+/**
+ * Show analyze project list paginate
+ * @param int curpage
+ * @param string token
+ */
 function showAnalyzeListProject(curpage,token){
     var startDate = $("#startDate_val").val();
     var endDate = $("#endDate_val").val();
@@ -426,6 +371,9 @@ function showAnalyzeListProject(curpage,token){
         case 'tcSale':
             criteriaType = "sale";
             break;
+        case 'tcQuestion':
+            criteriaType = "question";
+            break;
     }
     $.ajax({
         url: baseUrl + 'css/show_analyze_list_project/'+criteriaIds+'/'+teamIds+'/'+ projectTypeIds+'/'+startDate+'/'+endDate+'/'+criteriaType+'/'+curpage,
@@ -434,7 +382,7 @@ function showAnalyzeListProject(curpage,token){
             _token: token, 
         },
     })
-    .done(function (data) {  console.log(data); 
+    .done(function (data) { 
         var countResult = data["cssResultdata"].length; 
         var html = "";
         for(var i=0; i<countResult; i++){
@@ -455,6 +403,159 @@ function showAnalyzeListProject(curpage,token){
         alert("Ajax failed to fetch data");
     })
 }
+
+/**
+ * Show less 3* list
+ * @param int curpage
+ * @param string token
+ */
+function getListLessThreeStar(curpage,token,cssresultids){
+    $.ajax({
+        url: baseUrl + 'css/get_list_less_three_star/'+cssresultids+'/'+curpage,
+        type: 'post',
+        data: {
+            _token: token, 
+        },
+    })
+    .done(function (data) { 
+        var countResult = data["cssResultdata"].length; 
+        html = "";
+        for(var i=0; i<countResult; i++){
+            html += "<tr>";
+            html += "<td>"+data["cssResultdata"][i]["no"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["projectName"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["questionName"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["stars"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["comment"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["makeDateCss"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["cssPoint"]+"</td>";
+            html += "</tr>";   
+        }
+        $("#duoi3sao tbody").html(html);
+        $("#duoi3sao").parent().find(".pagination").html(data["paginationRender"]);
+    })
+    .fail(function () {
+        alert("Ajax failed to fetch data");
+    })
+}
+
+/**
+ * Show proposes list
+ * @param int curpage
+ * @param string token
+ */
+function getProposes(curpage,token,cssresultids){
+    $.ajax({
+        url: baseUrl + 'css/get_proposes/'+cssresultids+'/'+curpage,
+        type: 'post',
+        data: {
+            _token: token, 
+        },
+    })
+    .done(function (data) { 
+        //danh sach de xuat
+        var countResult = data["cssResultdata"].length; 
+        html = "";
+        for(var i=0; i<countResult; i++){
+            html += "<tr>";
+            html += "<td>"+data["cssResultdata"][i]["no"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["projectName"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["customerComment"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["makeDateCss"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["cssPoint"]+"</td>";
+            html += "</tr>";   
+        }
+        $("#danhsachdexuat tbody").html(html);
+        $("#danhsachdexuat").parent().find(".pagination").html(data["paginationRender"]);
+    })
+    .fail(function () {
+        alert("Ajax failed to fetch data");
+    })
+}
+
+$(document).on('icheck', function(){
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_minimal-blue',
+        radioClass: 'iradio_minimal-blue'
+    }); 
+
+    var arrCetirea = ['ProjectType','Team','Pm','Brse','Customer','Sale','Question'];
+    for(var i=0; i<arrCetirea.length; i++){ 
+        // Make "Item" checked if checkAll are checked
+        $('#check'+arrCetirea[i]).on('ifChecked', function (event) {
+            var id = '.' + $(this).attr("id") + "Item"; 
+            $(id).iCheck('check');
+            triggeredByChild = false;
+        });
+
+        // Make "Item" unchecked if checkAll are unchecked
+        $('#check'+arrCetirea[i]).on('ifUnchecked', function (event) {
+            var id = '.' + $(this).attr("id") + "Item"; 
+            if (!triggeredByChild) {
+                $(id).iCheck('uncheck');
+            }
+            triggeredByChild = true;
+        });
+
+        // Remove the checked state from "All" if any checkbox is unchecked
+        $('.check'+arrCetirea[i]+'Item').on('ifUnchecked', function (event) {
+            triggeredByChild = true;
+            var id = '#' + $(this).attr("class"); 
+            id = id.replace("Item",""); 
+            $(id).iCheck('uncheck');
+        });
+
+        // Make "All" checked if all checkboxes are checked
+        $('.check'+arrCetirea[i]+'Item').on('ifChecked', function (event) {
+            var id = '#' + $(this).attr("class"); 
+            id = id.replace("Item","");
+            if ($('.' + $(this).attr("class")).filter(':checked').length == $('.' + $(this).attr("class")).length) {
+                $(id).iCheck('check');
+            }
+        });
+    }
     
+    //show table project type
+    $('#tcProjectType').on('ifChecked', function (event) {
+        $('.tbl-criteria').hide(); 
+        $('table[data-id=tcProjectType]').show();
+    });
+
+    //show table team
+    $('#tcTeam').on('ifChecked', function (event) {
+        $('.tbl-criteria').hide();
+        $('table[data-id=tcTeam]').show();
+    });
+
+    //show table pm
+    $('#tcPm').on('ifChecked', function (event) {
+        $('.tbl-criteria').hide();
+        $('table[data-id=tcPm]').show();
+    });
+
+    //show table brse
+    $('#tcBrse').on('ifChecked', function (event) {
+        $('.tbl-criteria').hide();
+        $('table[data-id=tcBrse]').show();
+    });
+
+    //show table customer
+    $('#tcCustomer').on('ifChecked', function (event) {
+        $('.tbl-criteria').hide();
+        $('table[data-id=tcCustomer]').show();
+    });    
+
+    //show table sale
+    $('#tcSale').on('ifChecked', function (event) {
+        $('.tbl-criteria').hide();
+        $('table[data-id=tcSale]').show();
+    }); 
+
+    //show table question
+    $('#tcQuestion').on('ifChecked', function (event) {
+        $('.tbl-criteria').hide();
+        $('table[data-id=tcQuestion]').show();
+    }); 
+}).trigger('icheck'); // trigger it for page load
     
 

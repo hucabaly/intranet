@@ -10,6 +10,11 @@
  * mà không ấn OK thì khi mở lại vẫn lưu các team cũ
  * @type Array
  */
+$('input').iCheck({
+    checkboxClass: 'icheckbox_minimal-blue',
+    radioClass: 'iradio_minimal-blue'
+}); 
+
 var teamArray = []; 
 
 /** 
@@ -21,59 +26,9 @@ function showCalendar(x) {
     $("#" + target).focus();
 }
 
-/** 
- * hàm thực hiện việc add team từ cột trái sang cột phải trong popup team
- **/
-function add_team() {
-    if ($(".team-tree  a[set=true]").length > 0) {
-        var current = $(".team-tree a[set=true]");
-        strElem = '<li><span onclick="change_bgcolor_element(this);" data-id='+current.attr("data-id")+'>'+getTreeTeamNameSelected(current)+'</span></li>';
-        $(".right-list").append(strElem);
-        console.log(getTreeTeamNameSelected(current));
-    }
-}
 
-function getTreeTeamNameSelected(current){
-    var current_level = parseInt(current.attr("level"));
-    var name = current.text();
-    if(current.parent().parent().parent().parent().find("a[level="+(current_level - 1)+"]").length > 0){
-        parent = current.parent().parent().parent().parent().find("a[level="+(current_level - 1)+"]");
-        if(parseInt(parent.attr("level")) > 0){
-            name = getTreeTeamNameSelected(parent) + " -> " + name;
-        }
-    }
-    return name;
-}
 
-/** 
- * Hàm thực hiện việc remove team khỏi cột phải trong popup team
- * @returns void
- **/
 
-function remove_team() {
-    if ($(".modal-body .right-list li span[set=true]").length > 0) {
-        $(".modal-body .right-list li span[set=true]").parent().remove();
-    }
-}
-
-/**
- * Thay đổi background color của team được click và set attribue set=true
- * @param element x
- * @returns void
- */
-function change_bgcolor_element(x) {
-    $(".team-tree a").attr("set", "false");
-    $(".team-tree li").css("background-color", "");
-    $(".right-list li span").attr("set", "false");
-    $(".right-list li").css("background-color", "");
-    $(x).attr("set", "true");
-    if($(x).parent().parent().hasClass("right-list")){
-        $(x).parent().css("background-color", "rgb(33, 42, 109)");
-    }else{
-        $(x).parent().parent().css("background-color", "rgb(33, 42, 109)");
-    }
-    
-}
 
 /**
  * Sự kiện khi click OK trên popup team
@@ -84,20 +39,19 @@ function set_team_to_css() {
     var elements = "";
     var str = "";
     teamArray = [];
-
-    $(".modal-body .right-list li span").each(function () {
+    //get team checked
+    $('input[class=team-tree-checkbox]:checked').each(function(){
         var team_id = $(this).attr("data-id");
-        var team_name = $(this).html();
+        var team_name = $(this).parent().parent().find('span').text();
         elements += '<input class="team_id" type="hidden" name="teams[' + team_id + ']" value="' + team_name + '" />';
         if (str == "") {
             str = team_name;
         } else {
             str += ', ' + team_name;
         }
-
         teamArray.push([team_id, team_name]);
     });
-
+    
     $(".set_team").html(str);
     $(".set_team").parent().find('.team_id').remove();
     $(".set_team").parent().append(elements);
@@ -105,8 +59,9 @@ function set_team_to_css() {
         $('#team_id_check').val("")
     } else {
         $('#team_id_check').val("1")
+        $("#team_id_check-error").remove();
     }
-
+    
     //close popup
     $('#teamsModal').modal('hide');
 }
@@ -117,12 +72,27 @@ function set_team_to_css() {
  * @returns void
  */
 function set_teams_popup() {
-    $(".right-list").html("");
+    $('.team-tree-checkbox').iCheck('uncheck');
     for (var i = 0; i < teamArray.length; i++) {
-        $(".right-list").append('<li ><span onclick="change_bgcolor_element(this);" data-id="' + teamArray[i][0] + '">' + teamArray[i][1] + '</span></li>');
+        $('.team-tree-checkbox[data-id='+teamArray[i][0]+']').iCheck('check');
     }
 }
 
+function customRange(input) {
+    if (input.id == 'start_date') {     
+        var x = $('#start_date').datepicker("getDate"); 
+        $("#end_date").datepicker({
+            startDate : x,
+        }); 
+    } 
+    else if (input.id == 'end_date') {     
+        var x=$('#end_date').datepicker("getDate");
+        $("#start_date").datepicker({
+            endDate : x,
+        }); 
+    } 
+}
+;
 $(document).ready(function () {
     $(".project_type input[type=radio]:first-child").prop('checked', true);
     $(".team-tree a").removeAttr("href");
@@ -131,10 +101,12 @@ $(document).ready(function () {
     //hide calendar sau khi select
     $('#start_date').on('changeDate', function (ev) {
         $(this).datepicker('hide');
+        customRange(this);
         $('#end_date').focus();
     });
-
+    
     $('#end_date').on('changeDate', function (ev) {
+        customRange(this);
         $(this).datepicker('hide');
     });
 });
