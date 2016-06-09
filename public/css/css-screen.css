@@ -42,8 +42,8 @@
 }
 
 /* hien popup chon team vao css */
-.modal-dialog {
-    width: 533px !important;
+.css-create-page .modal-dialog, .css-update-page .modal-dialog{
+    width: 400px !important;
 }
 #frm-add-teams{
     text-align: center;
@@ -69,20 +69,29 @@
 }
 
 .modal-header{
-    background-color:#424242; 
-    border-bottom: 1px solid #363636 !important;
+    background-color:#a51214; 
+    border-bottom: 1px solid #d2d6de !important;
 }
 .modal-header button.close span{
     color:#fff;
 }
-.modal-body,.modal-footer{
-    background-color: #575757
-}
-.modal-body{
+
+.css-create-page .modal-body, .css-update-page .modal-body{
     font-size: 12px;
+    overflow-y: auto;
+    height: 400px;
 }
+
+.list-team-tree li {
+    list-style: none;
+}
+
+.list-team-tree ul label {
+    width: 100%;
+}
+
 .modal-footer{
-    border: none !important;
+    border-top: 1px solid #3c8dbc !important;
 }
 .modal-footer button.create-css{
     color: #000 ; 
@@ -129,12 +138,12 @@
 #start_date-error{    
     position: absolute;
     top:43px;
-    left:8px;
+    left:0;
 }
 #end_date-error{    
     position: absolute;
-    top:45px;
-    left:50px;
+    top:43px;
+    left:0;
 }
 #team_id_check-error{
     display: block;
@@ -455,4 +464,20 @@ select option.parent{
 
 .dataTables_paginate ul.pagination{
     margin: 0;
+}
+
+.table-fixed thead {
+  width: 100%;
+}
+.table-fixed tbody {
+  height: 345x;
+  overflow-y: auto;
+  width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+  display: block;
+}
+.table-fixed tbody td, .table-fixed thead > tr> th {
+  float: left;
+  border-bottom-width: 0;
 }

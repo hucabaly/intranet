@@ -1,12 +1,8 @@
 @extends('layouts.default')
-<?php
-use Rikkei\Team\View\TeamList;
-use Rikkei\Core\View\Form;
-?>
 
 @section('content')
 
-<div class="container content-container box box-primary" style="background-color: #fff;">
+<div class="container content-container box box-primary css-create-page" style="background-color: #fff;">
     <div class="row">
         <div class="col-md-12">
             <div class="box-header with-border">
@@ -43,7 +39,7 @@ use Rikkei\Core\View\Form;
                                         <div>
                                         @foreach($projects as $pj)
                                             <label class="radio-inline">
-                                                <input type="radio" checked="checked" name="project_type_id" value="{{$pj->id}}">{{$pj->name}}
+                                                <input type="radio" checked="checked" name="project_type_id" value="{{$pj->id}}">&nbsp;{{$pj->name}}
                                             </label>
                                         @endforeach 
                                         </div>
@@ -58,10 +54,9 @@ use Rikkei\Core\View\Form;
                                         <label for="form_lastname">{{ trans('sales::view.Team relate') }} <span class="required">*</span></label>
                                         <div>
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teamsModal" data-whatever="@mdo" onclick="set_teams_popup();">{{ trans('sales::view.Set team') }}</button>
-                                            <input id="team_id_check" name="team_id_check" type="text" value="" style="visibility: hidden;">
+                                            <input id="team_id_check" name="team_id_check" type="text" value="" style="visibility: hidden; position: absolute;">
+                                            <label class="set_team"></label>
                                         </div>
-                                        <label class="set_team"></label>
-                                        
                                     </div>
                                     <div class="form-group">
                                         <label for="form_lastname">{{ trans('sales::view.PM name') }} <span class="required">*</span></label>
@@ -73,18 +68,22 @@ use Rikkei\Core\View\Form;
                                     </div>
                                     <div class="form-group">
                                         <label for="form_lastname">{{ trans('sales::view.Project date') }} <span class="required">*</span></label>
-                                        <div style="position: relative;">
-                                            <div class="input-group-addon calendar-button" target="start_date" onclick="showCalendar(this);">
-                                                <i class="fa fa-calendar">
-                                                </i>
+                                        <div >
+                                            <div style="position: relative; display: inline;">
+                                                <div class="input-group-addon calendar-button" target="start_date" onclick="showCalendar(this);">
+                                                    <i class="fa fa-calendar">
+                                                    </i>
+                                                </div>
+                                                <input type='text' class="form-control date start-date" id="start_date" name="start_date" data-provide="datepicker" placeholder="DD/MM/YYYY" tabindex=7 />
+                                                &nbsp; ~ &nbsp; &nbsp;
                                             </div>
-                                            <input type='text' class="form-control date start-date" id="start_date" name="start_date" data-provide="datepicker" placeholder="DD/MM/YYYY" tabindex=7 />
-                                            &nbsp; ~ &nbsp; &nbsp;
-                                            <div class="input-group-addon calendar-button" target="end_date"  onclick="showCalendar(this);">
-                                                <i class="fa fa-calendar">
-                                                </i>
+                                            <div style="position: relative; display: inline;">
+                                                <div class="input-group-addon calendar-button" target="end_date"  onclick="showCalendar(this);">
+                                                    <i class="fa fa-calendar">
+                                                    </i>
+                                                </div>
+                                                <input type='text' class="form-control date end-date" id="end_date" name="end_date" data-provide="datepicker" placeholder="DD/MM/YYYY" tabindex=8  />
                                             </div>
-                                            <input type='text' class="form-control date end-date" id="end_date" name="end_date" data-provide="datepicker" placeholder="DD/MM/YYYY" tabindex=8  />
                                         </div>
                                     </div>
                                 </div>
@@ -106,22 +105,11 @@ use Rikkei\Core\View\Form;
 
             </div>
             <div class="modal-body">
-                <form id="frm-add-teams">
-                    <div class="remove-team"><img src="{{ URL::asset('img/remove_icon.png') }}" onclick="remove_team();"></div>
-                    <div class="container-teams left-list">
-                        {!! TeamList::getTreeHtml(Form::getData('id')) !!}
-                    </div>
-                    <button class="btn-add-team" type="button" onclick="add_team();">{{ trans('sales::view.Add >>') }}</button>
-                    <div class="container-teams">
-                        <ul class="list-teams right-list">
-
-                        </ul>
-                    </div>
-                </form>
+                <ul class="list-team-tree">{!! $htmlTeam !!}</ul>
             </div>
             <div class="modal-footer">
 
-                <button type="button" class="btn btn-primary create-css" onclick="set_team_to_css();">{{ trans('sales::view.OK') }}</button>
+                <button type="button" class="btn btn-primary" onclick="set_team_to_css();">{{ trans('sales::view.OK') }}</button>
             </div>
         </div>
     </div>
@@ -132,12 +120,14 @@ use Rikkei\Core\View\Form;
 @section('css')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker.min.css" />
 <link href="{{ asset('css/css-screen.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('adminlte/plugins/iCheck/minimal/_all.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
 <!-- Script -->
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
 <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('adminlte/plugins/iCheck/icheck.js') }}"></script>
 <script src="{{ asset('js/css.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function(){

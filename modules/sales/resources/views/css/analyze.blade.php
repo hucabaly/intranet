@@ -95,7 +95,7 @@
                                 <!----------- Bảng danh sách du an ------------------->
                                     <div class="col-md-5">
                                         <h4 class="small-title">{{trans('sales::view.Project list')}}</h4>
-                                        <table class="table table-bordered table-hover dataTable ketqua" id='danhsachduan'>
+                                        <table class="table  table-hover dataTable ketqua" id='danhsachduan'>
                                             <thead>
                                                 <tr>
                                                     <th>{{trans('sales::view.No.')}}</th>
@@ -156,7 +156,7 @@
                                  <!----------- Bảng danh sách dưới 3 sao ------------------->   
                                     <div class="col-md-6">
                                         <h4 class="small-title">{{trans('sales::view.List 3 * below')}}</h4>
-                                        <table class="table table-bordered table-hover dataTable duoi3sao" id='duoi3sao'>
+                                        <table class="table  table-hover dataTable duoi3sao" id='duoi3sao'>
                                             <thead>
                                                 <tr>
                                                     <th>{{trans('sales::view.No.')}}</th>
@@ -172,11 +172,14 @@
                                                 
                                             </tbody>
                                         </table>
+                                        <div class="dataTables_paginate paging_simple_numbers">
+                                            <ul class="pagination"></ul>
+                                        </div>
                                     </div>
                                  <!----------- Bảng danh sách de xuat cua khach hang ------------------->
                                     <div class="col-md-6">
                                         <h4 class="small-title">{{trans('sales::view.Customer proposed')}}</h4>
-                                        <table class="table table-bordered table-hover dataTable ketqua" id="danhsachdexuat">
+                                        <table class="table  table-hover dataTable ketqua" id="danhsachdexuat">
                                             <thead>
                                                 <tr>
                                                     <th>{{trans('sales::view.No.')}}</th>
@@ -190,6 +193,9 @@
                                                 
                                             </tbody>
                                         </table>
+                                        <div class="dataTables_paginate paging_simple_numbers">
+                                            <ul class="pagination"></ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
