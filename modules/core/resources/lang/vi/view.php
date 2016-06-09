@@ -13,5 +13,6 @@ return [
     'Please enter' => 'Vui lòng nhập',
     'Not activity' => "Không hoạt động",
     'Error system' => 'Lỗi hệ thống',
+    'not be greater than :number characters' => 'không được lớn hơn :number ký tự',
     
 ];

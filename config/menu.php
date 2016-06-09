@@ -50,7 +50,7 @@ return [
         'path' => 'sales',
         'label' => 'Sales',
         'active' => '1',
-        'action' => 'sales::css.*',
+        'action' => 'sales::css.list',
         'child' => [
             'sales.css' => [
                 'path' => 'sale/css',
