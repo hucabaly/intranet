@@ -5,6 +5,7 @@ use Rikkei\Team\View\TeamList;
 use Rikkei\Core\View\Form;
 use Rikkei\Team\Model\Roles;
 
+$teamTreeHtml = TeamList::getTreeHtml(Form::getData('id'));
 $positionAll = Roles::getAllPosition();
 $roleAll = Roles::getAllRole();
 ?>
@@ -27,7 +28,11 @@ Team Setting
             </div>
             <div class="row team-list-action box-body">
                 <div class="col-md-8 col-sm-8 team-list">
-                    {!! TeamList::getTreeHtml(Form::getData('id')) !!}
+                    @if (strip_tags($teamTreeHtml))
+                        {!! $teamTreeHtml !!}
+                    @else
+                        <p class="alert alert-warning">{{ trans('team::view.Not found team') }}</p>
+                    @endif
                 </div>
                 <div class="col-md-4 col-sm-4 team-action">
                     <p><button type="button" class="btn-add btn-action" data-target="#team-add-form" data-toggle="modal">
@@ -71,7 +76,7 @@ Team Setting
         </div>
     </div> <!-- end team manage -->
     
-    <!-- team position manage -->
+    <!-- team position manage --> <?php /*
     <div class="col-md-4 team-position-wrapper hight-same">
         <div class="box box-info">
             <div class="box-header with-border">
@@ -134,9 +139,9 @@ Team Setting
                 </div>
             </div>
         </div>
-    </div> <!-- end team position manage -->
+    </div> */ ?><!-- end team position manage -->
     
-    <!-- roles manage -->
+    <!-- roles manage --> <?php /*
     <div class="col-md-4 team-position-wrapper hight-same">
         <div class="box box-info">
             <div class="box-header with-border">
@@ -183,8 +188,8 @@ Team Setting
                 </div>
             </div>
         </div>
-    </div> <!-- end role manage -->
-    
+    </div>*/ ?> <!-- end role manage -->
+    <?php /*
     <div class="col-sm-12 team-rule-wrapper">
         <div class="box box-warning">
             <div class="box-header with-border">
@@ -216,7 +221,7 @@ Team Setting
                     @endif
                 @endif
             </div>
-    </div>
+    </div>*/ ?>
 </div>
 
 <!-- modal add/edit team position-->
@@ -323,6 +328,7 @@ Team Setting
     </div>
 </div>
 <!-- //end modal add/edit role -->
+<?php Form::forget(); ?>
 @endsection
 
 

@@ -30,7 +30,7 @@ class TeamList
     {
         $teamList = Team::select('id', 'name', 'parent_id')
                 ->where('parent_id', $parentId)
-                ->orderBy('position', 'asc')
+                ->orderBy('sort_order', 'asc')
                 ->get();
         $countCollection = count($teamList);
         if (!$countCollection) {
@@ -104,9 +104,9 @@ class TeamList
      */
     protected static function toOptionFunctionRecursive(&$options, $parentId, $skipId, $isFunction, $level)
     {
-        $teamList = Team::select('id', 'name', 'parent_id', 'is_function', 'permission_as')
+        $teamList = Team::select('id', 'name', 'parent_id', 'is_function', 'follow_team_id')
                 ->where('parent_id', $parentId)
-                ->orderBy('position', 'asc');
+                ->orderBy('sort_order', 'asc');
         if ($skipId) {
             $teamList = $teamList->where('id', '<>', $skipId);
         }

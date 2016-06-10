@@ -27,13 +27,14 @@ class Roles extends CoreModel
     /**
      * get all role is position
      * 
+     * @param string $dir
      * @return collection model
      */
-    public static function getAllPosition()
+    public static function getAllPosition($dir = 'asc')
     {
         return self::select('id', 'role')
             ->where('special_flg', self::FLAG_POSITION)
-            ->orderBy('sort_order')
+            ->orderBy('sort_order', $dir)
             ->get();
     }
     

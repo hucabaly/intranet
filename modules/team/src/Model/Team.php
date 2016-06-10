@@ -26,9 +26,9 @@ class Team extends CoreModel
      */
     public function move($up = true)
     {
-        $siblings = Team::select('id', 'position')
+        $siblings = Team::select('id', 'sort_order')
             ->where('parent_id', $this->parent_id)
-            ->orderBy('position')
+            ->orderBy('sort_order')
             ->get();
         if (count($siblings) < 2) {
             return true;
@@ -42,10 +42,10 @@ class Team extends CoreModel
             }
             for ($i = 1; $i < $countDataOrder; $i++) {
                 if (!$flagIndexToCurrent) {
-                    $dataOrder[$i]['position'] = $i;
+                    $dataOrder[$i]['sort_order'] = $i;
                     if ($dataOrder[$i]['id'] == $this->id) {
-                        $dataOrder[$i]['position'] = $i - 1;
-                        $dataOrder[$i - 1]['position'] = $i;
+                        $dataOrder[$i]['sort_order'] = $i - 1;
+                        $dataOrder[$i - 1]['sort_order'] = $i;
                         $flagIndexToCurrent = true;
                     }
                 } else {
@@ -58,10 +58,10 @@ class Team extends CoreModel
             }
             for ($i = 0; $i < $countDataOrder - 1; $i++) {
                 if (!$flagIndexToCurrent) {
-                    $dataOrder[$i]['position'] = $i;
+                    $dataOrder[$i]['sort_order'] = $i;
                     if ($dataOrder[$i]['id'] == $this->id) {
-                        $dataOrder[$i]['position'] = $i + 1;
-                        $dataOrder[$i + 1]['position'] = $i;
+                        $dataOrder[$i]['sort_order'] = $i + 1;
+                        $dataOrder[$i + 1]['sort_order'] = $i;
                         $flagIndexToCurrent = true;
                         $i++;
                     }
@@ -76,7 +76,7 @@ class Team extends CoreModel
                 DB::table($this->table)
                     ->where('id', $data['id'])
                     ->update([
-                        'position' => $data['position']
+                        'sort_order' => $data['sort_order']
                     ]);
             }
             DB::commit();
@@ -137,11 +137,14 @@ class Team extends CoreModel
         // update model
         if ($this->id) {
             //delete team rule of this team
-            if (! $this->is_function) {
-                TeamRule::where('team_id', $this->id)->delete();
-            } elseif ($this->permission_as) {
-                TeamRule::where('team_id', $this->id)->delete();
-            }
+            
+            // TODO delete rule
+            
+//            if (! $this->is_function) {
+//                TeamRule::where('team_id', $this->id)->delete();
+//            } elseif ($this->permission_as) {
+//                TeamRule::where('team_id', $this->id)->delete();
+//            }
         }
         return parent::save($options);
     }
@@ -179,10 +182,10 @@ class Team extends CoreModel
      */
     public function getTeamPermissionAs()
     {
-        if (! $this->permission_as) {
+        if (! $this->follow_team_id) {
             return null;
         }
-        $teamAs = Team::find($this->permission_as);
+        $teamAs = Team::find($this->follow_team_id);
         if (! $teamAs) {
             return null;
         }
