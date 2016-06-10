@@ -76,7 +76,7 @@ Team Setting
         </div>
     </div> <!-- end team manage -->
     
-    <!-- team position manage --> <?php /*
+    <!-- team position manage -->
     <div class="col-md-4 team-position-wrapper hight-same">
         <div class="box box-info">
             <div class="box-header with-border">
@@ -92,7 +92,7 @@ Team Setting
                                 @foreach ($positionAll as $positionItem)
                                 <tr><td>
                                     <a href="{{ URL::route('team::setting.team.position.view', ['id' => $positionItem->id]) }}"<?php
-                                    if ($positionItem->id == Form::getData('position.id')): ?> class="active"<?php endif; ?>>{{ $positionItem->name }}</a>
+                                    if ($positionItem->id == Form::getData('position.id')): ?> class="active"<?php endif; ?>>{{ $positionItem->role }}</a>
                                 </td></tr>
                                 @endforeach
                             </tbody>
@@ -139,7 +139,7 @@ Team Setting
                 </div>
             </div>
         </div>
-    </div> */ ?><!-- end team position manage -->
+    </div> <!-- end team position manage -->
     
     <!-- roles manage --> <?php /*
     <div class="col-md-4 team-position-wrapper hight-same">
@@ -343,11 +343,11 @@ Team Setting
                 required: '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.team name') ; ?>',
                 rangelength: '<?php echo trans('team::view.Team name') . ' ' . trans('core::view.not be greater than :number characters', ['number' => 255]) ; ?>',
               },
-            'position[name]': {
+            'position[role]': {
                 required: '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.position name') ; ?>',
                 rangelength: '<?php echo trans('team::view.Position name') . ' ' . trans('core::view.not be greater than :number characters', ['number' => 255]) ; ?>',
             },
-            'role[name]': {
+            'role[role]': {
                 required: '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.role name') ; ?>',
                 rangelength: '<?php echo trans('team::view.Role name') . ' ' . trans('core::view.not be greater than :number characters', ['number' => 255]) ; ?>',
             }
@@ -357,11 +357,11 @@ Team Setting
                 required: true,
                 rangelength: [1, 255]
             },
-            'position[name]': {
+            'position[role]': {
                 required: true,
                 rangelength: [1, 255]
             },
-            'role[name]': {
+            'role[role]': {
                 required: true,
                 rangelength: [1, 255]
             },

@@ -11,8 +11,8 @@ if (Form::getData('position.id')) {
     <div class="form-group">
         <label for="position-name{{ $suffixId }}" class="form-label required">{{ trans('team::view.Position name') }} <em>*</em></label>
         <div class="form-data">
-        <input type="text" class="form-control" id="position-name{{ $suffixId }}" name="position[name]" 
-            value="{{ Form::getData('position.name') }}" required />
+        <input type="text" class="form-control" id="position-name{{ $suffixId }}" name="position[role]" 
+            value="{{ Form::getData('position.role') }}" required />
         </div>
     </div>
     <div class="clearfix"></div>

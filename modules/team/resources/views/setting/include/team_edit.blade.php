@@ -27,12 +27,12 @@ if (Form::getData('id')) {
             </div>
             <div class="form-data team-group-function" data-id="group-{{ Form::getData('id') }}">
                 <p>
-                    <input type="radio" name="permission_same" id="permission-type-new{{ $suffixId }}" value="0"<?php if (! $permissionAs): ?> checked<?php endif; ?> />
+                    <input type="radio" name="permission_same" id="permission-type-new{{ $suffixId }}" value="0"<?php if (!isset($permissionAs) || ! $permissionAs): ?> checked<?php endif; ?> />
                     <label for="permission-type-new{{ $suffixId }}">{{ trans('team::view.New') }}</label>
                 </p>
                 <div class="row">
                     <p class="col-md-5">
-                        <input type="radio" name="permission_same" id="permission-type-same{{ $suffixId }}" value="1"<?php if ($permissionAs): ?> checked<?php endif; ?> />
+                        <input type="radio" name="permission_same" id="permission-type-same{{ $suffixId }}" value="1"<?php if (isset($permissionAs) && $permissionAs): ?> checked<?php endif; ?> />
                         <label for="permission-type-same{{ $suffixId }}">{{ trans('team::view.Permission following function unit') }}</label>&nbsp;&nbsp;&nbsp;
                     </p>
                     <p class="col-md-7">

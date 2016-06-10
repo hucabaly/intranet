@@ -10,8 +10,8 @@ class Roles extends CoreModel
     /**
      * flag postion, role
      */
-    const FLAG_ROLE = 0;
-    const FLAG_POSITION = 1;
+    const FLAG_ROLE = 0; //role another
+    const FLAG_POSITION = 1; //role position of team
 
     protected $table = 'roles';
     
@@ -106,5 +106,64 @@ class Roles extends CoreModel
             throw $ex;
         }
         return true;
+    }
+    
+    /**
+     * move position roles
+     * 
+     * @param boolean $up
+     */
+    public function move($up = true)
+    {
+        $siblings = self::select('id', 'sort_order')
+            ->where('special_flg', self::FLAG_POSITION)
+            ->orderBy('sort_order')
+            ->get();
+        if (count($siblings) < 2) {
+            return true;
+        }
+        $dataOrder = $siblings->toArray();
+        $countDataOrder = count($dataOrder);
+        if ($up) {
+            if ($dataOrder[0]['id'] == $this->id) { //item move up is first
+                return true;
+            }
+            for ($i = 1; $i < $countDataOrder; $i++) {
+                $dataOrder[$i]['sort_order'] = $i;
+                if ($dataOrder[$i]['id'] == $this->id) {
+                    $dataOrder[$i]['sort_order'] = $i - 1;
+                    $dataOrder[$i - 1]['sort_order'] = $i;
+                    break;
+                }
+            }
+        } else {
+            if ($dataOrder[count($dataOrder) - 1]['id'] == $this->id) { //item move down is last
+                return true;
+            }
+            for ($i = 0; $i < $countDataOrder - 1; $i++) {
+                $dataOrder[$i]['sort_order'] = $i;
+                if ($dataOrder[$i]['id'] == $this->id) {
+                    $dataOrder[$i]['sort_order'] = $i + 1;
+                    $dataOrder[$i + 1]['sort_order'] = $i;
+                    $flagIndexToCurrent = true;
+                    $i++;
+                    break;
+                }
+            }
+        }
+        DB::beginTransaction();
+        try {
+            foreach ($dataOrder as $data) {
+                DB::table($this->table)
+                    ->where('id', $data['id'])
+                    ->update([
+                        'sort_order' => $data['sort_order']
+                    ]);
+            }
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            throw $ex;
+        }
     }
 }
