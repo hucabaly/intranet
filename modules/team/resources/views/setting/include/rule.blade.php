@@ -2,7 +2,6 @@
 
 use Rikkei\Team\View\Acl;
 use Rikkei\Core\View\Form;
-use Rikkei\Team\Model\TeamRule;
 
 $acl = Acl::getAclData();
 $i = 0;

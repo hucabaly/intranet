@@ -81,12 +81,14 @@ class TeamController extends TeamBaseController
             return redirect()->route('team::setting.team.index')
                 ->withErrors($validator);
         }
+        if ($dataItem['parent_id']) {
+            $parentId = $dataItem['parent_id'];
+        } else {
+            unset($dataItem['parent_id']);
+        }
         //calculate position
         if (! $model->id) { //team new
             $parentId = 0;
-            if ($dataItem['parent_id']) {
-                $parentId = $dataItem['parent_id'];
-            }
             $teamSameParent = Team::select('id', 'sort_order')
                     ->where('parent_id', $parentId)
                     ->orderBy('sort_order', 'desc')

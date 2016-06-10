@@ -189,7 +189,8 @@ Team Setting
             </div>
         </div>
     </div> <!-- end role manage -->
-    <?php /*
+    
+    <!-- rule permission -->
     <div class="col-sm-12 team-rule-wrapper">
         <div class="box box-warning">
             <div class="box-header with-border">
@@ -221,7 +222,7 @@ Team Setting
                     @endif
                 @endif
             </div>
-    </div>*/ ?>
+    </div> <!-- end rule permission -->
 </div>
 
 <!-- modal add/edit team position-->

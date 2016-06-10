@@ -111,8 +111,8 @@ class PositionController extends TeamBaseController
         if (!$id) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
-        $model = Position::find($id);
-        if (!$model) {
+        $model = Roles::find($id);
+        if (! $model || ! $model->isPosition()) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         try {

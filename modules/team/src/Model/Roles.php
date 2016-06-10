@@ -4,9 +4,13 @@ namespace Rikkei\Team\Model;
 use Rikkei\Core\Model\CoreModel;
 use Rikkei\Team\View\Config;
 use DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Roles extends CoreModel
 {
+    
+    use SoftDeletes;
+    
     /**
      * flag postion, role
      */
@@ -69,6 +73,7 @@ class Roles extends CoreModel
      */
     public function delete()
     {
+        return parent::delete();
         DB::beginTransaction();
         try {
             EmployeeRole::where('role_id', $this->id)->delete();
@@ -165,5 +170,31 @@ class Roles extends CoreModel
             DB::rollback();
             throw $ex;
         }
+    }
+    
+    /**
+     * check role item is position team
+     * 
+     * @return boolean
+     */
+    public function isPosition()
+    {
+        if ($this->special_flg == self::FLAG_POSITION) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * check role item is role speical
+     * 
+     * @return boolean
+     */
+    public function isRole()
+    {
+        if ($this->special_flg == self::FLAG_ROLE) {
+            return true;
+        }
+        return false;
     }
 }

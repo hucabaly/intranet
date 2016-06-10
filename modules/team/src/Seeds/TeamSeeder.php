@@ -14,24 +14,25 @@ class TeamSeeder extends Seeder
      */
     public function run()
     {
-        if (DB::table('team')->where('name', 'BOD')->where('parent_id', 0)->get()) {
+        $bodTeam = Team::where('name', 'BOD')->where('parent_id', null)->first();
+        if ($bodTeam) {
             return;
         }
         $dataDemo = [
             [
                 'name' => 'BOD',
                 'is_function' => '0',
-                'permission_as' => '0',
+                'follow_team_id' => '0',
                 'child' => [
                     [
                         'name' => 'Rikkei - Hanoi',
                         'is_function' => '0',
-                        'permission_as' => '0',
+                        'follow_team_id' => '0',
                         'child' => [
                             [
                                 'name' => 'PTPM',
                                 'is_function' => '1',
-                                'permission_as' => '0',
+                                'follow_team_id' => '0',
                                 'flag_permission_children' => 1,
                                 'child' => [
                                     [
@@ -69,28 +70,28 @@ class TeamSeeder extends Seeder
                             [
                                 'name' => 'Nhân sự',
                                 'is_function' => '1',
-                                'permission_as' => '0',
+                                'follow_team_id' => '0',
                             ],
                             [
                                 'name' => 'HC - TH',
                                 'is_function' => '1',
-                                'permission_as' => '0',
+                                'follow_team_id' => '0',
                             ],
                             [
                                 'name' => 'Sales',
                                 'is_function' => '1',
-                                'permission_as' => '0',
+                                'follow_team_id' => '0',
                             ],
                         ]
                     ], // end rikkei hanoi
                     [
                         'name' => 'Rikkei - Danang',
                         'is_function' => '0',
-                        'permission_as' => '0',
+                        'follow_team_id' => '0',
                     ],
                     [
                         'name' => 'Rikkei - Jappan',
-                        'permission_as' => '0',
+                        'follow_team_id' => '0',
                         'is_function' => '0',
                     ],
                 ]
@@ -98,7 +99,7 @@ class TeamSeeder extends Seeder
         ];
         DB::beginTransaction();
         try {
-            $this->createTeamRecursive($dataDemo, 0, 0);
+            $this->createTeamRecursive($dataDemo, null, 0);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
@@ -124,10 +125,10 @@ class TeamSeeder extends Seeder
             }
             $itemDataAddtional = [
                 'parent_id' => $parentId,
-                'position' => $key + 1
+                'sort_order' => $key + 1
             ];
-            if (! isset($item['permission_as'])) {
-                $itemDataAddtional['permission_as'] = $permissionAsId;
+            if (! isset($item['follow_team_id'])) {
+                $itemDataAddtional['follow_team_id'] = $permissionAsId;
             }
             if (isset($item['flag_permission_children']) && $item['flag_permission_children']) {
                 $permissionAsId = true;
