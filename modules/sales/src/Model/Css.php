@@ -262,7 +262,7 @@ class Css extends Model
     /**
      * Get css result by user_id
      * @param string $pmName
-     * @param string $teamId
+     * @param string $teamIds
      * @param date $startDate
      * @param date $endDate 
      * @param string $projectTypeIds
@@ -282,6 +282,28 @@ class Css extends Model
     }
     
     /**
+     * Get css result by user_id
+     * @param string $questionId
+     * @param string $teamIds
+     * @param date $startDate
+     * @param date $endDate 
+     * @param string $projectTypeIds
+     * @return object
+     */
+    public static function getCssResultByQuestionToChart($questionId,$teamIds,$startDate, $endDate, $projectTypeIds){
+        $sql = 'select * from css_result '
+                . 'where created_at >= "'.$startDate.'" '
+                . 'and created_at <= "'.$endDate.'" '
+                . 'and css_id In (SELECT id from css where project_type_id IN ('.$projectTypeIds.'))'
+                . 'and css_id In (SELECT css_id from css_team where team_id IN ('.$teamIds.')) '
+                . 'and id IN (SELECT css_id from css_result_detail WHERE question_id = "'.$questionId.'") '
+                . 'order by created_at asc';
+        
+        $result = DB::select($sql);  
+        return $result;
+    }
+    
+    /**
      * lay danh sach cau hoi duoi 3 sao
      * @param string $cssResultIds
      * return object
@@ -294,6 +316,22 @@ class Css extends Model
     }
     
     /**
+     * lay danh sach cau hoi duoi 3 sao
+     * @param int $questionId
+     * @param string $cssResultIds
+     * @param int $offset
+     * @param int $perPage
+     * return object
+     */
+    public static function getListLessThreeStarByQuestionId($questionId,$cssResultIds,$offset,$perPage){
+        $result = DB::select('select * from css_result_detail '
+                . 'where css_id IN ('.$cssResultIds.') and point between 1 and 2 '
+                    . 'and question_id = ' . $questionId . ' '
+                . 'limit ' . $offset . ',' . $perPage );
+        return $result;
+    }
+    
+    /**
      * Get count less 3* list
      * @param string $cssResultIds
      * return int
@@ -301,6 +339,18 @@ class Css extends Model
     public static function getCountListLessThreeStar($cssResultIds){
         $result = DB::select('select * from css_result_detail '
                 . 'where css_id IN ('.$cssResultIds.') and point between 1 and 2 ' );
+        return count($result);
+    }
+    
+    /**
+     * Get count less 3* list by question
+     * @param int $questionId
+     * @param string $cssResultIds
+     * return int
+     */
+    public static function getCountListLessThreeStarByQuestion($questionId,$cssResultIds){
+        $result = DB::select('select * from css_result_detail '
+                . 'where css_id IN ('.$cssResultIds.') and point between 1 and 2 and question_id = ' .  $questionId);
         return count($result);
     }
     
@@ -334,12 +384,38 @@ class Css extends Model
     }
     
     /**
+     * get proposes list by question
+     * @param int $questionId
+     * @param string $cssResultIds
+     * @return object list
+     */
+    public static function getProposesByQuestion($questionId,$cssResultIds,$offset,$perPage){
+        $cssResult = DB::select("Select * from css_result "
+                . "where id in ($cssResultIds) "
+                    . "and survey_comment <> '' "
+                    . "and id in (Select css_id from css_result_detail where point between 1 and 2 and question_id = ".$questionId.")"
+                . "limit " . $offset . "," . $perPage );
+        return $cssResult;
+    }
+    
+    /**
      * get count Proposes
      * @param string $cssResultIds
      * @return int
      */
     public static function getCountProposes($cssResultIds){
         $cssResult = DB::select("Select * from css_result where id in ($cssResultIds) and survey_comment <> ''");
+        return count($cssResult);
+    }
+    
+    /**
+     * get count Proposes
+     * @param int $questionId
+     * @param string $cssResultIds
+     * @return int
+     */
+    public static function getCountProposesByQuestion($questionId,$cssResultIds){
+        $cssResult = DB::select("Select * from css_result where id in ($cssResultIds) and survey_comment <> '' and id in (Select css_id from css_result_detail where point between 1 and 2 and question_id = ".$questionId.")");
         return count($cssResult);
     }
     
@@ -433,7 +509,7 @@ class Css extends Model
                     . 'and created_at <= "'.$endDate.'" '
                     . 'and css_id IN (SELECT id from css where project_type_id In ('.$projectTypeIds.')) '
                     . 'and css_id IN (SELECT css_id from css_team where team_id IN ('.$teamIds.')) '
-                    . 'and css_id IN (SELECT id from css WHERE pm_name = IN ('.$str.')) '
+                    . 'and css_id IN (SELECT id from css WHERE pm_name IN ('.$str.')) '
                     . 'order by created_at asc '
                     . 'limit ' . $offset . ',' . $perPage ;
             
@@ -579,6 +655,50 @@ class Css extends Model
     }
     
     /**
+     * Get list css by list question, list team id, start date, end date and list project type id
+     * @param string $questionIds
+     * @param string $projectTypeIds
+     * @param date $startDate
+     * @param date $endDate 
+     * @param string $teamIds
+     * @return object list
+     */
+    public static function getCssResultByListQuestion($questionIds,$projectTypeIds,$startDate, $endDate, $teamIds){
+        $sql = 'select * from css_result '
+                . 'where created_at >= "'.$startDate.'" '
+                    . 'and created_at <= "'.$endDate.'" '
+                    . 'and css_id In (SELECT id from css where project_type_id In ('.$projectTypeIds.')) '
+                    . 'and css_id In (SELECT css_id from css_team where team_id IN ('.$teamIds.')) '
+                    . 'and id IN (SELECT css_id from css_result_detail where question_id IN ('.$questionIds.')) '
+                    . 'order by created_at asc';
+        
+        return DB::select($sql);
+    }
+    
+    /**
+     * Get list css by list question, list team id, start date, end date and list project type id
+     * @param string $questionIds
+     * @param string $projectTypeIds
+     * @param date $startDate
+     * @param date $endDate 
+     * @param string $teamIds
+     * @return object list
+     */
+    public static function getCssResultPaginateByListQuestion($questionIds,$projectTypeIds,$startDate, $endDate, $teamIds,$offset,$perPage){
+        $sql = 'select * from css_result '
+                . 'where created_at >= "'.$startDate.'" '
+                    . 'and created_at <= "'.$endDate.'" '
+                    . 'and css_id In (SELECT id from css where project_type_id In ('.$projectTypeIds.')) '
+                    . 'and css_id In (SELECT css_id from css_team where team_id IN ('.$teamIds.')) '
+                    . 'and id IN (SELECT css_id from css_result_detail where question_id IN ('.$questionIds.')) '
+                    . 'order by created_at asc '
+                    . 'limit ' . $offset . ',' . $perPage ;
+        
+        return DB::select($sql);
+    }
+    
+    
+    /**
      * Get list css by list customer name, list team id, start date, end date and list project type id
      * @param string $listCustomerName
      * @param string $projectTypeIds
@@ -608,4 +728,21 @@ class Css extends Model
                     . 'limit ' . $offset . ',' . $perPage ;
         return DB::select($sql);
     }
+    
+    public static function getCssResultByQuestion($questionId,$startDate,$endDate,$teamIds){
+        $sql = "select * from css_result "
+                . "where id IN (select css_id from css_result_detail where question_id = $questionId) "
+                    . "AND css_id IN (select css_id from css_team where team_id IN ($teamIds)) "
+                    . "AND created_at >= '$startDate'" 
+                    . "and created_at <= '$endDate.'";
+        return DB::select($sql);
+    }
+    
+    /**
+     * @param int $projectTypeIds
+     */
+    public static function getCategoryByProjectType($projectTypeId){
+        return DB::table("css_category")->where('id',$projectTypeId)->first();
+    }
+    
 }

@@ -216,6 +216,8 @@ return [
                     'sales::css.showAnalyzeListProject',
                     'sales::css.getListLessThreeStar',
                     'sales::css.getProposes',
+                    'sales::css.getListLessThreeStarByQuestion',
+                    'sales::css.getProposesByQuestion',
                 ]
             ],
         ]
