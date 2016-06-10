@@ -31,6 +31,8 @@ edit file `config.menu.php`, format file:
         ]
     ];
 
+Then, run `php artisan db:seed` to update menu
+
 #### Add domain allow logged
 edit file `config.domain_logged.php`
 
