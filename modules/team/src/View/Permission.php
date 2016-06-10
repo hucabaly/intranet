@@ -1,11 +1,11 @@
 <?php
 namespace Rikkei\Team\View;
 
-use Rikkei\Team\Model\User;
 use Auth;
 use Rikkei\Team\Model\TeamRule;
 use Route;
 use Config;
+use Rikkei\Core\Model\User;
 
 /**
  * class permission
@@ -24,19 +24,19 @@ class Permission
      * store user current logged
      * @var model
      */
-    protected static $user;
+    protected $employee;
     /**
      * store rules of current user
      * @var array
      */
-    protected static $rules;
+    protected $rules;
     
     /**
      * contructor
      */
     public function __construct() 
     {
-        $this->initUser();
+        $this->initEmployee();
         $this->initRules();
     }
 
@@ -45,11 +45,10 @@ class Permission
      * 
      * @return \Rikkei\Team\View\Permission
      */
-    public function initUser()
+    public function initEmployee()
     {
-        if (! self::$user) {
-            $id = Auth::user()->id;
-            self::$user = User::find($id);
+        if (! $this->employee) {
+            $this->employee = Auth::user()->getEmployee();
         }
         return $this;
     }
@@ -61,6 +60,7 @@ class Permission
      */
     public function initRules()
     {
+        return $this;
         if (! self::$rules) {
             self::$rules = self::$user->getAcl();
             if (! self::$rules) {
@@ -79,6 +79,7 @@ class Permission
      */
     public function getScopeCurrentOfTeam($teamId = null, $route = null)
     {
+        return $this;
         if (! $route) {
             $routeCurrent = Route::getCurrentRoute()->getName();
         } else {
@@ -122,6 +123,7 @@ class Permission
      */
     public function getScopeCurrentOfRole($route = null)
     {
+        return $this;
         if (! $route) {
             $routeCurrent = Route::getCurrentRoute()->getName();
         } else {
@@ -306,7 +308,7 @@ class Permission
      */
     public function isRoot()
     {
-        if ($this->getRootAccount() == self::$user->email) {
+        if ($this->getRootAccount() == $this->employee->email) {
             return true;
         }
         return false;

@@ -3,6 +3,9 @@
 namespace Rikkei\Core\Model;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Rikkei\Team\Model\Employees;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class User extends CoreModel implements Authenticatable
 {
@@ -33,6 +36,8 @@ class User extends CoreModel implements Authenticatable
     protected $hidden = [
         'token',
     ];
+    
+    protected static $employee;
 
     /**
      * Get the name of the unique identifier for the user.
@@ -93,5 +98,50 @@ class User extends CoreModel implements Authenticatable
     public function getRememberTokenName()
     {
         return 'token';
+    }
+    
+    /**
+     * get Employee
+     * 
+     * @return model
+     */
+    public function getEmployee()
+    {
+        return Employees::where('email', $this->email)
+                ->first();
+    }
+    
+    /**
+     * get employee of user logged
+     * 
+     * @return model
+     */
+    public static function getEmployeeLogged()
+    {
+        if (! self::$employee) {
+            self::$employee = Employees::where('email', Auth::user()->email)
+                ->first();
+        }
+        return self::$employee;
+    }
+    
+    /**
+     * get avatar of user logged
+     * 
+     * @return string
+     */
+    public static function getAvatar()
+    {
+        return Session::get(self::AVATAR);
+    }
+    
+    /**
+     * get nickname of user logged
+     * 
+     * @return string
+     */
+    public static function getNickName()
+    {
+        return self::getEmployeeLogged()->nickname;
     }
 }

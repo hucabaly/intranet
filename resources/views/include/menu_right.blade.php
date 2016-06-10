@@ -1,3 +1,9 @@
+<?php
+
+use Rikkei\Core\Model\User;
+use Rikkei\Team\View\Permission;
+?>
+
 <!-- Navbar Right Menu -->
 @if(Auth::user())
 <div class="navbar-custom-menu">
@@ -5,12 +11,12 @@
         <!-- User Account Menu -->
         <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                @if(Auth::user()->avatar)
-                    <img src="{{ Auth::user()->avatar }}" class="user-image" alt="User Image">
+                @if(User::getAvatar())
+                    <img src="{{ User::getAvatar() }}" class="user-image" alt="User Image">
                 @else
                     <i class="fa fa-user"></i>
                 @endif
-                <span class="hidden-xs">{{ Auth::user()->nickname }}</span>
+                <span class="hidden-xs">{{ User::getNickName() }}</span>
             </a>
             <ul class="dropdown-menu">
                 <!-- User image -->
@@ -30,7 +36,7 @@
                 </li>
             </ul>
         </li>
-        @if (\Rikkei\Team\View\Permission::getInstance()->isAllow('team::setting.team.index'))
+        @if (Permission::getInstance()->isAllow('team::setting.team.index'))
             <li class="setting">
                 <a href="{{ URL::route('team::setting.team.index') }}">
                     <i class="fa fa-gears"></i>
