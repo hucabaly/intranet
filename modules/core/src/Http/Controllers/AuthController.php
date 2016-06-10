@@ -80,15 +80,18 @@ class AuthController extends Controller
                 return redirect('/')->withErrors($ex);
             }
         }
+        $employeeId = $employee->id;
         if (! $account) {
             try {
                 $account = User::create([
                     'email' => $user->email,
                     'name' => $user->name,
                     'token' => $user->token,
-                    'employee_id' => $employee->id,
+                    'employee_id' => $employeeId,
                     'google_id' => $user->id,
                 ]);
+                $account->employee_id = $employeeId;
+                $account->save();
             } catch (Exception $ex) {
                 return redirect('/')->withErrors($ex);
             }
@@ -100,7 +103,7 @@ class AuthController extends Controller
                 'google_id' => $user->id,
             ]);
             if (! $account->employee_id) {
-                $account->employee_id = $employee->id;
+                $account->employee_id = $employeeId;
             }
             $account->save();
         }
@@ -120,8 +123,12 @@ class AuthController extends Controller
         }
         $user = Auth::user();
         if ($user) {
-            $user->token = '';
-            $user->save();
+            try {
+                $user->token = '';
+                $user->save();
+            } catch (Exception $ex) {
+                return redirect('/')->withErrors($ex);
+            }
         }
         Auth::logout();
         Session::flush();
@@ -167,9 +174,7 @@ class AuthController extends Controller
      */
     protected function storeSessionInformationAccount($user)
     {
-        $nickName = !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email);
-        Session::push('account.logged.avatar', $user->avatar);
-        Session::push('account.logged.nickname', $nickName);
+        Session::put(User::AVATAR, $user->avatar);
         return $this;
     }
 }

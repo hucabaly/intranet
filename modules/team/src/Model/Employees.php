@@ -33,7 +33,10 @@ class Employees extends CoreModel
         'id_card_number',
         'id_card_place',
         'id_cart_date',
-        'recruiment_apply_id',
+        'recruitment_apply_id',
+        'employee_code',
+        'personal_email',
+        'state'
     ];
     
     /**

@@ -7,6 +7,10 @@ use Illuminate\Contracts\Auth\Authenticatable;
 class User extends CoreModel implements Authenticatable
 {
     /**
+     * const avatar key store session
+     */
+    const AVATAR = 'account.logged.avatar';
+    /**
      * primary key
      * @var string
      */
