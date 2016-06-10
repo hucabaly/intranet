@@ -15,7 +15,7 @@ use Session;
 
 class CssController extends Controller {
 
-    static $perPage = 2;
+    static $perPage = 5;
     /**
      * Hàm hiển thị form tạo CSS
      */
@@ -316,7 +316,7 @@ class CssController extends Controller {
             /* get count css result by cssId */
             $item->countCss = DB::table('css_result')->where("css_id",$item->id)->count();
         }
-        //echo "<pre>";        var_dump($css);die;
+        
         return view(
             'sales::css.list', [
                 'css' => $css,
@@ -523,6 +523,9 @@ class CssController extends Controller {
             case 'tcSale':
                 $data = self::applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,'sale');
                 break;
+            case 'tcQuestion':
+                $data = self::applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,'question');
+                break;
         }
         
         return response()->json($data);
@@ -551,6 +554,8 @@ class CssController extends Controller {
             $cssResult = Css::getCssResultByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'sale'){
             $cssResult = Css::getCssResultByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+        }else if($criteria == 'question'){
+            $cssResult = Css::getCssResultByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }
         
         //$pointToHighchart -> luu diem hien thi tren bieu do all result
@@ -580,6 +585,17 @@ class CssController extends Controller {
         //Get data fill to table customer's proposes
         $proposes = self::getProposes(implode(",", $cssResultIds),1);
         
+        $htmlQuestionList = "<option value='0'>".Lang::get('sales::view.Please choose question')."</option>";
+        if($criteria == 'question'){
+            $arrProjectType = explode(",", $projectTypeIds);
+            foreach($arrProjectType as $k=>$projectTypeId){
+                $projectType = ProjectType::find($projectTypeId);
+                $htmlQuestionList .= "<option class=\"parent\" disabled=\"disabled\">$projectType->name</option>";
+                $htmlQuestionList .= self::getHtmlQuestionList($projectTypeId,$startDate,$endDate,$teamIds,$criteriaIds,implode(",", $cssResultIds));
+            }
+            
+        }
+        
         $data = [
             "cssResult" => $cssResult,
             "cssResultPaginate" => $cssResultPaginate,
@@ -588,6 +604,7 @@ class CssController extends Controller {
             "pointCompareChart" => $pointCompareChart,
             "lessThreeStar" =>$lessThreeStar,
             "proposes" => $proposes,
+            "htmlQuestionList" => $htmlQuestionList,
         ];
         return $data;
     }
@@ -626,8 +643,11 @@ class CssController extends Controller {
         }else if($criteria == 'sale'){
             $cssResult = Css::getCssResultByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
             $cssResultPaginate = Css::getCssResultPaginateByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+        }else if($criteria == 'question'){
+            $cssResult = Css::getCssResultByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = Css::getCssResultPaginateByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
         }
-        //echo "<pre>"; var_dump($cssResultPaginate);die;
+        
         foreach($cssResultPaginate as &$itemResultPaginate){
             $css = DB::table("css")->where("id",$itemResultPaginate->css_id)->first();
             
@@ -688,6 +708,7 @@ class CssController extends Controller {
     protected function getListLessThreeStar($cssResultIds,$curPage){
         $offset = ($curPage-1) * self::$perPage;
         $lessThreeStar = Css::getListLessThreeStar($cssResultIds,$offset,self::$perPage);
+        
         $result = [];
         foreach($lessThreeStar as $item){
             $cssResult = Css::getCssResultById($item->css_id);
@@ -741,6 +762,7 @@ class CssController extends Controller {
     /**
      * get customer's proposes
      * @param array $cssResultIds
+     * @param int $curPage
      */
     protected function getProposes($cssResultIds,$curPage){
         $offset = ($curPage-1) * self::$perPage;
@@ -788,7 +810,6 @@ class CssController extends Controller {
         return $data;
     }
     
-    
     /**
      * Get data fill to compare charts in analyze page
      * @param string $criteriaIds
@@ -824,12 +845,31 @@ class CssController extends Controller {
             }else if($criteria == 'sale'){
                 $name = $criteriaId;
                 $cssResultByCriteria = Css::getCssResultBySale($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+            }else if($criteria == 'question'){
+                $question = Css::getQuestionById($criteriaId);
+                $name = $question->content;
+                $cssResultByCriteria = Css::getCssResultByQuestionToChart($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }
             
             $pointToHighchartByProjectType = [];
-            $pointToHighchartByProjectType["name"] = $name;
-            foreach($cssResultByCriteria as $item){
-                $pointToHighchartByProjectType["data"][] = (float)self::getPointCssResult($item->id);
+            
+            $pointToHighchartByProjectType["data"] = [];
+            if($criteria == 'question'){
+                $pointToHighchartByProjectType["name"] = '';
+                foreach($cssResultByCriteria as $itemCssResult){
+                    $css_result_detail = DB::table('css_result_detail')
+                        ->where("css_id",$itemCssResult->id)
+                        ->where("question_id",$criteriaId)
+                        ->first();
+                    if($css_result_detail->point > 0){
+                        $pointToHighchartByProjectType["data"][] = $css_result_detail->point;
+                    }
+                }
+            }else{
+                $pointToHighchartByProjectType["name"] = $name;
+                foreach($cssResultByCriteria as $item){
+                    $pointToHighchartByProjectType["data"][] = (float)self::getPointCssResult($item->id);
+                }
             }
             $pointCompareChart[] = [
                 "name" => $pointToHighchartByProjectType["name"],
@@ -859,6 +899,7 @@ class CssController extends Controller {
         $result["brse"] = self::filterAnalyzeByPmOrBrseOrCustomerOrSale($startDate, $endDate, $projectTypeIds,$teamIds,'brse');
         $result["customer"] = self::filterAnalyzeByPmOrBrseOrCustomerOrSale($startDate, $endDate, $projectTypeIds,$teamIds,'customer');        
         $result["sale"] = self::filterAnalyzeByPmOrBrseOrCustomerOrSale($startDate, $endDate, $projectTypeIds,$teamIds,'sale');        
+        $result["question"] = self::filterAnalyzeByQuestion($startDate, $endDate, $projectTypeIds,$teamIds);        
         
         return response()->view('sales::css.include.table_theotieuchi', $result);
     }
@@ -933,6 +974,22 @@ class CssController extends Controller {
         return $result;
     }
     
+    protected function filterAnalyzeByQuestion($startDate, $endDate, $projectTypeIds,$teamIds){
+        $arrProjectTypeId = explode(",", $projectTypeIds);
+        $cssCateList = array();
+        foreach($arrProjectTypeId as $key => $projectTypeId){
+            $cssCate = self::getListQuestionByProjectType($projectTypeId,$startDate,$endDate,$teamIds);
+            $projectType = ProjectType::find($projectTypeId);
+            $cssCateList[] = [
+                "id"    => $projectTypeId,
+                "name"   => $projectType->name,
+                "cssCate" => $cssCate
+            ]; 
+        }
+        
+        return $cssCateList;
+    }
+
     /**
      * Show data filter by team
      * @param string $startDate
@@ -1186,5 +1243,240 @@ class CssController extends Controller {
             $html .= '</li>';
         }
         return $html;
+    }
+    
+    /**
+     * get questions list
+     * @param int $projectTypeId
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $teamIds
+     * @return type
+     */
+    protected function getListQuestionByProjectType($projectTypeId,$startDate,$endDate,$teamIds){
+        $cssCategory = DB::table('css_category')->where('parent_id', $projectTypeId)->get();
+        $cssCate = array();
+        if ($cssCategory) {
+            foreach ($cssCategory as $item) {
+                $cssCategoryChild = DB::table('css_category')->where('parent_id', $item->id)->get();
+                $cssCateChild = array();
+                if ($cssCategoryChild) {
+                    foreach ($cssCategoryChild as $item_child) {
+
+                        $cssQuestionChild = DB::table('css_question')->where('category_id', $item_child->id)->get();
+                        foreach($cssQuestionChild as &$itemQuestionChild){
+                            $css_result = Css::getCssResultByQuestion($itemQuestionChild->id,$startDate, $endDate,$teamIds);
+                            if(count($css_result) > 0){
+                                $countCss = count($css_result);
+                                $points = array();
+                                foreach($css_result as $itemCssResult){
+                                    $css_result_detail = DB::table('css_result_detail')
+                                        ->where("css_id",$itemCssResult->id)
+                                        ->where("question_id",$itemQuestionChild->id)
+                                        ->first();
+                                    if($css_result_detail->point > 0){
+                                        $points[] = $css_result_detail->point;
+                                    }
+
+                                }
+                                $itemQuestionChild->countCss = $countCss;
+                                $itemQuestionChild->maxPoint = (count($points) > 0) ? self::formatNumber(max($points)) : "-";
+                                $itemQuestionChild->minPoint = (count($points) > 0) ? self::formatNumber(min($points)) : "-";
+                                if(count($points) > 0){
+                                    $avgPoint = array_sum($points) / count($points);
+                                    $itemQuestionChild->avgPoint = self::formatNumber($avgPoint);
+                                }else{
+                                    $itemQuestionChild->avgPoint = "-";
+                                }
+                            }
+
+                        }
+
+                        $cssCateChild[] = array(
+                            "id" => $item_child->id,
+                            "name" => $item_child->name,
+                            "parentId" => $item->id,
+                            "questionsChild" => $cssQuestionChild,
+                        );
+                    }
+                }
+
+                $cssQuestion = DB::table('css_question')->where('category_id', $item->id)->get();
+                foreach($cssQuestion as &$itemQuestion){
+                    $css_result = Css::getCssResultByQuestion($itemQuestion->id,$startDate, $endDate,$teamIds);
+                    if(count($css_result) > 0){
+                        $countCss = count($css_result);
+                        $points = array();
+                        foreach($css_result as $itemCssResult){
+                            $css_result_detail = DB::table('css_result_detail')
+                                ->where("css_id",$itemCssResult->id)
+                                ->where("question_id",$itemQuestion->id)
+                                ->first();
+                            if($css_result_detail->point > 0){
+                                $points[] = $css_result_detail->point;
+                            }
+                        }
+                        //echo count($points);die;
+                        $itemQuestion->countCss = $countCss;
+                        $itemQuestion->maxPoint = (count($points) > 0) ? self::formatNumber(max($points)) : "-";
+                        $itemQuestion->minPoint = (count($points) > 0) ? self::formatNumber(min($points)) : "-";
+                        if(count($points) > 0){
+                            $avgPoint = array_sum($points) / count($points);
+                            $itemQuestion->avgPoint = self::formatNumber($avgPoint);
+                        }else{
+                            $itemQuestion->avgPoint = "-";
+                        }
+
+                    }
+                }
+                $cssCate[] = array(
+                    "id" => $item->id,
+                    "name" => $item->name,
+                    "parentId" => $item->parent_id,
+                    "cssCateChild" => $cssCateChild,
+                    "questions" => $cssQuestion,
+                );
+            }
+
+        }
+        
+        return $cssCate;
+    }
+    
+    protected function getHtmlQuestionList($projectTypeId,$startDate,$endDate,$teamIds,$questionIds,$cssResultIds){
+        $arrQuestionId = explode(",", $questionIds); 
+        $cssCate = self::getListQuestionByProjectType($projectTypeId,$startDate,$endDate,$teamIds);
+        $html = "";
+        foreach($cssCate as $itemCate){
+            $html .= "<option class=\"parent\" disabled=\"disabled\">-- ".$itemCate["name"]."</option>";
+            foreach($itemCate["cssCateChild"] as $itemCateChild){
+                $html .= "<option class=\"parent\" disabled=\"disabled\">---- ".$itemCateChild["name"]."</option>";
+                foreach($itemCateChild["questionsChild"] as $itemQuestionChild){
+                    if(in_array($itemQuestionChild->id, $arrQuestionId)){
+                        $html .= '<option value="'.$itemQuestionChild->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'" >------ '.$itemQuestionChild->content.'</option>';
+                    }
+                }
+            }
+            foreach($itemCate["questions"] as $itemQuestion){
+                if(in_array($itemQuestion->id, $arrQuestionId)){
+                    $html .= '<option value="'.$itemQuestion->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'">------ '.$itemQuestion->content.'</option>';
+                }
+            }
+        }
+        
+        return $html;
+    }
+    
+    /**
+     * Get list less three star by cssResultIds and questionId
+     * @param int $questionId
+     * @param array $cssResultIds
+     * @param int $curPage
+     */
+    protected function getListLessThreeStarByQuestion($questionId,$cssResultIds,$curPage){
+        $offset = ($curPage-1) * self::$perPage;
+        $lessThreeStar = Css::getListLessThreeStarByQuestionId($questionId,$cssResultIds,$offset,self::$perPage);
+        
+        $result = [];
+        foreach($lessThreeStar as $item){
+            $cssResult = Css::getCssResultById($item->css_id);
+            $cssPoint = self::getPointCssResult($item->css_id);
+            $question = Css::getQuestionById($item->question_id);
+            $css = Css::find($cssResult->css_id);
+            
+            $result[] = [
+                "no"   => ++$offset,
+                "projectName"   => $css->project_name,
+                "questionName" => $question->content,
+                "stars" => $item->point,
+                "comment"   => $item->comment,
+                "makeDateCss" => date('d/m/Y',strtotime($cssResult->created_at)),
+                "cssPoint" => $cssPoint,
+            ];
+        }
+        
+        //Get html pagination render
+        $count = Css::getCountListLessThreeStarByQuestion($questionId,$cssResultIds);
+        $totalPage = ceil($count / self::$perPage);
+        $html = "";
+        if($totalPage > 1){
+            if($curPage == 1){
+                $html .= '<li class="disabled"><span>«</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="getListLessThreeStarByQuestion('.$questionId.','.($curPage-1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="back">«</a></li>';
+            }
+            for($i=1; $i<=$totalPage; $i++){
+                if($i == $curPage){
+                    $html .= '<li class="active"><span>'.$i.'</span></li>';
+                }else{
+                    $html .= '<li><a href="javascript:void(0)" onclick="getListLessThreeStarByQuestion('.$questionId.','.$i.',\''.Session::token().'\',\''.$cssResultIds.'\');">'.$i.'</a></li>';
+                }
+            }
+            if($curPage == $totalPage){
+                $html .= '<li class="disabled"><span>»</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="getListLessThreeStarByQuestion('.$questionId.','.($curPage+1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="next">»</a></li>';
+            }
+        }
+        
+        $data = [
+            "cssResultdata" => $result,
+            "paginationRender" => $html,
+        ];
+        
+        return $data;
+    }
+    
+    /**
+     * get customer's proposes
+     * @param int $questionId
+     * @param array $cssResultIds
+     * @param int $curPage
+     */
+    protected function getProposesByQuestion($questionId,$cssResultIds,$curPage){
+        $offset = ($curPage-1) * self::$perPage;
+        $proposes = Css::getProposesByQuestion($questionId,$cssResultIds,$offset,self::$perPage);
+        
+        $result =[];
+        foreach($proposes as $propose){
+            $css = Css::find($propose->css_id);
+            
+            $result[] = [
+                "no"   => ++$offset,
+                "cssPoint"   => self::getPointCssResult($propose->id),
+                "projectName"   => $css->project_name,
+                "customerComment" => $propose->survey_comment,
+                "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),
+            ];
+        }
+        //Get html pagination render
+        $count = Css::getCountProposesByQuestion($questionId,$cssResultIds); 
+        $totalPage = ceil($count / self::$perPage);
+        $html = "";
+        if($totalPage > 1){
+            if($curPage == 1){
+                $html .= '<li class="disabled"><span>«</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.($curPage-1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="back">«</a></li>';
+            }
+            for($i=1; $i<=$totalPage; $i++){
+                if($i == $curPage){
+                    $html .= '<li class="active"><span>'.$i.'</span></li>';
+                }else{
+                    $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.$i.',\''.Session::token().'\',\''.$cssResultIds.'\');">'.$i.'</a></li>';
+                }
+            }
+            if($curPage == $totalPage){
+                $html .= '<li class="disabled"><span>»</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.($curPage+1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="next">»</a></li>';
+            }
+        }
+        
+        $data = [
+            "cssResultdata" => $result,
+            "paginationRender" => $html,
+        ];
+        return $data;
     }
 }

@@ -470,7 +470,7 @@ select option.parent{
   width: 100%;
 }
 .table-fixed tbody {
-  height: 345x;
+  height: 345px;
   overflow-y: auto;
   width: 100%;
 }
@@ -480,4 +480,18 @@ select option.parent{
 .table-fixed tbody td, .table-fixed thead > tr> th {
   float: left;
   border-bottom-width: 0;
+}
+
+.projecttype-title{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.root-category{
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.category{
+    font-weight: bold;
 }
