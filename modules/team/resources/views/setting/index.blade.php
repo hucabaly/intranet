@@ -141,7 +141,7 @@ Team Setting
         </div>
     </div> <!-- end team position manage -->
     
-    <!-- roles manage --> <?php /*
+    <!-- roles manage -->
     <div class="col-md-4 team-position-wrapper hight-same">
         <div class="box box-info">
             <div class="box-header with-border">
@@ -157,7 +157,7 @@ Team Setting
                                 @foreach ($roleAll as $roleItem)
                                 <tr><td>
                                     <a href="{{ URL::route('team::setting.role.view', ['id' => $roleItem->id]) }}"<?php
-                                    if ($roleItem->id == Form::getData('role.id')): ?> class="active"<?php endif; ?>>{{ $roleItem->name }}</a>
+                                    if ($roleItem->id == Form::getData('role.id')): ?> class="active"<?php endif; ?>>{{ $roleItem->role }}</a>
                                 </td></tr>
                                 @endforeach
                             </tbody>
@@ -188,7 +188,7 @@ Team Setting
                 </div>
             </div>
         </div>
-    </div>*/ ?> <!-- end role manage -->
+    </div> <!-- end role manage -->
     <?php /*
     <div class="col-sm-12 team-rule-wrapper">
         <div class="box box-warning">

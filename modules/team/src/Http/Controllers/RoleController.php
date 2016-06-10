@@ -30,13 +30,14 @@ class RoleController extends TeamBaseController
     public function view($id)
     {
         $model = Roles::find($id);
-        if (! $model) {
+        if (! $model || $model->special_flg != Roles::FLAG_ROLE) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         Breadcrumb::add($model->name, URL::route('team::setting.role.view', ['id' => $id]));
         Form::setData($model, 'role');
+        $roleRule = null; //RoleRule::where('role_id', $id)->get()
         return view('team::setting.index', [
-            'roleRule' => RoleRule::where('role_id', $id)->get(),
+            'roleRule' => $roleRule,
         ]);
     }
     
@@ -58,7 +59,7 @@ class RoleController extends TeamBaseController
         }
         
         $validator = Validator::make($dataItem, [
-            'name' => 'required|max:255',
+            'role' => 'required|max:255',
         ]);
         if ($validator->fails()) {
             Form::setData($dataItem);
@@ -70,6 +71,7 @@ class RoleController extends TeamBaseController
             return redirect()->route('team::setting.team.index')->withErrors($validator);
         }
         $model->setData($dataItem);
+        $model->special_flg = Roles::FLAG_ROLE;
         try {
             $result = $model->save();
             if (! $result) {
