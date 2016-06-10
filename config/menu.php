@@ -56,7 +56,7 @@ return [
                 'path' => 'sale/css',
                 'label' => 'CSS',
                 'active' => '1',
-                'action' => 'sales::css.*',
+                'action' => 'sales::css.list*',
                 'child' => [
                     'css.list' => [
                         'path' => 'sales/css/list',

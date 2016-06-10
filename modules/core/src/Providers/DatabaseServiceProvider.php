@@ -14,9 +14,9 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            app_path('/../database') => database_path(),
-        ], 'database');
+//        $this->publishes([
+//            app_path('/../database') => database_path(),
+//        ], 'database');
     }
 
     /**
