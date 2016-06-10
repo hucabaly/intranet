@@ -16,44 +16,6 @@ $("#dateRanger").dateRangeSlider({
 
 });
 
-$(document).ready(function(){
-    
- /** iCheck event theotieuchi la cau hoi */  
-    // Make "Item" checked if checkAll are checked
-    $('.checkItemQuestion').on('ifChecked', function (event) {
-        var parent_id = $(this).attr('data-id');
-        $('.checkItemQuestion[parent-id='+parent_id+']').iCheck('check');
-        triggeredByChild = false;
-    });
-    
-    // Make "Item" unchecked if checkAll are unchecked
-    $('.checkItemQuestion').on('ifUnchecked', function (event) {
-        if (!triggeredByChild) {
-            var parent_id = $(this).attr('data-id');
-            $('.checkItemQuestion[parent-id='+parent_id+']').iCheck('uncheck');
-        }
-        triggeredByChild = true;
-    });
-    
-    // Remove the checked state from "All" if any checkbox is unchecked
-    $('.checkItemQuestion').on('ifUnchecked', function (event) {
-        triggeredByChild = true;
-        var parent_id = $(this).attr('parent-id');
-        $('.checkItemQuestion[data-id='+parent_id+']').iCheck('uncheck');
-    });
-
-    // Make "All" checked if all checkboxes are checked
-    $('.checkItemQuestion').on('ifChecked', function (event) {
-        var parent_id = $(this).attr('parent-id');
-        if ($('.checkItemQuestion[parent-id='+parent_id+']').filter(':checked').length == $('.checkItemQuestion[parent-id='+parent_id+']').length) {
-            $('.checkItemQuestion[data-id='+parent_id+']').iCheck('check');
-        }
-    });
-    
-});
-
-
-
 /**
 * click filter
 */
@@ -145,9 +107,22 @@ function apply(token){
     var classCriteriaCheck = getCriteriaChecked();
     $('input[class='+classCriteriaCheck+']:checked').each(function(){
         if(criteriaIds == ""){
-            criteriaIds = $(this).attr("data-id");
+            if(classCriteriaCheck == "checkQuestionItem"){
+                if($(this).attr("data-questionid")){
+                    criteriaIds = $(this).attr("data-questionid");
+                }
+            }else{
+                criteriaIds = $(this).attr("data-id");
+            }
         } else{
-            criteriaIds += "," + $(this).attr("data-id");
+            if(classCriteriaCheck == "checkQuestionItem"){
+                if($(this).attr("data-questionid")){
+                    criteriaIds += "," + $(this).attr("data-questionid");
+                }
+            }else{
+                criteriaIds += "," + $(this).attr("data-id");
+            }
+            
         }
     });
     
@@ -196,6 +171,13 @@ function apply(token){
         $("#criteriaType_val").val(criteriaType);
         
         $(".ketquaapply").show();
+        if(criteriaType == "tcQuestion"){
+            $(".box-select-question").show();
+            $(".box-select-question #question-choose").html(data["htmlQuestionList"]);
+        }else{
+            $(".box-select-question").hide();
+            $(".box-select-question #question-choose").html('');
+        }
         $('html, body').animate({
             scrollTop: $(".ketquaapply").offset().top
         }, 100);
@@ -237,9 +219,8 @@ function apply(token){
                 valueDecimals: 2
             },
             legend: {
-                layout: 'vertical',
+                layout: 'horizontal',
                 align: 'right',
-                verticalAlign: 'middle',
                 borderWidth: 0
             },
             series: [{
@@ -272,45 +253,52 @@ function apply(token){
                 valueSuffix: ''
             },
             legend: {
-                layout: 'vertical',
+                layout: 'horizontal',
                 align: 'right',
-                verticalAlign: 'middle',
                 borderWidth: 0
             },
             series: data["pointCompareChart"]
         });
         
-        //danh sach cau hoi duoi 3 sao
-        var countResult = data["lessThreeStar"]["cssResultdata"].length; 
-        html = "";
-        for(var i=0; i<countResult; i++){
-            html += "<tr>";
-            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["no"]+"</td>";
-            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["projectName"]+"</td>";
-            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["questionName"]+"</td>";
-            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["stars"]+"</td>";
-            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["comment"]+"</td>";
-            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["makeDateCss"]+"</td>";
-            html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["cssPoint"]+"</td>";
-            html += "</tr>";   
+        if(criteriaType != "tcQuestion"){
+            //danh sach cau hoi duoi 3 sao
+            var countResult = data["lessThreeStar"]["cssResultdata"].length; 
+            html = "";
+            for(var i=0; i<countResult; i++){
+                html += "<tr>";
+                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["no"]+"</td>";
+                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["projectName"]+"</td>";
+                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["questionName"]+"</td>";
+                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["stars"]+"</td>";
+                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["comment"]+"</td>";
+                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["makeDateCss"]+"</td>";
+                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["cssPoint"]+"</td>";
+                html += "</tr>";   
+            }
+            $("#duoi3sao tbody").html(html);
+            $("#duoi3sao").parent().find(".pagination").html(data["lessThreeStar"]["paginationRender"]);
+
+            //danh sach de xuat
+            var countResult = data["proposes"]["cssResultdata"].length; 
+            html = "";
+            for(var i=0; i<countResult; i++){
+                html += "<tr>";
+                html += "<td>"+data["proposes"]["cssResultdata"][i]["no"]+"</td>";
+                html += "<td>"+data["proposes"]["cssResultdata"][i]["projectName"]+"</td>";
+                html += "<td>"+data["proposes"]["cssResultdata"][i]["customerComment"]+"</td>";
+                html += "<td>"+data["proposes"]["cssResultdata"][i]["makeDateCss"]+"</td>";
+                html += "<td>"+data["proposes"]["cssResultdata"][i]["cssPoint"]+"</td>";
+                html += "</tr>";   
+            }
+            $("#danhsachdexuat tbody").html(html);
+            $("#danhsachdexuat").parent().find(".pagination").html(data["proposes"]["paginationRender"]);
+        }else{
+            $("#duoi3sao tbody").html('');
+            $("#duoi3sao").parent().find(".pagination").html('');
+            $("#danhsachdexuat tbody").html('');
+            $("#danhsachdexuat").parent().find(".pagination").html('');
         }
-        $("#duoi3sao tbody").html(html);
-        $("#duoi3sao").parent().find(".pagination").html(data["lessThreeStar"]["paginationRender"]);
         
-        //danh sach de xuat
-        var countResult = data["proposes"]["cssResultdata"].length; 
-        html = "";
-        for(var i=0; i<countResult; i++){
-            html += "<tr>";
-            html += "<td>"+data["proposes"]["cssResultdata"][i]["no"]+"</td>";
-            html += "<td>"+data["proposes"]["cssResultdata"][i]["projectName"]+"</td>";
-            html += "<td>"+data["proposes"]["cssResultdata"][i]["customerComment"]+"</td>";
-            html += "<td>"+data["proposes"]["cssResultdata"][i]["makeDateCss"]+"</td>";
-            html += "<td>"+data["proposes"]["cssResultdata"][i]["cssPoint"]+"</td>";
-            html += "</tr>";   
-        }
-        $("#danhsachdexuat tbody").html(html);
-        $("#danhsachdexuat").parent().find(".pagination").html(data["proposes"]["paginationRender"]);
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
@@ -479,7 +467,7 @@ $(document).on('icheck', function(){
         radioClass: 'iradio_minimal-blue'
     }); 
 
-    var arrCetirea = ['ProjectType','Team','Pm','Brse','Customer','Sale','Question'];
+    var arrCetirea = ['ProjectType','Team','Pm','Brse','Customer','Sale'];
     for(var i=0; i<arrCetirea.length; i++){ 
         // Make "Item" checked if checkAll are checked
         $('#check'+arrCetirea[i]).on('ifChecked', function (event) {
@@ -514,6 +502,38 @@ $(document).on('icheck', function(){
             }
         });
     }
+    
+    /** iCheck event theotieuchi la cau hoi */  
+    // Make "Item" checked if checkAll are checked
+    $('.checkQuestionItem').on('ifChecked', function (event) {
+        var parent_id = $(this).attr('data-id');
+        $('.checkQuestionItem[parent-id='+parent_id+']').iCheck('check');
+        triggeredByChild = false;
+    });
+    
+    // Make "Item" unchecked if checkAll are unchecked
+    $('.checkQuestionItem').on('ifUnchecked', function (event) {
+        if (!triggeredByChild) {
+            var parent_id = $(this).attr('data-id');
+            $('.checkQuestionItem[parent-id='+parent_id+']').iCheck('uncheck');
+        }
+        triggeredByChild = true;
+    });
+    
+    // Remove the checked state from "All" if any checkbox is unchecked
+    $('.checkQuestionItem').on('ifUnchecked', function (event) {
+        triggeredByChild = true;
+        var parent_id = $(this).attr('parent-id');
+        $('.checkQuestionItem[data-id='+parent_id+']').iCheck('uncheck');
+    });
+
+    // Make "All" checked if all checkboxes are checked
+    $('.checkQuestionItem').on('ifChecked', function (event) {
+        var parent_id = $(this).attr('parent-id');
+        if ($('.checkQuestionItem[parent-id='+parent_id+']').filter(':checked').length == $('.checkQuestionItem[parent-id='+parent_id+']').length) {
+            $('.checkQuestionItem[data-id='+parent_id+']').iCheck('check');
+        }
+    });
     
     //show table project type
     $('#tcProjectType').on('ifChecked', function (event) {
@@ -558,4 +578,55 @@ $(document).on('icheck', function(){
     }); 
 }).trigger('icheck'); // trigger it for page load
     
+$(document).ready(function(){
+   $(".box-select-question #question-choose").change(function(){
+       var questionId = $(this).val(); 
+       if(questionId == 0){
+           $("#duoi3sao tbody").html('');
+           $("#duoi3sao").parent().find(".pagination").html('');
+       }else{
+           var curpage = 1;
+           var cssresultids = $("#question-choose option:selected").data("cssresult");
+           var token = $("#question-choose option:selected").data("token");
+           
+           getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids);
+       }
+   }); 
+});
 
+/**
+ * Get less 3* list by question
+ * @param int questionId
+ * @param int curpage
+ * @param string token
+ * @param string cssresultids
+ */
+function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids){
+    $.ajax({
+        url: baseUrl + 'css/get_list_less_three_star_question/'+questionId+'/'+cssresultids+'/'+curpage,
+        type: 'post',
+        data: {
+            _token: token, 
+        },
+    })
+    .done(function (data) { 
+        var countResult = data["cssResultdata"].length; 
+        html = "";
+        for(var i=0; i<countResult; i++){
+            html += "<tr>";
+            html += "<td>"+data["cssResultdata"][i]["no"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["projectName"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["questionName"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["stars"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["comment"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["makeDateCss"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["cssPoint"]+"</td>";
+            html += "</tr>";   
+        }
+        $("#duoi3sao tbody").html(html);
+        $("#duoi3sao").parent().find(".pagination").html(data["paginationRender"]);
+    })
+    .fail(function () {
+        alert("Ajax failed to fetch data");
+    })
+}

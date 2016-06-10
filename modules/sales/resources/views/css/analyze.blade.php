@@ -151,7 +151,6 @@
                                     </div>
                                 </div>
                                   
-                            
                                 <div class="row">
                                  <!----------- Bảng danh sách dưới 3 sao ------------------->   
                                     <div class="col-md-6">
