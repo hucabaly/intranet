@@ -6,9 +6,13 @@ use Rikkei\Team\View\Config;
 use DB;
 use Exception;
 use Lang;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employees extends CoreModel
 {
+    
+    use SoftDeletes;
+    
     protected $table = 'employees';
     
     /**

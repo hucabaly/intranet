@@ -7,6 +7,12 @@ use DB;
 
 class Roles extends CoreModel
 {
+    /**
+     * flag postion, role
+     */
+    const FLAG_ROLE = 0;
+    const FLAG_POSITION = 1;
+
     protected $table = 'roles';
     
     /**
@@ -15,8 +21,34 @@ class Roles extends CoreModel
      * @var array
      */
     protected $fillable = [
-        'name'
+        'role', 'special_flg', 'sort_order'
     ];
+    
+    /**
+     * get all role is position
+     * 
+     * @return collection model
+     */
+    public static function getAllPosition()
+    {
+        return self::select('id', 'role')
+            ->where('special_flg', self::FLAG_POSITION)
+            ->orderBy('sort_order')
+            ->get();
+    }
+    
+    /**
+     * get all role is position
+     * 
+     * @return collection model
+     */
+    public static function getAllRole()
+    {
+        return self::select('id', 'role')
+            ->where('special_flg', self::FLAG_ROLE)
+            ->orderBy('role')
+            ->get();
+    }
     
     /**
      * get collection to show grid
@@ -29,13 +61,6 @@ class Roles extends CoreModel
         $collection = self::select('id','name')->orderBy($pager['order'], $pager['dir']);
         $collection = $collection->paginate($pager['limit']);
         return $collection;
-    }
-    
-    public static function getAll()
-    {
-        return self::select('id', 'name')
-            ->orderBy('name')
-            ->get();
     }
     
     /**

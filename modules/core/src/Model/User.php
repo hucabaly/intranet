@@ -6,9 +6,13 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Rikkei\Team\Model\Employees;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends CoreModel implements Authenticatable
 {
+    
+    use SoftDeletes;
+    
     /**
      * const avatar key store session
      */

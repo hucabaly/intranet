@@ -3,11 +3,10 @@
 
 use Rikkei\Team\View\TeamList;
 use Rikkei\Core\View\Form;
-use Rikkei\Team\Model\Position;
 use Rikkei\Team\Model\Roles;
 
-$positionAll = Position::getAll();
-$roleAll = Roles::getAll();
+$positionAll = Roles::getAllPosition();
+$roleAll = Roles::getAllRole();
 ?>
 
 @section('title')

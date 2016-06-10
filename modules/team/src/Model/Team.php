@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Lang;
 
 class Team extends CoreModel
 {
-    protected $table = 'team';
+    protected $table = 'teams';
     
     /**
      * The attributes that are mass assignable.
@@ -16,7 +16,7 @@ class Team extends CoreModel
      * @var array
      */
     protected $fillable = [
-        'name', 'parent_id', 'position', 'permission_as', 'is_function', 'path'
+        'name', 'parent_id', 'sort_order', 'follow_team_id', 'is_function', 'type', 'description', 'leader_id', 'email'
     ];
     
     /**
