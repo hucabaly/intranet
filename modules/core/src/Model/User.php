@@ -7,12 +7,18 @@ use Illuminate\Contracts\Auth\Authenticatable;
 class User extends CoreModel implements Authenticatable
 {
     /**
+     * primary key
+     * @var string
+     */
+    protected $primaryKey = 'employee_id';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'nickname', 'email', 'employee_id', 'token', 'avatar'
+        'employee_id', 'google_id', 'name', 'email', 'token'
     ];
 
     /**
