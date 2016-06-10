@@ -384,12 +384,38 @@ class Css extends Model
     }
     
     /**
+     * get proposes list by question
+     * @param int $questionId
+     * @param string $cssResultIds
+     * @return object list
+     */
+    public static function getProposesByQuestion($questionId,$cssResultIds,$offset,$perPage){
+        $cssResult = DB::select("Select * from css_result "
+                . "where id in ($cssResultIds) "
+                    . "and survey_comment <> '' "
+                    . "and id in (Select css_id from css_result_detail where point between 1 and 2 and question_id = ".$questionId.")"
+                . "limit " . $offset . "," . $perPage );
+        return $cssResult;
+    }
+    
+    /**
      * get count Proposes
      * @param string $cssResultIds
      * @return int
      */
     public static function getCountProposes($cssResultIds){
         $cssResult = DB::select("Select * from css_result where id in ($cssResultIds) and survey_comment <> ''");
+        return count($cssResult);
+    }
+    
+    /**
+     * get count Proposes
+     * @param int $questionId
+     * @param string $cssResultIds
+     * @return int
+     */
+    public static function getCountProposesByQuestion($questionId,$cssResultIds){
+        $cssResult = DB::select("Select * from css_result where id in ($cssResultIds) and survey_comment <> '' and id in (Select css_id from css_result_detail where point between 1 and 2 and question_id = ".$questionId.")");
         return count($cssResult);
     }
     

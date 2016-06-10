@@ -584,12 +584,15 @@ $(document).ready(function(){
        if(questionId == 0){
            $("#duoi3sao tbody").html('');
            $("#duoi3sao").parent().find(".pagination").html('');
+           $("#danhsachdexuat tbody").html('');
+           $("#danhsachdexuat").parent().find(".pagination").html('');
        }else{
            var curpage = 1;
            var cssresultids = $("#question-choose option:selected").data("cssresult");
            var token = $("#question-choose option:selected").data("token");
            
            getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids);
+           getProposesQuestion(questionId,curpage,token,cssresultids);
        }
    }); 
 });
@@ -625,6 +628,42 @@ function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids){
         }
         $("#duoi3sao tbody").html(html);
         $("#duoi3sao").parent().find(".pagination").html(data["paginationRender"]);
+    })
+    .fail(function () {
+        alert("Ajax failed to fetch data");
+    })
+}
+
+/**
+ * Show proposes list by question
+ * @param int questionId
+ * @param int curpage
+ * @param string token
+ * @param string cssresultids
+ */
+function getProposesQuestion(questionId,curpage,token,cssresultids){
+    $.ajax({
+        url: baseUrl + 'css/get_proposes_question/'+questionId+'/'+cssresultids+'/'+curpage,
+        type: 'post',
+        data: {
+            _token: token, 
+        },
+    })
+    .done(function (data) { 
+        //danh sach de xuat
+        var countResult = data["cssResultdata"].length; 
+        html = "";
+        for(var i=0; i<countResult; i++){
+            html += "<tr>";
+            html += "<td>"+data["cssResultdata"][i]["no"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["projectName"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["customerComment"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["makeDateCss"]+"</td>";
+            html += "<td>"+data["cssResultdata"][i]["cssPoint"]+"</td>";
+            html += "</tr>";   
+        }
+        $("#danhsachdexuat tbody").html(html);
+        $("#danhsachdexuat").parent().find(".pagination").html(data["paginationRender"]);
     })
     .fail(function () {
         alert("Ajax failed to fetch data");

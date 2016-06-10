@@ -15,7 +15,7 @@ use Session;
 
 class CssController extends Controller {
 
-    static $perPage = 1;
+    static $perPage = 5;
     /**
      * Hàm hiển thị form tạo CSS
      */
@@ -762,6 +762,7 @@ class CssController extends Controller {
     /**
      * get customer's proposes
      * @param array $cssResultIds
+     * @param int $curPage
      */
     protected function getProposes($cssResultIds,$curPage){
         $offset = ($curPage-1) * self::$perPage;
@@ -808,7 +809,6 @@ class CssController extends Controller {
         ];
         return $data;
     }
-    
     
     /**
      * Get data fill to compare charts in analyze page
@@ -1424,6 +1424,59 @@ class CssController extends Controller {
             "paginationRender" => $html,
         ];
         
+        return $data;
+    }
+    
+    /**
+     * get customer's proposes
+     * @param int $questionId
+     * @param array $cssResultIds
+     * @param int $curPage
+     */
+    protected function getProposesByQuestion($questionId,$cssResultIds,$curPage){
+        $offset = ($curPage-1) * self::$perPage;
+        $proposes = Css::getProposesByQuestion($questionId,$cssResultIds,$offset,self::$perPage);
+        
+        $result =[];
+        foreach($proposes as $propose){
+            $css = Css::find($propose->css_id);
+            
+            $result[] = [
+                "no"   => ++$offset,
+                "cssPoint"   => self::getPointCssResult($propose->id),
+                "projectName"   => $css->project_name,
+                "customerComment" => $propose->survey_comment,
+                "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),
+            ];
+        }
+        //Get html pagination render
+        $count = Css::getCountProposesByQuestion($questionId,$cssResultIds); 
+        $totalPage = ceil($count / self::$perPage);
+        $html = "";
+        if($totalPage > 1){
+            if($curPage == 1){
+                $html .= '<li class="disabled"><span>«</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.($curPage-1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="back">«</a></li>';
+            }
+            for($i=1; $i<=$totalPage; $i++){
+                if($i == $curPage){
+                    $html .= '<li class="active"><span>'.$i.'</span></li>';
+                }else{
+                    $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.$i.',\''.Session::token().'\',\''.$cssResultIds.'\');">'.$i.'</a></li>';
+                }
+            }
+            if($curPage == $totalPage){
+                $html .= '<li class="disabled"><span>»</span></li>';
+            }else{
+                $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.($curPage+1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="next">»</a></li>';
+            }
+        }
+        
+        $data = [
+            "cssResultdata" => $result,
+            "paginationRender" => $html,
+        ];
         return $data;
     }
 }

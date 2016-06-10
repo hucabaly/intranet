@@ -19,7 +19,7 @@ Route::group([
         Route::post('css/get_list_less_three_star/{cssresultids}/{curpage}', 'CssController@getListLessThreeStar')->name('getListLessThreeStar');
         Route::post('css/get_proposes/{cssresultids}/{curpage}', 'CssController@getProposes')->name('getProposes');
         Route::post('css/get_list_less_three_star_question/{questionid}/{cssresultids}/{curpage}', 'CssController@getListLessThreeStarByQuestion')->name('getListLessThreeStarByQuestion');
-        Route::post('css/get_proposes_question/{cssresultids}/{curpage}', 'CssController@getProposesByQuestion')->name('getProposesByQuestion');
+        Route::post('css/get_proposes_question/{questionid}/{cssresultids}/{curpage}', 'CssController@getProposesByQuestion')->name('getProposesByQuestion');
 });
 Route::get('css/success/{id}', 'CssController@success')->name('success');
 Route::get('css/make/{token}/{id}', 'CssController@make')->name('make') ;
