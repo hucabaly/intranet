@@ -17,7 +17,7 @@ class CreateTableUsers extends Migration
         }
         Schema::create('users', function (Blueprint $table) {
             $table->unsignedInteger('employee_id');
-            $table->string('google_id', 20);
+            $table->string('google_id', 50);
             $table->string('name', 100);
             $table->string('email', 100);
             $table->string('token', 45);
