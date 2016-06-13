@@ -3,17 +3,22 @@ namespace Rikkei\Team\Model;
 
 use DB;
 use Lang;
-use Cache;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Permissions extends \Rikkei\Core\Model\CoreModel
 {
+    
+    use SoftDeletes;
+    
     const SCOPE_NONE = 0;
     const SCOPE_SELF = 1;
     const SCOPE_TEAM = 2;
     const SCOPE_COMPANY = 3;
  
     protected $table = 'permissions';
-    
+    public $timestamps = false;
+
+
     /**
      * get all scope
      * 
@@ -103,24 +108,41 @@ class Permissions extends \Rikkei\Core\Model\CoreModel
      * @param int $teamId
      * @return type
      */
-    public static function saveRule(array $data, $teamId, $addTeamId = true) {
-        if (! $data || ! $teamId) {
+    public static function saveRule(array $data = [], $teamId = null) {
+        if (! $data) {
             return;
         }
-        if ($addTeamId) {
-            foreach ($data as &$item) {
-                $item['team_id'] = $teamId;
-            }
-        }
-        
         DB::beginTransaction();
         try {
-            self::where('team_id', $teamId)->delete();
-            self::insert($data);
+            foreach ($data as $item) {
+                $item['team_id'] = $teamId;
+                $permissionItem = self::where('role_id', $item['role_id'])
+                    ->where('action_id', $item['action_id'])
+                    ->where('team_id', $item['team_id'])
+                    ->first();
+                if (! $permissionItem) {
+                    $permissionItem = new Permissions();
+                }
+                $permissionItem->setData($item);
+                $permissionItem->save();
+            }
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
-            throw $ex;
+            throw $ex;   
         }
+    }
+    
+    /**
+     * get permission of team
+     * 
+     * @param int $teamid
+     * @return collection model
+     */
+    public static function getTeamPermission($teamid)
+    {
+        return self::select('role_id', 'action_id', 'scope')
+            ->where('team_id', $teamid)
+            ->get();
     }
 }

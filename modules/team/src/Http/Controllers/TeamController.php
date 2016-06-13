@@ -10,6 +10,7 @@ use Rikkei\Core\View\Form;
 use Rikkei\Core\View\Breadcrumb;
 use URL;
 use Rikkei\Team\Model\Roles;
+use Rikkei\Team\Model\Permissions;
 
 class TeamController extends TeamBaseController
 {
@@ -39,13 +40,13 @@ class TeamController extends TeamBaseController
             $positions = Roles::getAllPosition('desc');
             $permissionAs = $model->getTeamPermissionAs();
             if (! $permissionAs) {
-                //$teamRule = \Rikkei\Team\Model\TeamRule::where('team_id', $id)->get();
+                $teamPermissions = Permissions::getTeamPermission($id);
             }
         }
         
         return view('team::setting.index', [
-            'positions' => $positions,
-            'teamRules' => $teamRule,
+            'rolesPosition' => $positions,
+            'teamPermissions' => $teamPermissions,
             'permissionAs' => $permissionAs
         ]);
     }

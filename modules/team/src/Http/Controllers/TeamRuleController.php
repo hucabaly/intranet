@@ -5,7 +5,7 @@ namespace Rikkei\Team\Http\Controllers;
 use Illuminate\Support\Facades\Input;
 use Rikkei\Team\Model\Team;
 use Lang;
-use Rikkei\Team\Model\TeamRule;
+use Rikkei\Team\Model\Permissions;
 use Url;
 
 class TeamRuleController extends TeamBaseController
@@ -35,9 +35,9 @@ class TeamRuleController extends TeamBaseController
             return redirect()->route('team::setting.team.view', ['id' => $teamId])
                 ->withErrors($message);
         }
-        $rules = Input::get('rule');
+        $permissions = Input::get('permission');
         try {
-            TeamRule::saveRule($rules, $teamId);
+            Permissions::saveRule($permissions, $teamId);
             return redirect()->route('team::setting.team.view', ['id' => $teamId])->with('messages', [
                     'success' => [
                         Lang::get('team::messages.Save data success!')

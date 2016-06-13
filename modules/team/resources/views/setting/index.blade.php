@@ -212,7 +212,7 @@ Team Setting
                         @elseif ($permissionAs)
                             <p class="alert alert-warning">{{ trans('team::view.Team permisstion as team') }} 
                                 <a href="{{ Url::route('team::setting.team.view', ['id' => $permissionAs->id]) }}">{{ $permissionAs->name }}</a></p>
-                        @elseif (! isset($positions) || ! count($positions))
+                        @elseif (! isset($rolesPosition) || ! count($rolesPosition))
                             <p class="alert alert-warning">{{ trans('team::view.Not found position to set permission function') }}</p>
                         @else
                             @include('team::setting.include.rule')

@@ -5,9 +5,13 @@ use Rikkei\Core\Model\CoreModel;
 use DB;
 use Exception;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Team extends CoreModel
 {
+    
+    use SoftDeletes;
+    
     protected $table = 'teams';
     
     /**
