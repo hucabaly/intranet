@@ -4,13 +4,9 @@ namespace Rikkei\Team\Model;
 use Rikkei\Core\Model\CoreModel;
 use Rikkei\Team\View\Config;
 use DB;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Roles extends CoreModel
 {
-    
-    use SoftDeletes;
-    
     /**
      * flag postion, role
      */

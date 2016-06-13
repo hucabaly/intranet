@@ -52,4 +52,14 @@ class CoreModel extends \Illuminate\Database\Eloquent\Model
         }
         return $collection;
     }
+    
+    /**
+     * get table name of model
+     * 
+     * @return string
+     */
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
 }

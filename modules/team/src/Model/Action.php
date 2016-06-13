@@ -2,12 +2,9 @@
 namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\CoreModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Action extends CoreModel
 {
-    
-    use SoftDeletes;
     
     protected $table = 'actions';
     
@@ -45,5 +42,38 @@ class Action extends CoreModel
             }
         }
         return $actionTree;
+    }
+    
+    /**
+     * get route to action ids
+     * 
+     * @param array $actionIds
+     * @return array
+     */
+    public static function getRouteChildren($actionIds)
+    {
+        $result = [];
+        if (! is_array($actionIds)) {
+            $actionIds = array ($actionIds);
+        }
+        $routes = self::select('route', 'id', 'parent_id')
+            ->orWhereIn('id', $actionIds)
+            ->orWhereIn('parent_id', $actionIds)
+            ->where('route' , '<>', null)
+            ->where('route' , '<>', '')
+            ->get();
+        if (! count($routes)) {
+            return $result;
+        }
+        foreach ($routes as $route) {
+            if (! $route->route) {
+                continue;
+            }
+            $result[$route->route] = [
+                'id' => $route->id,
+                'parent_id' => $route->parent_id,
+            ];
+        }
+        return $result;
     }
 }

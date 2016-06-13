@@ -6,12 +6,9 @@ use Rikkei\Team\View\Config;
 use DB;
 use Exception;
 use Lang;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employees extends CoreModel
 {
-    
-    use SoftDeletes;
     
     protected $table = 'employees';
     
@@ -158,6 +155,18 @@ class Employees extends CoreModel
     }
     
     /**
+     * get roles of employee
+     * 
+     * @return collection
+     */
+    public function getRoleIds()
+    {
+        return EmployeeRole::select('role_id')
+            ->where('employee_id', $this->id)
+            ->get();
+    }
+    
+    /**
      * convert collection model to array with key is name column
      * 
      * @param model $collection
@@ -178,5 +187,133 @@ class Employees extends CoreModel
             $result[$item[$key]] = $item;
         }
         return $result;
+    }
+    
+    /**
+     * get permission of employee
+     * result = array route name and action id allowed follow each team
+     * 
+     * @return array
+     */
+    public function getPermission()
+    {
+        $permissionTeam = $this->getPermissionTeam();
+        $permissionRole = $this->getPermissionRole();
+        $result = [];
+        if ($permissionTeam) {
+            $result['team'] = $permissionTeam;
+        }
+        if ($permissionRole) {
+            $result['role'] = $permissionRole;
+        }
+        return $result;
+    }
+    
+    /**
+     * get permission team of employee
+     * 
+     * @return array
+     */
+    public function getPermissionTeam()
+    {
+        $teams = $this->getTeamPositons();
+        if (! $teams || ! count($teams)) {
+            return [];
+        }
+        $routesAllow = [];
+        $actionIdAllow = [];
+        $actionTable = Action::getTableName();
+        $permissionTable = Permissions::getTableName();
+        foreach ($teams as $teamMember) {
+            $team = Team::find($teamMember->team_id);
+            $teamAs = $team->getTeamPermissionAs();
+            $teamIdOrgin = $team->id;
+            if ($teamAs) {
+                $team = $teamAs;
+            }
+            //get permission of team member
+            $teamPermission = Permissions::select('action_id',  'route', 'scope')
+                ->join($actionTable, $actionTable . '.id', '=', $permissionTable . '.action_id')
+                ->where('team_id', $team->id)
+                ->where('role_id', $teamMember->role_id)
+                ->get();
+            foreach ($teamPermission as $item) {
+                if (! $item->scope) {
+                    continue;
+                }
+                if ($item->action_id) {
+                    $actionIdAllow[$teamIdOrgin][$item->action_id] = $item->scope;
+                }
+            }
+        }
+        //get scope of route name from action id
+        if ($actionIdAllow && count($actionIdAllow)) {
+            foreach ($actionIdAllow as $teamId => $actionIds) {
+                $actionIds = array_keys($actionIds);
+                $routes = Action::getRouteChildren($actionIds);
+                foreach ($routes as $route => $valueIds) {
+                    if ($valueIds['id'] && isset($actionIdAllow[$teamId][$valueIds['id']])) {
+                        $routesAllow[$teamId][$route] = $actionIdAllow[$teamId][$valueIds['id']];
+                    } else if ($valueIds['parent_id'] && isset($actionIdAllow[$teamId][$valueIds['parent_id']])) {
+                        $routesAllow[$teamId][$route] = $actionIdAllow[$teamId][$valueIds['parent_id']];
+                    }
+                }
+            }
+        }
+        return [
+            'route' => $routesAllow,
+            'action' => $actionIdAllow,
+        ];
+    }
+    
+    /**
+     * get acl role of rule
+     * 
+     * @return array
+     */
+    protected function getPermissionRole()
+    {
+        $roles = $this->getRoleIds();
+        if (! $roles || ! count($roles)) {
+            return [];
+        }
+        $routesAllow = [];
+        $actionIdAllow = [];
+        $actionTable = Action::getTableName();
+        $permissionTable = Permissions::getTableName();
+        foreach ($roles as $role) {
+            $rolePermission = Permissions::select('action_id',  'route', 'scope')
+                ->join($actionTable, $actionTable . '.id', '=', $permissionTable . '.action_id')
+                ->where('team_id', null)
+                ->where('role_id', $role->role_id)
+                ->get();
+            foreach ($rolePermission as $item) {
+                if (! $item->scope) {
+                    continue;
+                }
+                if ($item->action_id) {
+                    //get scope greater of role
+                    if (isset($actionIdAllow[$item->action_id]) && $actionIdAllow[$item->action_id] > (int) $item->scope) {
+                        continue;
+                    } 
+                    $actionIdAllow[$item->action_id] = (int) $item->scope;
+                }
+            }
+        }
+        if ($actionIdAllow) {
+            $actionIds = array_keys($actionIdAllow);
+            $routes = Action::getRouteChildren($actionIds);
+            foreach ($routes as $route => $valueIds) {
+                if ($valueIds['id'] && isset($actionIdAllow[$valueIds['id']])) {
+                    $routesAllow[$route] = $actionIdAllow[$valueIds['id']];
+                } else if ($valueIds['parent_id'] && isset($actionIdAllow[$valueIds['parent_id']])) {
+                    $routesAllow[$route] = $actionIdAllow[$valueIds['parent_id']];
+                }
+            }
+        }
+        return [
+            'route' => $routesAllow,
+            'action' => $actionIdAllow,
+        ];
     }
 }
