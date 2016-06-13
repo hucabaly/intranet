@@ -25,6 +25,10 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
+        if(!defined('RIKKEI_CORE_PATH')) {
+            define('RIKKEI_CORE_PATH', __DIR__ . '/../');
+        }
+        
         $providers = [
             \Rikkei\Core\Providers\AuthServiceProvider::class,
             \Rikkei\Core\Providers\EventServiceProvider::class,

@@ -21,10 +21,16 @@ class MenuItemsSeeder extends Seeder
             return;
         }
         $menus = $menus->id;
-        $dataDemo = Config::get('menu');
+        if (! file_exists(RIKKEI_CORE_PATH . 'config/menu.php')) {
+            return;
+        }
+        $dataDemo = require RIKKEI_CORE_PATH . 'config/menu.php';
+        if (! $dataDemo || ! count($dataDemo)) {
+            return;
+        }
         DB::beginTransaction();
         try {
-            $this->createMenuItemsRecurive($dataDemo, 0, 0, $menus);
+            $this->createMenuItemsRecurive($dataDemo, null, 0, $menus);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();

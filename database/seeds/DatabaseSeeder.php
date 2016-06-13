@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
         $this->call(Rikkei\Core\Seeds\MenuItemsSeeder::class);
         $this->call(Rikkei\Team\Seeds\TeamSeeder::class);
         $this->call(Rikkei\Team\Seeds\PositionSeeder::class);
+        $this->call(Rikkei\Team\Seeds\PositionSeeder::class);
+        $this->call(Rikkei\Team\Seeds\ActionSeeder::class);
         
 //        $this->call(Rikkei\Sales\Seeds\CssQuestionSeeder::class);
 //        $this->call(Rikkei\Sales\Seeds\CssCategorySeeder::class);

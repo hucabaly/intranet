@@ -2,7 +2,6 @@
 namespace Rikkei\Team\Seeds;
 
 use Illuminate\Database\Seeder;
-use DB;
 use Rikkei\Team\Model\Roles;
 
 class PositionSeeder extends Seeder

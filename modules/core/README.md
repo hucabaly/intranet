@@ -14,7 +14,7 @@ Features
 - [x] Integrate switch localization
 
 #### add menu
-edit file `config.menu.php`, format file:
+edit file `modules/core/config/menu.php`, format file:
 
     'menu.name' => [
         'path' => 'path/url',

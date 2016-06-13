@@ -5,74 +5,74 @@ return [
         'label' => 'Profile',
         'child' => [
             'view.profile' => [
-                'label' => 'View thông tin ở trang cá nhân',
+                'label' => 'View profile',
                 'routes' => [
-                    'profile.*'
+                    'profile::view'
                 ]
             ],
             'view.team.member' => [
-                'label' => 'Xem danh sách các thành viên',
+                'label' => 'View list member',
                 'routes' => [
                     'team::team.member.index'
                 ]
             ],
             'view.review.test.employee' => [
-                'label' => 'Xem lại bài test của nhân viên',
+                'label' => 'View review test of member',
                 'routes' => [
                     
                 ]
             ],
             'view.point.employee' => [
-                'label' => 'Xem danh sách điểm cộng trừ của nhân viên',
+                'label' => 'View list point of member',
                 'routes' => [
                 ]
             ],
             'edit.information.base' => [
-                'label' => 'Chỉnh sửa thông tin cơ bản, link facebook, upload CV',
+                'label' => 'Edit base information, link facebook, upload CV',
                 'routes' => [
                     'team::team.member.edit',
                     'team::team.member.save',
                 ]
             ],
             'edit.team.position' => [
-                'label' => 'Chỉnh sửa thông tin về team, vị trí',
+                'label' => 'Edit information team, position of member',
                 'routes' => [
                     'team::team.member.edit.team.position'
                 ]
             ],
             'edit.role' => [
-                'label' => 'Chỉnh sửa thông tin vai trò đặc biệt',
+                'label' => 'Edit information role of member',
                 'routes' => [
                     'team::team.member.edit.role'
                 ]
             ],
             'edit.point' => [
-                'label' => 'Chỉnh sửa điểm cộng, điểm trừ',
+                'label' => 'Edit point of member',
                 'routes' => [
                 ]
             ],
             'edit.test.schedule' => [
-                'label' => 'Chỉnh sửa phần test định kỳ',
+                'label' => 'Edit test schedule',
                 'routes' => [
                 ]
             ],
             'edit.skill' => [
-                'label' => 'Chỉnh sửa phần trình độ và kỹ năng',
+                'label' => 'Edit skill',
                 'routes' => [
                 ]
             ],
             'edit.experience' => [
-                'label' => 'Chỉnh sửa phần kinh nghiêm dự án',
+                'label' => 'Edit experience project',
                 'routes' => [
                 ]
             ],
             'delete.employee.left' => [
-                'label' => 'Set nhân viên sang nghỉ việc',
+                'label' => 'Set employee left work',
                 'routes' => [
                 ]
             ],
             'add.account' => [
-                'label' => 'Đăng ký thành viên mới',
+                'label' => 'Register new member',
                 'routes' => [
                 ]
             ],
@@ -80,80 +80,80 @@ return [
     ], // end A-2 profile
     
     'B-1' => [
-        'label' => 'Tuyển dụng',
+        'label' => 'Recruitment',
         'child' => [
-            'view.list.recruiment' => [
-                'label' => 'Xem danh sách yêu cầu đăng tuyển',
+            'view.list.recruitment' => [
+                'label' => 'View list request recruitment',
                 'routes' => [
                 ]
             ],
-            'view.details.recruiment' => [
-                'label' => 'Xem chi tiết yêu cầu đăng tuyển',
+            'view.details.recruitment' => [
+                'label' => 'View detail request recuitment',
                 'routes' => [
                 ]
             ],
             'view.download.cv.applicant' => [
-                'label' => 'Download CV ứng viên',
+                'label' => 'Download CV applicant',
                 'routes' => [
                 ]
             ],
             'view.details.profile.applicant' => [
-                'label' => 'Xem chi tiết hồ sơ ứng viên',
+                'label' => 'View detail profile applicant',
                 'routes' => [
                 ]
             ],
-            'edit.recruiment' => [
-                'label' => 'Chỉnh sửa yêu cầu đăng tuyển',
+            'edit.recruitment' => [
+                'label' => 'Edit request recruitment',
                 'routes' => [
                 ]
             ],
             'edit.profile.applicant' => [
-                'label' => 'Chỉnh sửa hồ sơ ứng viên',
+                'label' => 'Edit profile applicant',
                 'routes' => [
                 ]
             ],
-            'delete.recruiment' => [
-                'label' => 'Xóa yêu cầu đăng tuyển',
+            'delete.recruitment' => [
+                'label' => 'Delete request recruitment',
                 'routes' => [
                 ]
             ],
             'delete.profile.applicant' => [
-                'label' => 'Xóa hồ sơ ứng viên khỏi yêu cầu đăng tuyển',
+                'label' => 'Delete profile applicant from request recruitment',
                 'routes' => [
                 ]
             ],
-            'add.recruiment' => [
-                'label' => 'Thêm yêu cầu đăng tuyển',
+            'add.recruitment' => [
+                'label' => 'Add request recruitment',
                 'routes' => [
                 ]
             ],
             'add.applicant' => [
-                'label' => 'Thêm ứng viên vào yêu cầu đăng tuyển',
+                'label' => 'Add applicant to request recruitment',
                 'routes' => [
                 ]
             ],
             'system.email.interview.applicant' => [
-                'label' => 'Gửi email phỏng vấn tới ứng viên',
+                'label' => 'Send interview email to applicant',
                 'routes' => [
                 ]
             ],
             'system.update.result.interview' => [
-                'label' => 'Cập nhập kết quả phỏng vấn',
+                'label' => 'Update result interview',
                 'routes' => [
                 ]
             ],
             'system.email.offer.applicant' => [
-                'label' => 'Gửi email OFFER đến ứng viên',
+                'label' => 'Send OFFER email to applicant',
                 'routes' => [
                 ]
             ],
             'system.email.decline.applicant' => [
-                'label' => 'Gửi email từ chối đến ứng viên',
+                'label' => 'Send decline email to applicant',
                 'routes' => [
                 ]
             ],
-            'system.notification.result.recruiment' => [
-                'label' => 'Thông báo kết quả tuyển dụng',
+            'system.notification.result.recruitment' => [
+                'label' => 'Notification result recruitment',
                 'routes' => [
                 ]
             ],
@@ -161,20 +161,20 @@ return [
     ], //end B-1 Recruiment
     
     'B-3' => [
-        'label' => 'Tuyển dụng - Summary',
+        'label' => 'Recruitment - Summary',
         'child' => [
             'view.hr.inout.month' => [
-                'label' => 'Tổng hợp nhân sự in/out trong tháng',
+                'label' => 'View hr inout in month',
                 'routes' => [
                 ]
             ],
             'view.hr.inout.month.pre' => [
-                'label' => 'Tổng hợp nhận sự in/out các tháng trước',
+                'label' => 'View ht inout in previous month',
                 'routes' => [
                 ]
             ],
             'view.hr.inout.year' => [
-                'label' => 'Tổng hợp nhân sự in/out cả năm',
+                'label' => 'View hr inout in year',
                 'routes' => [
                 ]
             ],
@@ -185,19 +185,19 @@ return [
         'label' => 'Css',
         'child' => [
             'view.list' => [
-                'label' => 'Xem danh sách css',
+                'label' => 'View list css',
                 'routes' => [
                     'sales::css.list'
                 ]
             ],
             'view.detail' => [
-                'label' => 'Xem chi tiết css',
+                'label' => 'View detail css',
                 'routes' => [
                     'sales::css.view'
                 ]
             ],
             'edit.detail' => [
-                'label' => 'Tạo và sửa css',
+                'label' => 'Create and edit css',
                 'routes' => [
                     'sales::css.cancel',
                     'sales::css.create',
@@ -208,7 +208,7 @@ return [
                 ]
             ],
             'view.analyze' => [
-                'label' => 'Phân tích css',
+                'label' => 'Analyze css',
                 'routes' => [
                     'sales::css.analyze',
                     'sales::css.filterAnalyze',
