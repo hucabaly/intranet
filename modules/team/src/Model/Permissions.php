@@ -3,13 +3,9 @@ namespace Rikkei\Team\Model;
 
 use DB;
 use Lang;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Permissions extends \Rikkei\Core\Model\CoreModel
 {
-    
-    use SoftDeletes;
-    
     const SCOPE_NONE = 0;
     const SCOPE_SELF = 1;
     const SCOPE_TEAM = 2;
@@ -102,20 +98,25 @@ class Permissions extends \Rikkei\Core\Model\CoreModel
     }
     
     /**
-     * save teamrule
+     * save permission
      * 
      * @param array $data
-     * @param int $teamId
-     * @return type
+     * @param int $teamOrRoleId
+     * @param boolean $flagAddTeam
      */
-    public static function saveRule(array $data = [], $teamId = null) {
+    public static function saveRule(array $data = [], $teamOrRoleId = null, $flagAddTeam = true) {
         if (! $data) {
             return;
         }
         DB::beginTransaction();
         try {
             foreach ($data as $item) {
-                $item['team_id'] = $teamId;
+                if ($flagAddTeam) {
+                    $item['team_id'] = $teamOrRoleId;
+                } else {
+                    $item['team_id'] = null;
+                    $item['role_id'] = $teamOrRoleId;
+                }
                 $permissionItem = self::where('role_id', $item['role_id'])
                     ->where('action_id', $item['action_id'])
                     ->where('team_id', $item['team_id'])
@@ -143,6 +144,19 @@ class Permissions extends \Rikkei\Core\Model\CoreModel
     {
         return self::select('role_id', 'action_id', 'scope')
             ->where('team_id', $teamid)
+            ->get();
+    }
+    
+    /**
+     * get permission of role
+     * 
+     * @param int $roleId
+     * @return collection model
+     */
+    public static function getRolePermission($roleId)
+    {
+        return self::select('action_id', 'scope')
+            ->where('role_id', $roleId)
             ->get();
     }
 }

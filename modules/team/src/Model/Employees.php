@@ -58,6 +58,12 @@ class Employees extends CoreModel
         return $collection;
     }
     
+    /**
+     * save team positon for member
+     * 
+     * @param array $teamPostions
+     * @throws Exception
+     */
     public function saveTeamPosition(array $teamPostions = [])
     {
         //check miss data
@@ -83,11 +89,13 @@ class Employees extends CoreModel
             TeamMembers::where('employee_id', $this->id)->delete();
             if (count($teamPostions)) {
                 foreach ($teamPostions as $teamPostion) {
-                    TeamMembers::create([
+                    $teamMember = new TeamMembers();
+                    $teamMember->setData([
                         'team_id' => $teamPostion['team'],
-                        'position_id' => $teamPostion['position'],
+                        'role_id' => $teamPostion['position'],
                         'employee_id' => $this->id
                     ]);
+                    $teamMember->save();
                 }
             }
             DB::commit();
@@ -97,6 +105,12 @@ class Employees extends CoreModel
         }
     }
     
+    /**
+     * save role for employee
+     * 
+     * @param array $roles
+     * @throws Exception
+     */
     public function saveRoles(array $roles = [])
     {
         DB::beginTransaction();
@@ -104,10 +118,12 @@ class Employees extends CoreModel
             EmployeeRole::where('employee_id', $this->id)->delete();
             if (count($roles)) {
                 foreach ($roles as $role) {
-                    EmployeeRole::create([
+                    $employeeRole = new EmployeeRole();
+                    $employeeRole->setData([
                         'role_id' => $role,
                         'employee_id' => $this->id
                     ]);
+                    $employeeRole->save();
                 }
             }
             DB::commit();
@@ -124,7 +140,7 @@ class Employees extends CoreModel
      */
     public function getTeamPositons()
     {
-        return TeamMembers::select('team_id', 'position_id')->where('employee_id', $this->id)->get();
+        return TeamMembers::select('team_id', 'role_id')->where('employee_id', $this->id)->get();
     }
     
     /**
@@ -134,10 +150,10 @@ class Employees extends CoreModel
      */
     public function getRoles()
     {
-        return EmployeeRole::select('role_id', 'name')
+        return EmployeeRole::select('role_id', 'role')
                 ->join('roles', 'roles.id', '=', 'employee_roles.role_id')
                 ->where('employee_id', $this->id)
-                ->orderBy('name')
+                ->orderBy('role')
                 ->get();
     }
     

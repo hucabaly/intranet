@@ -29,7 +29,7 @@ Route::group([
         'prefix' => 'rule',
         'as' => 'rule.',
     ], function() {
-        Route::post('save','TeamRuleController@save')->name('save');
+        Route::post('save','PermissionController@saveTeam')->name('save');
     });
 });
 
@@ -41,7 +41,7 @@ Route::group([
     Route::get('view/{id}','RoleController@view')->name('view')->where('id', '[0-9]+');
     Route::post('save','RoleController@save')->name('save');
     Route::delete('delete','RoleController@delete')->name('delete');
-    Route::post('rule/save', 'RoleController@ruleSave')->name('rule.save');
+    Route::post('rule/save', 'PermissionController@saveRole')->name('rule.save');
 });
 
 //team 

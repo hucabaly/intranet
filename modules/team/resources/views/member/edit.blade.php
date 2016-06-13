@@ -2,10 +2,11 @@
 <?php
 use Rikkei\Core\View\Form;
 use Rikkei\Team\View\TeamList;
-use Rikkei\Team\Model\Position;
+use Rikkei\Team\Model\Roles;
 
-$postionsOption = Position::toOption();
+$postionsOption = Roles::toOptionPosition();
 $teamsOption = TeamList::toOption(null, false, false);
+
 ?>
 
 @section('title')

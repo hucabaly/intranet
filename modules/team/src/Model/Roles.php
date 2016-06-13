@@ -197,4 +197,25 @@ class Roles extends CoreModel
         }
         return false;
     }
+    
+    /**
+     * to option position array data
+     * 
+     * @return array
+     */
+    public static function toOptionPosition()
+    {
+        $data = self::select('id', 'role')
+            ->where('special_flg', self::FLAG_POSITION)
+            ->orderBy('sort_order', 'desc')
+            ->get();
+        $result = [];
+        foreach ($data as $item) {
+            $result[] = [
+                'value' => $item->id,
+                'label' => $item->role
+            ];
+        }
+        return $result;
+    }
 }

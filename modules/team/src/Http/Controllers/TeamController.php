@@ -35,7 +35,7 @@ class TeamController extends TeamBaseController
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         Form::setData($model);
-        $positions = $teamRule = $permissionAs = null;
+        $positions = $teamPermissions = $permissionAs = null;
         if ($model->is_function) {
             $positions = Roles::getAllPosition('desc');
             $permissionAs = $model->getTeamPermissionAs();

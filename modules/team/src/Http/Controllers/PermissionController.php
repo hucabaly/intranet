@@ -7,13 +7,14 @@ use Rikkei\Team\Model\Team;
 use Lang;
 use Rikkei\Team\Model\Permissions;
 use Url;
+use Rikkei\Team\Model\Roles;
 
-class TeamRuleController extends TeamBaseController
+class PermissionController extends TeamBaseController
 {    
     /**
      * save team rule
      */
-    public function save()
+    public function saveTeam()
     {
         $teamId = Input::get('team.id');
         if (! $teamId) {
@@ -37,7 +38,7 @@ class TeamRuleController extends TeamBaseController
         }
         $permissions = Input::get('permission');
         try {
-            Permissions::saveRule($permissions, $teamId);
+            Permissions::saveRule((array) $permissions, $teamId);
             return redirect()->route('team::setting.team.view', ['id' => $teamId])->with('messages', [
                     'success' => [
                         Lang::get('team::messages.Save data success!')
@@ -45,6 +46,27 @@ class TeamRuleController extends TeamBaseController
                 ]);
         } catch (Exception $ex) {
             return redirect()->route('team::setting.team.view', ['id' => $teamId])->withErrors($ex);
+        }
+    }
+    
+    public function saveRole()
+    {
+        $id = Input::get('role.id');
+        $model = Roles::find($id);
+        if (! $model || ! $model->isRole()) {
+            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        $permissions = Input::get('permission');
+        try {
+            Permissions::saveRule((array) $permissions, $id, false);
+            $messages = [
+                    'success'=> [
+                        Lang::get('team::messages.Save data success!'),
+                    ]
+            ];
+            return redirect()->route('team::setting.role.view', ['id' => $model->id])->with('messages', $messages);
+        } catch (Exception $ex) {
+            return redirect()->route('team::setting.role.view', ['id' => $model->id])->withErrors($ex);
         }
     }
 }

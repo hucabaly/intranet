@@ -89,7 +89,7 @@ class TeamList
                 'option' => '',
             ];
         }
-        self::toOptionFunctionRecursive($options, 0, $skipId, $isFunction, $level = 0);
+        self::toOptionFunctionRecursive($options, null, $skipId, $isFunction, $level = 0);
         return $options;
     }
     
