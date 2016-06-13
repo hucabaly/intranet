@@ -14,8 +14,8 @@ use Mail;
 use Session;
 
 class CssController extends Controller {
-
     static $perPage = 5;
+    
     /**
      * Hàm hiển thị form tạo CSS
      */
@@ -542,7 +542,6 @@ class CssController extends Controller {
     protected function applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria){
         //lay ra cac ban ghi tu bang css_result theo loai du an, ngay lam du an, team set theo css
         if($criteria == 'projectType'){
-            //all result to show charts
             $cssResult = Css::getCssResultByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'team'){
             $cssResult = Css::getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds);
@@ -558,7 +557,7 @@ class CssController extends Controller {
             $cssResult = Css::getCssResultByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }
         
-        //$pointToHighchart -> luu diem hien thi tren bieu do all result
+        //display chart all result
         $pointToHighchart = [];
         
         //cssResultIds list
@@ -567,8 +566,6 @@ class CssController extends Controller {
         //Get data chart all result 
         foreach($cssResult as $itemResult){
             $cssResultIds[] = $itemResult->id;
-            
-            //lay diem de show tren bieu do thoi gian all result
             $pointToHighchart[] = (float)self::getPointCssResult($itemResult->id);
             $dateToHighchart[] = date('d/m/Y',strtotime($itemResult->created_at));
         }
@@ -851,29 +848,28 @@ class CssController extends Controller {
                 $cssResultByCriteria = Css::getCssResultByQuestionToChart($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }
             
-            $pointToHighchartByProjectType = [];
+            $pointToHighchart = [];
             
-            $pointToHighchartByProjectType["data"] = [];
+            $pointToHighchart["data"] = [];
             if($criteria == 'question'){
-                $pointToHighchartByProjectType["name"] = '';
+                $pointToHighchart["name"] = '';
                 foreach($cssResultByCriteria as $itemCssResult){
-                    $css_result_detail = DB::table('css_result_detail')
-                        ->where("css_id",$itemCssResult->id)
-                        ->where("question_id",$criteriaId)
-                        ->first();
+                    $css_result_detail = Css::getCssResultDetail($itemCssResult->id,$criteriaId);
                     if($css_result_detail->point > 0){
-                        $pointToHighchartByProjectType["data"][] = $css_result_detail->point;
+                        $pointToHighchart["data"][] = $css_result_detail->point;
+                    }else{
+                        $pointToHighchart["data"][] = null;
                     }
                 }
             }else{
-                $pointToHighchartByProjectType["name"] = $name;
+                $pointToHighchart["name"] = $name;
                 foreach($cssResultByCriteria as $item){
-                    $pointToHighchartByProjectType["data"][] = (float)self::getPointCssResult($item->id);
+                    $pointToHighchart["data"][] = (float)self::getPointCssResult($item->id);
                 }
             }
             $pointCompareChart[] = [
-                "name" => $pointToHighchartByProjectType["name"],
-                "data" => $pointToHighchartByProjectType["data"]
+                "name" => $pointToHighchart["name"],
+                "data" => $pointToHighchart["data"]
             ];
         }
         
@@ -931,11 +927,7 @@ class CssController extends Controller {
             $projectTypeName = $projectType->name;
             $countCss = 0;
             foreach($css as $itemCss){
-                $css_result = DB::table("css_result")
-                ->where("css_id",$itemCss->id)
-                ->where("created_at", ">=", $startDate)
-                ->where("created_at", "<=", $endDate)
-                ->get();
+                $css_result = Css::getCssResultByCssId($itemCss->id,$startDate,$endDate);
 
                 if(count($css_result) > 0){
                     $countCss += count($css_result);
@@ -1012,11 +1004,7 @@ class CssController extends Controller {
             $teamId = $team->id;
             $teamName = $team->name;
             foreach($css as $itemCss){
-                $css_result = DB::table("css_result")
-                ->where("css_id",$itemCss->id)
-                ->where("created_at", ">=", $startDate)
-                ->where("created_at", "<=", $endDate)
-                ->get();
+                $css_result = Css::getCssResultByCssId($itemCss->id,$startDate,$endDate);
 
                 if(count($css_result) > 0){
                     $countCss += count($css_result);
@@ -1267,7 +1255,7 @@ class CssController extends Controller {
                         foreach($cssQuestionChild as &$itemQuestionChild){
                             $css_result = Css::getCssResultByQuestion($itemQuestionChild->id,$startDate, $endDate,$teamIds);
                             if(count($css_result) > 0){
-                                $countCss = count($css_result);
+                                $countCss = 0;
                                 $points = array();
                                 foreach($css_result as $itemCssResult){
                                     $css_result_detail = DB::table('css_result_detail')
@@ -1276,6 +1264,7 @@ class CssController extends Controller {
                                         ->first();
                                     if($css_result_detail->point > 0){
                                         $points[] = $css_result_detail->point;
+                                        $countCss++;
                                     }
 
                                 }
@@ -1305,7 +1294,7 @@ class CssController extends Controller {
                 foreach($cssQuestion as &$itemQuestion){
                     $css_result = Css::getCssResultByQuestion($itemQuestion->id,$startDate, $endDate,$teamIds);
                     if(count($css_result) > 0){
-                        $countCss = count($css_result);
+                        $countCss = 0;
                         $points = array();
                         foreach($css_result as $itemCssResult){
                             $css_result_detail = DB::table('css_result_detail')
@@ -1314,6 +1303,7 @@ class CssController extends Controller {
                                 ->first();
                             if($css_result_detail->point > 0){
                                 $points[] = $css_result_detail->point;
+                                $countCss++;
                             }
                         }
                         //echo count($points);die;
