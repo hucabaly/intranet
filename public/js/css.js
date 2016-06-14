@@ -78,21 +78,6 @@ function set_teams_popup() {
     }
 }
 
-function customRange(input) {
-    if (input.id == 'start_date') {     
-        var x = $('#start_date').datepicker("getDate"); 
-        $("#end_date").datepicker({
-            startDate : x,
-        }); 
-    } 
-    else if (input.id == 'end_date') {     
-        var x=$('#end_date').datepicker("getDate");
-        $("#start_date").datepicker({
-            endDate : x,
-        }); 
-    } 
-}
-;
 $(document).ready(function () {
     $(".project_type input[type=radio]:first-child").prop('checked', true);
     $(".team-tree a").removeAttr("href");
@@ -101,17 +86,21 @@ $(document).ready(function () {
     //hide calendar sau khi select
     $('#start_date').on('changeDate', function (ev) {
         $(this).datepicker('hide');
-        customRange(this);
         $('#end_date').focus();
     });
     
     $('#end_date').on('changeDate', function (ev) {
-        customRange(this);
         $(this).datepicker('hide');
     });
 });
 
 $(document).ready(function () {
+    /** Check is firefox */
+    if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+        $(".date").css('top','-1px');
+    }
+    /** End check is firefox */
+    
     jQuery.validator.addMethod("greaterThan",
         function (value, element, params) {
             if (!/Invalid|NaN/.test(new Date(value))) {
@@ -125,6 +114,7 @@ $(document).ready(function () {
 
     $("#frm_create_css").validate({
         rules: {
+            japanese_name: "required",
             team_id_check: "required",
             company_name: "required",
             customer_name: "required",
@@ -138,6 +128,7 @@ $(document).ready(function () {
             },
         },
         messages: {
+            japanese_name: "Vui lòng điền tên tiếng Nhật của bạn",
             team_id_check: "Vui lòng chọn team cho dự án",
             company_name: "Vui lòng nhập tên công ty",
             customer_name: "Vui lòng nhập tên khách hàng",
@@ -286,13 +277,6 @@ function submit(token, cssId, arrayValidate){
                 strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
             }
         }
-        invalid = true;
-    }
-    
-    var gopY = $.trim($("#proposed").val());
-    if(gopY == ""){
-        $("#proposed").css("border","1px solid red");
-        strInvalid += '<div>'+arrayValidate['proposedRequired']+'</div>';
         invalid = true;
     }
     

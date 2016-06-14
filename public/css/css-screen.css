@@ -69,7 +69,7 @@
 }
 
 .modal-header{
-    background-color:#a51214; 
+    background-color:#3c8dbc; 
     border-bottom: 1px solid #d2d6de !important;
 }
 .modal-header button.close span{
@@ -470,7 +470,7 @@ select option.parent{
   width: 100%;
 }
 .table-fixed tbody {
-  height: 345x;
+  height: 345px;
   overflow-y: auto;
   width: 100%;
 }
@@ -480,4 +480,29 @@ select option.parent{
 .table-fixed tbody td, .table-fixed thead > tr> th {
   float: left;
   border-bottom-width: 0;
+}
+
+.projecttype-title{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.root-category{
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.category{
+    font-weight: bold;
+}
+
+.loading-img {
+    position: absolute;
+    top:50%;
+    left:50%;
+    width: 35px;
+}
+
+table tr.loading {
+    height:200px;
 }

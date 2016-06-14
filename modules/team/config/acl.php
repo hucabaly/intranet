@@ -199,12 +199,14 @@ return [
             'edit.detail' => [
                 'label' => 'Create and edit css',
                 'routes' => [
-                    'sales::css.cancel',
                     'sales::css.create',
-                    'sales::css.detail',
-                    'sales::css.saveResult',
-                    'sales::css.saveResult',
                     'sales::css.update',
+                    'sales::css.preview',
+                    'sales::css.save',
+                    'sales::css.list',
+                    'sales::css.view',
+                    'sales::css.detail',
+                    'sales::css.cancel',
                 ]
             ],
             'view.analyze' => [
@@ -216,6 +218,8 @@ return [
                     'sales::css.showAnalyzeListProject',
                     'sales::css.getListLessThreeStar',
                     'sales::css.getProposes',
+                    'sales::css.getListLessThreeStarByQuestion',
+                    'sales::css.getProposesByQuestion',
                 ]
             ],
         ]

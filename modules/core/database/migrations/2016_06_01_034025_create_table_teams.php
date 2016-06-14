@@ -24,6 +24,7 @@ class CreateTableTeams extends Migration
             $table->string('email', 100)->nullable();
             $table->unsignedInteger('parent_id')->nullable();
             $table->unsignedInteger('follow_team_id')->nullable();
+            $table->boolean('is_function');
             $table->smallInteger('sort_order')->default(0);
             $table->dateTime('created_at');
             $table->unsignedInteger('created_by')->nullable();

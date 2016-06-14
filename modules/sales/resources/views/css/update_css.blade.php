@@ -28,16 +28,16 @@ use Rikkei\Core\View\Form;
                                         <input type="text" class="form-control" id="user_name" name="user_name" value="{{$user->name}}" disabled="disabled">
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_name">{{ trans('sales::view.Sale name jp') }}</label>
-                                        <input type="text" class="form-control" id="japanese_name" name="japanese_name" value="{{$user->japanese_name}}" <?php if($user->japanese_name != ""){ echo 'disabled="disabled"'; } ?> >
+                                        <label for="japanese_name">{{ trans('sales::view.Sale name jp') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="japanese_name" name="japanese_name" value="{{$user->japanese_name}}"  maxlength="100">
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_name">{{ trans('sales::view.Customer company') }} <span class="required">*</span></label>
-                                        <input type="text" class="form-control" id="company_name" name="company_name" tabindex=2  value="{{$css->company_name}}" >
+                                        <label for="company_name">{{ trans('sales::view.Customer company') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="company_name" name="company_name" tabindex=2  value="{{$css->company_name}}"  maxlength="200">
                                     </div>
                                     <div class="form-group" style="position: relative;">
-                                        <label for="form_name">{{ trans('sales::view.Customer name') }} <span class="required">*</span></label>
-                                        <input type="text" class="form-control" id="customer_name" name="customer_name" tabindex=3 value="{{$css->customer_name}}" >
+                                        <label for="customer_name">{{ trans('sales::view.Customer name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="customer_name" name="customer_name" tabindex=3 value="{{$css->customer_name}}"  maxlength="100">
                                         <label class="sama_label">様</label>
                                     </div>
                                     <div class="form-group">
@@ -58,8 +58,8 @@ use Rikkei\Core\View\Form;
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="form_lastname">{{ trans('sales::view.Project base name') }} <span class="required">*</span></label>
-                                        <input type="text" class="form-control" id="project_name" name="project_name" tabindex=4 value="{{$css->project_name}}"  >
+                                        <label for="project_name">{{ trans('sales::view.Project base name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="project_name" name="project_name" tabindex=4 value="{{$css->project_name}}"  maxlength="200" >
                                     </div>
                                     <div class="form-group">
                                         <label for="form_lastname">{{ trans('sales::view.Team relate') }} <span class="required">*</span></label>
@@ -73,15 +73,15 @@ use Rikkei\Core\View\Form;
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_lastname">{{ trans('sales::view.PM name') }} <span class="required">*</span></label>
-                                        <input type="text" class="form-control" id="pm_name" name="pm_name" tabindex=5 value="{{$css->pm_name}}">
+                                        <label for="pm_name">{{ trans('sales::view.PM name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="pm_name" name="pm_name" tabindex=5 value="{{$css->pm_name}}" maxlength="100">
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_lastname">{{ trans('sales::view.BrSE name') }} <span class="required">*</span></label>
-                                        <input type="text" class="form-control" id="brse_name" name="brse_name" tabindex=6 value="{{$css->brse_name}}" >
+                                        <label for="brse_name">{{ trans('sales::view.BrSE name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="brse_name" name="brse_name" tabindex=6 value="{{$css->brse_name}}"  maxlength="100">
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_lastname">{{ trans('sales::view.Project date') }} <span class="required">*</span></label>
+                                        <label for="start_date">{{ trans('sales::view.Project date') }} <span class="required">*</span></label>
                                         <div >
                                             <div style="position: relative; display: inline;">
                                                 <div class="input-group-addon calendar-button" target="start_date" onclick="showCalendar(this);">

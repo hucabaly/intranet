@@ -45,38 +45,37 @@
                                     <div class="col-md-12" style="border-right: 1px solid #f4f4f4;">
                                         <div class="iradio-container">
                                             <input type="radio" name="tieuchi" id="tcProjectType"  checked>
-                                            <label class="label-normal" for="tcProjectType">Theo loại dự án</label>
+                                            <label class="label-normal" for="tcProjectType">{{trans("sales::view.By project type")}}</label>
                                         </div>
                                         <div class="iradio-container">
                                             <input type="radio" name="tieuchi" id="tcTeam" >
-                                            <label class="label-normal" for="tcTeam">Theo team</label>
+                                            <label class="label-normal" for="tcTeam">{{trans("sales::view.By team")}}</label>
                                         </div>
                                         <div class="iradio-container">
                                             <input type="radio" name="tieuchi" id="tcPm" >
-                                            <label class="label-normal" for="tcPm">Theo PM</label>
+                                            <label class="label-normal" for="tcPm">{{trans("sales::view.By pm")}}</label>
                                         </div>
                                         <div class="iradio-container">
                                             <input type="radio" name="tieuchi" id="tcBrse" >
-                                            <label class="label-normal" for="tcBrse">Theo BrSE</label>
+                                            <label class="label-normal" for="tcBrse">{{trans("sales::view.By brse")}}</label>
                                         </div>
                                         <div class="iradio-container">
                                             <input type="radio" name="tieuchi" id="tcCustomer" 
-                                            <label class="label-normal" for="tcCustomer">Theo khách hàng</label>
+                                            <label class="label-normal" for="tcCustomer">{{trans("sales::view.By customer")}}</label>
                                         </div>
                                         <div class="iradio-container">
                                             <input type="radio" name="tieuchi" id="tcSale" >
-                                            <label class="label-normal" for="tcSale">Theo nhân viên sale</label>
+                                            <label class="label-normal" for="tcSale">{{trans("sales::view.By sale")}}</label>
                                         </div>
                                         <div class="iradio-container">
                                             <input type="radio" name="tieuchi" id="tcQuestion" >
-                                            <label class="label-normal" for="tcQuestion">Theo Câu hỏi</label>
+                                            <label class="label-normal" for="tcQuestion">{{trans("sales::view.By question")}}</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div  class="theotieuchi">@include('sales::css.include.table_theotieuchi')</div>
-                                        <div class="theotieuchicauhoi">@include('sales::css.include.table_theotieuchicauhoi')</div>
                                     </div>
                                 </div>
                                 
@@ -137,21 +136,10 @@
                                 <div class="box-header with-border box-select-question">
                                     <div class="form-group">
                                         <label for="sel1">{{trans("sales::view.Question choose")}}</label>
-                                        <select class="form-control" id="question-choose">
-                                            <option value='0'>{{trans('sales::view.Please choose question')}}</option>
-                                            <option class="parent" disabled="disabled">OSDC</option>
-                                            <option class="parent" disabled="disabled">-- Kỹ năng, năng lực</option>
-                                            <option>---- Năng lực của nhân viên công ty cung cấp cho các bạn phù hợp chứ?</option>
-                                            <option>---- Kỹ năng về kỹ thuật của nhân viên công ty cung cấp cho các bạn phù hợp chứ (khả năng phân tích yêu cầu, thiết kế, coding,..)</option>
-                                            <option class="parent" disabled="disabled">OSDC</option>
-                                            <option class="parent" disabled="disabled">-- Kỹ năng, năng lực</option>
-                                            <option>---- Năng lực của nhân viên công ty cung cấp cho các bạn phù hợp chứ?</option>
-                                            <option>---- Kỹ năng về kỹ thuật của nhân viên công ty cung cấp cho các bạn phù hợp chứ (khả năng phân tích yêu cầu, thiết kế, coding,..)</option>
-                                        </select>
+                                        <select class="form-control" id="question-choose"></select>
                                     </div>
                                 </div>
                                   
-                            
                                 <div class="row">
                                  <!----------- Bảng danh sách dưới 3 sao ------------------->   
                                     <div class="col-md-6">
@@ -235,6 +223,7 @@
     <input type="hidden" id="teamIds_val" value="" />
     <input type="hidden" id="projectTypeIds_val" value="" />
     <input type="hidden" id="criteriaType_val" value="" />
+    <div class="modal apply-click-modal"><img class="loading-img" src="{{ asset('img/loading.gif') }}" /></div>
     
 @endsection
 
