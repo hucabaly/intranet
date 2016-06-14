@@ -49,7 +49,6 @@ function filterAnalyze(token){
     });
     
     //check if don't any check project type or team
-    
     if(projectTypeIds == ""){
         if(teamIds == ""){
             $('#modal-warning').modal('show');
@@ -67,8 +66,6 @@ function filterAnalyze(token){
         }
     }
 
-    
-    
     var startDate = $('.ui-rangeSlider-leftLabel .ui-rangeSlider-label-value').text();
     var endDate = $('.ui-rangeSlider-rightLabel .ui-rangeSlider-label-value').text();
     
@@ -89,7 +86,9 @@ function filterAnalyze(token){
         $(".apply-click-modal").hide();
         $("div.theotieuchi").html(data);
         $(".tbl-criteria").hide();
+        $(".no-result").hide();
         $("table[data-id="+criteriaType+"]").show();
+        $(".no-result-"+criteriaType).show();
         $(document).trigger('icheck');
         $("#startDate_val").val(startDate);
         $("#endDate_val").val(endDate);

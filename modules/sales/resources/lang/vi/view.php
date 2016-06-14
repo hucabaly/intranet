@@ -112,4 +112,5 @@ return [
     'By customer' => 'Theo khách hàng',
     'By sale' => 'Theo nhân viên sale',
     'By question' => 'Theo câu hỏi',
+    'No result not found' => 'Không có kết quả nào',
 ];
