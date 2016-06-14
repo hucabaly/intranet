@@ -541,42 +541,56 @@ $(document).on('icheck', function(){
     $('#tcProjectType').on('ifChecked', function (event) {
         $('.tbl-criteria').hide(); 
         $('table[data-id=tcProjectType]').show();
+        $('.no-result').hide();
+        $('.no-result-tcProjectType').show();
     });
 
     //show table team
     $('#tcTeam').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcTeam]').show();
+        $('.no-result').hide();
+        $('.no-result-tcTeam').show();
     });
 
     //show table pm
     $('#tcPm').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcPm]').show();
+        $('.no-result').hide();
+        $('.no-result-tcPm').show();
     });
 
     //show table brse
     $('#tcBrse').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcBrse]').show();
+        $('.no-result').hide();
+        $('.no-result-tcBrse').show();
     });
 
     //show table customer
     $('#tcCustomer').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcCustomer]').show();
+        $('.no-result').hide();
+        $('.no-result-tcCustomer').show();
     });    
 
     //show table sale
     $('#tcSale').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcSale]').show();
+        $('.no-result').hide();
+        $('.no-result-tcSale').show();
     }); 
 
     //show table question
     $('#tcQuestion').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcQuestion]').show();
+        $('.no-result').hide();
+        $('.no-result-tcQuestion').show();
     }); 
 }).trigger('icheck'); // trigger it for page load
     

@@ -273,7 +273,7 @@
 @endif
 
 <!------ table questions -------------->
-@if(isset($projectType) && count($projectType) > 0)
+@if(isset($question) && count($question) > 0)
 <table class="table table-hover dataTable tbl-criteria table-fixed" data-id="tcQuestion">
     <thead>
         <tr>
@@ -371,6 +371,4 @@
         @endforeach
     </tbody>
 </table> 
-@else
-<div class="col-md-12 no-result no-result-tcQuestion"><h3>{{trans('sales::view.No result not found')}}</h3></div>
 @endif

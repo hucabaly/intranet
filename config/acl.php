@@ -193,7 +193,8 @@ return [
             'view.detail' => [
                 'label' => 'Xem chi tiết css',
                 'routes' => [
-                    'sales::css.view'
+                    'sales::css.view',
+                    'sales::css.detail',
                 ]
             ],
             'edit.detail' => [
@@ -203,9 +204,6 @@ return [
                     'sales::css.update',
                     'sales::css.preview',
                     'sales::css.save',
-                    'sales::css.list',
-                    'sales::css.view',
-                    'sales::css.detail',
                     'sales::css.cancel',
                 ]
             ],
