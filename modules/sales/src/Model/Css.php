@@ -166,6 +166,18 @@ class Css extends Model
     }
     
     /**
+     * Get Project type by id
+     * @param int $project_type_id
+     * return object
+     */
+    public static function getProjectTypeById($project_type_id){
+        $project_type = DB::table("project_type")
+                ->where("id",$project_type_id)
+                ->first();
+        return $project_type;
+    }
+    
+    /**
      * Lay ten cua loai du an theo id
      * @param int $project_type_id
      * return string
@@ -771,4 +783,29 @@ class Css extends Model
                         ->first();
     }
     
+    /**
+     * get Css list
+     * @param int $perPage
+     */
+    public static function getCssList($perPage){
+        return DB::table('css')->orderBy('id', 'desc')->paginate($perPage);
+    }
+    
+    /**
+     * Get records in table css_team by css_id
+     * @param int $cssId
+     * @return object list
+     */
+    public static function getCssTeamByCssId($cssId){
+        return DB::table('css_team')->where('css_id',$cssId)->get();
+    }
+    
+    /**
+     * Get Team by id
+     * @param type $teamId
+     * @return team object
+     */
+    public static function getTeamById($teamId){
+        return Team::find($teamId);
+    }
 }

@@ -17,6 +17,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
+                                @if(count($css) > 0)
                                 <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                     <thead>
                                         <tr role="row">
@@ -59,8 +60,10 @@
                                         </tr>
                                         @endforeach
                                     </tbody>
-
                                 </table>
+                                @else
+                                <h3>{{trans('sales::view.No result not found')}}</h3>
+                                @endif
                             </div>
                         </div>
                         <div class="row">
