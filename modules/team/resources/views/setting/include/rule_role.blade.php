@@ -36,11 +36,11 @@ $scopeIcon = Permissions::scopeIconArray();
                   @else
                     @foreach ($acl as $aclKey => $aclValue)
                         <tr class="tr-col-screen">
-                            <td class="col-screen">{{ $aclValue['description'] }}</td>
+                            <td class="col-screen">{{ trans('team::acl.' . $aclValue['description']) }}</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                         </tr>
-                        @if ($aclValue['child'] && count($aclValue['child']))
+                        @if (isset($aclValue['child']) && count($aclValue['child']))
                             @foreach ($aclValue['child'] as $aclItemKey => $aclItem)
                                 <tr>
                                     <td class="col-screen-empty">&nbsp;</td>

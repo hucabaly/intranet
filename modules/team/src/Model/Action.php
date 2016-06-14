@@ -2,6 +2,7 @@
 namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\CoreModel;
+use Rikkei\Team\View\Config;
 
 class Action extends CoreModel
 {
@@ -75,5 +76,72 @@ class Action extends CoreModel
             ];
         }
         return $result;
+    }
+    
+    /**
+     * get collection to show grid data
+     * 
+     * @return collection model
+     */
+    public static function getGridData()
+    {
+        $pager = Config::getPagerData();
+        $collection = self::select('id','parent_id','route', 'name', 'description', 'sort_order')
+            ->orderBy($pager['order'], $pager['dir']);
+        $collection = self::filterGrid($collection);
+        $collection = $collection->paginate($pager['limit']);
+        return $collection;
+    }
+    
+    /**
+     * get collection to option
+     * 
+     * @param boolean $nullable
+     * @return array
+     */
+    public static function toOption($nullable = true)
+    {
+        $options = [];
+        if ($nullable) {
+            $options[] = [
+                'value' => '',
+                'label' => ''
+            ];
+        }
+        self::toOptionRecursive($options, null, 0);
+        return $options;
+    }
+    
+    /**
+     * 
+     * @param artay $options
+     * @param int|null $parentId
+     * @param int $level
+     */
+    public static function toOptionRecursive(&$options, $parentId = null, $level = 0)
+    {
+        //only get action level < 2
+        if ($level >= 2 ) {
+            return ;
+        }
+        $actions = self::select('id', 'description')
+            ->where('description', '<>', null)
+            ->where('description', '<>', '')
+            ->where('parent_id', $parentId)
+            ->get();
+        if (! count($actions)) {
+            return ;
+        }
+        $prefixLabel = '';
+        for ($i = 0 ; $i < $level ; $i++) {
+            $prefixLabel .= ' ---- ';
+        }
+        foreach ($actions as $action) {
+            $options[] = [
+                'value' => $action->id,
+                'label' => $prefixLabel . $action->description
+            ];
+            self::toOptionRecursive($options, $action->id, $level+1);
+        }
     }
 }

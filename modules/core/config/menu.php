@@ -86,4 +86,39 @@ return [
         'active' => '1',
         'action' => 'ams::route.name',
     ],
+    
+    'setting' => [
+        'path' => '#',
+        'label' => 'Setting',
+        'active' => '1',
+        'action' => 'sales::css.list',
+        'child' => [
+            'menu' => [
+                'path' => '#',
+                'label' => 'Menu',
+                'active' => '1',
+                'action' => 'sales::css.list*',
+                'child' => [
+                    'menu.group' => [
+                        'path' => 'sales/css/list',
+                        'label' => 'Danh sách CSS',
+                        'active' => '1',
+                        'action' => 'sales::css.list',
+                    ],
+                    'css.create' => [
+                        'path' => 'css/create',
+                        'label' => 'Tạo CSS',
+                        'active' => '1',
+                        'action' => 'sales::css.create',
+                    ],
+                    'css.analyze' => [
+                        'path' => 'css/analyze',
+                        'label' => 'Phân tích CSS',
+                        'active' => '1',
+                        'action' => 'sales::css.analyze',
+                    ]
+                ]
+            ]
+        ]        
+    ],
 ];

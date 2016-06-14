@@ -36,7 +36,6 @@ class RoleController extends TeamBaseController
         Breadcrumb::add($model->name, URL::route('team::setting.role.view', ['id' => $id]));
         Form::setData($model, 'role');
         $rolePermissions = Permissions::getRolePermission($id);
-        $roleRule = null; //RoleRule::where('role_id', $id)->get()
         return view('team::setting.index', [
             'rolePermissions' => $rolePermissions,
         ]);

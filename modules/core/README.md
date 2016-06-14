@@ -38,6 +38,12 @@ Then, run
 
 to update menu and acl
 
+#### Acl
+Acl has 3 level:
+- level 1: acl group, ex: Profile, Recruitment, Setting, ....
+- level 2: action label, ex: View profile, View list member,...
+- level 3: action route, ex: team::setting.team.edit, team::team.member.edit
+
 #### Add domain allow logged
 edit file `config.domain_logged.php`
 

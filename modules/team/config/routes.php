@@ -44,6 +44,24 @@ Route::group([
     Route::post('rule/save', 'PermissionController@saveRole')->name('rule.save');
 });
 
+//manage setting
+Route::group([
+    'prefix' => 'setting',
+    'as' => 'setting.'
+], function() {
+    //setting acl action
+    Route::group([
+        'prefix' => 'acl',
+        'as' => 'acl.'
+    ], function() {
+        Route::get('/','AclController@index')->name('index');
+        Route::get('create','AclController@create')->name('create');
+        Route::get('edit/{id}','AclController@edit')->name('edit')->where('id', '[0-9]+');
+        Route::post('save','AclController@save')->name('save');
+    });
+});
+
+
 //team 
 Route::group([
     'prefix' => 'team',

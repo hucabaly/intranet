@@ -15,4 +15,6 @@ return [
     'Error system' => 'Lỗi hệ thống',
     'not be greater than :number characters' => 'không được lớn hơn :number ký tự',
     'Profile' => 'Thông tin cá nhân',
+    'Back' => 'Quay lại',
+    
 ];
