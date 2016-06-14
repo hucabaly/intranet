@@ -2,7 +2,7 @@
 return [
     'home' => [
         'path' => '/',
-        'label' => 'Home aaaa',
+        'label' => 'Home',
         'active' => '1'
     ],
     'profile' => [
