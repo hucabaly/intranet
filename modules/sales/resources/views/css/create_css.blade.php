@@ -17,25 +17,25 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="form_name">{{ trans('sales::view.Sale name') }}</label>
+                                        <label for="user_name">{{ trans('sales::view.Sale name') }}</label>
                                         <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}">
                                         <input type="text" class="form-control" id="user_name" name="user_name" value="{{$user->name}}" disabled="disabled">
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_name">{{ trans('sales::view.Sale name jp') }}</label>
-                                        <input type="text" class="form-control" id="japanese_name" name="japanese_name" value="{{$user->japanese_name}}" <?php if($user->japanese_name != ""){ echo 'disabled="disabled"'; } ?> >
+                                        <label for="japanese_name">{{ trans('sales::view.Sale name jp') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="japanese_name" name="japanese_name" value="{{$user->japanese_name}}" maxlength="100" >
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_name">{{ trans('sales::view.Customer company') }} <span class="required">*</span></label>
-                                        <input type="text" class="form-control" id="company_name" name="company_name" tabindex=2 >
+                                        <label for="company_name">{{ trans('sales::view.Customer company') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="company_name" name="company_name" tabindex=2 maxlength="200"  >
                                     </div>
                                     <div class="form-group" style="position: relative;">
-                                        <label for="form_name">{{ trans('sales::view.Customer name') }} <span class="required">*</span></label>
-                                        <input type="text" class="form-control" id="customer_name" name="customer_name" tabindex=3 >
+                                        <label for="customer_name">{{ trans('sales::view.Customer name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="customer_name" name="customer_name" tabindex=3  maxlength="100" >
                                         <label class="sama_label">様</label>
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_name">{{ trans('sales::view.Project type') }} <span class="required">*</span></label>
+                                        <label for="project_type_id">{{ trans('sales::view.Project type') }} <span class="required">*</span></label>
                                         <div>
                                         @foreach($projects as $pj)
                                             <label class="radio-inline">
@@ -47,11 +47,11 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="form_lastname">{{ trans('sales::view.Project base name') }} <span class="required">*</span></label>
-                                        <input type="text" class="form-control" id="project_name" name="project_name" tabindex=4 >
+                                        <label for="project_name">{{ trans('sales::view.Project base name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="project_name" name="project_name" tabindex=4   maxlength="200" >
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_lastname">{{ trans('sales::view.Team relate') }} <span class="required">*</span></label>
+                                        <label >{{ trans('sales::view.Team relate') }} <span class="required">*</span></label>
                                         <div>
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teamsModal" data-whatever="@mdo" onclick="set_teams_popup();">{{ trans('sales::view.Set team') }}</button>
                                             <input id="team_id_check" name="team_id_check" type="text" value="" style="visibility: hidden; position: absolute;">
@@ -59,15 +59,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_lastname">{{ trans('sales::view.PM name') }} <span class="required">*</span></label>
-                                        <input type="text" class="form-control" id="pm_name" name="pm_name" tabindex=5>
+                                        <label for="pm_name">{{ trans('sales::view.PM name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="pm_name" name="pm_name" tabindex=5  maxlength="100" >
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_lastname">{{ trans('sales::view.BrSE name') }} <span class="required">*</span></label>
-                                        <input type="text" class="form-control" id="brse_name" name="brse_name" tabindex=6 >
+                                        <label for="brse_name">{{ trans('sales::view.BrSE name') }} <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="brse_name" name="brse_name" tabindex=6  maxlength="100"  >
                                     </div>
                                     <div class="form-group">
-                                        <label for="form_lastname">{{ trans('sales::view.Project date') }} <span class="required">*</span></label>
+                                        <label for="start_date">{{ trans('sales::view.Project date') }} <span class="required">*</span></label>
                                         <div >
                                             <div style="position: relative; display: inline;">
                                                 <div class="input-group-addon calendar-button" target="start_date" onclick="showCalendar(this);">

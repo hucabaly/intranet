@@ -745,4 +745,30 @@ class Css extends Model
         return DB::table("css_category")->where('id',$projectTypeId)->first();
     }
     
+    /**
+     * 
+     * @param ing $cssId
+     * @param date $startDate
+     * @param date $endDate
+     */
+    public static function getCssResultByCssId($cssId,$startDate,$endDate){
+        return DB::table("css_result")
+                ->where("css_id",$cssId)
+                ->where("created_at", ">=", $startDate)
+                ->where("created_at", "<=", $endDate)
+                ->get();
+    }
+    
+    /**
+     * 
+     * @param int $cssResultId
+     * @param int $questionId
+     */
+    public static function getCssResultDetail($cssResultId,$questionId){
+        return DB::table('css_result_detail')
+                        ->where("css_id",$cssResultId)
+                        ->where("question_id",$questionId)
+                        ->first();
+    }
+    
 }

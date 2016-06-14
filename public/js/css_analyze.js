@@ -71,7 +71,8 @@ function filterAnalyze(token){
     
     var startDate = $('.ui-rangeSlider-leftLabel .ui-rangeSlider-label-value').text();
     var endDate = $('.ui-rangeSlider-rightLabel .ui-rangeSlider-label-value').text();
-
+    
+    $(".apply-click-modal").show();
     $.ajax({
         url: '/css/filter_analyze',
         type: 'post',
@@ -85,10 +86,15 @@ function filterAnalyze(token){
         },
     })
     .done(function (data) { 
+        $(".apply-click-modal").hide();
         $("div.theotieuchi").html(data);
         $(".tbl-criteria").hide();
         $("table[data-id="+criteriaType+"]").show();
         $(document).trigger('icheck');
+        $("#startDate_val").val(startDate);
+        $("#endDate_val").val(endDate);
+        $("#teamIds_val").val(teamIds);
+        $("#projectTypeIds_val").val(projectTypeIds);
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
@@ -126,29 +132,17 @@ function apply(token){
         }
     });
     
-    //get team checked
-    var teamIds = "";
-    $('input[class=team-tree-checkbox]:checked').each(function(){
-        if(teamIds == ""){
-            teamIds = $(this).attr("data-id");
-        } else{
-            teamIds += "," + $(this).attr("data-id");
-        }
-    });
+    if(criteriaIds == ""){
+        $('#modal-warning').modal('show');
+        $('#modal-warning .modal-body').html("Phải chọn ít nhất một dòng ở bảng tiêu chí.");
+        return false;
+    }
     
-    //get project type checked
-    var projectTypeIds = "";
-    $('input[name=project_type]:checked').each(function(){
-        if(projectTypeIds == ""){
-            projectTypeIds = $(this).val();
-        } else{
-            projectTypeIds += "," + $(this).val();
-        }
-    });
-    
-    var startDate = $('.ui-rangeSlider-leftLabel .ui-rangeSlider-label-value').text();
-    var endDate = $('.ui-rangeSlider-rightLabel .ui-rangeSlider-label-value').text();
-    
+    var teamIds = $("#teamIds_val").val();
+    var projectTypeIds = $("#projectTypeIds_val").val();
+    var startDate = $("#startDate_val").val();
+    var endDate = $("#endDate_val").val();
+    $(".apply-click-modal").show();
     $.ajax({
         url: '/css/apply_analyze',
         type: 'post',
@@ -162,14 +156,8 @@ function apply(token){
             criteriaType: criteriaType,
         },
     })
-    .done(function (data) {  console.log(data); 
-        $("#startDate_val").val(startDate);
-        $("#endDate_val").val(endDate);
-        $("#criteriaIds_val").val(criteriaIds);
-        $("#teamIds_val").val(teamIds);
-        $("#projectTypeIds_val").val(projectTypeIds);
-        $("#criteriaType_val").val(criteriaType);
-        
+    .done(function (data) {  
+        $(".apply-click-modal").hide();
         $(".ketquaapply").show();
         if(criteriaType == "tcQuestion"){
             $(".box-select-question").show();
@@ -236,8 +224,7 @@ function apply(token){
             },
 
             xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                categories: []
             },
             yAxis: {
                 title: {
@@ -264,34 +251,39 @@ function apply(token){
             //danh sach cau hoi duoi 3 sao
             var countResult = data["lessThreeStar"]["cssResultdata"].length; 
             html = "";
-            for(var i=0; i<countResult; i++){
-                html += "<tr>";
-                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["no"]+"</td>";
-                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["projectName"]+"</td>";
-                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["questionName"]+"</td>";
-                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["stars"]+"</td>";
-                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["comment"]+"</td>";
-                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["makeDateCss"]+"</td>";
-                html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["cssPoint"]+"</td>";
-                html += "</tr>";   
-            }
-            $("#duoi3sao tbody").html(html);
-            $("#duoi3sao").parent().find(".pagination").html(data["lessThreeStar"]["paginationRender"]);
+            if(countResult > 0){
+                for(var i=0; i<countResult; i++){
+                    html += "<tr>";
+                    html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["no"]+"</td>";
+                    html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["projectName"]+"</td>";
+                    html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["questionName"]+"</td>";
+                    html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["stars"]+"</td>";
+                    html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["comment"]+"</td>";
+                    html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["makeDateCss"]+"</td>";
+                    html += "<td>"+data["lessThreeStar"]["cssResultdata"][i]["cssPoint"]+"</td>";
+                    html += "</tr>";   
+                }
+                $("#duoi3sao tbody").html(html);
+                $("#duoi3sao").parent().find(".pagination").html(data["lessThreeStar"]["paginationRender"]);
 
-            //danh sach de xuat
-            var countResult = data["proposes"]["cssResultdata"].length; 
-            html = "";
-            for(var i=0; i<countResult; i++){
-                html += "<tr>";
-                html += "<td>"+data["proposes"]["cssResultdata"][i]["no"]+"</td>";
-                html += "<td>"+data["proposes"]["cssResultdata"][i]["projectName"]+"</td>";
-                html += "<td>"+data["proposes"]["cssResultdata"][i]["customerComment"]+"</td>";
-                html += "<td>"+data["proposes"]["cssResultdata"][i]["makeDateCss"]+"</td>";
-                html += "<td>"+data["proposes"]["cssResultdata"][i]["cssPoint"]+"</td>";
-                html += "</tr>";   
+                //danh sach de xuat
+                var countResult = data["proposes"]["cssResultdata"].length; 
+                html = "";
+                for(var i=0; i<countResult; i++){
+                    html += "<tr>";
+                    html += "<td>"+data["proposes"]["cssResultdata"][i]["no"]+"</td>";
+                    html += "<td>"+data["proposes"]["cssResultdata"][i]["projectName"]+"</td>";
+                    html += "<td>"+data["proposes"]["cssResultdata"][i]["customerComment"]+"</td>";
+                    html += "<td>"+data["proposes"]["cssResultdata"][i]["makeDateCss"]+"</td>";
+                    html += "<td>"+data["proposes"]["cssResultdata"][i]["cssPoint"]+"</td>";
+                    html += "</tr>";   
+                }
+                $("#danhsachdexuat tbody").html(html);
+                $("#danhsachdexuat").parent().find(".pagination").html(data["proposes"]["paginationRender"]);
+            }else{
+                $("#duoi3sao tbody").html(noResult);
+                $("#danhsachdexuat tbody").html(noResult);
             }
-            $("#danhsachdexuat tbody").html(html);
-            $("#danhsachdexuat").parent().find(".pagination").html(data["proposes"]["paginationRender"]);
         }else{
             $("#duoi3sao tbody").html('');
             $("#duoi3sao").parent().find(".pagination").html('');
@@ -326,6 +318,9 @@ function getCriteriaChecked(){
         return "checkQuestionItem";
     }
 }
+
+strLoading = '<tr class="loading"><td colspan="7"><img class="loading-img" src="'+baseUrl+'img/loading.gif" /></td></tr>';
+noResult = '<tr><td colspan="7" style="text-align:center;">Không có kết quả nào được tìm thấy</td></tr>';
 
 /**
  * Show analyze project list paginate
@@ -363,6 +358,8 @@ function showAnalyzeListProject(curpage,token){
             criteriaType = "question";
             break;
     }
+    
+    $("#danhsachduan tbody").html(strLoading);
     $.ajax({
         url: baseUrl + 'css/show_analyze_list_project/'+criteriaIds+'/'+teamIds+'/'+ projectTypeIds+'/'+startDate+'/'+endDate+'/'+criteriaType+'/'+curpage,
         type: 'post',
@@ -398,6 +395,7 @@ function showAnalyzeListProject(curpage,token){
  * @param string token
  */
 function getListLessThreeStar(curpage,token,cssresultids){
+    $("#duoi3sao tbody").html(strLoading);
     $.ajax({
         url: baseUrl + 'css/get_list_less_three_star/'+cssresultids+'/'+curpage,
         type: 'post',
@@ -408,19 +406,23 @@ function getListLessThreeStar(curpage,token,cssresultids){
     .done(function (data) { 
         var countResult = data["cssResultdata"].length; 
         html = "";
-        for(var i=0; i<countResult; i++){
-            html += "<tr>";
-            html += "<td>"+data["cssResultdata"][i]["no"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["projectName"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["questionName"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["stars"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["comment"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["makeDateCss"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["cssPoint"]+"</td>";
-            html += "</tr>";   
+        if(countResult > 0){
+            for(var i=0; i<countResult; i++){
+                html += "<tr>";
+                html += "<td>"+data["cssResultdata"][i]["no"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["projectName"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["questionName"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["stars"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["comment"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["makeDateCss"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["cssPoint"]+"</td>";
+                html += "</tr>";   
+            }
+            $("#duoi3sao tbody").html(html);
+            $("#duoi3sao").parent().find(".pagination").html(data["paginationRender"]);
+        }else{
+            $("#duoi3sao tbody").html(noResult);
         }
-        $("#duoi3sao tbody").html(html);
-        $("#duoi3sao").parent().find(".pagination").html(data["paginationRender"]);
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
@@ -433,6 +435,7 @@ function getListLessThreeStar(curpage,token,cssresultids){
  * @param string token
  */
 function getProposes(curpage,token,cssresultids){
+    $("#danhsachdexuat tbody").html(strLoading);
     $.ajax({
         url: baseUrl + 'css/get_proposes/'+cssresultids+'/'+curpage,
         type: 'post',
@@ -482,7 +485,7 @@ $(document).on('icheck', function(){
             if (!triggeredByChild) {
                 $(id).iCheck('uncheck');
             }
-            triggeredByChild = true;
+            triggeredByChild = false;
         });
 
         // Remove the checked state from "All" if any checkbox is unchecked
@@ -517,10 +520,10 @@ $(document).on('icheck', function(){
             var parent_id = $(this).attr('data-id');
             $('.checkQuestionItem[parent-id='+parent_id+']').iCheck('uncheck');
         }
-        triggeredByChild = true;
+        triggeredByChild = false;
     });
     
-    // Remove the checked state from "All" if any checkbox is unchecked
+    //Remove the checked state from "All" if any checkbox is unchecked
     $('.checkQuestionItem').on('ifUnchecked', function (event) {
         triggeredByChild = true;
         var parent_id = $(this).attr('parent-id');
@@ -580,6 +583,7 @@ $(document).on('icheck', function(){
     
 $(document).ready(function(){
    $(".box-select-question #question-choose").change(function(){
+       $(".box-select-question #question-choose option[value=0]").remove();
        var questionId = $(this).val(); 
        if(questionId == 0){
            $("#duoi3sao tbody").html('');
@@ -605,6 +609,7 @@ $(document).ready(function(){
  * @param string cssresultids
  */
 function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids){
+    $("#duoi3sao tbody").html(strLoading);
     $.ajax({
         url: baseUrl + 'css/get_list_less_three_star_question/'+questionId+'/'+cssresultids+'/'+curpage,
         type: 'post',
@@ -615,7 +620,8 @@ function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids){
     .done(function (data) { 
         var countResult = data["cssResultdata"].length; 
         html = "";
-        for(var i=0; i<countResult; i++){
+        if(countResult > 0){
+            for(var i=0; i<countResult; i++){
             html += "<tr>";
             html += "<td>"+data["cssResultdata"][i]["no"]+"</td>";
             html += "<td>"+data["cssResultdata"][i]["projectName"]+"</td>";
@@ -625,9 +631,12 @@ function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids){
             html += "<td>"+data["cssResultdata"][i]["makeDateCss"]+"</td>";
             html += "<td>"+data["cssResultdata"][i]["cssPoint"]+"</td>";
             html += "</tr>";   
+            }
+            $("#duoi3sao tbody").html(html);
+            $("#duoi3sao").parent().find(".pagination").html(data["paginationRender"]);
+        }else {
+            $("#duoi3sao tbody").html(noResult);
         }
-        $("#duoi3sao tbody").html(html);
-        $("#duoi3sao").parent().find(".pagination").html(data["paginationRender"]);
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
@@ -642,6 +651,7 @@ function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids){
  * @param string cssresultids
  */
 function getProposesQuestion(questionId,curpage,token,cssresultids){
+    $("#danhsachdexuat tbody").html(strLoading);
     $.ajax({
         url: baseUrl + 'css/get_proposes_question/'+questionId+'/'+cssresultids+'/'+curpage,
         type: 'post',
@@ -653,17 +663,21 @@ function getProposesQuestion(questionId,curpage,token,cssresultids){
         //danh sach de xuat
         var countResult = data["cssResultdata"].length; 
         html = "";
-        for(var i=0; i<countResult; i++){
-            html += "<tr>";
-            html += "<td>"+data["cssResultdata"][i]["no"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["projectName"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["customerComment"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["makeDateCss"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["cssPoint"]+"</td>";
-            html += "</tr>";   
+        if(countResult > 0){
+            for(var i=0; i<countResult; i++){
+                html += "<tr>";
+                html += "<td>"+data["cssResultdata"][i]["no"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["projectName"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["customerComment"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["makeDateCss"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["cssPoint"]+"</td>";
+                html += "</tr>";   
+            }
+            $("#danhsachdexuat tbody").html(html);
+            $("#danhsachdexuat").parent().find(".pagination").html(data["paginationRender"]);
+        }else{
+            $("#danhsachdexuat tbody").html(noResult);
         }
-        $("#danhsachdexuat tbody").html(html);
-        $("#danhsachdexuat").parent().find(".pagination").html(data["paginationRender"]);
     })
     .fail(function () {
         alert("Ajax failed to fetch data");

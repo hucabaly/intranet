@@ -267,9 +267,9 @@
         <tr>
             <th class="col-xs-7">{{trans('sales::view.Css')}}</th>
             <th class="col-xs-1">{{trans('sales::view.Count css')}}</th>
-            <th class="col-xs-1">{{trans('sales::view.Avg css')}}</th>
-            <th class="col-xs-1">{{trans('sales::view.Max css')}}</th>
-            <th class="col-xs-1">{{trans('sales::view.Min css')}}</th>
+            <th class="col-xs-1">{{trans('sales::view.Avg point')}}</th>
+            <th class="col-xs-1">{{trans('sales::view.Max point')}}</th>
+            <th class="col-xs-1">{{trans('sales::view.Min point')}}</th>
             <th class="col-xs-1">{{trans('sales::view.Check')}}
                 <label class="label-normal">
                     <div class="icheckbox">
