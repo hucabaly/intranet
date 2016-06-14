@@ -4,6 +4,8 @@ namespace Rikkei\Team\Model;
 use Rikkei\Core\Model\CoreModel;
 use Rikkei\Team\View\Config;
 use DB;
+use Exception;
+use Lang;
 
 class Roles extends CoreModel
 {
@@ -69,11 +71,20 @@ class Roles extends CoreModel
      */
     public function delete()
     {
-        return parent::delete();
+        if ($this->isPosition()) {
+            if ($length = $this->getNumberMember()) {
+                throw new Exception(Lang::get("team::messages.Position :name has :number members, can't delete!",[
+                    'name' => $this->role,
+                    'number' => $length
+                ]));
+            }
+        }
         DB::beginTransaction();
         try {
-            EmployeeRole::where('role_id', $this->id)->delete();
-            RoleRule::where('role_id', $this->id)->delete();
+            Permissions::where('role_id', $this->id)->delete();
+            if ($this->isRole()) {
+                EmployeeRole::where('role_id', $this->id)->delete();
+            }
             $result = parent::delete();
             DB::commit();
         } catch (Exception $ex) {
@@ -213,5 +224,18 @@ class Roles extends CoreModel
             ];
         }
         return $result;
+    }
+    
+    /**
+     * get number member of a position
+     * 
+     * @return int
+     */
+    public function getNumberMember()
+    {
+        $children = TeamMembers::select(DB::raw('count(*) as count'))
+            ->where('role_id', $this->id)
+            ->first();
+        return $children->count;
     }
 }

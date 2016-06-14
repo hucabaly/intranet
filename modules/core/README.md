@@ -31,7 +31,12 @@ edit file `modules/core/config/menu.php`, format file:
         ]
     ];
 
-Then, run `php artisan db:seed` to update menu
+
+Then, run 
+    `composer dump-autoload`
+    `php artisan db:seed --class=PermissionSeeder` 
+
+to update menu and acl
 
 #### Add domain allow logged
 edit file `config.domain_logged.php`

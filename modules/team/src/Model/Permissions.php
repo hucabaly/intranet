@@ -3,6 +3,7 @@ namespace Rikkei\Team\Model;
 
 use DB;
 use Lang;
+use Exception;
 
 class Permissions extends \Rikkei\Core\Model\CoreModel
 {

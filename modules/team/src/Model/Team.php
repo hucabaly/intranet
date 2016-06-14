@@ -114,10 +114,10 @@ class Team extends CoreModel
             // TO DO check table Relationship: team position, user, css, ...
             
             //delete team rule
-            TeamRule::where('team_id', $this->id)->delete();
+            Permissions::where('team_id', $this->id)->delete();
             //set permission as of  teams follow this team to 0
-            Team::where('permission_as', $this->id)->update([
-                'permission_as' => 0
+            Team::where('follow_team_id', $this->id)->update([
+                'follow_team_id' => null
             ]);
             //delete team item
             parent::delete();
