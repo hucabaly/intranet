@@ -9,10 +9,10 @@
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.Sale name') }}</label></td>
-        <td class="infomation">{{$user->name}}</td>
+        <td class="infomation">{{$user->japanese_name}}</td>
         <td class="title2"><label>{{ trans('sales::view.Customer name') }}</label></td>
         <td class="infomation">{{$css->customer_name}}</td>
-        <td rowspan="3" class="<?php echo ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' ?>">
+        <td rowspan="3" class="{{ ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' }}">
             <div>{{ trans('sales::view.Total mark') }}</div>
             <div class="diem">00.00</div>
         </td>
@@ -33,7 +33,7 @@
     </tr>
 </table>
 <div class="visible-check"></div>
-<table class="table table-bordered bang2 <?php echo ($css->project_type_id == 1) ? 'table-osdc' : 'table-base' ?>">
+<table class="table table-bordered bang2 {{($css->project_type_id == 1) ? 'table-osdc' : 'table-base' }}">
   <!-- header -->
   <tr class="header">
       <td><label>{{ trans('sales::view.No.') }}</label></td>

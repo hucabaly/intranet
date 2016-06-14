@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.guest')
 
 @section('content')
 <div class="container box box-primary" style="background-color: #fff;min-height: 400px;">
@@ -15,7 +15,7 @@
                             <p><?php echo trans('sales::view.Hello',["customer_name" => $css->customer_name, "company_name" => $css->company_name]) ?></p>
                             <p>{{ trans('sales::view.Thank you message') }}</p>
                             <p><?php echo trans('sales::view.Please message',["project_name" => $css->project_name]) ?></p>
-                            <p class="kinh-thu"><?php echo trans('sales::view.Respect',["user_name" => $user->name]) ?></p>
+                            <p class="kinh-thu"><?php echo trans('sales::view.Respect',["user_name" => $user->japanese_name]) ?></p>
                             <div style="clear:both;"></div>
                             <button type="button" class="btn btn-primary btn-next" onclick="goto_make();">{{ trans('sales::view.Next') }}</button>
                         </div>
@@ -60,10 +60,7 @@
         $(".make-css").show();
     }
     <?php if(Auth::check()): ?>
-        //$(document).ready(function(){
-            $('#modal-confirm-make').show();
-        //});
-        
+        $('#modal-confirm-make').show();
     <?php endif; ?>
         
     function hideModalConfirmMake(){
