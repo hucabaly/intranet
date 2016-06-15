@@ -49,17 +49,22 @@ class MenuGroupController extends Controller
     }
     
     /**
-     * save member
+     * save menu group
      */
     public function save()
     {
+        //if submit is delete action
+        if (Input::get('submit_delete')) {
+            return $this->delete();
+        }
+        
         $id = Input::get('id');
         if (! $id) {
             $model = new Menus();
         } else {
             $model = Menus::find($id);
             if (! $model) {
-                return redirect()->route('core::setting.menu.group.menu')->withErrors(Lang::get('team::messages.Not found item.'));
+                return redirect()->route('core::setting.menu.group.index')->withErrors(Lang::get('team::messages.Not found item.'));
             }
         }
         $dataItem = Input::get('item');
@@ -89,12 +94,30 @@ class MenuGroupController extends Controller
     }
     
     /**
-     * create member
+     * create menu group
      */
     public function create()
     {
         return view('core::menu.group.edit');
     }
+    
+    public function delete()
+    {
+        $id = Input::get('id');
+        $model = Menus::find($id);
+        if (! $model) {
+            return redirect()->route('core::setting.menu.group.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        try {
+            $model->delete();echo 3;exit;
+            $messages = [
+                    'success'=> [
+                        Lang::get('team::messages.Delete item success!'),
+                    ]
+            ];
+            return redirect()->route('core::setting.menu.group.index')->with('messages', $messages);
+        } catch (Exception $ex) {
+            return redirect()->route('core::setting.menu.group.index')->withErrors($ex);
+        }
+    }
 }
-
-

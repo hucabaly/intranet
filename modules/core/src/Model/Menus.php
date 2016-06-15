@@ -6,6 +6,7 @@ use Rikkei\Team\View\Config;
 use Lang;
 use Exception;
 use DB;
+use Rikkei\Core\Model\MenuItems;
 
 /**
  * Menus object
@@ -90,6 +91,33 @@ class Menus extends CoreModel
             Db::commit();
         } catch (Exception $ex) {
             DB::rollback();
+            throw $ex;
+        }
+    }
+    
+    /**
+     * count menu item
+     */
+    public function countMenuItem()
+    {
+        $items = MenuItems::select(DB::raw('COUNT(*) AS count'))
+            ->where('menu_id', $this->id)
+            ->first();
+        return $items->count;
+    }
+    
+    /**
+     * rewrite delete
+     */
+    public function delete() {
+        $count = $this->countMenuItem();
+        if ($count) {
+            $message = Lang::get("core::view.This menu group has :number items, can't delete", ['number' => $count]);
+            throw new Exception($message);
+        }
+        try {
+            return parent::delete();
+        } catch (Exception $ex) {
             throw $ex;
         }
     }

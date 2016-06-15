@@ -48,6 +48,7 @@ Route::group([
             Route::get('create','MenuGroupController@create')->name('create');
             Route::get('edit/{id}','MenuGroupController@edit')->name('edit')->where('id', '[0-9]+');
             Route::post('save','MenuGroupController@save')->name('save');
+            Route::post('delete','MenuGroupController@delete')->name('delete');
         });
     });
 });
