@@ -73,7 +73,7 @@ return [
                         'path' => 'css/analyze',
                         'label' => 'Phân tích CSS',
                         'active' => '1',
-                        'action_code' => 'sales::css.analyze',
+                        'action_code' => 'view.analyze.css',
                     ]
                 ]
             ]

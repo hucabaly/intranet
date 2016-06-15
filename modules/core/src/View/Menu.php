@@ -132,7 +132,7 @@ class Menu
             $html .= "<a href=\"{$urlMenu}\"{$classA}{$optionA}>";
             $html .= $item->name;
             $html .= '</a>';
-            if ($hasChild) {
+            if ($hasChild && e($htmlMenuChild)) {
                 $html .= '<ul class="dropdown-menu" role="menu">';
                 $html .= $htmlMenuChild;
                 $html .= '</ul>';

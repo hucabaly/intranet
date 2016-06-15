@@ -4,7 +4,7 @@ namespace Rikkei\Core\Seeds;
 use Illuminate\Database\Seeder;
 use Rikkei\Core\Model\Menus;
 use Rikkei\Core\Model\MenuItems;
-use Illuminate\Support\Facades\Config;
+use Rikkei\Team\Model\Action;
 use DB;
 
 class MenuItemsSeeder extends Seeder
@@ -62,6 +62,12 @@ class MenuItemsSeeder extends Seeder
             }
             if (isset($item['active']) && $item['active']) {
                 $dataItem['state'] = $item['active'];
+            }
+            if (isset($item['action_code']) && $item['action_code']) {
+                $actionPermission = Action::where('name', $item['action_code'])->first();
+                if ($actionPermission) {
+                    $dataItem['action_id'] = $actionPermission->id;
+                }
             }
             $menuItem = MenuItems::where('menu_id', $menuId)
                 ->where('url', $dataItem['url'])

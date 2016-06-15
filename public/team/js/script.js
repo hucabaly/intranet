@@ -73,7 +73,9 @@ jQuery(document).ready(function ($) {
     /**
      * padding table rule
      */
+    lengthTrTableRule = $('.team-rule-wrapper table.table-team-rule tbody tr').length;
     $('.team-rule-wrapper table.table-team-rule tbody tr:last-child .form-input-dropdown').addClass('input-rule-last');
+    $('.team-rule-wrapper table.table-team-rule tbody tr:nth-child(' + (lengthTrTableRule - 1) + ') .form-input-dropdown').addClass('input-rule-last');
     var paddingTableRule = $('.team-rule-wrapper .table-responsive').css('padding-bottom');
     $('.input-rule-last').on('show.bs.dropdown', function () {
         $('.team-rule-wrapper .table-responsive').css('padding-bottom', '90px');
