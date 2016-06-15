@@ -285,7 +285,7 @@
             <th class="col-xs-1">{{trans('sales::view.Check')}}
                 <label class="label-normal">
                     <div class="icheckbox">
-                        <input type="checkbox" name="team[4]" id="checkQuestion">
+                        <input type="checkbox" data-id='0' class="checkQuestionItem">
                     </div>
                 </label>
             </th>

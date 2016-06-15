@@ -67,8 +67,6 @@
                     <!-- /.col -->
                 </div>
                 <!-- /.row -->
-            
-
 @endsection
 <!-- Styles -->
 @section('css')
@@ -83,5 +81,4 @@
 <script type="text/javascript">
     $(function () { $('#rateit_star').rateit({min: 1, max: 10, step: 2}); });
 </script>
-- See more at: http://hocphp.info/danh-gia-dang-ngoi-sao-voi-jquery-rateit/#sthash.e8vhG2FN.dpuf
 @endsection
