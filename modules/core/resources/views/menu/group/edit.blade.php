@@ -26,8 +26,10 @@ $actionOptions = Menus::toOptionState();
         <div class=" col-md-12 box-action">
             <input type="submit" class="btn-edit" name="submit" value="{{ trans('team::view.Save') }}" />
             <a href="{{ route('core::setting.menu.group.index') }}" class="btn btn-primary">{{ trans('core::view.Back') }}</a>
-            <input type="submit" class="btn-delete btn-action<?php if (Form::getData('menus.id')): ?> delete-confirm<?php endif; ?>" 
+            @if (Form::getData('menus.id'))
+                <input type="submit" class="btn-delete btn-action delete-confirm" 
                    disabled name="submit_delete" value="{{ trans('team::view.Remove') }}" />
+            @endif
         </div>
         <div class="col-md-12">
             <div class="box box-info">

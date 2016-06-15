@@ -121,4 +121,33 @@ class Menus extends CoreModel
             throw $ex;
         }
     }
+    
+    /**
+     * to option array
+     * 
+     * @return array
+     */
+    public static function toOption($nullable = false)
+    {
+        $menus = self::select('id', 'name')
+            ->where('state', '<>', self::FLAG_DISABLE)
+            ->orderBy('name')
+            ->get();
+        $options = [];
+        if ($nullable) {
+            $options[] = [
+                'value' => '',
+                'label' => '',
+            ];
+        }
+        if (count($menus)) {
+            foreach ($menus as $menu) {
+                $options[] = [
+                    'value' => $menu->id,
+                    'label' => $menu->name,
+                ];
+            }
+        }
+        return $options;
+    }
 }

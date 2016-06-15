@@ -10,7 +10,6 @@ use Lang;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Rikkei\Team\Model\Permissions;
-use Exception;
 
 class RoleController extends \Rikkei\Core\Http\Controllers\Controller
 {

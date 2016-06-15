@@ -50,7 +50,7 @@ $actionOptions = Action::toOption();
                     <div class="form-group form-label-left">
                         <label class="col-md-3 control-label">{{ trans('team::view.Sort order') }}</label>
                         <div class="input-box col-md-9">
-                            <input type="number" name="item[sort_order]]" class="form-control" placeholder="{{ trans('team::view.Sort order') }}" value="{{ Form::getData('acl.sort_order') }}" />
+                            <input type="number" name="item[sort_order]" class="form-control" placeholder="{{ trans('team::view.Sort order') }}" value="{{ Form::getData('acl.sort_order') }}" />
                         </div>
                     </div>
                     

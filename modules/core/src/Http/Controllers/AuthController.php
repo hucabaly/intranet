@@ -14,7 +14,6 @@ use Illuminate\Support\ViewErrorBag;
 use Lang;
 use Illuminate\Support\MessageBag;
 use Rikkei\Team\Model\Employees;
-use Exception;
 
 class AuthController extends Controller
 {

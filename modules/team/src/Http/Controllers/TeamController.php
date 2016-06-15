@@ -11,7 +11,6 @@ use Rikkei\Core\View\Breadcrumb;
 use URL;
 use Rikkei\Team\Model\Roles;
 use Rikkei\Team\Model\Permissions;
-use Exception;
 
 class TeamController extends \Rikkei\Core\Http\Controllers\Controller
 {

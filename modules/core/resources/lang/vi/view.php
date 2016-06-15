@@ -25,4 +25,6 @@ return [
     'Main menu' =>  'Menu chính',
     'Create new' =>  'Tạo mới',
     "This menu group has :number items, can't delete" =>  'Menu group này có :number đối tượng, không thể xóa',
+    'Are you sure delete this menu and all children?' => 'Bạn có chắc chắn muốn xóa menu này và tất cả con của nó?',
+    
 ];

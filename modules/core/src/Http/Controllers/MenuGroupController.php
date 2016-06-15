@@ -10,7 +10,6 @@ use Lang;
 use Rikkei\Core\View\Menu;
 use Rikkei\Core\Model\Menus;
 use Illuminate\Support\Facades\Validator;
-use Exception;
 
 class MenuGroupController extends Controller
 {
@@ -109,7 +108,7 @@ class MenuGroupController extends Controller
             return redirect()->route('core::setting.menu.group.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         try {
-            $model->delete();echo 3;exit;
+            $model->delete();
             $messages = [
                     'success'=> [
                         Lang::get('team::messages.Delete item success!'),

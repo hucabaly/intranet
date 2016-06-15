@@ -3,6 +3,7 @@ namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\CoreModel;
 use Rikkei\Team\View\Config;
+use Illuminate\Support\Facades\Lang;
 
 class Action extends CoreModel
 {
@@ -99,7 +100,7 @@ class Action extends CoreModel
      * @param boolean $nullable
      * @return array
      */
-    public static function toOption($nullable = true)
+    public static function toOption($nullable = true, $translate = true)
     {
         $options = [];
         if ($nullable) {
@@ -108,7 +109,7 @@ class Action extends CoreModel
                 'label' => ''
             ];
         }
-        self::toOptionRecursive($options, null, 0);
+        self::toOptionRecursive($options, null, 0, $translate);
         return $options;
     }
     
@@ -118,7 +119,7 @@ class Action extends CoreModel
      * @param int|null $parentId
      * @param int $level
      */
-    public static function toOptionRecursive(&$options, $parentId = null, $level = 0)
+    public static function toOptionRecursive(&$options, $parentId = null, $level = 0, $translate = true)
     {
         //only get action level < 2
         if ($level >= 2 ) {
@@ -137,10 +138,17 @@ class Action extends CoreModel
             $prefixLabel .= ' ---- ';
         }
         foreach ($actions as $action) {
-            $options[] = [
-                'value' => $action->id,
-                'label' => $prefixLabel . $action->description
-            ];
+            if ($translate) {
+                $options[] = [
+                    'value' => $action->id,
+                    'label' => $prefixLabel . Lang::get('acl.' . $action->description)
+                ];
+            } else {
+                $options[] = [
+                    'value' => $action->id,
+                    'label' => $prefixLabel . $action->description
+                ];
+            }
             self::toOptionRecursive($options, $action->id, $level+1);
         }
     }
