@@ -521,27 +521,27 @@ $(document).on('icheck', function(){
     
     // Make "Item" unchecked if checkAll are unchecked
     $('.checkQuestionItem').on('ifUnchecked', function (event) {
-        if (!triggeredByChild) {
+        //if (!triggeredByChild) {
             var parent_id = $(this).attr('data-id');
             $('.checkQuestionItem[parent-id='+parent_id+']').iCheck('uncheck');
-        }
+        //}
         triggeredByChild = false;
     });
     
-    //Remove the checked state from "All" if any checkbox is unchecked
-    $('.checkQuestionItem').on('ifUnchecked', function (event) {
-        triggeredByChild = true;
-        var parent_id = $(this).attr('parent-id');
-        $('.checkQuestionItem[data-id='+parent_id+']').iCheck('uncheck');
-    });
-
-    // Make "All" checked if all checkboxes are checked
-    $('.checkQuestionItem').on('ifChecked', function (event) {
-        var parent_id = $(this).attr('parent-id');
-        if ($('.checkQuestionItem[parent-id='+parent_id+']').filter(':checked').length == $('.checkQuestionItem[parent-id='+parent_id+']').length) {
-            $('.checkQuestionItem[data-id='+parent_id+']').iCheck('check');
-        }
-    });
+//    //Remove the checked state from "All" if any checkbox is unchecked
+//    $('.checkQuestionItem').on('ifUnchecked', function (event) {
+//        triggeredByChild = true;
+//        var parent_id = $(this).attr('parent-id');
+//        $('.checkQuestionItem[data-id='+parent_id+']').iCheck('uncheck');
+//    });
+//
+//    // Make "All" checked if all checkboxes are checked
+//    $('.checkQuestionItem').on('ifChecked', function (event) {
+//        var parent_id = $(this).attr('parent-id');
+//        if ($('.checkQuestionItem[parent-id='+parent_id+']').filter(':checked').length == $('.checkQuestionItem[parent-id='+parent_id+']').length) {
+//            $('.checkQuestionItem[data-id='+parent_id+']').iCheck('check');
+//        }
+//    });
     
     //show table project type
     $('#tcProjectType').on('ifChecked', function (event) {
