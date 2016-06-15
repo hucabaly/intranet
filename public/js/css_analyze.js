@@ -156,6 +156,8 @@ function apply(token){
         },
     })
     .done(function (data) {  
+        $("#criteriaIds_val").val(criteriaIds);
+        $("#criteriaType_val").val(criteriaType);
         $(".apply-click-modal").hide();
         $(".ketquaapply").show();
         if(criteriaType == "tcQuestion"){
@@ -264,10 +266,14 @@ function apply(token){
                 }
                 $("#duoi3sao tbody").html(html);
                 $("#duoi3sao").parent().find(".pagination").html(data["lessThreeStar"]["paginationRender"]);
-
-                //danh sach de xuat
-                var countResult = data["proposes"]["cssResultdata"].length; 
-                html = "";
+            }else{
+                $("#duoi3sao tbody").html(noResult);
+            }
+            
+            //danh sach de xuat
+            countResult = data["proposes"]["cssResultdata"].length; 
+            html = "";
+            if(countResult > 0){
                 for(var i=0; i<countResult; i++){
                     html += "<tr>";
                     html += "<td>"+data["proposes"]["cssResultdata"][i]["no"]+"</td>";
@@ -280,7 +286,7 @@ function apply(token){
                 $("#danhsachdexuat tbody").html(html);
                 $("#danhsachdexuat").parent().find(".pagination").html(data["proposes"]["paginationRender"]);
             }else{
-                $("#duoi3sao tbody").html(noResult);
+                
                 $("#danhsachdexuat tbody").html(noResult);
             }
         }else{

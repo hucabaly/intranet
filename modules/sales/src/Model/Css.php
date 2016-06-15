@@ -840,4 +840,12 @@ class Css extends Model
             )
         ); 
     }
+    
+    public static function getCssResultByProjectType($projectTypeId,$startDate,$endDate,$teamIds){
+        $sql = "select * from css_result where "
+                . "css_id In (SELECT css_id from css_team where team_id IN ($teamIds)) "
+                . "and created_at >= '$startDate' and created_at <= '$endDate' "
+                . "and css_id In (select id from css where project_type_id = $projectTypeId)";
+        return DB::select($sql);
+    }
 }

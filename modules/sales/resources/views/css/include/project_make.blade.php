@@ -75,7 +75,7 @@
 @endforeach
     <!-- muc to 4 -->
     <tr class="mucto">
-        <td class="title" colspan="4"><?php echo trans('sales::view.Overview',["number" => ($css->project_type_id==1) ? "V" : "IV"]) ?></td>
+        <td class="title" colspan="4">{{trans('sales::view.Overview',["number" => ($css->project_type_id==1) ? "V" : "IV"]) }}</td>
     </tr>
 
     <!-- cau tong quat -->
@@ -83,7 +83,7 @@
         <td class="title" colspan="2">{{ trans('sales::view.Overview content') }}</td>
         
         <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" onclick="totalMark();"></div></td>
-        <td class="title2"><textarea class="comment-question" rows="1" type="text" id="comment-tongquat"  ></textarea></td>
+        <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" id="comment-tongquat"  ></textarea></td>
     </tr>
 
     <!-- danh gia chung -->
