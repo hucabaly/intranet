@@ -15,15 +15,17 @@ class MenusSeeder extends Seeder
     {
         $dataDemo = [
             [
-                'name' => Menus::MENU_DEFAULT,
-                'state' => '1'
+                'name' => 'Rikkei Intranet',
+                'state' => Menus::FLAG_MAIN
             ]
         ];
         foreach ($dataDemo as $data) {
-            if (count(Menus::where('name', $data['name'])->get())) {
+            if (count(Menus::where('state', $data['state'])->get())) {
                 continue;
             }
-            Menus::create($data);
+            $menu = new Menus();
+            $menu->setData($data);
+            $menu->save();
         }
     }
 }

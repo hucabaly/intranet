@@ -16,5 +16,13 @@ return [
     'not be greater than :number characters' => 'không được lớn hơn :number ký tự',
     'Profile' => 'Thông tin cá nhân',
     'Back' => 'Quay lại',
+    'Save' => 'Lưu',
+    'State' => 'Trạng thái',
+    'Menu name' => 'Tên menu',
+    'menu name' =>  'tên menu',
+    'Active' => 'Kích hoạt',
+    'Disable' => 'Vô hiệu hóa',
+    'Main menu' =>  'Menu chính',
+    'Create new' =>  'Tạo mới',
     
 ];

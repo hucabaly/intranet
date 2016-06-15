@@ -13,26 +13,9 @@ Features
 - [x] Allow config menu by file
 - [x] Integrate switch localization
 
-#### add menu
-edit file `modules/core/config/menu.php`, format file:
+#### add menu and acl default
+Run in command line:
 
-    'menu.name' => [
-        'path' => 'path/url',
-        'label' => 'Menu Label',
-        'active' => '1',
-        'action' => 'route.name.permission',
-        'child' => [
-            'menu.name.child' => [
-                'path' => 'path/url',
-                'label' => 'Menu Child Label',
-                'active' => '1',
-                'action' => 'route.name.permission'
-            ]
-        ]
-    ];
-
-
-Then, run 
     `composer dump-autoload`
     `php artisan db:seed --class=PermissionSeeder` 
 

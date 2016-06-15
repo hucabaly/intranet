@@ -10,8 +10,9 @@ use Lang;
 use Rikkei\Core\View\Menu;
 use Rikkei\Team\Model\Action;
 use Rikkei\Team\View\Translate;
+use Exception;
 
-class AclController extends TeamBaseController
+class AclController extends \Rikkei\Core\Http\Controllers\Controller
 {
     /**
      * construct more

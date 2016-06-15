@@ -91,33 +91,33 @@ return [
         'path' => '#',
         'label' => 'Setting',
         'active' => '1',
-        'action' => 'sales::css.list',
         'child' => [
+            'team' => [
+                'path' => 'setting/team',
+                'label' => 'Team',
+                'active' => '1',
+            ],
             'menu' => [
                 'path' => '#',
                 'label' => 'Menu',
                 'active' => '1',
-                'action' => 'sales::css.list*',
                 'child' => [
                     'menu.group' => [
-                        'path' => 'sales/css/list',
-                        'label' => 'Danh sách CSS',
+                        'path' => 'setting/menu/group',
+                        'label' => 'Menu group',
                         'active' => '1',
-                        'action' => 'sales::css.list',
                     ],
                     'css.create' => [
-                        'path' => 'css/create',
-                        'label' => 'Tạo CSS',
+                        'path' => 'setting/menu/item',
+                        'label' => 'Menu item',
                         'active' => '1',
-                        'action' => 'sales::css.create',
                     ],
-                    'css.analyze' => [
-                        'path' => 'css/analyze',
-                        'label' => 'Phân tích CSS',
-                        'active' => '1',
-                        'action' => 'sales::css.analyze',
-                    ]
                 ]
+            ],
+            'acl' => [
+                'path' => 'setting/acl',
+                'label' => 'Acl',
+                'active' => '1',
             ]
         ]        
     ],

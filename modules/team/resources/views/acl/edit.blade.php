@@ -8,9 +8,11 @@ $actionOptions = Action::toOption();
 
 @section('title')
 @if (! Form::getData('acl.id'))
-    {{ trans('tean::view.Create new') }}
+    {{ trans('team::view.Create new') }} Acl
+@else
+    Acl: {{ trans('acl.' . Form::getData('acl.description')) }}
 @endif
-Acl: {{ trans('team::acl.' . Form::getData('acl.description')) }}
+
 @endsection
 
 @section('css')
@@ -74,7 +76,7 @@ Acl: {{ trans('team::acl.' . Form::getData('acl.description')) }}
                     <div class="form-group form-label-left">
                         <label class="col-md-3 control-label">{{ trans('team::view.Translate (vi) "description"') }}</label>
                         <div class="input-box col-md-9">
-                            <textarea name="trans[description]" class="form-control">{{ trans('team::acl.' . Form::getData('acl.description')) }}</textarea>
+                            <textarea name="trans[description]" class="form-control">{{ trans('acl.' . Form::getData('acl.description')) }}</textarea>
                         </div>
                     </div>
                     

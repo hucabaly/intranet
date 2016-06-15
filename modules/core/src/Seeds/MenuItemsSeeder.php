@@ -46,13 +46,13 @@ class MenuItemsSeeder extends Seeder
                 $dataChild = $item['child'];
                 unset($item['child']);
             }
-            $dataItem = [];
             $dataItem = [
                 'name' => '',
                 'url' => '',
                 'state' => 1,
                 'menu_id' => $menuId,
                 'sort_order' => $sortOrder,
+                'parent_id' => $parentId,
             ];
             if (isset($item['label']) && $item['label']) {
                 $dataItem['name'] = $item['label'];
@@ -63,17 +63,15 @@ class MenuItemsSeeder extends Seeder
             if (isset($item['active']) && $item['active']) {
                 $dataItem['state'] = $item['active'];
             }
-            if ($parentId) {
-                $dataItem['parent_id'] = $parentId;
-            }
             $menuItem = MenuItems::where('menu_id', $menuId)
                 ->where('url', $dataItem['url'])
+                ->where('name', $dataItem['name'])
                 ->first();
             if (! $menuItem) {
                 $menuItem = new MenuItems();
+                $menuItem->setData($dataItem);
+                $menuItem->save();
             }
-            $menuItem = $menuItem->setData($dataItem);
-            $menuItem->save();
             if ($dataChild) {
                 $this->createMenuItemsRecurive($dataChild, $menuItem->id, 0, $menuId);
             }

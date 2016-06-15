@@ -10,8 +10,9 @@ use Lang;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Rikkei\Team\Model\Permissions;
+use Exception;
 
-class RoleController extends TeamBaseController
+class RoleController extends \Rikkei\Core\Http\Controllers\Controller
 {
     /**
      * construct more
@@ -33,7 +34,7 @@ class RoleController extends TeamBaseController
         if (! $model || ! $model->isRole()) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
-        Breadcrumb::add($model->name, URL::route('team::setting.role.view', ['id' => $id]));
+        Breadcrumb::add($model->role, URL::route('team::setting.role.view', ['id' => $id]));
         Form::setData($model, 'role');
         $rolePermissions = Permissions::getRolePermission($id);
         return view('team::setting.index', [

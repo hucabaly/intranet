@@ -9,8 +9,9 @@ use Rikkei\Core\View\Form;
 use Rikkei\Core\View\Breadcrumb;
 use URL;
 use Rikkei\Team\Model\Roles;
+use Exception;
 
-class PositionController extends TeamBaseController
+class PositionController extends \Rikkei\Core\Http\Controllers\Controller
 {
     /**
      * construct more

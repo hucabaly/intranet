@@ -58,10 +58,10 @@ class ActionSeeder extends Seeder
                 ->first();
             if (! $actionItem) {
                 $actionItem = new Action();
+                //add route flag
+                $actionItem->setData($dataItem);
+                $actionItem->save();
             }
-            //add route flag
-            $actionItem = $actionItem->setData($dataItem);
-            $actionItem->save();
             //add route action
             if (isset($item['routes']) && count($item['routes'])) {
                 foreach ($item['routes'] as $keyRotue => $route) {

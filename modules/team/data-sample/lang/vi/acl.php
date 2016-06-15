@@ -1,7 +1,7 @@
 <?php
 return array (
   '' => '',
-  'View profile' => 'Xem thông tin ở trang cá nhân giangsoda',
+  'View profile' => 'Xem thông tin ở trang cá nhân',
   'View list member' => 'Xem danh sách các thành viên',
   'View review test of member' => 'Xem lại bài test của nhân viên',
   'View list point of member' => 'Xem danh sách điểm cộng trừ của nhân viên',

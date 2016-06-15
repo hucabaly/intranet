@@ -8,8 +8,9 @@ use Lang;
 use Rikkei\Team\Model\Permissions;
 use Url;
 use Rikkei\Team\Model\Roles;
+use Exception;
 
-class PermissionController extends TeamBaseController
+class PermissionController extends \Rikkei\Core\Http\Controllers\Controller
 {    
     /**
      * save team rule

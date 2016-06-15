@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Input;
 use Lang;
 use Rikkei\Core\View\Menu;
 
-class MemberController extends TeamBaseController
+class MemberController extends \Rikkei\Core\Http\Controllers\Controller
 {
     /**
      * construct more

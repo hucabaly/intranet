@@ -22,17 +22,17 @@ class Translate
     {
         $prefixFile = '<?php' . PHP_EOL. 'return ';
         $suffixFile = ';';
-        
-        $filePath = RIKKEI_TEAM_PATH . 'resources/lang/' . $lang . '/' . $fileName . '.php';
-        if (! file_exists($filePath)) {
-            return;
-        }
+        $filePath = base_path('resources/lang/' . $lang . '/' . $fileName . '.php');
         $data = [];
-        if (isset(self::$file[$fileName][$lang])) {
-            $data = self::$file[$fileName][$lang];
+        if (! file_exists($filePath)) {
+            $data = [];
         } else {
-            $data = require $filePath;
-            self::$file[$fileName][$lang] = $data;
+            if (isset(self::$file[$fileName][$lang])) {
+                $data = self::$file[$fileName][$lang];
+            } else {
+                $data = require $filePath;
+                self::$file[$fileName][$lang] = $data;
+            }
         }
         $data[$wordOrgin] = $wordTranslate;
         try {
