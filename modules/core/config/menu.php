@@ -8,73 +8,72 @@ return [
     'profile' => [
         'path' => 'profile',
         'label' => 'Profile',
-        'active' => '1'
+        'active' => '1',
+        'action_code' => 'view.profile',
     ],
     'hr' => [
         'path' => 'hr',
         'label' => 'HR',
         'active' => '1',
-        'action' => 'hr::route.name'
+        'action_code' => 'view.list.recruitment',
     ],
     'training' => [
         'path' => 'training',
         'label' => 'Training',
         'active' => '1',
-        'action' => 'training::route.name'
+        'action_code' => 'edit.test.schedule'
     ],
     'finance' => [
         'path' => 'finance',
         'label' => 'Finance',
         'active' => '1',
-        'action' => 'finance::route.name'
+        'action_code' => 'view.hr.inout.month'
     ],
     'admin' => [
         'path' => 'admin',
         'label' => 'Admin',
         'active' => '1',
-        'action' => 'admin::route.name'
+        'action_code' => 'view.hr.inout.month.pre'
     ],
     'team' => [
         'path' => 'team/member',
         'label' => 'Team',
         'active' => '1',
-        'action' => 'team::team.member.index',
+        'action_code' => 'view.team.member',
     ],
     'project' => [
         'path' => 'project',
         'label' => 'Project',
         'active' => '1',
-        'action' => 'project::route.name'
+        'action_code' => 'view.hr.inout.year'
     ],
     'sales' => [
         'path' => 'sales',
         'label' => 'Sales',
         'active' => '1',
-        'action' => 'sales::css.list',
         'child' => [
             'sales.css' => [
                 'path' => 'sale/css',
                 'label' => 'CSS',
                 'active' => '1',
-                'action' => 'sales::css.list*',
                 'child' => [
                     'css.list' => [
                         'path' => 'sales/css/list',
                         'label' => 'Danh sách CSS',
                         'active' => '1',
-                        'action' => 'sales::css.list',
+                        'action_code' => 'view.list.css',
                     ],
                     'css.create' => [
                         'path' => 'css/create',
                         'label' => 'Tạo CSS',
                         'active' => '1',
-                        'action' => 'sales::css.create',
+                        'action_code' => 'edit.detail.css',
                     ],
-                    'css.analyze' => [
+                    'view.analyze.css' => [
                         'path' => 'css/analyze',
                         'label' => 'Phân tích CSS',
                         'active' => '1',
-                        'action' => 'sales::css.analyze',
+                        'action_code' => 'sales::css.analyze',
                     ]
                 ]
             ]
@@ -84,7 +83,7 @@ return [
         'path' => 'qms',
         'label' => 'QMS',
         'active' => '1',
-        'action' => 'ams::route.name',
+        'action_code' => 'system.notification.result.recruitment',
     ],
     
     'setting' => [
@@ -96,11 +95,13 @@ return [
                 'path' => 'setting/team',
                 'label' => 'Team',
                 'active' => '1',
+                'action_code' => 'edit.setting.team',
             ],
             'menu' => [
                 'path' => '#',
                 'label' => 'Menu',
                 'active' => '1',
+                'action_code' => 'edit.setting.menu',
                 'child' => [
                     'menu.group' => [
                         'path' => 'setting/menu/group',
@@ -118,6 +119,7 @@ return [
                 'path' => 'setting/acl',
                 'label' => 'Acl',
                 'active' => '1',
+                'action_code' => 'edit.setting.acl'
             ]
         ]        
     ],

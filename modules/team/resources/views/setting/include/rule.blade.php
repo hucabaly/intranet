@@ -38,7 +38,13 @@ $scopeIcon = Permissions::scopeIconArray();
                   @else
                     @foreach ($acl as $aclKey => $aclValue)
                         <tr class="tr-col-screen">
-                            <td class="col-screen">{{ trans('acl.' . $aclValue['description']) }}</td>
+                            <td class="col-screen">
+                                @if (Lang::has('acl.' . $aclValue['description']))
+                                    {{ trans('acl.' . $aclValue['description']) }}
+                                @else
+                                    $aclValue['description']
+                                @endif
+                            </td>
                             <td>&nbsp;</td>
                             @foreach ($rolesPosition as $role)
                                 <td>&nbsp;</td>
@@ -48,7 +54,13 @@ $scopeIcon = Permissions::scopeIconArray();
                             @foreach ($aclValue['child'] as $aclItemKey => $aclItem)
                                 <tr>
                                     <td class="col-screen-empty">&nbsp;</td>
-                                    <td>{{ trans('acl.' . $aclItem['description']) }}</td>
+                                    <td>
+                                        @if (Lang::has('acl.' . $aclItem['description']))
+                                            {{ trans('acl.' . $aclItem['description']) }}
+                                        @else
+                                            {{ $aclItem['description'] }}
+                                        @endif
+                                    </td>
                                     @foreach ($rolesPosition as $role)
                                         <td class="col-team">
                                             <input type="hidden" name="permission[{{ $i }}][role_id]" value="{{ $role->id }}" />

@@ -346,6 +346,25 @@ class Permission
     }
     
     /**
+     * get employee current
+     * 
+     * @return null|model
+     */
+    public function getEmployee()
+    {
+        return $this->employee;
+    }
+    
+    /**
+     * get permission of employee current
+     * 
+     * @return array|null
+     */
+    public function getPermission()
+    {
+        return $this->rules;
+    }
+    /**
      * Singleton instance
      * 
      * @return \Rikkei\Team\View\Permission

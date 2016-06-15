@@ -10,7 +10,12 @@ $actionOptions = Action::toOption();
 @if (! Form::getData('acl.id'))
     {{ trans('team::view.Create new') }} Acl
 @else
-    Acl: {{ trans('acl.' . Form::getData('acl.description')) }}
+    Acl: 
+    @if (Lang::has('acl.' . Form::getData('acl.description')))
+        {{ trans('acl.' . Form::getData('acl.description')) }}
+    @else
+        {{ Form::getData('acl.description') }}
+    @endif
 @endif
 
 @endsection
@@ -34,7 +39,7 @@ $actionOptions = Action::toOption();
                 <div class="box-body">
                     
                     <div class="form-group form-label-left">
-                        <label class="col-md-3 control-label">{{ trans('team::view.Name') }}</label>
+                        <label class="col-md-3 control-label">Code</label>
                         <div class="input-box col-md-9">
                             <input type="text" name="item[name]" class="form-control" placeholder="{{ trans('team::view.Name') }}" value="{{ Form::getData('acl.name') }}" />
                         </div>
@@ -59,7 +64,7 @@ $actionOptions = Action::toOption();
                         <div class="input-box col-md-9">
                             <select class="select-search form-control" name="item[parent_id]">
                                 @foreach ($actionOptions as $option)
-                                <option value="{{ $option['value'] }}"<?php if ($option['value'] == Form::getData('acl.parent_id')): ?> selected<?php endif; ?>>{{ $option['label'] }}</option>
+                                    <option value="{{ $option['value'] }}"<?php if ($option['value'] == Form::getData('acl.parent_id')): ?> selected<?php endif; ?>>{{ $option['label'] }}</option>
                                 @endforeach
                             </select>
                             
@@ -76,7 +81,9 @@ $actionOptions = Action::toOption();
                     <div class="form-group form-label-left">
                         <label class="col-md-3 control-label">{{ trans('team::view.Translate (vi) "description"') }}</label>
                         <div class="input-box col-md-9">
-                            <textarea name="trans[description]" class="form-control">{{ trans('acl.' . Form::getData('acl.description')) }}</textarea>
+                            <textarea name="trans[description]" class="form-control"><?php
+                                if (Lang::has('acl.' . Form::getData('acl.description'))): ?>{{ trans('acl.' . Form::getData('acl.description')) }}<?php
+                                else: ?>{{ Form::getData('acl.description') }}<?php endif; ?></textarea>
                         </div>
                     </div>
                     

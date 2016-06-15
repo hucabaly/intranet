@@ -39,7 +39,7 @@ use Rikkei\Core\View\Form;
                     <thead>
                         <tr>
                             <th class="sorting {{ Config::getDirClass('id') }} col-id" onclick="window.location.href = '{{Config::getUrlOrder('id')}}';">Id</th>
-                            <th class="sorting {{ Config::getDirClass('name') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('name')}}';">{{ trans('team::view.Name') }}</th>
+                            <th class="sorting {{ Config::getDirClass('name') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('name')}}';">Code</th>
                             <th class="sorting {{ Config::getDirClass('description') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('description')}}';">{{ trans('team::view.Description') }}</th>
                             <th class="sorting {{ Config::getDirClass('route') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('route')}}';">Route</th>
                             <th class="sorting {{ Config::getDirClass('parent_id') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('parent_id')}}';">{{ trans('team::view.Parent id') }}</th>

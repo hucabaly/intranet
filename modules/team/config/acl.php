@@ -184,19 +184,19 @@ return [
     'C-1' => [
         'label' => 'Css',
         'child' => [
-            'view.list' => [
+            'view.list.css' => [
                 'label' => 'View list css',
                 'routes' => [
                     'sales::css.list'
                 ]
             ],
-            'view.detail' => [
+            'view.detail.css' => [
                 'label' => 'View detail css',
                 'routes' => [
                     'sales::css.view'
                 ]
             ],
-            'edit.detail' => [
+            'edit.detail.css' => [
                 'label' => 'Create and edit css',
                 'routes' => [
                     'sales::css.create',
@@ -209,7 +209,7 @@ return [
                     'sales::css.cancel',
                 ]
             ],
-            'view.analyze' => [
+            'view.analyze.css' => [
                 'label' => 'Analyze css',
                 'routes' => [
                     'sales::css.analyze',
@@ -228,11 +228,23 @@ return [
     'S-1' => [
         'label' => 'Setting',
         'child' => [
-            'edit.team' => [
+            'edit.setting.team' => [
                 'label' => 'Setting team / role',
                 'routes' => [
                     'team::setting.team.*',
                     'team::setting.role.*',
+                ]
+            ],
+            'edit.setting.menu' => [
+                'label' => 'Setting menu',
+                'routes' => [
+                    'core::setting.menu.*',
+                ]
+            ],
+            'edit.setting.acl' => [
+                'label' => 'Setting acl',
+                'routes' => [
+                    'team::setting.acl.*',
                 ]
             ],
         ]
