@@ -62,11 +62,14 @@
 .form-group {
     .form-label {
         float: left;
-        width: 23%;
+        min-width: 23%;
     }
     .form-data {
         float: left;
-        width: 65%;
+        min-width: 65%;
+    }
+    .select2-container {
+        min-width: 65%;
     }
     clear: both;
 }
@@ -84,7 +87,10 @@
     }
     .team-group-function {
         select {
-            width: 100%;
+            min-width: 100%;
+        }
+        .select2-container {
+            min-width: 100%;
         }
     }
 }

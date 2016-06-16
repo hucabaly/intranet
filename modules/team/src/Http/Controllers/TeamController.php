@@ -82,11 +82,6 @@ class TeamController extends \Rikkei\Core\Http\Controllers\Controller
             return redirect()->route('team::setting.team.index')
                 ->withErrors($validator);
         }
-        if ($dataItem['parent_id']) {
-            $parentId = $dataItem['parent_id'];
-        } else {
-            unset($dataItem['parent_id']);
-        }
         //calculate position
         if (! $model->id) { //team new
             $parentId = 0;

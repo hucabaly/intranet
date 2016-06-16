@@ -14,7 +14,7 @@ if (! function_exists('teamHtmladdTeamPostion')) {
         <div class="form-inline group-team-position form-inline-block">
             <div class="input-team-position input-team form-group">
                 <label class="control-label">Team</label>
-                <select name="team[{{ $index }}][team]" class="form-control">
+                <select name="team[{{ $index }}][team]" class="form-control select-search">
                     @foreach($teamsOption as $option)
                         <option value="{{ $option['value'] }}"<?php
                             if ($option['value'] == $teamId): ?> selected<?php endif; 

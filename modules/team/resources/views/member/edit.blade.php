@@ -14,6 +14,7 @@ $teamsOption = TeamList::toOption(null, false, false);
 @endsection
 
 @section('css')
+<link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/select2/select2.min.css') }}" />
 <link rel="stylesheet" href="{{ URL::asset('team/css/style.css') }}" />
 @endsection
 
@@ -67,8 +68,14 @@ Form::forget();
 @endsection
 
 @section('script')
+<script src="{{ URL::asset('adminlte/plugins/select2/select2.full.min.js') }}"></script>
 <script src="{{ URL::asset('team/js/script.js') }}"></script>
 <script>
-    
+    jQuery(document).ready(function($) {
+        selectSearchReload();
+        $(document).on('click', '.input-team-position.input-add-new button', function(event) {
+            selectSearchReload();
+        });
+    });
 </script>
 @endsection

@@ -36,7 +36,7 @@ if (Form::getData('id')) {
                         <label for="permission-type-same{{ $suffixId }}">{{ trans('team::view.Permission following function unit') }}</label>&nbsp;&nbsp;&nbsp;
                     </p>
                     <p class="col-md-7">
-                        <select class="input-select" name="item[follow_team_id]">
+                        <select class="input-select select-search" name="item[follow_team_id]">
                             @foreach(Rikkei\Team\View\TeamList::toOption(Form::getData('id'), true) as $option)
                             <option value="{{ $option['value'] }}"
                                 <?php if (Form::getData('follow_team_id') == $option['value']): ?> selected<?php endif; ?>
@@ -52,7 +52,7 @@ if (Form::getData('id')) {
     
     <div class="form-group">
         <label for="team-parent{{ $suffixId }}" class="form-label">{{ trans('team::view.Team parent') }}</label>
-        <select class="input-select form-data" name="item[parent_id]" id="team-parent{{ $suffixId }}">
+        <select class="input-select form-data select-search" name="item[parent_id]" id="team-parent{{ $suffixId }}">
             @foreach(Rikkei\Team\View\TeamList::toOption(Form::getData('id')) as $option)
             <option value="{{ $option['value'] }}"<?php if (Form::getData('parent_id') == $option['value']): ?> selected<?php endif; ?>>{{ $option['label'] }}</option>
             @endforeach

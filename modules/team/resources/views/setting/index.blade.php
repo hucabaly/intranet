@@ -15,6 +15,7 @@ Team Setting
 @endsection
 
 @section('css')
+<link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/select2/select2.min.css') }}" />
 <link rel="stylesheet" href="{{ URL::asset('team/css/style.css') }}" />
 @endsection
 
@@ -336,9 +337,11 @@ Team Setting
 @section('script')
 <script src="{{ URL::asset('js/jquery.validate.min.js') }}"></script>
 <script src="{{ URL::asset('js/jquery.match.height.addtional.js') }}"></script>
+<script src="{{ URL::asset('adminlte/plugins/select2/select2.full.min.js') }}"></script>
 <script src="{{ URL::asset('team/js/script.js') }}"></script>
 <script>
     jQuery(document).ready(function ($) {
+        selectSearchReload();
         var messages = {
             'item[name]': {
                 required: '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.team name') ; ?>',

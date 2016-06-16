@@ -117,7 +117,7 @@ class TeamList
         }
         $prefixLabel = '';
         for ($i = 0; $i < $level; $i++) {
-            $prefixLabel .= '----&nbsp;&nbsp;';
+            $prefixLabel .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         }
         foreach ($teamList as $team) {
             if ($isFunction && (!$team->is_function || $team->permission_as)) {

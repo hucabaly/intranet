@@ -139,6 +139,9 @@ class Team extends CoreModel
      * @return bool
      */
     public function save(array $options = array()) {
+        if (! $this->parent_id) {
+            $this->parent_id = null;
+        }
         // update model
         if ($this->id) {
             //delete team rule of this team
