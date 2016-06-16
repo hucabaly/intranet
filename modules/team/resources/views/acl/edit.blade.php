@@ -33,6 +33,10 @@ $actionOptions = Action::toOption();
         <div class=" col-md-12 box-action">
             <input type="submit" class="btn-edit" name="submit" value="{{ trans('team::view.Save') }}" />
             <a href="{{ route('team::setting.acl.index') }}" class="btn btn-primary">{{ trans('core::view.Back') }}</a>
+            @if (Form::getData('acl.id'))
+                <input type="submit" class="btn-delete btn-action delete-confirm" disabled name="submit_delete" 
+                    value="{{ trans('team::view.Remove') }}" />
+            @endif
         </div>
         <div class="col-md-12">
             <div class="box box-info">

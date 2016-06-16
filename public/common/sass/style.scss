@@ -273,9 +273,15 @@ form{
 .box-action {
     margin-bottom: 10px;
 }
-.btn-mar-left {
+.btn-sets-box {
     margin-left: 10px;
 }
+.table-grid-data {
+    .col-action.col-a1{
+        width: 30px;
+    }
+}
+
 /*responsive*/
 @media (max-width: 1160px) and  (min-width: $mobile+1) {
     .navbar-collapse.pull-left+.navbar-custom-menu {

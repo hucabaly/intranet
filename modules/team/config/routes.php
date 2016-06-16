@@ -58,6 +58,7 @@ Route::group([
         Route::get('create','AclController@create')->name('create');
         Route::get('edit/{id}','AclController@edit')->name('edit')->where('id', '[0-9]+');
         Route::post('save','AclController@save')->name('save');
+        Route::delete('delete','AclController@delete')->name('delete');
     });
 });
 

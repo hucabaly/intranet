@@ -23,7 +23,7 @@ class AclController extends \Rikkei\Core\Http\Controllers\Controller
     }
     
     /**
-     * list member
+     * list acl
      */
     public function index()
     {
@@ -33,7 +33,7 @@ class AclController extends \Rikkei\Core\Http\Controllers\Controller
     }
     
     /**
-     * view/edit member
+     * view/edit acl
      * 
      * @param int $id
      */
@@ -48,10 +48,13 @@ class AclController extends \Rikkei\Core\Http\Controllers\Controller
     }
     
     /**
-     * save member
+     * save acl
      */
     public function save()
     {
+        if (Input::get('submit_delete')) {
+            return $this->delete();
+        }
         $id = Input::get('id');
         if (! $id) {
             $model = new Action();
@@ -77,12 +80,29 @@ class AclController extends \Rikkei\Core\Http\Controllers\Controller
     }
     
     /**
-     * create member
+     * create acl
      */
     public function create()
     {
         return view('team::acl.edit');
     }
+    
+    /**
+     * delete acl item
+     */
+    public function delete()
+    {
+        $id = Input::get('id');
+        $model = Action::find($id);
+        if (! $model) {
+            return redirect()->route('core::setting.acl.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        }
+        $model->delete();
+        $messages = [
+                'success'=> [
+                    Lang::get('team::messages.Delete item success!'),
+                ]
+        ];
+        return redirect()->route('core::setting.menu.item.index')->with('messages', $messages);
+    }
 }
-
-

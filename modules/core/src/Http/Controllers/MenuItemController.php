@@ -24,7 +24,7 @@ class MenuItemController extends Controller
     }
     
     /**
-     * list menu group
+     * list menu item
      */
     public function index()
     {
@@ -35,7 +35,7 @@ class MenuItemController extends Controller
     }
     
     /**
-     * view/edit menu group
+     * view/edit menu item
      * 
      * @param int $id
      */
@@ -50,7 +50,7 @@ class MenuItemController extends Controller
     }
     
     /**
-     * save menu group
+     * save menu item
      */
     public function save()
     {
@@ -91,13 +91,16 @@ class MenuItemController extends Controller
     }
     
     /**
-     * create menu group
+     * create menu item
      */
     public function create()
     {
         return view('core::menu.item.edit');
     }
     
+    /**
+     * delete menu item
+     */
     public function delete()
     {
         $id = Input::get('id');

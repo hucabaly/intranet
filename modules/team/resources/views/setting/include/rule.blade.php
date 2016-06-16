@@ -39,7 +39,7 @@ $scopeIcon = Permissions::scopeIconArray();
                     @foreach ($acl as $aclKey => $aclValue)
                         <tr class="tr-col-screen">
                             <td class="col-screen">
-                                @if (Lang::has('acl.' . $aclValue['description']))
+                                @if (Lang::has('acl.' . $aclValue['description']) && trim(trans('acl.' . $aclValue['description'])))
                                     {{ trans('acl.' . $aclValue['description']) }}
                                 @else
                                     $aclValue['description']
@@ -55,7 +55,7 @@ $scopeIcon = Permissions::scopeIconArray();
                                 <tr>
                                     <td class="col-screen-empty">&nbsp;</td>
                                     <td>
-                                        @if (Lang::has('acl.' . $aclItem['description']))
+                                        @if (Lang::has('acl.' . $aclItem['description']) && trim(trans('acl.' . $aclItem['description'])))
                                             {{ trans('acl.' . $aclItem['description']) }}
                                         @else
                                             {{ $aclItem['description'] }}

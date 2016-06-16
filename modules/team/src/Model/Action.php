@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Exception;
 use DB;
+use Rikkei\Core\Model\MenuItems;
+use Rikkei\Team\Model\Permissions;
 
 class Action extends CoreModel
 {
@@ -146,7 +148,7 @@ class Action extends CoreModel
             $prefixLabel .= ' ---- ';
         }
         foreach ($actions as $action) {
-            if ($translate && Lang::has('acl.' . $action->description)) {
+            if ($translate && Lang::has('acl.' . $action->description) && Lang::get('acl.' . $action->description)) {
                 $options[] = [
                     'value' => $action->id,
                     'label' => $prefixLabel . Lang::get('acl.' . $action->description)
@@ -167,8 +169,11 @@ class Action extends CoreModel
      * @param array $options
      */
     public function save(array $options = array()) {
-        if ($this->route) {
-            $actionRouteSame = self::select(DB::raw('COUNT(*) as count')) ->where('route', $this->route)->first();
+        if ($this->route && $this->id) {
+            $actionRouteSame = self::select(DB::raw('COUNT(*) as count'))
+                ->where('route', $this->route)
+                ->where('id', '<>', $this->id)
+                ->first();
             if ($actionRouteSame->count) {
                 throw new Exception(Lang::get('team::view.Route data exists, please fill another route'));
             }
@@ -176,6 +181,36 @@ class Action extends CoreModel
         try {
             Employees::flushCache();
             return parent::save($options);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+    
+    /**
+     * rewrite delete model
+     */
+    public function delete() {
+        try {
+            //update menu item
+            MenuItems::where('action_id', $this->id)
+                ->update([
+                    'action_id' => null,
+                ]);
+            //update permissions
+            $permissions = Permissions::where('action_id', $this->id)->get();
+            if (count($permissions)) {
+                foreach ($permissions as $permission) {
+                    $permission->delete();
+                }
+            }
+            //delete child acl
+            $actionChildren = self::where('parent_id', $this->id)->get();
+            if (count($actionChildren)) {
+                foreach ($actionChildren as $action) {
+                    $action->delete();
+                }
+            }
+            parent::delete();
         } catch (Exception $ex) {
             throw $ex;
         }
