@@ -6,9 +6,13 @@ use Rikkei\Team\View\Config;
 use DB;
 use Exception;
 use Lang;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class Employees extends CoreModel
 {
+    
+    use SoftDeletes;
     
     protected $table = 'employees';
     
@@ -95,6 +99,7 @@ class Employees extends CoreModel
                     $teamMember->save();
                 }
             }
+            self::flushCache();
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
@@ -123,6 +128,7 @@ class Employees extends CoreModel
                     $employeeRole->save();
                 }
             }
+            self::flushCache();
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
@@ -137,7 +143,16 @@ class Employees extends CoreModel
      */
     public function getTeamPositons()
     {
-        return TeamMembers::select('team_id', 'role_id')->where('employee_id', $this->id)->get();
+        $keyCache = self::getKeyCache([
+            'employee',
+            $this->id
+        ]);
+        if (Cache::has($keyCache)) {
+            return Cache::get($keyCache);
+        }
+        $employeeTeam = TeamMembers::select('team_id', 'role_id')->where('employee_id', $this->id)->get();
+        Cache::put($keyCache, $employeeTeam, self::$timeStoreCache);
+        return $employeeTeam;
     }
     
     /**
@@ -147,11 +162,20 @@ class Employees extends CoreModel
      */
     public function getRoles()
     {
-        return EmployeeRole::select('role_id', 'role')
+        $keyCache = self::getKeyCache([
+            'employee',
+            $this->id
+        ]);
+        if (Cache::has($keyCache)) {
+            return Cache::get($keyCache);
+        }
+        $employeeRole = EmployeeRole::select('role_id', 'role')
                 ->join('roles', 'roles.id', '=', 'employee_roles.role_id')
                 ->where('employee_id', $this->id)
                 ->orderBy('role')
                 ->get();
+        Cache::put($keyCache, $employeeRole, self::$timeStoreCache);
+        return $employeeRole;
     }
     
     /**
@@ -215,7 +239,7 @@ class Employees extends CoreModel
      * @return array
      */
     public function getPermissionTeam()
-    {
+    {        
         $teams = $this->getTeamPositons();
         if (! $teams || ! count($teams)) {
             return [];
@@ -225,6 +249,16 @@ class Employees extends CoreModel
         $actionTable = Action::getTableName();
         $permissionTable = Permissions::getTableName();
         foreach ($teams as $teamMember) {
+            $keyCache = self::getKeyCache([
+                'team', 
+                $teamMember->team_id,
+                'position',
+                $teamMember->role_id,
+            ]);
+            if (Cache::has($keyCache)) {
+                $actionIdAllow = Cache::get($keyCache);
+                continue;
+            }
             $team = Team::find($teamMember->team_id);
             $teamAs = $team->getTeamPermissionAs();
             $teamIdOrgin = $team->id;
@@ -245,11 +279,21 @@ class Employees extends CoreModel
                     $actionIdAllow[$teamIdOrgin][$item->action_id] = $item->scope;
                 }
             }
+            Cache::put($keyCache, $actionIdAllow, self::$timeStoreCache);
         }
+        
         //get scope of route name from action id
         if ($actionIdAllow && count($actionIdAllow)) {
             foreach ($actionIdAllow as $teamId => $actionIds) {
                 $actionIds = array_keys($actionIds);
+                $keyCache = self::getKeyCache([
+                    'action',
+                    $actionIds
+                ]);
+                if (Cache::has($keyCache)) {
+                    $routesAllow = Cache::get($keyCache);
+                    continue;
+                }
                 $routes = Action::getRouteChildren($actionIds);
                 foreach ($routes as $route => $valueIds) {
                     if ($valueIds['id'] && isset($actionIdAllow[$teamId][$valueIds['id']])) {
@@ -258,6 +302,7 @@ class Employees extends CoreModel
                         $routesAllow[$teamId][$route] = $actionIdAllow[$teamId][$valueIds['parent_id']];
                     }
                 }
+                Cache::put($keyCache, $routesAllow, self::$timeStoreCache);
             }
         }
         return [
@@ -282,6 +327,16 @@ class Employees extends CoreModel
         $actionTable = Action::getTableName();
         $permissionTable = Permissions::getTableName();
         foreach ($roles as $role) {
+            $keyCache = self::getKeyCache([
+                'team', 
+                null,
+                'position',
+                $role->role_id
+            ]);
+            if (Cache::has($keyCache)) {
+                $actionIdAllow = Cache::get($keyCache);
+                continue;
+            }
             $rolePermission = Permissions::select('action_id',  'route', 'scope')
                 ->join($actionTable, $actionTable . '.id', '=', $permissionTable . '.action_id')
                 ->where('team_id', null)
@@ -295,20 +350,31 @@ class Employees extends CoreModel
                     //get scope greater of role
                     if (isset($actionIdAllow[$item->action_id]) && $actionIdAllow[$item->action_id] > (int) $item->scope) {
                         continue;
-                    } 
+                    }
                     $actionIdAllow[$item->action_id] = (int) $item->scope;
                 }
             }
+            Cache::put($keyCache, $actionIdAllow, self::$timeStoreCache);
         }
+        
         if ($actionIdAllow) {
             $actionIds = array_keys($actionIdAllow);
-            $routes = Action::getRouteChildren($actionIds);
-            foreach ($routes as $route => $valueIds) {
-                if ($valueIds['id'] && isset($actionIdAllow[$valueIds['id']])) {
-                    $routesAllow[$route] = $actionIdAllow[$valueIds['id']];
-                } else if ($valueIds['parent_id'] && isset($actionIdAllow[$valueIds['parent_id']])) {
-                    $routesAllow[$route] = $actionIdAllow[$valueIds['parent_id']];
+            $keyCache = self::getKeyCache([
+                'action',
+                $actionIds
+            ]);
+            if (Cache::has($keyCache)) {
+                $routesAllow = Cache::get($keyCache);
+            } else {
+                $routes = Action::getRouteChildren($actionIds);
+                foreach ($routes as $route => $valueIds) {
+                    if ($valueIds['id'] && isset($actionIdAllow[$valueIds['id']])) {
+                        $routesAllow[$route] = $actionIdAllow[$valueIds['id']];
+                    } else if ($valueIds['parent_id'] && isset($actionIdAllow[$valueIds['parent_id']])) {
+                        $routesAllow[$route] = $actionIdAllow[$valueIds['parent_id']];
+                    }
                 }
+                Cache::put($keyCache, $routesAllow, self::$timeStoreCache);
             }
         }
         return [

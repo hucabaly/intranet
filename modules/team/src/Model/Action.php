@@ -4,9 +4,14 @@ namespace Rikkei\Team\Model;
 use Rikkei\Core\Model\CoreModel;
 use Rikkei\Team\View\Config;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Exception;
+use DB;
 
 class Action extends CoreModel
 {
+    
+    use SoftDeletes;
     
     protected $table = 'actions';
     
@@ -69,6 +74,9 @@ class Action extends CoreModel
         }
         foreach ($routes as $route) {
             if (! $route->route) {
+                continue;
+            }
+            if (isset($result[$route->route]) && $result[$route->route]) {
                 continue;
             }
             $result[$route->route] = [
@@ -150,6 +158,26 @@ class Action extends CoreModel
                 ];
             }
             self::toOptionRecursive($options, $action->id, $level+1);
+        }
+    }
+    
+    /**
+     * rewrite save
+     * 
+     * @param array $options
+     */
+    public function save(array $options = array()) {
+        if ($this->route) {
+            $actionRouteSame = self::select(DB::raw('COUNT(*) as count')) ->where('route', $this->route)->first();
+            if ($actionRouteSame->count) {
+                throw new Exception(Lang::get('team::view.Route data exists, please fill another route'));
+            }
+        }
+        try {
+            Employees::flushCache();
+            return parent::save($options);
+        } catch (Exception $ex) {
+            throw $ex;
         }
     }
 }

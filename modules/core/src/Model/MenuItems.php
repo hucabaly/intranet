@@ -6,12 +6,13 @@ use DB;
 use Rikkei\Team\View\Config;
 use Lang;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 
 class MenuItems extends CoreModel
 {
     const STATE_ENABLE  = 1;
     const STATE_DISABLE = 0;
-
+    
     public $timestamps = false;
     
     /**
@@ -121,12 +122,16 @@ class MenuItems extends CoreModel
         if ($this->parent_id) {
             $parentMenu = MenuItems::find($this->parent_id);
             $this->menu_id  = $parentMenu->menu_id;
+        } else {
+            $this->parent_id = null;
         }
         if (! $this->action_id) {
             $this->action_id = null;
         }
         try {
-            return parent::save($options);
+            $result = parent::save($options);
+            self::flushCache();
+            return $result;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -144,9 +149,29 @@ class MenuItems extends CoreModel
                     $item->delete();
                 }
             }
+            self::flushCache();
             return parent::delete();
         } catch (Exception $ex) {
             throw $ex;
         }
+    }
+    
+    /**
+     * get child of menu item
+     * 
+     * @param int $parentId
+     * @param int $menuGroupId
+     */
+    public static function getChildMenuItems($parentId, $menuGroupId)
+    {
+        $keyCache = self::getKeyCache();
+        if (Cache::has($keyCache)) {
+            return Cache::get($keyCache);
+        }
+        $menuItems = MenuItems::where('menu_id', $menuGroupId)
+            ->where('parent_id', $parentId)
+            ->get();
+        Cache::put($keyCache, $menuItems, self::$timeStoreCache);
+        return $menuItems;
     }
 }

@@ -5,9 +5,12 @@ use Rikkei\Core\Model\CoreModel;
 use DB;
 use Exception;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Team extends CoreModel
 {
+    
+    use SoftDeletes;
     
     protected $table = 'teams';
     
@@ -120,6 +123,7 @@ class Team extends CoreModel
                 'follow_team_id' => null
             ]);
             //delete team item
+            self::flushCache();
             parent::delete();
             DB::commit();
         } catch (Exception $ex) {
@@ -147,6 +151,7 @@ class Team extends CoreModel
 //                TeamRule::where('team_id', $this->id)->delete();
 //            }
         }
+        self::flushCache();
         return parent::save($options);
     }
     

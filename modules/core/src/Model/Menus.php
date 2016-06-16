@@ -7,6 +7,7 @@ use Lang;
 use Exception;
 use DB;
 use Rikkei\Core\Model\MenuItems;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Menus object
@@ -16,6 +17,7 @@ class Menus extends CoreModel
     const FLAG_DISABLE = 0;
     const FLAG_ACTIVE = 1;
     const FLAG_MAIN = 2;
+    const FLAG_SETTING = 3;
     
     protected $table = 'menus';
     
@@ -28,8 +30,31 @@ class Menus extends CoreModel
      */
     public static function getMenuDefault()
     {
-        return self::where('state', self::FLAG_MAIN)
+        $keyCache = self::getKeyCache();
+        if (Cache::has($keyCache)) {
+            return Cache::get($keyCache);
+        }
+        $menu = self::where('state', self::FLAG_MAIN)
             ->first();
+        Cache::put($keyCache, $menu, self::$timeStoreCache);
+        return $menu;
+    }
+    
+    /**
+     * get menu default
+     * 
+     * @return model
+     */
+    public static function getMenuSetting()
+    {
+        $keyCache = self::getKeyCache();
+        if (Cache::has($keyCache)) {
+            return Cache::get($keyCache);
+        }
+        $menu = self::where('state', self::FLAG_SETTING)
+            ->first();
+        Cache::put($keyCache, $menu, self::$timeStoreCache);
+        return $menu;
     }
     
     /**
@@ -51,6 +76,10 @@ class Menus extends CoreModel
             [
                 'value' => self::FLAG_MAIN,
                 'label' => Lang::get('core::view.Main menu')
+            ],
+            [
+                'value' => self::FLAG_SETTING,
+                'label' => 'Setting menu'
             ],
         ];
     }
@@ -86,7 +115,14 @@ class Menus extends CoreModel
                     ->update([
                         'state' => self::FLAG_ACTIVE
                     ]);
+            } elseif ($this->state == self::FLAG_SETTING) {
+                self::where('state', self::FLAG_SETTING)
+                    ->where('id', '<>', $this->id)
+                    ->update([
+                        'state' => self::FLAG_ACTIVE
+                    ]);
             }
+            self::flushCache();
             parent::save($options);
             Db::commit();
         } catch (Exception $ex) {

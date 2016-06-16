@@ -17,6 +17,10 @@ class MenusSeeder extends Seeder
             [
                 'name' => 'Rikkei Intranet',
                 'state' => Menus::FLAG_MAIN
+            ],
+            [
+                'name' => 'Setting',
+                'state' => Menus::FLAG_SETTING
             ]
         ];
         foreach ($dataDemo as $data) {

@@ -97,23 +97,11 @@ return [
                 'active' => '1',
                 'action_code' => 'edit.setting.team',
             ],
-            'menu' => [
-                'path' => '#',
+            'menu.item' => [
+                'path' => 'setting/menu/item',
                 'label' => 'Menu',
                 'active' => '1',
-                'action_code' => 'edit.setting.menu',
-                'child' => [
-                    'menu.group' => [
-                        'path' => 'setting/menu/group',
-                        'label' => 'Menu group',
-                        'active' => '1',
-                    ],
-                    'css.create' => [
-                        'path' => 'setting/menu/item',
-                        'label' => 'Menu item',
-                        'active' => '1',
-                    ],
-                ]
+                'action_code' => 'edit.setting.menu'
             ],
             'acl' => [
                 'path' => 'setting/acl',

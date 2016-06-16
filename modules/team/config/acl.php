@@ -203,7 +203,6 @@ return [
                     'sales::css.update',
                     'sales::css.preview',
                     'sales::css.save',
-                    'sales::css.list',
                     'sales::css.view',
                     'sales::css.detail',
                     'sales::css.cancel',

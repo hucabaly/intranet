@@ -66,11 +66,7 @@ class AclController extends \Rikkei\Core\Http\Controllers\Controller
             $itemData['parent_id'] = null;
         }
         $model->setData($itemData);
-        try {
-            $model->save();
-        } catch (Exception $ex) {
-            return redirect()->route('team:setting.acl')->withErrors($ex);
-        }
+        $model->save();
         Translate::writeWord($model->description, Input::get('trans.description'), 'acl');
         $messages = [
                 'success'=> [

@@ -273,6 +273,9 @@ form{
 .box-action {
     margin-bottom: 10px;
 }
+.btn-mar-left {
+    margin-left: 10px;
+}
 /*responsive*/
 @media (max-width: 1160px) and  (min-width: $mobile+1) {
     .navbar-collapse.pull-left+.navbar-custom-menu {

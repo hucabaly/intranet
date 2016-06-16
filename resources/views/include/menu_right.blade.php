@@ -2,15 +2,32 @@
 
 use Rikkei\Core\Model\User;
 use Rikkei\Team\View\Permission;
+use Rikkei\Core\View\Menu;
+use Rikkei\Core\Model\Menus;
+
+$menuSetting = Menus::getMenuSetting();
 ?>
 
 <!-- Navbar Right Menu -->
 @if(Auth::user())
 <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
+        @if ($menuSetting->id)
+            <?php $menuSettingHtml = Menu::get($menuSetting->id, 1); ?>
+            @if (e($menuSettingHtml))
+                <li class="setting dropdown">
+                    <a href="{{ URL::route('team::setting.team.index') }}" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-gears"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {!! $menuSettingHtml !!}
+                    </ul>
+                </li>
+            @endif
+        @endif
         <!-- User Account Menu -->
-        <li class="dropdown user user-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <li class="user user-menu">
+            <a href="#">
                 @if(User::getAvatar())
                     <img src="{{ User::getAvatar() }}" class="user-image" alt="User Image">
                 @else
@@ -18,31 +35,12 @@ use Rikkei\Team\View\Permission;
                 @endif
                 <span class="hidden-xs">{{ User::getNickName() }}</span>
             </a>
-            <ul class="dropdown-menu">
-                <!-- User image -->
-                <li class="user-header">
-                    <p>{{ Auth::user()->name }} - Web Developer
-                        <small>Member since Nov. 2012</small>
-                    </p>
-                </li>
-                <!-- Menu Footer-->
-                <li class="user-footer">
-                    <div class="pull-left">
-                        <a href="#" class="btn btn-default btn-flat">Profile</a>
-                    </div>
-                    <div class="pull-right">
-                        <a href="{{ URL::to('/logout') }}" class="btn btn-default btn-flat">Sign out</a>
-                    </div>
-                </li>
-            </ul>
         </li>
-        @if (Permission::getInstance()->isAllow('team::setting.team.index'))
-            <li class="setting">
-                <a href="{{ URL::route('team::setting.team.index') }}">
-                    <i class="fa fa-gears"></i>
-                </a>
-            </li>
-        @endif
+        <li class="logout">
+            <a href="{{ URL::to('logout') }}">
+                <i class="fa fa-sign-out"></i>
+            </a>
+        </li>
     </ul>
 </div><!-- /.navbar-custom-menu -->
 @endif

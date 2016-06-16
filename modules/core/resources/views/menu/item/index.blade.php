@@ -19,6 +19,7 @@ use Rikkei\Core\View\Form;
     <div class="col-sm-12">
         <p>
             <a href="{{ route('core::setting.menu.item.create')  }}" class="btn-add">{{ trans('team::view.Create new') }}</a>
+            <a href="{{ route('core::setting.menu.group.index')  }}" class="btn btn-primary btn-mar-left">{{ trans('core::view.Menu group manage') }}</a>
         </p>
     </div>
     <div class="col-sm-12">

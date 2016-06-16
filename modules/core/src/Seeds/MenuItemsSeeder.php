@@ -9,6 +9,10 @@ use DB;
 
 class MenuItemsSeeder extends Seeder
 {
+    
+    protected $menuDefaultId = null;
+    protected $menuSettingId = null;
+    
     /**
      * Run the database seeds.
      *
@@ -16,11 +20,15 @@ class MenuItemsSeeder extends Seeder
      */
     public function run()
     {
-        $menus = Menus::getMenuDefault();
-        if (! $menus) {
-            return;
+        $menu = Menus::getMenuDefault();
+        if ($menu) {
+            $this->menuDefaultId = $menu->id;
         }
-        $menus = $menus->id;
+        $menu = Menus::getMenuSetting();
+        if ($menu) {
+            $this->menuSettingId = $menu->id;
+        }
+        
         if (! file_exists(RIKKEI_CORE_PATH . 'config/menu.php')) {
             return;
         }
@@ -30,7 +38,7 @@ class MenuItemsSeeder extends Seeder
         }
         DB::beginTransaction();
         try {
-            $this->createMenuItemsRecurive($dataDemo, null, 0, $menus);
+            $this->createMenuItemsRecurive($dataDemo, null, 0, $this->menuDefaultId);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
@@ -40,7 +48,13 @@ class MenuItemsSeeder extends Seeder
     
     protected function createMenuItemsRecurive($data, $parentId, $sortOrder, $menuId)
     {
-        foreach ($data as $item) {
+        foreach ($data as $key => $item) {
+            if ($key == 'setting') {
+                $menuId = $this->menuSettingId;
+            }
+            if (! $menuId) {
+                continue;
+            }
             $dataChild = null;
             if (isset($item['child'] ) && count($item['child']) > 0) {
                 $dataChild = $item['child'];
@@ -69,14 +83,18 @@ class MenuItemsSeeder extends Seeder
                     $dataItem['action_id'] = $actionPermission->id;
                 }
             }
-            $menuItem = MenuItems::where('menu_id', $menuId)
-                ->where('url', $dataItem['url'])
-                ->where('name', $dataItem['name'])
-                ->first();
-            if (! $menuItem) {
+            if ($key == 'setting') {
                 $menuItem = new MenuItems();
-                $menuItem->setData($dataItem);
-                $menuItem->save();
+            } else {
+                $menuItem = MenuItems::where('menu_id', $menuId)
+                    ->where('url', $dataItem['url'])
+                    ->where('name', $dataItem['name'])
+                    ->first();
+                if (! $menuItem) {
+                    $menuItem = new MenuItems();
+                    $menuItem->setData($dataItem);
+                    $menuItem->save();
+                }
             }
             if ($dataChild) {
                 $this->createMenuItemsRecurive($dataChild, $menuItem->id, 0, $menuId);

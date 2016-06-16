@@ -62,11 +62,8 @@ class Menu
      * @param int $menuId id of menus
      * @return string
      */
-    public static function get($menuId = null)
+    public static function get($menuId = null, $level = 0)
     {
-        if (self::$menuHtml !== null) {
-            return self::$menuHtml;
-        }
         if (! $menuId) {
             $menuId = Menus::getMenuDefault();
             if(! $menuId) {
@@ -74,8 +71,7 @@ class Menu
             }
             $menuId = $menuId->id;
         }
-        self::$menuHtml = self::getChildMenu($menuId, null, 0);
-        return self::$menuHtml;
+        return self::getChildMenu($menuId, null, $level);
     }
     
     /**
@@ -88,9 +84,7 @@ class Menu
     protected static function getChildMenu($menuId, $parentId = null, $level = 0)
     {
         $html = '';
-        $menuItems = MenuItems::where('menu_id', $menuId)
-            ->where('parent_id', $parentId)
-            ->get();
+        $menuItems = MenuItems::getChildMenuItems($parentId, $menuId);
         if (! count($menuItems)) {
             return;
         }

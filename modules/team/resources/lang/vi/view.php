@@ -91,5 +91,7 @@ return [
     'Sort order' => 'Sắp xếp',
     'Parent' => 'Cha',
     'Create' => 'Tạo',
-    'Translate (vi) "description"' => 'Dịch (vi) "miêu tả"'
+    'Translate (vi) "description"' => 'Dịch (vi) "miêu tả"',
+    'Route data exists, please fill another route' => 'Route đã tồn tại, vui lòng điền route khác',
+    
 ];

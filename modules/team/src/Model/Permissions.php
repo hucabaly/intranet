@@ -4,9 +4,13 @@ namespace Rikkei\Team\Model;
 use DB;
 use Lang;
 use Exception;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Permissions extends \Rikkei\Core\Model\CoreModel
 {
+    
+    use SoftDeletes;
+    
     const SCOPE_NONE = 0;
     const SCOPE_SELF = 1;
     const SCOPE_TEAM = 2;
@@ -128,6 +132,7 @@ class Permissions extends \Rikkei\Core\Model\CoreModel
                 $permissionItem->setData($item);
                 $permissionItem->save();
             }
+            Employees::flushCache();
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
@@ -159,5 +164,14 @@ class Permissions extends \Rikkei\Core\Model\CoreModel
         return self::select('action_id', 'scope')
             ->where('role_id', $roleId)
             ->get();
+    }
+    
+    public function delete() {
+        try {
+            Employees::flushCache();
+            return parent::delete();
+        } catch (Exception $ex) {
+            throw $ex;
+        }
     }
 }
