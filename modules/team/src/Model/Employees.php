@@ -8,12 +8,17 @@ use Exception;
 use Lang;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
+use Rikkei\Core\View\View;
 
 class Employees extends CoreModel
 {
     
     use SoftDeletes;
     
+    const GENDER_MALE = 1;
+    const GENDER_FEMALE = 0;
+
+
     protected $table = 'employees';
     
     /**
@@ -57,6 +62,25 @@ class Employees extends CoreModel
         $collection = self::filterGrid($collection);
         $collection = $collection->paginate($pager['limit']);
         return $collection;
+    }
+    
+    /**
+     * rewrite save model employee
+     * 
+     * @param array $options
+     */
+    public function save(array $options = array()) {
+        if (! $this->nickname) {
+            $this->nickname = preg_replace('/@.*$/', '', $this->email);
+        }
+        if (! View::isEmailAllow($this->email)) {
+            throw new Exception(Lang::get('team::messages.Please enter email of Rikkeisoft'));
+        }
+        try {
+            return parent::save($options);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
     }
     
     /**
@@ -381,5 +405,40 @@ class Employees extends CoreModel
             'route' => $routesAllow,
             'action' => $actionIdAllow,
         ];
+    }
+    
+    /**
+     * gender to option
+     * 
+     * @return array
+     */
+    public static function toOptionGender()
+    {
+        return [
+            [
+                'value' => self::GENDER_FEMALE,
+                'label' => Lang::get('team::view.Female')
+            ],
+            [
+            'value' => self::GENDER_MALE,
+            'label' => Lang::get('team::view.Male')
+            ]
+        ];
+    }
+    
+    /**
+     * check employee allow login
+     * 
+     * @return boolean
+     */
+    public function isAllowLogin()
+    {
+        $joinDate = strtotime($this->join_date);
+        $leaveDate = strtotime($this->leave_date);
+        $nowDate = time();
+        if ($joinDate > $nowDate || ($leaveDate && $leaveDate <= $nowDate)) {
+            return false;
+        }
+        return true;
     }
 }

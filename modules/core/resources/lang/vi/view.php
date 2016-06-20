@@ -27,5 +27,9 @@ return [
     "This menu group has :number items, can't delete" =>  'Menu group này có :number đối tượng, không thể xóa',
     'Are you sure delete this menu and all children?' => 'Bạn có chắc chắn muốn xóa menu này và tất cả con của nó?',
     'Menu group manage' => 'Quản lý menu group',
+    'This field is required' => 'Trường dữ liệu bắt buộc',
+    'Please enter a valid email address' => 'Vui lòng nhập đúng email',
+    'This field not be greater than :number characters' => 'Trường dữ liệu không được lớn hơn :number ký tự',
+    'Please enter a valid number' => 'Vui lòng chỉ nhập số',
     
 ];

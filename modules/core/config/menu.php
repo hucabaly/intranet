@@ -16,6 +16,14 @@ return [
         'label' => 'HR',
         'active' => '1',
         'action_code' => 'view.list.recruitment',
+        'child' => [
+            'add.employee' => [
+                'path' => 'team/member/create',
+                'label' => 'Create employee',
+                'active' => '1',
+                'action_code' => 'add.account',
+            ]
+        ]
     ],
     'training' => [
         'path' => 'training',

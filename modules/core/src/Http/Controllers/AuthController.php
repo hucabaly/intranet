@@ -14,6 +14,7 @@ use Illuminate\Support\ViewErrorBag;
 use Lang;
 use Illuminate\Support\MessageBag;
 use Rikkei\Team\Model\Employees;
+use Rikkei\Core\View\View;
 
 class AuthController extends Controller
 {
@@ -46,41 +47,27 @@ class AuthController extends Controller
         $user = Socialite::driver($provider)->user();
         $email = $user->email;
         if (!$email) {
-            redirect('/')->withErrors('Error Social connect');
+            return redirect('/')->withErrors('Error Social connect');
         }
         //add check email allow
-        $domainAllow = Config::get('domain_logged');
-        if ($domainAllow && count($domainAllow)) {
-            $matchCheck = false;
-            foreach ($domainAllow as $value) {
-                if (preg_match('/@' . $value . '$/', $email)) {
-                    $matchCheck = true;
-                    break;
-                }
-            }
-            if (! $matchCheck) {
-                $this->processNewAccount();
-                return redirect('/');
-            }
+        if (! View::isEmailAllow($email)) {
+            $this->processNewAccount();
+            return redirect('/');
         }
+        
         $nickName = !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email);
         $account = User::where('email', $user->email)
             ->first();
         $employee = Employees::where('email', $user->email)
             ->first();
         //add employee
-        if (! $employee) {
-            try {
-                $employee = Employees::create([
-                    'email' => $user->email,
-                    'name' => $user->name,
-                    'nickname' => $nickName
-                ]);
-            } catch (Exception $ex) {
-                return redirect('/')->withErrors($ex);
-            }
+        if (! $employee || ! $employee->isAllowLogin()) {
+            $this->processNewAccount(Lang::get('core::message.You donot have permission login'));
+            return redirect('/');
         }
         $employeeId = $employee->id;
+        
+        //create or update accout
         if (! $account) {
             try {
                 $account = User::create([
@@ -154,13 +141,19 @@ class AuthController extends Controller
      * 
      * @return redirect
      */
-    protected function processNewAccount()
+    protected function processNewAccount($message = null)
     {
-        $messageError = new MessageBag([
-            Lang::get('core::message.Please use Rikkisoft\'s Email!')
-        ]);
+        if (! $message) {
+            $message = new MessageBag([
+                Lang::get('core::message.Please use Rikkisoft\'s Email!')
+            ]);
+        } else {
+            $message = new MessageBag([
+                $message
+            ]);
+        }
         Session::flash(
-            'errors', Session::get('errors', new ViewErrorBag)->put('default', $messageError)
+            'errors', Session::get('errors', new ViewErrorBag)->put('default', $message)
         );
         return Redirect::away($this->getGoogleLogoutUrl('/'))
             ->send();
