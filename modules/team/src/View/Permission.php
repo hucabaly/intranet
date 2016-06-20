@@ -1,11 +1,10 @@
 <?php
 namespace Rikkei\Team\View;
 
-use Rikkei\Team\Model\User;
 use Auth;
-use Rikkei\Team\Model\TeamRule;
 use Route;
 use Config;
+use Rikkei\Team\Model\Permissions;
 
 /**
  * class permission
@@ -24,19 +23,19 @@ class Permission
      * store user current logged
      * @var model
      */
-    protected static $user;
+    protected $employee;
     /**
      * store rules of current user
      * @var array
      */
-    protected static $rules;
+    protected $rules;
     
     /**
      * contructor
      */
     public function __construct() 
     {
-        $this->initUser();
+        $this->initEmployee();
         $this->initRules();
     }
 
@@ -45,11 +44,10 @@ class Permission
      * 
      * @return \Rikkei\Team\View\Permission
      */
-    public function initUser()
+    public function initEmployee()
     {
-        if (! self::$user) {
-            $id = Auth::user()->id;
-            self::$user = User::find($id);
+        if (! $this->employee) {
+            $this->employee = Auth::user()->getEmployee();
         }
         return $this;
     }
@@ -61,10 +59,13 @@ class Permission
      */
     public function initRules()
     {
-        if (! self::$rules) {
-            self::$rules = self::$user->getAcl();
-            if (! self::$rules) {
-                self::$rules = ['checked' => true];
+        if ($this->isRoot()) {
+            return $this;
+        }
+        if (! $this->rules) {
+            $this->rules = $this->employee->getPermission();
+            if (! $this->rules) {
+                $this->rules = ['checked' => true];
             }
         }
         return $this;
@@ -74,29 +75,49 @@ class Permission
      * get scopes of teams in a route
      * 
      * @param int $teamId
-     * @param string|null $route route name
+     * @param string|int|null $routeOrActionId
      * @return int|array
      */
-    public function getScopeCurrentOfTeam($teamId = null, $route = null)
+    public function getScopeCurrentOfTeam($teamId = null, $routeOrActionId = null)
     {
-        if (! $route) {
+        if ($this->isRoot()) {
+            return Permissions::SCOPE_COMPANY;
+        }
+        if (! $routeOrActionId) {
             $routeCurrent = Route::getCurrentRoute()->getName();
         } else {
-            $routeCurrent = $route;
+            $routeCurrent = $routeOrActionId;
         }
-        if (! self::$rules || ! isset(self::$rules['team'])) {
-            return TeamRule::SCOPE_NONE;
+        if (! $this->rules || ! isset($this->rules['team'])) {
+            return Permissions::SCOPE_NONE;
         }
         $scopes = [];
-        foreach (self::$rules['team'] as $teamIdRule => $rules) {
+        //if route current is number: check action id
+        if (is_numeric($routeCurrent)) {
+            $rulesTeam = $this->rules['team']['action'];
+        } else { //if route current is string: check route name
+            $rulesTeam = $this->rules['team']['route'];
+        }
+        foreach ($rulesTeam as $teamIdRule => $rules) {
             if ($teamId && $teamId != $teamIdRule) {
                 continue;
             }
-            foreach ($rules as $routeAcl => $scope) {
-                if ($routeAcl == '*') {
-                    $routeAcl = '.*';
+            foreach ($rules as $routePermission => $scope) {
+                //check all permission
+                if ($routePermission == '*') {
+                    $routePermission = '.*';
                 }
-                if (preg_match('/' . $routeAcl . '/', $routeCurrent)) {
+                $flagCheck = false; //search route action
+                if (is_numeric($routeCurrent)) {
+                    if ($routeCurrent == $routePermission) {
+                        $flagCheck = true;
+                    }
+                } else {
+                    if (preg_match('/' . $routePermission . '/', $routeCurrent)) {
+                        $flagCheck = true;
+                    }
+                }
+                if ($flagCheck) {
                     if ($teamId) {
                         return $scope;
                     }
@@ -104,8 +125,9 @@ class Permission
                 }
             }
         }
+        
         if (! $scopes) {
-            return TeamRule::SCOPE_NONE;
+            return Permissions::SCOPE_NONE;
         }
         //get first element
         if (count($scopes) == 1) {
@@ -117,37 +139,48 @@ class Permission
     /**
      * get scopes of roles in a route
      * 
-     * @param string|null $route route name
+     * @param string|int|null $routeOrActionId
      * @return int
      */
-    public function getScopeCurrentOfRole($route = null)
+    public function getScopeCurrentOfRole($routeOrActionId = null)
     {
-        if (! $route) {
+        if ($this->isRoot()) {
+            return Permissions::SCOPE_COMPANY;
+        }
+        if (! $routeOrActionId) {
             $routeCurrent = Route::getCurrentRoute()->getName();
         } else {
-            $routeCurrent = $route;
+            $routeCurrent = $routeOrActionId;
         }
-        if (! self::$rules || ! isset(self::$rules['role'])) {
-            return TeamRule::SCOPE_NONE;
+        if (! $this->rules || ! isset($this->rules['role'])) {
+            return Permissions::SCOPE_NONE;
         }
         $scopeResult = 0;
-        foreach (self::$rules['role'] as $roleRuleId => $rules) {
-            foreach ($rules as $routeAcl => $scope) {
-                $scope = (int) $scope;
-                if ($routeAcl == '*') {
-                    $routeAcl = '.*';
+        //if route current is number: check action id
+        if (is_numeric($routeCurrent)) {
+            $rulesRole = $this->rules['role']['action'];
+        } else { //if route current is string: check route name
+            $rulesRole = $this->rules['role']['route'];
+        }
+        foreach ($rulesRole as $routePermission => $scope) {
+            if ($routePermission == '*') {
+                $routePermission = '.*';
+            }
+            $flagCheck = false; //search route action
+            if (is_numeric($routeCurrent)) {
+                if ($routeCurrent == $routePermission) {
+                    $flagCheck = true;
                 }
-                if (preg_match('/' . $routeAcl . '/', $routeCurrent)) {
-                    if ($scope == TeamRule::SCOPE_COMPANY) {
-                        return TeamRule::SCOPE_COMPANY;
-                    }
-                    if ($scope > $scopeResult) {
-                        $scopeResult = $scope;
-                    }
+            } else {
+                if (preg_match('/' . $routePermission . '/', $routeCurrent)) {
+                    $flagCheck = true;
                 }
             }
+            if ($flagCheck) {
+                return $scope;
+            }
         }
-        return $scopeResult;
+        return Permissions::SCOPE_NONE;
     }
     
     /**
@@ -171,7 +204,7 @@ class Permission
      * check is scope none
      * 
      * @param int $teamId
-     * @param string|null $route route name
+     * @param string|int|null $route route name
      * @return boolean
      */
     public function isScopeNone($teamId = null, $route = null)
@@ -179,20 +212,20 @@ class Permission
         if ($this->isRoot()) {
             return false;
         }
-        if ($this->getScopeCurrentOfRole($route) != TeamRule::SCOPE_NONE) {
+        if ($this->getScopeCurrentOfRole($route) != Permissions::SCOPE_NONE) {
             return false;
         }
         $scopeTeam = $this->getScopeCurrentOfTeam($teamId, $route);
         // scope team is int
         if (is_numeric($scopeTeam)) {
-            if ($scopeTeam != TeamRule::SCOPE_NONE) {
+            if ($scopeTeam != Permissions::SCOPE_NONE) {
                 return false;
             }
             return true;
         }
         // scope team is array
         foreach ($scopeTeam as $scope) {
-            if ($scope != TeamRule::SCOPE_NONE) {
+            if ($scope != Permissions::SCOPE_NONE) {
                 return false;
             }
         }
@@ -208,20 +241,20 @@ class Permission
      */
     public function isScopeSelf($teamId = null, $route = null)
     {
-        if ($this->getScopeCurrentOfRole($route) == TeamRule::SCOPE_SELF) {
+        if ($this->getScopeCurrentOfRole($route) == Permissions::SCOPE_SELF) {
             return true;
         }
         $scopeTeam = $this->getScopeCurrentOfTeam($teamId, $route);
         // scope team is int
         if (is_numeric($scopeTeam)) {
-            if ($scopeTeam == TeamRule::SCOPE_SELF) {
+            if ($scopeTeam == Permissions::SCOPE_SELF) {
                 return true;
             }
             return false;
         }
         // scope team is array
         foreach ($scopeTeam as $scope) {
-            if ($scope == TeamRule::SCOPE_SELF) {
+            if ($scope == Permissions::SCOPE_SELF) {
                 return true;
             }
         }
@@ -237,20 +270,20 @@ class Permission
      */
     public function isScopeTeam($teamId = null, $route = null)
     {
-        if ($this->getScopeCurrentOfRole($route) == TeamRule::SCOPE_TEAM) {
+        if ($this->getScopeCurrentOfRole($route) == Permissions::SCOPE_TEAM) {
             return true;
         }
         $scopeTeam = $this->getScopeCurrentOfTeam($teamId, $route);
         // scope team is int
         if (is_numeric($scopeTeam)) {
-            if ($scopeTeam == TeamRule::SCOPE_TEAM) {
+            if ($scopeTeam == Permissions::SCOPE_TEAM) {
                 return true;
             }
             return false;
         }
         // scope team is array
         foreach ($scopeTeam as $scope) {
-            if ($scope == TeamRule::SCOPE_TEAM) {
+            if ($scope == Permissions::SCOPE_TEAM) {
                 return true;
             }
         }
@@ -269,20 +302,20 @@ class Permission
         if ($this->isRoot()) {
             return true;
         }
-        if ($this->getScopeCurrentOfRole($route) == TeamRule::SCOPE_COMPANY) {
+        if ($this->getScopeCurrentOfRole($route) == Permissions::SCOPE_COMPANY) {
             return true;
         }
         $scopeTeam = $this->getScopeCurrentOfTeam($teamId, $route);
         // scope team is int
         if (is_numeric($scopeTeam)) {
-            if ($scopeTeam == TeamRule::SCOPE_COMPANY) {
+            if ($scopeTeam == Permissions::SCOPE_COMPANY) {
                 return true;
             }
             return false;
         }
         // scope team is array
         foreach ($scopeTeam as $scope) {
-            if ($scope == TeamRule::SCOPE_COMPANY) {
+            if ($scope == Permissions::SCOPE_COMPANY) {
                 return true;
             }
         }
@@ -306,12 +339,31 @@ class Permission
      */
     public function isRoot()
     {
-        if ($this->getRootAccount() == self::$user->email) {
+        if ($this->getRootAccount() == $this->employee->email) {
             return true;
         }
         return false;
     }
     
+    /**
+     * get employee current
+     * 
+     * @return null|model
+     */
+    public function getEmployee()
+    {
+        return $this->employee;
+    }
+    
+    /**
+     * get permission of employee current
+     * 
+     * @return array|null
+     */
+    public function getPermission()
+    {
+        return $this->rules;
+    }
     /**
      * Singleton instance
      * 

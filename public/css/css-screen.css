@@ -510,3 +510,16 @@ table tr.loading {
 .no-result{
     display: none;
 }
+
+.with-textalign-center{
+    text-align: center;
+}
+
+.color-green{
+    color: #439c4d;
+}
+
+.welcome-line{
+    margin-bottom: 0 !important;
+    color: #646666;
+}

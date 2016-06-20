@@ -197,7 +197,7 @@ function confirm(){
 }
 
 /**
- * Function validate va insert CSS vao database
+ * Validate then insert CSS result into database
  * @param string token
  * @param int cssId
  * @param json arrayValidate
@@ -301,7 +301,7 @@ function submit(token, cssId, arrayValidate){
         }
     });
     
-    
+    $(".apply-click-modal").show();
     $.ajax({
         url: '/css/saveResult',
         type: 'post',

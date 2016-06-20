@@ -84,6 +84,14 @@ return [
     'Change' => 'Thay đổi',
     'Change Role of employee' => 'Thay đổi vai trò của nhân viên',
     'Employees must belong to at least one team' => 'Nhân viên phải thuộc ít nhất 1 team',
-    "Team :name has :number members, can't delete!" => "Team :name đã có :number thành viên, không thể xóa!"
+    "Team :name has :number members, can't delete!" => "Team :name đã có :number thành viên, không thể xóa!",
+    'Acl' => 'Danh sách kiểm soát truy cập',
+    'Description' => 'Miêu tả',
+    'Parent id' => 'id cha',
+    'Sort order' => 'Sắp xếp',
+    'Parent' => 'Cha',
+    'Create' => 'Tạo',
+    'Translate (vi) "description"' => 'Dịch (vi) "miêu tả"',
+    'Route data exists, please fill another route' => 'Route đã tồn tại, vui lòng điền route khác',
     
 ];

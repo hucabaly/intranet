@@ -3,11 +3,11 @@
 
 use Rikkei\Team\View\TeamList;
 use Rikkei\Core\View\Form;
-use Rikkei\Team\Model\Position;
 use Rikkei\Team\Model\Roles;
 
-$positionAll = Position::getAll();
-$roleAll = Roles::getAll();
+$teamTreeHtml = TeamList::getTreeHtml(Form::getData('id'));
+$positionAll = Roles::getAllPosition();
+$roleAll = Roles::getAllRole();
 ?>
 
 @section('title')
@@ -15,6 +15,7 @@ Team Setting
 @endsection
 
 @section('css')
+<link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/select2/select2.min.css') }}" />
 <link rel="stylesheet" href="{{ URL::asset('team/css/style.css') }}" />
 @endsection
 
@@ -28,7 +29,11 @@ Team Setting
             </div>
             <div class="row team-list-action box-body">
                 <div class="col-md-8 col-sm-8 team-list">
-                    {!! TeamList::getTreeHtml(Form::getData('id')) !!}
+                    @if (strip_tags($teamTreeHtml))
+                        {!! $teamTreeHtml !!}
+                    @else
+                        <p class="alert alert-warning">{{ trans('team::view.Not found team') }}</p>
+                    @endif
                 </div>
                 <div class="col-md-4 col-sm-4 team-action">
                     <p><button type="button" class="btn-add btn-action" data-target="#team-add-form" data-toggle="modal">
@@ -88,7 +93,7 @@ Team Setting
                                 @foreach ($positionAll as $positionItem)
                                 <tr><td>
                                     <a href="{{ URL::route('team::setting.team.position.view', ['id' => $positionItem->id]) }}"<?php
-                                    if ($positionItem->id == Form::getData('position.id')): ?> class="active"<?php endif; ?>>{{ $positionItem->name }}</a>
+                                    if ($positionItem->id == Form::getData('position.id')): ?> class="active"<?php endif; ?>>{{ $positionItem->role }}</a>
                                 </td></tr>
                                 @endforeach
                             </tbody>
@@ -153,7 +158,7 @@ Team Setting
                                 @foreach ($roleAll as $roleItem)
                                 <tr><td>
                                     <a href="{{ URL::route('team::setting.role.view', ['id' => $roleItem->id]) }}"<?php
-                                    if ($roleItem->id == Form::getData('role.id')): ?> class="active"<?php endif; ?>>{{ $roleItem->name }}</a>
+                                    if ($roleItem->id == Form::getData('role.id')): ?> class="active"<?php endif; ?>>{{ $roleItem->role }}</a>
                                 </td></tr>
                                 @endforeach
                             </tbody>
@@ -186,6 +191,7 @@ Team Setting
         </div>
     </div> <!-- end role manage -->
     
+    <!-- rule permission -->
     <div class="col-sm-12 team-rule-wrapper">
         <div class="box box-warning">
             <div class="box-header with-border">
@@ -207,7 +213,7 @@ Team Setting
                         @elseif ($permissionAs)
                             <p class="alert alert-warning">{{ trans('team::view.Team permisstion as team') }} 
                                 <a href="{{ Url::route('team::setting.team.view', ['id' => $permissionAs->id]) }}">{{ $permissionAs->name }}</a></p>
-                        @elseif (! isset($positions) || ! count($positions))
+                        @elseif (! isset($rolesPosition) || ! count($rolesPosition))
                             <p class="alert alert-warning">{{ trans('team::view.Not found position to set permission function') }}</p>
                         @else
                             @include('team::setting.include.rule')
@@ -217,7 +223,7 @@ Team Setting
                     @endif
                 @endif
             </div>
-    </div>
+    </div> <!-- end rule permission -->
 </div>
 
 <!-- modal add/edit team position-->
@@ -324,25 +330,28 @@ Team Setting
     </div>
 </div>
 <!-- //end modal add/edit role -->
+<?php Form::forget(); ?>
 @endsection
 
 
 @section('script')
 <script src="{{ URL::asset('js/jquery.validate.min.js') }}"></script>
 <script src="{{ URL::asset('js/jquery.match.height.addtional.js') }}"></script>
+<script src="{{ URL::asset('adminlte/plugins/select2/select2.full.min.js') }}"></script>
 <script src="{{ URL::asset('team/js/script.js') }}"></script>
 <script>
     jQuery(document).ready(function ($) {
+        selectSearchReload();
         var messages = {
             'item[name]': {
                 required: '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.team name') ; ?>',
                 rangelength: '<?php echo trans('team::view.Team name') . ' ' . trans('core::view.not be greater than :number characters', ['number' => 255]) ; ?>',
               },
-            'position[name]': {
+            'position[role]': {
                 required: '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.position name') ; ?>',
                 rangelength: '<?php echo trans('team::view.Position name') . ' ' . trans('core::view.not be greater than :number characters', ['number' => 255]) ; ?>',
             },
-            'role[name]': {
+            'role[role]': {
                 required: '<?php echo trans('core::view.Please enter') . ' ' . trans('team::view.role name') ; ?>',
                 rangelength: '<?php echo trans('team::view.Role name') . ' ' . trans('core::view.not be greater than :number characters', ['number' => 255]) ; ?>',
             }
@@ -352,11 +361,11 @@ Team Setting
                 required: true,
                 rangelength: [1, 255]
             },
-            'position[name]': {
+            'position[role]': {
                 required: true,
                 rangelength: [1, 255]
             },
-            'role[name]': {
+            'role[role]': {
                 required: true,
                 rangelength: [1, 255]
             },

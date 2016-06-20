@@ -14,5 +14,18 @@ return [
     'Not activity' => "Không hoạt động",
     'Error system' => 'Lỗi hệ thống',
     'not be greater than :number characters' => 'không được lớn hơn :number ký tự',
+    'Profile' => 'Thông tin cá nhân',
+    'Back' => 'Quay lại',
+    'Save' => 'Lưu',
+    'State' => 'Trạng thái',
+    'Menu name' => 'Tên menu',
+    'menu name' =>  'tên menu',
+    'Active' => 'Kích hoạt',
+    'Disable' => 'Vô hiệu hóa',
+    'Main menu' =>  'Menu chính',
+    'Create new' =>  'Tạo mới',
+    "This menu group has :number items, can't delete" =>  'Menu group này có :number đối tượng, không thể xóa',
+    'Are you sure delete this menu and all children?' => 'Bạn có chắc chắn muốn xóa menu này và tất cả con của nó?',
+    'Menu group manage' => 'Quản lý menu group',
     
 ];

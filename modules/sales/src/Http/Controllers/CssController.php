@@ -8,7 +8,13 @@ use DB;
 use Rikkei\Core\Model\User;
 use Rikkei\Sales\Model\ProjectType;
 use Rikkei\Sales\Model\Css;
+use Rikkei\Sales\Model\CssTeams;
+use Rikkei\Sales\Model\CssQuestion;
+use Rikkei\Sales\Model\CssCategory;
+use Rikkei\Sales\Model\CssResult;
+use Rikkei\Sales\Model\CssResultDetail;
 use Rikkei\Team\Model\Team;
+use Rikkei\Team\Model\Employees;
 use Lang;
 use Mail;
 use Session;
@@ -17,91 +23,88 @@ use Illuminate\Http\Request;
 class CssController extends Controller {
     static $perPage = 5;
     static $perPageCss = 10;
+    
     /**
-     * Hàm hiển thị form tạo CSS
+     * Create Css page view
      */
     public function create() {
-        $user = Auth::user();
-        $projects = ProjectType::all();
+        $user = Auth::user(); 
+        $employee = Employees::find($user->employee_id);
         $teams = Team::all();
-        $htmlTeam = self::getTreeDataRecursive(0, 0, null);
+        $htmlTeam = self::getTreeDataRecursive(null, 0, null);
 
         return view(
-                'sales::css.create_css', 
+                'sales::css.create', 
                 [
-                    'user'      => $user,
-                    "projects"  => $projects,
-                    "teams"     => $teams,
-                    "htmlTeam"  => $htmlTeam,
+                    'employee'  => $employee,
+                    'teams'     => $teams,
+                    'htmlTeam'  => $htmlTeam,
                 ]
         );
     }
 
     /**
-     * Hàm hiển thị form sửa CSS
+     * Update Css page view
      * @param int $id
      */
     public function update($id) {
         $css = Css::where('id', $id)->first();
 
-        //get user tao css       
-        $user = User::find($css->user_id);
-
-        //get list projects va teams
-        $projects = ProjectType::all();
-        $teams = Team::all();
-
-        //get list team_id cua css theo css_id
-        $team_ids = array();
-        $team_id_by_css_id = DB::table('css_team')->where('css_id', $id)->get();
-
-        foreach ($team_id_by_css_id as $team) {
-            $team_ids[] = $team->team_id;
-        }
-
-        //get team cua css
-        $teams_set = DB::table('team')->whereIn('id', $team_ids)->get();
-
-        //text hien thi cac team cua CSS ra trang update
-        //ngan cach nhau bang dau ','
-        $str_teams_set_name = [];
-        foreach ($teams_set as $team) {
-            $str_teams_set_name[] = $team->name;
-        }
-        $str_teams_set_name = implode(', ', $str_teams_set_name);
+        //get employee create css       
+        $employee = Employees::find($css->employee_id);
         
-        $htmlTeam = self::getTreeDataRecursive(0, 0, null);
+        //get team_id list by css_id
+        $teams = Team::all();
+        $arrTeamId = array();
+        $teamIds = CssTeams::getTeamIdsByCssId($id);
+
+        foreach ($teamIds as $team) {
+            $arrTeamId[] = $team->team_id;
+        }
+
+        //get Css's team list
+        $teamModel = new Team();
+        $teamsSet = $teamModel->getTeamsByTeamIds($arrTeamId);
+
+        //Get Team's name is set
+        $strTeamsNameSet = [];
+        foreach ($teamsSet as $team) {
+            $strTeamsNameSet[] = $team->name;
+        }
+        $strTeamsNameSet = implode(', ', $strTeamsNameSet);
+        
+        $htmlTeam = self::getTreeDataRecursive(null, 0, null);
         return view(
-            'sales::css.update_css', 
+            'sales::css.update', 
             [
-                'css' => $css, //css by css_id
-                'user' => $user, //user by css_id
-                "projects" => $projects, // all project type
-                "teams" => $teams, //all team
-                "teams_set" => $teams_set, // team lien quan cua CSS
-                "str_teams_set_name" => $str_teams_set_name, 
+                'css' => $css, 
+                'employee' => $employee, 
+                "teams" => $teams, 
+                "teamsSet" => $teamsSet, 
+                "strTeamsNameSet" => $strTeamsNameSet, 
                 "htmlTeam"  => $htmlTeam,
             ]
         );
     }
 
     /**
-     * Hàm hiển thị trang preview sau khi tạo CSS
+     * Preview page
      * @param string $token
      * @param int $id
      * @return objects
      */
     public function preview($token, $id) {
-        $css = Css::where('id', $id)
-                ->where('token', $token)
-                ->first();
+        $cssModel = new Css();
+        $css = $cssModel->getCssByIdAndToken($id,$token);
 
         if ($css) {
-            $user = User::find($css->user_id);
-            return view('sales::css.preview_css', [
-                'css' => $css,
-                "user" => $user
-                    ]
+            $employee = Employees::find($css->employee_id);
+            return view(
+                'sales::css.preview', 
+                [
+                    'css' => $css,
+                    "employee" => $employee
+                ]
             );
         } else {
             return redirect("/");
@@ -109,22 +112,20 @@ class CssController extends Controller {
     }
 
     /**
-     * Hàm save CSS vào database
-     * @return void
+     * Save Css (insert or update)
      */
     public function save(Request $request) { 
         $start_date = date('Y-m-d', strtotime($request->input('start_date')));
         $end_date = date('Y-m-d', strtotime($request->input('end_date')));
 
         if ($request->input("create_or_update") == 'create') {
-            $css = new Css;
+            $css = new Css();
         } else {
-            $css_id = $request->input("css_id");
-            $css = Css::find($css_id);
+            $cssId = $request->input("css_id");
+            $css = Css::find($cssId);
         }
         
-        //insert or update to table css
-        $css->user_id = $request->input("user_id");
+        $css->employee_id = $request->input("employee_id");
         $css->company_name = $request->input("company_name");
         $css->customer_name = $request->input("customer_name");
         $css->project_name = $request->input("project_name");
@@ -134,29 +135,21 @@ class CssController extends Controller {
         $css->pm_name = $request->input("pm_name");
         $css->project_type_id = $request->input("project_type_id");
         
-        $user = Auth::user();
-        $user->japanese_name = $request->input("japanese_name");
+        $employee = Employees::find($css->employee_id);
+        $employee->japanese_name = $request->input("japanese_name");
         
         if ($request->input("create_or_update") == 'create') {
             $css->token = md5(rand());
-        } else {
-            DB::table('css_team')->where('css_id', $css_id)->delete();
         }
 
         $css->save();
-        $user->save();
-
+        $employee->save();
+        
         //insert into table css_team
-        $teams = $request->input("teams");
-        foreach ($teams as $k => $v) {
-            DB::table('css_team')->insert(
-                    array(
-                        'css_id' => $css->id,
-                        'team_id' => $k
-                    )
-            );
-        }
-
+        $arrTeamIds = $request->input("teams"); 
+        $cssTeamModel = new CssTeams();
+        $cssTeamModel->insertCssTeam($css->id, $arrTeamIds);
+        
         return redirect('/css/preview/' . $css->token . '/' . $css->id);
     }
 
@@ -167,39 +160,48 @@ class CssController extends Controller {
      * @return objects
      */
     public function make($token, $id) {
+        $cssQuestionModel = new CssQuestion();
+        $cssCategoryModel = new CssCategory();
         $css = Css::where('id', $id)
                 ->where('token', $token)
                 ->first();
 
         if ($css) {
-            $user = User::find($css->user_id);
-            $cssCategory = DB::table('css_category')->where('parent_id', $css->project_type_id)->get();
+            $employee = Employees::find($css->employee_id);
+            $rootCategory = $cssCategoryModel->getRootCategory($css->project_type_id);
+            $cssCategory = $cssCategoryModel->getCategoryByParent($rootCategory->id);
             $cssCate = array();
             if ($cssCategory) {
+                $NoOverView = 0;
                 foreach ($cssCategory as $item) {
-                    $cssCategoryChild = DB::table('css_category')->where('parent_id', $item->id)->get();
+                    $NoOverView++;
+                    $cssCategoryChild = $cssCategoryModel->getCategoryByParent($item->id);
                     $cssCateChild = array();
                     if ($cssCategoryChild) {
                         foreach ($cssCategoryChild as $item_child) {
-                            $cssQuestionChild = DB::table('css_question')->where('category_id', $item_child->id)->get();
+                            $cssQuestionChild = $cssQuestionModel->getQuestionByCategory($item_child->id);
                             $cssCateChild[] = array(
                                 "id" => $item_child->id,
                                 "name" => $item_child->name,
                                 "parent_id" => $item->id,
+                                "sort_order" => $item_child->sort_order,
                                 "questionsChild" => $cssQuestionChild,
                             );
                         }
                     }
-
-                    $cssQuestion = DB::table('css_question')->where('category_id', $item->id)->get();
+                    
+                    $cssQuestion = $cssQuestionModel->getQuestionByCategory($item->id);
                     $cssCate[] = array(
                         "id" => $item->id,
                         "name" => $item->name,
+                        "sort_order" => self::romanic_number($item->sort_order,true),
                         "cssCateChild" => $cssCateChild,
                         "questions" => $cssQuestion,
                     );
                 }
             }
+            
+            $overviewQuestion = $cssQuestionModel->getCommentOverview($rootCategory->id,1);
             
             $arrayValidate = array(
                 "nameRequired" => Lang::get('sales::message.Name validate required'),
@@ -209,13 +211,15 @@ class CssController extends Controller {
                 "questionCommentRequired" => Lang::get('sales::message.Question comment required'),
                 "proposedRequired"  => Lang::get('sales::message.Proposed required'),
             );
-            if(Auth::check()){}
+            
             return view(
-                'sales::css.makecss', [
+                'sales::css.make', [
                     'css' => $css,
-                    "user" => $user,
+                    "employee" => $employee,
                     "cssCate" => $cssCate,
-                    "arrayValidate" => json_encode($arrayValidate)
+                    "arrayValidate" => json_encode($arrayValidate),
+                    "noOverView" => self::romanic_number(++$NoOverView,true),
+                    "overviewQuestionContent" => $overviewQuestion->content,
                 ]
             );
         } else {
@@ -227,7 +231,7 @@ class CssController extends Controller {
      * Hàm insert bai lam CSS vao database
      * @return void
      */
-    public function saveResult(Request $request){
+    public function saveResult(Request $request){ 
         $arrayQuestion  = $request->input('arrayQuestion');
         $name           = $request->input('make_name');
         $email          = $request->input('make_email');
@@ -235,38 +239,29 @@ class CssController extends Controller {
         $comment        = $request->input('comment');
         $survey_comment = $request->input('proposed');
         $cssId          = $request->input('cssId');
-       
+        
         $dataResult = [
             'css_id' => $cssId,
             'name' => $name,
             'email' => $email,
-            'comment' => $comment,
+            'comment_overview' => $comment,
             'avg_point' => $avgPoint,
-            'name' => $name,
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
-            'survey_comment' => $survey_comment
+            'proposed' => $survey_comment
         ];
-        $css_result_id = Css::insertCssResult($dataResult);
-       
-        if(count($arrayQuestion) > 0){
-           $countQuestion = count($arrayQuestion);
-           for($i=0; $i<$countQuestion; $i++){
-                $dataDetail = [
-                    'css_id' => $css_result_id,
-                    'question_id' => $arrayQuestion[$i][0],
-                    'point' => $arrayQuestion[$i][1],
-                    'comment' => $arrayQuestion[$i][2],
-                ];
-                Css::insertCssResultDetail($dataDetail);
-            }
-        }
         
-        $css = Css::find($cssId);
-        $user = User::find($css->user_id);
-        $email = $user->email; 
+        $cssResultModel = new CssResult();
+        $cssResultId = $cssResultModel->insertCssResult($dataResult);
+        
+        $cssResultDetailModel = new CssResultDetail();
+        $cssResultDetailModel->insertCssResultDetail($cssResultId,$arrayQuestion);
+        
+        $css = Css::find($cssId); 
+        $employee = Employees::find($css->employee_id); 
+        $email = $employee->email; 
         $data = array(
-            'href' => url('/') . "/css/detail/" . $css_result_id,
+            'href' => url('/') . "/css/detail/" . $cssResultId,
             'project_name' => $css->project_name,
         );
 
@@ -1203,7 +1198,7 @@ class CssController extends Controller {
     {
         $teamList = Team::select('id', 'name', 'parent_id')
                 ->where('parent_id', $parentId)
-                ->orderBy('position', 'asc')
+                ->orderBy('sort_order', 'asc')
                 ->get();
         $countCollection = count($teamList);
         if (!$countCollection) {
@@ -1515,4 +1510,24 @@ class CssController extends Controller {
         $arr = explode(".", $question->content, 2);
         return $arr[0];
     }
+    
+    public function romanic_number($integer, $upcase = true) 
+    { 
+        $table = array('M'=>1000, 'CM'=>900, 'D'=>500, 'CD'=>400, 'C'=>100, 'XC'=>90, 'L'=>50, 'XL'=>40, 'X'=>10, 'IX'=>9, 'V'=>5, 'IV'=>4, 'I'=>1); 
+        $return = ''; 
+        while($integer > 0) 
+        { 
+            foreach($table as $rom=>$arb) 
+            { 
+                if($integer >= $arb) 
+                { 
+                    $integer -= $arb; 
+                    $return .= $rom; 
+                    break; 
+                } 
+            } 
+        } 
+
+        return $return; 
+    }  
 }

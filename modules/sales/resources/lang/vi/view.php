@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'Osdc'  => 'OSDC',
+    'Project base'  => 'Project base',
+    'Update Css'    => 'Cập nhật CSS',
     'Create CSS title' => 'Tạo CSS gửi cho khách hàng',
     'Sale name' => 'Họ và tên người gửi (Sales)',
     'Sale name jp' => 'Họ và tên người gửi (Tiếng Nhật)',
@@ -18,10 +21,10 @@ return [
     'Update CSS' => 'Cập nhật CSS',
     'Add >>' => 'Add >>',
     'OK' => 'OK',
-    'Welcome title' => 'Welcome to CSS page of Rikkeisoft',
-    'Hello' => 'Xin chào quý khách :customer_name thuộc công ty :company_name.',
-    'Thank you message' => 'Cảm ơn quý khách đã luôn đồng hành cùng Rikkeisoft thời gian qua.',
-    'Please message' => 'Xin quý khách vui lòng dành chút thời gian để làm phiếu khảo sát ý kiến khách hàng về dự án :project_name',
+    'Welcome title' => 'お客様アンケート',
+    'Welcome line 2' => '今後、当社がよりよいサービス、ご提案をできるようお客様のご意見を参考にさせていただきます。',
+    'Welcome line 3' => '大変お手数ですが、以下のアンケートにお答えいただきますようお願いいたします。',
+    'Welcome line 1' => 'この度は当社をご利用いただき、誠にありがとうございます。',
     'Respect' => "Kính thư: nhân viên :user_name",
     'Next' => 'Next',
     'Project infomation' => 'Project infomation',
@@ -40,7 +43,7 @@ return [
     'Question' => 'Question',
     'Rating' => 'Rating',
     'Comment' => 'Comment',
-    'Overview'  => "IV. Tổng thể",
+    'Overview'  => "Tổng thể",
     'Overview osdc'  => "V. Tổng thể",
     'Overview content' => "Một cách tổng thể thì quý khách có hài lòng với dịch vụ và sản phẩm mà công ty chúng tôi cung cấp hay không?",
     'Proposed'  => "Ngoài ra để công ty chúng tôi phục vụ quý khách hàng được hơn nữa, nếu quý khách hàng có bất cứ đề xuất gì về phương pháp cải thiện chất lượng dự án, quản trị dự án cũng như communication trong dự án. Xin mời quý khách điền vào ô bên cạnh. \nXin liệt kê ra 3 điểm mà quý khách thấy quan trọng nhất cần phải cải thiện",

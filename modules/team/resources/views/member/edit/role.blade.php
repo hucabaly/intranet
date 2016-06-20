@@ -1,5 +1,5 @@
 <?php
-$rolesData = Rikkei\Team\Model\Roles::getAll();
+$rolesData = Rikkei\Team\Model\Roles::getAllRole();
 $employeeRoleIds = [];
 ?>
 
@@ -10,7 +10,7 @@ $employeeRoleIds = [];
                 @if (isset($employeeRoles) && count($employeeRoles))
                     @foreach ($employeeRoles as $employeeRole)
                         <li>
-                            <span>{{ $employeeRole->name }}</span>
+                            <span>{{ $employeeRole->role }}</span>
                         </li>
                         <?php $employeeRoleIds[] = $employeeRole->role_id; ?>
                     @endforeach
@@ -38,7 +38,7 @@ $employeeRoleIds = [];
                         <div class="checkbox">
                             <label>
                                 <input name="role[]" type="checkbox" value="{{ $roleItem->id }}"<?php
-                                    if (in_array($roleItem->id, $employeeRoleIds)): ?> checked<?php endif; ?>>{{ $roleItem->name }}
+                                    if (in_array($roleItem->id, $employeeRoleIds)): ?> checked<?php endif; ?>>{{ $roleItem->role }}
                             </label>
                         </div>
                     @endforeach

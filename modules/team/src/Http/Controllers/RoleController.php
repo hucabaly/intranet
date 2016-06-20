@@ -9,9 +9,9 @@ use Rikkei\Core\View\Form;
 use Lang;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
-use Rikkei\Team\Model\RoleRule;
+use Rikkei\Team\Model\Permissions;
 
-class RoleController extends TeamBaseController
+class RoleController extends \Rikkei\Core\Http\Controllers\Controller
 {
     /**
      * construct more
@@ -30,13 +30,14 @@ class RoleController extends TeamBaseController
     public function view($id)
     {
         $model = Roles::find($id);
-        if (! $model) {
+        if (! $model || ! $model->isRole()) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
-        Breadcrumb::add($model->name, URL::route('team::setting.role.view', ['id' => $id]));
+        Breadcrumb::add($model->role, URL::route('team::setting.role.view', ['id' => $id]));
         Form::setData($model, 'role');
+        $rolePermissions = Permissions::getRolePermission($id);
         return view('team::setting.index', [
-            'roleRule' => RoleRule::where('role_id', $id)->get(),
+            'rolePermissions' => $rolePermissions,
         ]);
     }
     
@@ -58,7 +59,7 @@ class RoleController extends TeamBaseController
         }
         
         $validator = Validator::make($dataItem, [
-            'name' => 'required|max:255',
+            'role' => 'required|max:255',
         ]);
         if ($validator->fails()) {
             Form::setData($dataItem);
@@ -70,6 +71,7 @@ class RoleController extends TeamBaseController
             return redirect()->route('team::setting.team.index')->withErrors($validator);
         }
         $model->setData($dataItem);
+        $model->special_flg = Roles::FLAG_ROLE;
         try {
             $result = $model->save();
             if (! $result) {
@@ -107,26 +109,6 @@ class RoleController extends TeamBaseController
             return redirect()->route('team::setting.team.index')->with('messages', $messages);
         } catch (Exception $ex) {
             return redirect()->route('team::setting.team.index')->withErrors($ex);
-        }
-    }
-    
-    public function ruleSave()
-    {
-        $id = Input::get('role.id');
-        $model = Roles::find($id);
-        if (! $model) {
-            return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
-        }
-        try {
-            $model->saveRule((array) Input::get('rule'));
-            $messages = [
-                    'success'=> [
-                        Lang::get('team::messages.Save data success!'),
-                    ]
-            ];
-            return redirect()->route('team::setting.role.view', ['id' => $model->id])->with('messages', $messages);
-        } catch (Exception $ex) {
-            return redirect()->route('team::setting.role.view', ['id' => $model->id])->withErrors($ex);
         }
     }
 }

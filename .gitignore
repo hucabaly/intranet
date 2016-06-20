@@ -8,6 +8,7 @@
 /public/adminlte
 /database/migrations
 /.env
+/resources/lang/*/acl.php
 
 # IDE and editor specific files #
 #################################

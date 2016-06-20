@@ -254,6 +254,14 @@ form{
         }
     }
 }
+.form-group {
+    .select2-container--default .select2-selection--single, 
+    .select2-selection .select2-selection--single {
+        border: 1px solid #d2d6de;
+        border-radius: 0;
+        height: 34px
+    }
+}
 .rule-noti {
     b {
         display: inline-block;
@@ -262,6 +270,18 @@ form{
     }
     
 }
+.box-action {
+    margin-bottom: 10px;
+}
+.btn-sets-box {
+    margin-left: 10px;
+}
+.table-grid-data {
+    .col-action.col-a1{
+        width: 30px;
+    }
+}
+
 /*responsive*/
 @media (max-width: 1160px) and  (min-width: $mobile+1) {
     .navbar-collapse.pull-left+.navbar-custom-menu {

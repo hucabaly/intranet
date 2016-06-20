@@ -11,6 +11,18 @@ class Css extends Model
     protected $table = 'css';
     
     /**
+     * Get Css by css_id and token
+     * @param int $cssId
+     * @param string $token
+     * @return object
+     */
+    public function getCssByIdAndToken($cssId,$token){
+        return self::where('id', $cssId)
+                ->where('token', $token)
+                ->first();
+    }
+
+    /**
      * Get bai lam css theo mot nhom cac project_type_id
      * @param string $projectTypeIds
      * @param date $startDate

@@ -1,5 +1,22 @@
 //collapse function
 !function(e){function s(e,s){return void 0==e?s:e}e.fn.collapse=function(t){function l(e,s,l){s.siblings(o).slideUp(t.speed),t.parent?l.siblings().children(a).removeClass(c):e.siblings(a).removeClass(c),s.siblings(o).removeClass(r),t.changeText&&(e.siblings("."+h).html(t.more),t.parent&&l.siblings().children("."+h).html(t.more))}var n=e(this),i=n.selector,a=".collapse-title",o=".collapse-content",c="expand",r="open",h="change-text",d="collapse-close";t=s(t,{}),t.start=s(t.start,!0),t.click=s(t.click,!0),t.next=s(t.next,!0),t.speed=s(t.speed,500),t.only=s(t.only,!1),t.parent=s(t.parent,!1),t.clickOut=s(t.clickOut,!1),t.parent?t.sync=s(t.sync,!1):t.sync=!1,t.changeText=s(t.changeText,!1),t.changeText&&(t.more=s(t.more,"more"),t.less=s(t.less,"less")),t.close=s(t.close,!1),t.start&&e.each(n.find(a),function(){var s,l,n=e(this);t.parent&&(l=e(this).parent()),s=t.next?t.parent?l.next(o):n.next(o):t.parent?l.prev(o):n.prev(o),n.hasClass(c)?(s.show(),s.addClass(r)):(s.hide(),s.removeClass(r))}),t.click&&(t.clickOut&&e(document).on("click",function(s){domTitleOut=e(a),domContentOut=e(o),domTitleOut.is(s.target)||0!==domTitleOut.has(s.target).length||domContentOut.is(s.target)||0!==domContentOut.has(s.target).length||domTitleOut.each(function(s,l){domTitleOutThis=e(this),domTitleOutThis.hasClass("click-out")&&(domTitleOutThis.removeClass(c),domTitleOutThis.next(o).slideUp(t.speed),domTitleOutThis.next(o).removeClass(r))})}),e(document).on("click touchstart",i+" "+a,function(s){s.preventDefault();var n,i,a=e(this);t.parent&&(i=e(this).parent()),n=t.next?t.parent?i.next(o):a.next(o):t.parent?i.prev(o):a.prev(o),n.length&&(a.hasClass(c)?(t.only&&l(a,n,i),n.slideUp(t.speed),a.removeClass(c),t.sync&&a.siblings().removeClass(c),n.removeClass(r)):(t.only&&l(a,n,i),n.slideDown(t.speed),a.addClass(c),t.sync&&a.siblings().addClass(c),n.addClass(r)),t.changeText&&(a.hasClass(c)?a.hasClass(h)&&a.html(t.less):a.hasClass(h)&&a.html(t.more),a.siblings("."+h).hasClass(c)?a.siblings("."+h).html(t.less):a.siblings("."+h).html(t.more)))}),t.close&&e(document).on("click","."+d,function(s){s.preventDefault(),t.parent?domTitleClose=e(this).parent().prev().children(a):domTitleClose=e(this).parent().prev(a),domTitleClose.first().trigger("click")}))}}(jQuery);
+
+/**
+ * select2 reload and trim text result
+ */
+function selectSearchReload(showSearch) {
+    var selectSearch = jQuery(".select-search").select2({
+        minimumResultsForSearch: Infinity
+    });
+    jQuery('.select-search').each(function(i,k){
+        text = jQuery(this).find('option:selected').text().trim();
+        jQuery(this).siblings('.select2-container').find('.select2-selection__rendered').text(text);
+    });
+    jQuery('.select-search').on('select2:select', function (evt) {
+        text = jQuery(this).find('option:selected').text().trim();
+        jQuery(this).siblings('.select2-container').find('.select2-selection__rendered').text(text);
+    });
+}
 //menu mobile
 jQuery(document).ready(function($) {
     var domOpenChild = '<span class="collapse-title menu-open-child"><span>Open</span></span>';

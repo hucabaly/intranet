@@ -9,8 +9,10 @@ use Validator;
 use Rikkei\Core\View\Form;
 use Rikkei\Core\View\Breadcrumb;
 use URL;
+use Rikkei\Team\Model\Roles;
+use Rikkei\Team\Model\Permissions;
 
-class TeamController extends TeamBaseController
+class TeamController extends \Rikkei\Core\Http\Controllers\Controller
 {
     /**
      * construct more
@@ -29,25 +31,22 @@ class TeamController extends TeamBaseController
     public function view($id)
     {
         $model = Team::find($id);
-        if (!$model) {
+        if (! $model) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         Form::setData($model);
-        $positions = $teamRule = $permissionAs = null;
+        $positions = $teamPermissions = $permissionAs = null;
         if ($model->is_function) {
-            if (! $model->permission_as) {
-                $teamRule = \Rikkei\Team\Model\TeamRule::where('team_id', $id)->get();
-                $positions = \Rikkei\Team\Model\Position::select('id', 'name')
-                    ->orderBy('level', 'desc')
-                    ->get();
-            } else {
-                $permissionAs = $model->getTeamPermissionAs();
+            $positions = Roles::getAllPosition('desc');
+            $permissionAs = $model->getTeamPermissionAs();
+            if (! $permissionAs) {
+                $teamPermissions = Permissions::getTeamPermission($id);
             }
         }
         
         return view('team::setting.index', [
-            'positions' => $positions,
-            'teamRules' => $teamRule,
+            'rolesPosition' => $positions,
+            'teamPermissions' => $teamPermissions,
             'permissionAs' => $permissionAs
         ]);
     }
@@ -63,11 +62,11 @@ class TeamController extends TeamBaseController
             $model = new Team();
         }
         $dataItem = Input::get('item');
-        if (!Input::get('item.is_function')) {
+        if (! Input::get('item.is_function')) {
             $dataItem['is_function'] = 0;
-            $dataItem['permission_as'] = 0;
-        } elseif (!Input::get('permission_same')) {
-            $dataItem['permission_as'] = 0;
+            $dataItem['follow_team_id'] = 0;
+        } elseif (! Input::get('permission_same')) {
+            $dataItem['follow_team_id'] = 0;
         }
         $validator = Validator::make($dataItem, [
             'name' => 'required|max:255',
@@ -84,19 +83,16 @@ class TeamController extends TeamBaseController
                 ->withErrors($validator);
         }
         //calculate position
-        if (!$model->id) { //team new
+        if (! $model->id) { //team new
             $parentId = 0;
-            if ($dataItem['parent_id']) {
-                $parentId = $dataItem['parent_id'];
-            }
-            $teamSameParent = Team::select('id', 'position')
+            $teamSameParent = Team::select('id', 'sort_order')
                     ->where('parent_id', $parentId)
-                    ->orderBy('position', 'desc')
+                    ->orderBy('sort_order', 'desc')
                     ->first();
             if (count($teamSameParent)) {
-                $dataItem['position'] = $teamSameParent->position + 1;
+                $dataItem['sort_order'] = $teamSameParent->sort_order + 1;
             } else {
-                $dataItem['position'] = 0;
+                $dataItem['sort_order'] = 0;
             }
         }
 

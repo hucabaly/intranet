@@ -3,9 +3,12 @@
 namespace Rikkei\Core\Model;
 
 use Rikkei\Core\View\Form;
+use Illuminate\Support\Facades\Cache;
 
 class CoreModel extends \Illuminate\Database\Eloquent\Model
 {
+    
+    protected static $timeStoreCache = 10080; //time store cache is 1 week
     /**
      * set data for a model
      * 
@@ -51,5 +54,66 @@ class CoreModel extends \Illuminate\Database\Eloquent\Model
             }
         }
         return $collection;
+    }
+    
+    /**
+     * get table name of model
+     * 
+     * @return string
+     */
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+    
+    /**
+     * flush cache store of model
+     */
+    public static function flushCache()
+    {
+        Cache::flush();
+    }
+    
+    /**
+     * get key follow function class called
+     * 
+     * @param array|null $suffixKey
+     * @return string
+     */
+    public static function getKeyCache($suffixKey = [])
+    {
+        $dataCalled = debug_backtrace();
+        if (isset($dataCalled[1])) {
+            $dataCalled = $dataCalled[1];
+        } else {
+            $dataCalled = $dataCalled[0];
+        }
+        $key = '';
+        if (isset($dataCalled['class'])) {
+            $key .= $dataCalled['class'] . '-c-';
+        }
+        if (isset($dataCalled['function'])) {
+            $key .= $dataCalled['function'] . '-f-';
+        }
+        if (isset($dataCalled['args']) && $dataCalled['args']) {
+            foreach ($dataCalled['args'] as $args) {
+                $key .= var_export($args, true) . '-';
+            }
+            $key .= 'ar-';
+        }
+        if ($suffixKey) {
+            if (is_string($suffixKey)) {
+                $key .= $suffixKey;
+            } else if (is_array($suffixKey)) {
+                foreach ($suffixKey as $i) {
+                    if (is_array($i)) {
+                        $i = implode('.', $i);
+                    }
+                    $key .= $i . '-';
+                }
+            }
+            $key .= $i . '-p-';
+        }
+        return $key;
     }
 }
