@@ -4,7 +4,6 @@
 <div class="row analyze-body">
     <div class="col-xs-12">
         <div class="box box-solid">
-          <div class="box-body">
             <div class="box-group" id="accordion">
               <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
               <div class="panel box box-primary">
@@ -18,13 +17,16 @@
                                 <div class="row" id="dateRanger"></div>
                                 <div class="row line-15">
                                     <label class="title-label">{{trans('sales::view.Project type')}}</label>
-                                    @foreach($projectTypes as $type)
-                                        <label class="icheckbox-container label-normal">
-                                            <div class="icheckbox">
-                                                <input type="checkbox" name="project_type" value="{{$type->id}}">&nbsp;&nbsp;{{$type->name}}
-                                            </div>
-                                        </label>
-                                    @endforeach
+                                    <label class="icheckbox-container label-normal">
+                                        <div class="icheckbox">
+                                            <input type="checkbox" name="project_type" value="1">&nbsp;&nbsp;{{ trans('sales::view.Osdc')}}
+                                        </div>
+                                    </label>
+                                    <label class="icheckbox-container label-normal">
+                                        <div class="icheckbox">
+                                            <input type="checkbox" name="project_type" value="2">&nbsp;&nbsp;{{trans('sales::view.Project base')}}
+                                        </div>
+                                    </label>
                                 </div>
                                 <div class="row line-15">
                                     <label class="title-label">{{trans('sales::view.Team')}}</label>
@@ -194,8 +196,6 @@
             </div>
           </div>
           <!-- /.box-body -->
-        </div>
-        <!-- /.box -->
     </div>
 </div>    
 <div class="modal modal-warning" id="modal-warning" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
