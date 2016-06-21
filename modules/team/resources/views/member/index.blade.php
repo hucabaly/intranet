@@ -37,6 +37,7 @@ use Rikkei\Core\View\Form;
                     <thead>
                         <tr>
                             <th class="sorting {{ Config::getDirClass('id') }} col-id" onclick="window.location.href = '{{Config::getUrlOrder('id')}}';">Id</th>
+                            <th class="sorting {{ Config::getDirClass('employee_code') }} col-id" onclick="window.location.href = '{{Config::getUrlOrder('employee_code')}}';">Code</th>
                             <th class="sorting {{ Config::getDirClass('name') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('name')}}';">{{ trans('team::view.Name') }}</th>
                             <th class="sorting {{ Config::getDirClass('email') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('email')}}';">Email</th>
                             <th class="col-action">&nbsp;</th>
@@ -65,6 +66,13 @@ use Rikkei\Core\View\Form;
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <input type="text" name="filter[employee_code]" value="{{ Form::getFilterData('employee_code') }}" placeholder="Code" class="filter-grid" />
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-12">
                                         <input type="text" name="filter[name]" value="{{ Form::getFilterData('name') }}" placeholder="{{ trans('team::view.Name') }}" class="filter-grid" />
                                     </div>
                                 </div>
@@ -83,6 +91,7 @@ use Rikkei\Core\View\Form;
                         @foreach($collectionModel as $item)
                         <tr>
                             <td>{{ $item->id }}</td>
+                            <td>{{ $item->employee_code }}</td>
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->email }}</td>
                             <td>

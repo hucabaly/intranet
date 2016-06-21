@@ -16,7 +16,7 @@ class Form
         if(!$data || is_string($data)) {
             self::setDataInput($data, $key);
         } elseif (is_array($data)) {
-            self::setDataForm($data);
+            self::setDataForm($data, $key);
         } elseif (is_object($data)) {
             self::setDataModel($data, $key);
         }
@@ -112,14 +112,21 @@ class Form
      * 
      * @param array $data
      */
-    protected static function setDataForm(array $data = array())
+    protected static function setDataForm(array $data = array(), $key = null)
     {
         if (!$data || !count($data)) {
             return;
         }
-        foreach ($data as $key => $value) {
-            Session::flash('form_data.' . $key, $value);
+        if ($key) {
+            foreach ($data as $keyData => $value) {
+                Session::flash('form_data.' . $key . '.' . $keyData, $value);
+            }
+        } else {
+            foreach ($data as $keyData => $value) {
+                Session::flash('form_data.' . $keyData, $value);
+            }
         }
+        
     }
     
     /**
