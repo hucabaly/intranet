@@ -1107,17 +1107,6 @@ class CssController extends Controller {
                             "minPoint"          => self::formatNumber(min($points)),
                             "avgPoint"          => self::formatNumber($avgPoint),
                         ];
-                    }else{
-                        $no++;
-                        $result[] = [
-                            "no"                => $no,
-                            "id"                => $id,
-                            "name"              => $name,
-                            "countCss"          => 0,
-                            "maxPoint"          => "-",
-                            "minPoint"          => "-",
-                            "avgPoint"          => "-",
-                        ];
                     }
                 }
             }
@@ -1275,7 +1264,7 @@ class CssController extends Controller {
 
                         $cssCateChild[] = array(
                             "id" => $itemChild->id,
-                            "name" => $itemChild->name,
+                            "name" => $itemChild->sort_order . ". " . $itemChild->name,
                             "parentId" => $item->id,
                             "questionsChild" => $cssQuestionChild,
                         );
@@ -1290,9 +1279,11 @@ class CssController extends Controller {
                         $points = array();
                         foreach($cssResult as $itemCssResult){
                             $cssResultDetail = $cssResultDetailModel->getResultDetailRow($itemCssResult->id,$itemQuestion->id);
-                            if($cssResultDetail->point > 0){
-                                $points[] = $cssResultDetail->point;
-                                $countCss++;
+                            if(count($cssResultDetail)){
+                                if($cssResultDetail->point > 0){
+                                    $points[] = $cssResultDetail->point;
+                                    $countCss++;
+                                }
                             }
                         }
                         //echo count($points);die;
@@ -1315,7 +1306,7 @@ class CssController extends Controller {
                 }
                 $cssCate[] = array(
                     "id" => $item->id,
-                    "name" => $item->name,
+                    "name" => self::romanic_number($item->sort_order,true) . ". " .$item->name,
                     "parentId" => $item->parent_id,
                     "cssCateChild" => $cssCateChild,
                     "questions" => $cssQuestion,

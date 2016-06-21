@@ -469,6 +469,9 @@ select option.parent{
 .table-fixed thead {
   width: 100%;
 }
+.table-question-fixed thead {
+  width: 98%;
+}
 .table-fixed tbody {
   height: 345px;
   overflow-y: auto;
