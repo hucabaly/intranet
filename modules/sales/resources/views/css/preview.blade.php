@@ -44,7 +44,7 @@
                         <p>Xin chào quý khách {{$css->customer_name}} thuộc công ty {{$css->company_name}}.</p>
                         <p>Cảm ơn quý khách đã luôn đồng hành cùng Rikkeisoft thời gian qua.</p>
                         <p>Xin quý khách vui lòng dành chút thời gian để làm phiếu khảo sát ý kiến khách hàng về dự án {{$css->project_name}}.</p>
-                        <p class="kinh-thu">Kính thư: nhân viên {{$user->name}}</p>
+                        <p class="kinh-thu">Kính thư: nhân viên {{$employee->japanese_name}}</p>
                         <div style="clear:both;"></div>
                         <button type="button" class="btn btn-primary btn-next" onclick="goto_make();">Next</button>
                     </div>      
