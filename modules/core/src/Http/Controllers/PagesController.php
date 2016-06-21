@@ -19,7 +19,6 @@ class PagesController extends Controller
         if (Auth::guest()) {
             return view('core::welcome');
         }
-        Breadcrumb::add('Home', URL::to('/'), '<i class="fa fa-dashboard"></i>');
         Breadcrumb::add('Dashboard');
         Menu::setActive('home');
         // TODO: get user data

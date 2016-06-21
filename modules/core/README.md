@@ -21,6 +21,19 @@ Run in command line:
 
 to update menu and acl
 
+#### Recuirement demo data
+Add demo data for recruitment
+
+    `composer dump-autoload`
+    `php artisan db:seed --class=RecruitmentSeeder`
+
+Fill phone field demo in profile data, presenter autoload:
+
+    0912345678
+    0922345678
+    0932345678
+    0942345678
+
 #### Acl
 Acl has 3 level:
 - level 1: acl group, ex: Profile, Recruitment, Setting, ....

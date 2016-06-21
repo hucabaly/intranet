@@ -74,6 +74,8 @@ return [
             'add.account' => [
                 'label' => 'Register new member',
                 'routes' => [
+                    'team::team.member.create',
+                    
                 ]
             ],
         ],
