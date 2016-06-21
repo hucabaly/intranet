@@ -87,10 +87,13 @@ $(document).ready(function () {
     $('#start_date').on('changeDate', function (ev) {
         $(this).datepicker('hide');
         $('#end_date').focus();
+        $('#start_date').css('color','#555').css('font-size','14px');
+        $('#start_date-error').remove();
     });
     
     $('#end_date').on('changeDate', function (ev) {
         $(this).datepicker('hide');
+        $('#end_date').css('color','#555').css('font-size','14px');;
     });
 });
 
@@ -342,3 +345,12 @@ function exportExcel(projectName){
     });
 }
 
+function copyToClipboard(element) {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).attr('data-href')).select();
+  document.execCommand("copy");
+  $temp.remove();
+  
+  $("#modal-clipboard").modal('show');
+}

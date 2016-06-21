@@ -276,9 +276,9 @@ class Css extends Model
      * @param string $projectTypeIds
      * return list object
      */
-    public static function getCssBySaleAndTeamIdsAndListProjectType($user_id, $teamIds,$projectTypeIds){
+    public static function getCssBySaleAndTeamIdsAndListProjectType($employee_id, $teamIds,$projectTypeIds){
         $result = DB::select('select * from css '
-                . 'where user_id = "'.$user_id.'" AND project_type_id IN ('.$projectTypeIds.') and id In (SELECT css_id from css_team where team_id IN ('.$teamIds.')) '
+                . 'where employee_id = "'.$employee_id.'" AND project_type_id IN ('.$projectTypeIds.') and id In (SELECT css_id from css_team where team_id IN ('.$teamIds.')) '
                 . 'order by created_at asc');
         return $result;
     }
@@ -474,7 +474,7 @@ class Css extends Model
      * Get list sale css 
      */
     public static function getListSale(){
-        $sql = "select distinct(user_id) from css ";
+        $sql = "select distinct(employee_id) from css ";
         $sale = DB::select($sql);
         return $sale;
     }
@@ -800,16 +800,7 @@ class Css extends Model
      * @param int $perPage
      */
     public static function getCssList($perPage){
-        return DB::table('css')->orderBy('id', 'desc')->paginate($perPage);
-    }
-    
-    /**
-     * Get records in table css_team by css_id
-     * @param int $cssId
-     * @return object list
-     */
-    public static function getCssTeamByCssId($cssId){
-        return DB::table('css_team')->where('css_id',$cssId)->get();
+        return self::orderBy('id', 'desc')->paginate($perPage);
     }
     
     /**

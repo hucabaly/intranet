@@ -29,4 +29,33 @@ class CssResult extends Model
         }
         
     }
+    
+    /**
+     * Get css result count
+     * @param type $cssId
+     * @return count css result
+     */
+    public function getCountCssResultByCss($cssId){
+        return self::where("css_id",$cssId)->count();
+    }
+    
+    /**
+     * When Css only have once Css result then use this to get Css result
+     * @param int $cssId
+     */
+    public function getCssResultFirstByCss($cssId){
+        return self::where('css_id', $cssId)->first();
+    }
+    
+    /**
+     * Get Css result list by Css
+     * @param int $cssId
+     * @param int $perPage
+     * @return object list css result
+     */
+    public function getCssResulByCss($cssId, $perPage){
+        return self::where("css_id",$cssId)
+                ->orderBy('id', 'desc')
+                ->paginate($perPage);
+    }
 }

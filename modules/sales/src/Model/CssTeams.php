@@ -43,4 +43,13 @@ class CssTeams extends CoreModel
             throw $ex;
         }
     }
+    
+    /**
+     * Get records in table css_team by css_id
+     * @param int $cssId
+     * @return object list
+     */
+    public static function getCssTeamByCssId($cssId){
+        return self::where('css_id',$cssId)->get();
+    }
 }
