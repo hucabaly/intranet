@@ -4,18 +4,17 @@
 <div class="container box box-primary" style="background-color: #fff;min-height: 400px;">
     <div class="row">
         <div class="col-md-10 col-md-offset-1 welcome" style="display:block;" >
-            <div class="box-header with-border">
-                <h1 >{{ trans('sales::view.Welcome title') }}</h1>
+            <div class="box-header with-textalign-center color-green">
+                <h2>{{ trans('sales::view.Welcome title') }}</h2>
             </div>
-            <div class="container-fluid">
+            <div class="container-fluid with-textalign-center">
                 <div class="row-fluid">
 
                     <div class="span12">
                         <div >
-                            <p><?php echo trans('sales::view.Hello',["customer_name" => $css->customer_name, "company_name" => $css->company_name]) ?></p>
-                            <p>{{ trans('sales::view.Thank you message') }}</p>
-                            <p><?php echo trans('sales::view.Please message',["project_name" => $css->project_name]) ?></p>
-                            <p class="kinh-thu"><?php echo trans('sales::view.Respect',["user_name" => $user->japanese_name]) ?></p>
+                            <p class="welcome-line">{{trans('sales::view.Welcome line 1')}}</p>
+                            <p class="welcome-line">{{trans('sales::view.Welcome line 2')}}</p>
+                            <p class="welcome-line">{{trans('sales::view.Welcome line 3')}}</p>
                             <div style="clear:both;"></div>
                             <button type="button" class="btn btn-primary btn-next" onclick="goto_make();">{{ trans('sales::view.Next') }}</button>
                         </div>

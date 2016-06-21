@@ -200,4 +200,13 @@ class Team extends CoreModel
         }
         return $teamAs;
     }
+    
+    /**
+     * get teams by team_id list
+     * @param array $arrTeamIds
+     * @return object list
+     */
+    public function getTeamsByTeamIds($arrTeamIds){
+        return self::whereIn('id', $arrTeamIds)->get();
+    }
 }

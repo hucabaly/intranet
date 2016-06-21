@@ -20,6 +20,7 @@ class CreateTableEmployees extends Migration
             $table->unsignedInteger('employee_card_id');
             $table->string('employee_code', 10);
             $table->string('name', 45);
+            $table->string('japanese_name', 45);
             $table->string('nickname', 20);
             $table->string('email', 100);
             $table->dateTime('join_date')->nullable();
