@@ -36,15 +36,15 @@
     <body class="hold-transition skin-blue layout-top-nav">
         <div class="wrapper">
             <header class="main-header">
+                <!-- Logo -->
+                <a href="{{ URL::to('/') }}" class="logo" id="logo">
+                  <span class="logo-lg"><img src="{{ asset('/common/images/intranet_logo.png') }}" /></span>
+                </a>
                 <nav class="navbar navbar-static-top">
                     <div class="container-fluid">
-                        <div class="navbar-header">
-                            <a href="{{ URL::to('/') }}" class="navbar-brand"><b><img src="{{ asset('/common/images/intranet_logo.png') }}" /></b></a>
-                            <button type="button" class="navbar-toggle mmenu-toggle">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                        </div>
-
+                        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                            <span class="sr-only">Toggle navigation</span>
+                        </a>
                         @include("include.menu_main")
                         @include("include.menu_right")
                     </div><!-- /.container-fluid -->
@@ -83,6 +83,8 @@
                     <strong>Copyright &copy; 2016 <a href="http://rikkeisoft.com/">RikkeiSoft</a>.</strong> All rights reserved.
                 </div><!-- /.container -->
             </footer>
+            
+            @include("include.menu_mobile")
         </div><!-- ./wrapper -->
         
         <!-- modal delete cofirm -->
@@ -128,7 +130,7 @@
         </div><!-- end modal warning cofirm -->
         
         <!-- menu mobile -->
-        <div class="menu-left-wraper">
+        <?php /*div class="menu-left-wraper">
             <nav id="mmenu-left" class="left">
                 <div class="mmenu-close mmenu-toggle">
                     <a href="#"><span></span></a>
@@ -137,7 +139,7 @@
                     {!! Rikkei\Core\View\Menu::get() !!}
                 </ul>
             </nav>
-        </div> <!-- end menu mobile -->
+        </div*/ ?> <!-- end menu mobile -->
 
         <!-- jQuery 2.2.0 -->
         <script src="{{ URL::asset('adminlte/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
