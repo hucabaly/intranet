@@ -117,4 +117,10 @@ return [
     'By sale' => 'Theo nhân viên sale',
     'By question' => 'Theo câu hỏi',
     'No result not found' => 'Không có kết quả nào',
+    'View css make list' => 'Xem danh sách Css',
+    'View' => 'Xem',
+    'Url css' => 'URL gửi khách hàng',
+    'Copy to clipboard' => 'Copy to clipboard',
+    'Text notification copy clipboard' => 'Đã copy link URL của bài CSS vào clipboard, bạn có thể paste vào mail để gửi cho khách hàng.',
+    'Css result list of'    => 'Danh sách bài làm Css của dự án ',
 ];

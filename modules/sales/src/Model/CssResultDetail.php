@@ -33,4 +33,21 @@ class CssResultDetail extends Model
         }
         
     }
+    
+    /**
+     * Get css result detail by css result
+     * @param int $cssResultId
+     */
+    public function getResultDetailByCssResult($cssResultId){
+        return self::where('css_result_id', $cssResultId)->get();
+    }
+    
+    /**
+     * Get a row of result detail
+     * @param int $resultId
+     * @param int $questionId
+     */
+    public function getResultDetailRow($resultId, $questionId){
+        return self::where(['css_result_id' => $resultId, 'question_id' => $questionId])->first();
+    }
 }
