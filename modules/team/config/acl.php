@@ -193,7 +193,8 @@ return [
             'view.detail.css' => [
                 'label' => 'View detail css',
                 'routes' => [
-                    'sales::css.view'
+                    'sales::css.view',
+                    'sales::css.detail',
                 ]
             ],
             'edit.detail.css' => [

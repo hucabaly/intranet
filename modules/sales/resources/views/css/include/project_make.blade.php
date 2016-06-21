@@ -9,10 +9,10 @@
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.Sale name') }}</label></td>
-        <td class="infomation">{{$user->name}}</td>
+        <td class="infomation">{{$employee->japanese_name}}</td>
         <td class="title2"><label>{{ trans('sales::view.Customer name') }}</label></td>
         <td class="infomation">{{$css->customer_name}}</td>
-        <td rowspan="3" class="<?php echo ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' ?>">
+        <td rowspan="3" class="{{ ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' }}">
             <div>{{ trans('sales::view.Total mark') }}</div>
             <div class="diem">00.00</div>
         </td>
@@ -33,7 +33,7 @@
     </tr>
 </table>
 <div class="visible-check"></div>
-<table class="table table-bordered bang2 <?php echo ($css->project_type_id == 1) ? 'table-osdc' : 'table-base' ?>">
+<table class="table table-bordered bang2 {{($css->project_type_id == 1) ? 'table-osdc' : 'table-base' }}">
   <!-- header -->
   <tr class="header">
       <td><label>{{ trans('sales::view.No.') }}</label></td>
@@ -41,21 +41,22 @@
     <td class="reply"><label>{{ trans('sales::view.Rating') }}</label></td>
     <td class="comment"><label>{{ trans('sales::view.Comment') }}</label></td>
 </tr>
+
 @foreach($cssCate as $item)
     <tr class="mucto">
-        <td class="title" colspan="3">{{$item['name']}}</td>
+        <td class="title" colspan="3">{{$item["sort_order"] . ". " .$item['name']}}</td>
         <td class="title2"></td>
     </tr>
     @if($item['cssCateChild'])
         @foreach($item['cssCateChild'] as $itemChild)
             <tr class="mucbe">
-                <td class="title" colspan="3">{{$itemChild['name']}}</td>
+                <td class="title" colspan="3">{{$itemChild["sort_order"] . ". " .$itemChild['name']}}</td>
                 <td class="title2">
             </tr>
             @if($itemChild['questionsChild'])
                 @foreach($itemChild['questionsChild'] as $questionChild)
                     <tr class="cau">
-                        <td class="title" colspan="2">{{$questionChild->content}}</td>
+                        <td class="title" colspan="2">{{$questionChild->sort_order . ". " .$questionChild->content}}</td>
                         <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$questionChild->id}}" onclick="totalMark();"></div></td>
                         <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" data-questionid="{{$questionChild->id}}"  ></textarea></td>
                     </tr>
@@ -65,7 +66,7 @@
     @elseif($item['questions'])
         @foreach($item['questions'] as $question)
             <tr class="cau">
-                <td class="title" colspan="2">{{$question->content}}</td>
+                <td class="title" colspan="2">{{$question->sort_order . ". " .$question->content}}</td>
                 <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$question->id}}" onclick="totalMark();"></div></td>
                 <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" data-questionid="{{$question->id}}"  ></textarea></td>
             </tr>
@@ -73,20 +74,19 @@
     @endif
     
 @endforeach
-    <!-- muc to 4 -->
     <tr class="mucto">
-        <td class="title" colspan="4"><?php echo trans('sales::view.Overview',["number" => ($css->project_type_id==1) ? "V" : "IV"]) ?></td>
+        <td class="title" colspan="4">{{$noOverView . ". " .trans('sales::view.Overview') }}</td>
     </tr>
 
-    <!-- cau tong quat -->
+    <!-- Overview Question -->
     <tr class="cau">
-        <td class="title" colspan="2">{{ trans('sales::view.Overview content') }}</td>
+        <td class="title" colspan="2">{{ $overviewQuestionContent }}</td>
         
         <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" onclick="totalMark();"></div></td>
-        <td class="title2"><textarea class="comment-question" rows="1" type="text" id="comment-tongquat"  ></textarea></td>
+        <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" id="comment-tongquat"  ></textarea></td>
     </tr>
 
-    <!-- danh gia chung -->
+    <!-- Proposed -->
     <tr class="cau">
         <td class="title" >
             {{ trans('sales::view.Proposed') }}
@@ -159,3 +159,4 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<div class="modal apply-click-modal"><img class="loading-img" src="{{ asset('img/loading.gif') }}" /></div>
