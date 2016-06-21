@@ -368,6 +368,26 @@
                     @endforeach
                 @endif
             @endforeach
+            <tr>
+                <td class="col-xs-11 root-category" colspan="6">-- {{$item["overviewTitle"]}}</td>
+                
+            </tr>
+            <tr>
+                <td class="col-xs-7">---- {{$item["overviewQuestionContent"]}}</td>
+                <td class="col-xs-1">{{$item["overviewQuestionCountCss"]}}</td>
+                <td class="col-xs-1">{{$item["overviewQuestionAvgPoint"]}}</td>
+                <td class="col-xs-1">{{$item["overviewQuestionMaxPoint"]}}</td>
+                <td class="col-xs-1">{{$item["overviewQuestionMinPoint"]}}</td>
+                <td class="col-xs-1">
+                    <label class="label-normal">
+                        <div class="icheckbox">
+                        @if($question->countCss > 0)
+                            <input type="checkbox" data-questionid='{{$item["overviewQuestionId"]}}' parent-id='{{$item["id"]}}' class="checkQuestionItem">
+                        @endif
+                        </div>
+                    </label>
+                </td>
+            </tr>
         @endforeach
     </tbody>
 </table> 

@@ -5,7 +5,6 @@
     <div class="col-xs-12">
         <div class="box box-solid">
             <div class="box-group" id="accordion">
-              <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
               <div class="panel box box-primary">
                   <div id="collapseOne" class="panel-collapse collapse in">
                       <div class="box-body">
