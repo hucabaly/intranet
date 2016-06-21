@@ -506,3 +506,7 @@ select option.parent{
 table tr.loading {
     height:200px;
 }
+
+.no-result{
+    display: none;
+}

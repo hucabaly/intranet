@@ -316,7 +316,7 @@ function submit(token, cssId, arrayValidate){
             cssId: cssId
         },
     })
-    .done(function (data) {
+    .done(function (data) { 
         location.href = "/css/success/"+cssId;
     })
     .fail(function () {

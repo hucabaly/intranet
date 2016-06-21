@@ -12,10 +12,11 @@ use Rikkei\Team\Model\Team;
 use Lang;
 use Mail;
 use Session;
+use Illuminate\Http\Request;
 
 class CssController extends Controller {
     static $perPage = 5;
-    
+    static $perPageCss = 10;
     /**
      * Hàm hiển thị form tạo CSS
      */
@@ -63,7 +64,7 @@ class CssController extends Controller {
 
         //text hien thi cac team cua CSS ra trang update
         //ngan cach nhau bang dau ','
-        $str_teams_set_name = array();
+        $str_teams_set_name = [];
         foreach ($teams_set as $team) {
             $str_teams_set_name[] = $team->name;
         }
@@ -111,57 +112,52 @@ class CssController extends Controller {
      * Hàm save CSS vào database
      * @return void
      */
-    public function save() {
-        if (Auth::check() && $_POST) {
-            $start_date = date('Y-m-d', strtotime($_POST["start_date"]));
-            $end_date = date('Y-m-d', strtotime($_POST["end_date"]));
+    public function save(Request $request) { 
+        $start_date = date('Y-m-d', strtotime($request->input('start_date')));
+        $end_date = date('Y-m-d', strtotime($request->input('end_date')));
 
-            if ($_POST["create_or_update"] == 'create') {
-                $css = new Css;
-            } else {
-                $css_id = $_POST["css_id"];
-                $css = Css::find($css_id);
-            }
-
-            //insert hoac vao bang css
-            $css->user_id = $_POST["user_id"];
-            $css->company_name = $_POST["company_name"];
-            $css->customer_name = $_POST["customer_name"];
-            $css->project_name = $_POST["project_name"];
-            $css->brse_name = $_POST["brse_name"];
-            $css->start_date = $start_date;
-            $css->end_date = $end_date;
-            $css->pm_name = $_POST["pm_name"];
-            $css->project_type_id = $_POST["project_type_id"];
-
-            if ($_POST["create_or_update"] == 'create') {
-                //tao token
-                $css->token = md5(rand());
-                //Neu user chua co ten Tieng Nhat thi update
-                $user = Auth::user();
-                if (!$user->japanese_name) {
-                    $user->japanese_name = $_POST["japanese_name"];
-                    $user->save();
-                }
-            } else { // update thi delete css_id tu table css_team
-                DB::table('css_team')->where('css_id', $css_id)->delete();
-            }
-
-            $css->save();
-
-            //insert vao bang css_team
-            $teams = $_POST["teams"];
-            foreach ($teams as $k => $v) {
-                DB::table('css_team')->insert(
-                        array(
-                            'css_id' => $css->id,
-                            'team_id' => $k
-                        )
-                );
-            }
-
-            return redirect('/css/preview/' . $css->token . '/' . $css->id);
+        if ($request->input("create_or_update") == 'create') {
+            $css = new Css;
+        } else {
+            $css_id = $request->input("css_id");
+            $css = Css::find($css_id);
         }
+        
+        //insert or update to table css
+        $css->user_id = $request->input("user_id");
+        $css->company_name = $request->input("company_name");
+        $css->customer_name = $request->input("customer_name");
+        $css->project_name = $request->input("project_name");
+        $css->brse_name = $request->input("brse_name");
+        $css->start_date = $start_date;
+        $css->end_date = $end_date;
+        $css->pm_name = $request->input("pm_name");
+        $css->project_type_id = $request->input("project_type_id");
+        
+        $user = Auth::user();
+        $user->japanese_name = $request->input("japanese_name");
+        
+        if ($request->input("create_or_update") == 'create') {
+            $css->token = md5(rand());
+        } else {
+            DB::table('css_team')->where('css_id', $css_id)->delete();
+        }
+
+        $css->save();
+        $user->save();
+
+        //insert into table css_team
+        $teams = $request->input("teams");
+        foreach ($teams as $k => $v) {
+            DB::table('css_team')->insert(
+                    array(
+                        'css_id' => $css->id,
+                        'team_id' => $k
+                    )
+            );
+        }
+
+        return redirect('/css/preview/' . $css->token . '/' . $css->id);
     }
 
     /**
@@ -231,45 +227,43 @@ class CssController extends Controller {
      * Hàm insert bai lam CSS vao database
      * @return void
      */
-    public function saveResult(){
-        $arrayQuestion = $_REQUEST['arrayQuestion'];
-        $name = $_REQUEST['make_name'];
-        $email = $_REQUEST['make_email'];
-        $avgPoint = $_REQUEST['totalMark'];
-        $comment = $_REQUEST['comment'];
-        $survey_comment = $_REQUEST['proposed'];
-        $cssId = $_REQUEST['cssId'];
+    public function saveResult(Request $request){
+        $arrayQuestion  = $request->input('arrayQuestion');
+        $name           = $request->input('make_name');
+        $email          = $request->input('make_email');
+        $avgPoint       = $request->input('totalMark');
+        $comment        = $request->input('comment');
+        $survey_comment = $request->input('proposed');
+        $cssId          = $request->input('cssId');
        
-        $css_result_id = DB::table('css_result')->insertGetId(
-            array(
-                'css_id' => $cssId,
-                'name' => $name,
-                'email' => $email,
-                'comment' => $comment,
-                'avg_point' => $avgPoint,
-                'name' => $name,
-                'created_at' => date('Y-m-d'),
-                'updated_at' => date('Y-m-d'),
-                'survey_comment' => $survey_comment
-            )
-        );
+        $dataResult = [
+            'css_id' => $cssId,
+            'name' => $name,
+            'email' => $email,
+            'comment' => $comment,
+            'avg_point' => $avgPoint,
+            'name' => $name,
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+            'survey_comment' => $survey_comment
+        ];
+        $css_result_id = Css::insertCssResult($dataResult);
        
         if(count($arrayQuestion) > 0){
            $countQuestion = count($arrayQuestion);
            for($i=0; $i<$countQuestion; $i++){
-                DB::table('css_result_detail')->insert(
-                    array(
-                        'css_id' => $css_result_id,
-                        'question_id' => $arrayQuestion[$i][0],
-                        'point' => $arrayQuestion[$i][1],
-                        'comment' => $arrayQuestion[$i][2],
-                    )
-                );
+                $dataDetail = [
+                    'css_id' => $css_result_id,
+                    'question_id' => $arrayQuestion[$i][0],
+                    'point' => $arrayQuestion[$i][1],
+                    'comment' => $arrayQuestion[$i][2],
+                ];
+                Css::insertCssResultDetail($dataDetail);
             }
         }
         
         $css = Css::find($cssId);
-        $user = DB::table('users')->where('id', $css->user_id)->first();
+        $user = User::find($css->user_id);
         $email = $user->email; 
         $data = array(
             'href' => url('/') . "/css/detail/" . $css_result_id,
@@ -290,31 +284,33 @@ class CssController extends Controller {
      * @return void
      */
     public function grid(){
-        $css = DB::table('css')->orderBy('id', 'desc')->paginate(10);
+        $css = Css::getCssList(self::$perPageCss);
         
-        $i = ($css->currentPage()-1) * $css->perPage() + 1;
-        foreach($css as &$item){
-            $item->stt = $i;
-            $i++;
-            $project_type = DB::table('project_type')->where('id',$item->project_type_id)->first();
-            $item->project_type_name = $project_type->name;
-            $css_team_list = DB::table('css_team')->where('css_id',$item->id)->get();
-            
-            $arr_team = array();
-            foreach($css_team_list as $css_team_child){
-                $team = Team::find($css_team_child->team_id);
-                $arr_team[] = $team->name;
+        if(count($css) > 0){
+            $i = ($css->currentPage()-1) * $css->perPage() + 1;
+            foreach($css as &$item){ 
+                $item->stt = $i;
+                $i++;
+                $project_type = Css::getProjectTypeById($item->project_type_id);
+                $item->project_type_name = $project_type->name; 
+                $css_team_list = Css::getCssTeamByCssId($item->id);
+
+                $arr_team = array();
+                foreach($css_team_list as $css_team_child){
+                    $team = Css::getTeamById($css_team_child->team_id);
+                    $arr_team[] = $team->name;
+                }
+                $item->teams_name = implode(",", $arr_team);
+
+                $user = User::find($item->user_id);
+                $item->sale_name = $user->name;
+                $item->start_date = date('d/m/Y',strtotime($item->start_date));
+                $item->end_date = date('d/m/Y',strtotime($item->end_date));
+                $item->create_date = date('d/m/Y',strtotime($item->created_at));
+
+                /* get count css result by cssId */
+                $item->countCss = DB::table('css_result')->where("css_id",$item->id)->count();
             }
-            $item->teams_name = implode(",", $arr_team);
-            
-            $user = User::find($item->user_id);
-            $item->sale_name = $user->name;
-            $item->start_date = date('d/m/Y',strtotime($item->start_date));
-            $item->end_date = date('d/m/Y',strtotime($item->end_date));
-            $item->create_date = date('d/m/Y',strtotime($item->created_at));
-            
-            /* get count css result by cssId */
-            $item->countCss = DB::table('css_result')->where("css_id",$item->id)->count();
         }
         
         return view(
@@ -494,13 +490,13 @@ class CssController extends Controller {
      * @param datetime $endDate
      * return json
      */
-    public function applyAnalyze(){
-        $projectTypeIds = $_POST["projectTypeIds"]; 
-        $startDate = $_POST["startDate"];
-        $endDate = $_POST["endDate"];
-        $teamIds = $_POST["teamIds"]; 
-        $criteriaType = $_POST["criteriaType"]; 
-        $criteriaIds = $_POST["criteriaIds"]; 
+    public function applyAnalyze(Request $request){
+        $projectTypeIds = $request->input("projectTypeIds"); 
+        $startDate = $request->input("startDate");
+        $endDate = $request->input("endDate");
+        $teamIds = $request->input("teamIds"); 
+        $criteriaType = $request->input("criteriaType"); 
+        $criteriaIds = $request->input("criteriaIds"); 
         
         //lay thong tin hien ket qua danh sach du an
         $data = [];
@@ -852,7 +848,7 @@ class CssController extends Controller {
             
             $pointToHighchart["data"] = [];
             if($criteria == 'question'){
-                $pointToHighchart["name"] = '';
+                $pointToHighchart["name"] = self::getNumberQuestion($criteriaId);
                 foreach($cssResultByCriteria as $itemCssResult){
                     $css_result_detail = Css::getCssResultDetail($itemCssResult->id,$criteriaId);
                     if($css_result_detail->point > 0){
@@ -883,11 +879,11 @@ class CssController extends Controller {
      * @param string endDate
      * @param string projectTypeIds
      */
-    public function filterAnalyze(){
-        $startDate = $_POST["startDate"];
-        $endDate = $_POST["endDate"];
-        $projectTypeIds = $_POST["projectTypeIds"]; 
-        $teamIds = $_POST["teamIds"]; 
+    public function filterAnalyze(Request $request){
+        $startDate = $request->input("startDate");
+        $endDate = $request->input("endDate");
+        $projectTypeIds = $request->input("projectTypeIds"); 
+        $teamIds = $request->input("teamIds"); 
         
         $result["projectType"] = self::filterAnalyzeByProjectType($startDate, $endDate, $projectTypeIds,$teamIds);
         $result["team"] = self::filterAnalyzeByTeam($startDate, $endDate, $projectTypeIds,$teamIds);
@@ -914,41 +910,47 @@ class CssController extends Controller {
         $result = array();
         $no = 0;
         foreach($arrProjectTypeId as $k => $v){
-            $points = array();
-            
-            if($teamIds == ""){
-                $css = DB::table("css")->where("project_type_id",$v)->get();
-            }else{
-                $css = Css::getCssByProjectTypeAndTeam($v,$teamIds);
-            }
-            
             $projectType = ProjectType::find($v);
             $projectTypeId = $projectType->id;
             $projectTypeName = $projectType->name;
-            $countCss = 0;
-            foreach($css as $itemCss){
-                $css_result = Css::getCssResultByCssId($itemCss->id,$startDate,$endDate);
-
-                if(count($css_result) > 0){
-                    $countCss += count($css_result);
-                    foreach($css_result as $itemCssResult){
-                        $points[] = self::getPointCssResult($itemCssResult->id);
+            $points = array();
+            $css = Css::getCssByProjectTypeAndTeam($v,$teamIds);
+            if(count($css) > 0){
+                $countCss = 0;
+                foreach($css as $itemCss){
+                    $css_result = Css::getCssResultByCssId($itemCss->id,$startDate,$endDate);
+                    if(count($css_result) > 0){
+                        $countCss += count($css_result);
+                        foreach($css_result as $itemCssResult){
+                            $points[] = self::getPointCssResult($itemCssResult->id);
+                        }
                     }
                 }
-            }
-            
-            if(count($points) > 0){
-                $avgPoint = array_sum($points) / count($points);
-                $no++;
-                $result[] = [
-                    "no"                => $no,
-                    "projectTypeId"     => $projectTypeId,
-                    "projectTypeName"   => $projectTypeName,
-                    "countCss"          => $countCss,
-                    "maxPoint"          => self::formatNumber(max($points)),
-                    "minPoint"          => self::formatNumber(min($points)),
-                    "avgPoint"          => self::formatNumber($avgPoint),
-                ];
+
+                if(count($points) > 0){
+                    $avgPoint = array_sum($points) / count($points);
+                    $no++;
+                    $result[] = [
+                        "no"                => $no,
+                        "projectTypeId"     => $projectTypeId,
+                        "projectTypeName"   => $projectTypeName,
+                        "countCss"          => $countCss,
+                        "maxPoint"          => self::formatNumber(max($points)),
+                        "minPoint"          => self::formatNumber(min($points)),
+                        "avgPoint"          => self::formatNumber($avgPoint),
+                    ];
+                }else{
+                    $no++;
+                    $result[] = [
+                        "no"                => $no,
+                        "projectTypeId"     => $projectTypeId,
+                        "projectTypeName"   => $projectTypeName,
+                        "countCss"          => 0,
+                        "maxPoint"          => "-",
+                        "minPoint"          => "-",
+                        "avgPoint"          => "-",
+                    ];
+                }
             }else{
                 $no++;
                 $result[] = [
@@ -956,9 +958,9 @@ class CssController extends Controller {
                     "projectTypeId"     => $projectTypeId,
                     "projectTypeName"   => $projectTypeName,
                     "countCss"          => 0,
-                    "maxPoint"          => 0,
-                    "minPoint"          => 0,
-                    "avgPoint"          => 0,
+                    "maxPoint"          => "-",
+                    "minPoint"          => "-",
+                    "avgPoint"          => "-",
                 ];
             }
         }
@@ -998,34 +1000,46 @@ class CssController extends Controller {
         foreach($arrTeamId as $k => $teamId){
             $points = array();
             $css = Css::getCssByTeamIdAndListProjectType($teamId,$projectTypeIds);
-            
-            $countCss = 0;
             $team = Team::find($teamId);
             $teamId = $team->id;
             $teamName = $team->name;
-            foreach($css as $itemCss){
-                $css_result = Css::getCssResultByCssId($itemCss->id,$startDate,$endDate);
+            if(count($css) > 0){
+                $countCss = 0;
+                foreach($css as $itemCss){
+                    $css_result = Css::getCssResultByCssId($itemCss->id,$startDate,$endDate);
 
-                if(count($css_result) > 0){
-                    $countCss += count($css_result);
-                    foreach($css_result as $itemCssResult){
-                        $points[] = self::getPointCssResult($itemCssResult->id);
+                    if(count($css_result) > 0){
+                        $countCss += count($css_result);
+                        foreach($css_result as $itemCssResult){
+                            $points[] = self::getPointCssResult($itemCssResult->id);
+                        }
                     }
                 }
-            }
-            
-            if(count($points) > 0){
-                $avgPoint = array_sum($points) / count($points);
-                $no++;
-                $result[] = [
-                    "no"                => $no,
-                    "teamId"            => $teamId,
-                    "teamName"          => $teamName,
-                    "countCss"          => $countCss,
-                    "maxPoint"          => self::formatNumber(max($points)),
-                    "minPoint"          => self::formatNumber(min($points)),
-                    "avgPoint"          => self::formatNumber($avgPoint),
-                ];
+
+                if(count($points) > 0){
+                    $avgPoint = array_sum($points) / count($points);
+                    $no++;
+                    $result[] = [
+                        "no"                => $no,
+                        "teamId"            => $teamId,
+                        "teamName"          => $teamName,
+                        "countCss"          => $countCss,
+                        "maxPoint"          => self::formatNumber(max($points)),
+                        "minPoint"          => self::formatNumber(min($points)),
+                        "avgPoint"          => self::formatNumber($avgPoint),
+                    ];
+                }else{
+                    $no++;
+                    $result[] = [
+                        "no"                => $no,
+                        "teamId"            => $teamId,
+                        "teamName"          => $teamName,
+                        "countCss"          => 0,
+                        "maxPoint"          => "-",
+                        "minPoint"          => "-",
+                        "avgPoint"          => "-",
+                    ];
+                }
             }else{
                 $no++;
                 $result[] = [
@@ -1033,9 +1047,9 @@ class CssController extends Controller {
                     "teamId"            => $teamId,
                     "teamName"          => $teamName,
                     "countCss"          => 0,
-                    "maxPoint"          => 0,
-                    "minPoint"          => 0,
-                    "avgPoint"          => 0,
+                    "maxPoint"          => "-",
+                    "minPoint"          => "-",
+                    "avgPoint"          => "-",
                 ];
             }
         }
@@ -1066,73 +1080,76 @@ class CssController extends Controller {
         }else if($criteria == "sale"){
             $listResult = CSS::getListSale();
         }
-        
-        foreach($listResult as $itemList){
-            $points = array();
-            if($criteria == "pm"){
-                $css = Css::getCssByPmAndTeamIdsAndListProjectType($itemList->pm_name, $teamIds,$projectTypeIds);
-            }else if($criteria == "brse"){
-                $css = Css::getCssByBrseAndTeamIdsAndListProjectType($itemList->brse_name, $teamIds,$projectTypeIds);
-            }else if($criteria == "customer"){
-                $css = Css::getCssByCustomerAndTeamIdsAndListProjectType($itemList->customer_name, $teamIds,$projectTypeIds);
-            }else if($criteria == "sale"){
-                $css = Css::getCssBySaleAndTeamIdsAndListProjectType($itemList->user_id, $teamIds,$projectTypeIds);
-            }
-            
-            $countCss = 0;
-            foreach($css as $itemCss){
-                $css_result = DB::table("css_result")
-                ->where("css_id",$itemCss->id)
-                ->where("created_at", ">=", $startDate)
-                ->where("created_at", "<=", $endDate)
-                ->get();
+        if(count($listResult) > 0){
+            foreach($listResult as $itemList){
+                $points = array();
+                if($criteria == "pm"){
+                    $css = Css::getCssByPmAndTeamIdsAndListProjectType($itemList->pm_name, $teamIds,$projectTypeIds);
+                }else if($criteria == "brse"){
+                    $css = Css::getCssByBrseAndTeamIdsAndListProjectType($itemList->brse_name, $teamIds,$projectTypeIds);
+                }else if($criteria == "customer"){
+                    $css = Css::getCssByCustomerAndTeamIdsAndListProjectType($itemList->customer_name, $teamIds,$projectTypeIds);
+                }else if($criteria == "sale"){
+                    $css = Css::getCssBySaleAndTeamIdsAndListProjectType($itemList->user_id, $teamIds,$projectTypeIds);
+                }
 
-                if(count($css_result) > 0){
-                    $countCss += count($css_result);
-                    foreach($css_result as $itemCssResult){
-                        $points[] = self::getPointCssResult($itemCssResult->id);
+                $countCss = 0;
+                if(count($css) > 0){
+                    foreach($css as $itemCss){
+                        $css_result = DB::table("css_result")
+                        ->where("css_id",$itemCss->id)
+                        ->where("created_at", ">=", $startDate)
+                        ->where("created_at", "<=", $endDate)
+                        ->get();
+
+                        if(count($css_result) > 0){
+                            $countCss += count($css_result);
+                            foreach($css_result as $itemCssResult){
+                                $points[] = self::getPointCssResult($itemCssResult->id);
+                            }
+                        }
+                    }
+
+                    if($criteria == "pm"){
+                        $id = $itemList->pm_name;
+                        $name = $itemList->pm_name;
+                    } else if($criteria == "brse"){
+                        $id = $itemList->brse_name;
+                        $name = $itemList->brse_name;
+                    } else if($criteria == "customer"){
+                        $id = $itemList->customer_name; 
+                        $name = $itemList->customer_name; 
+                    } else if($criteria == "sale"){
+                        $user = User::find($itemList->user_id);
+                        $id = $itemList->user_id;
+                        $name = $user->name; 
+                    } 
+
+                    if(count($points) > 0){
+                        $avgPoint = array_sum($points) / count($points);
+                        $no++;
+                        $result[] = [
+                            "no"                => $no,
+                            "id"                => $id,
+                            "name"              => $name,
+                            "countCss"          => $countCss,
+                            "maxPoint"          => self::formatNumber(max($points)),
+                            "minPoint"          => self::formatNumber(min($points)),
+                            "avgPoint"          => self::formatNumber($avgPoint),
+                        ];
+                    }else{
+                        $no++;
+                        $result[] = [
+                            "no"                => $no,
+                            "id"                => $id,
+                            "name"              => $name,
+                            "countCss"          => 0,
+                            "maxPoint"          => "-",
+                            "minPoint"          => "-",
+                            "avgPoint"          => "-",
+                        ];
                     }
                 }
-            }
-            
-            if($criteria == "pm"){
-                $id = $itemList->pm_name;
-                $name = $itemList->pm_name;
-            } else if($criteria == "brse"){
-                $id = $itemList->brse_name;
-                $name = $itemList->brse_name;
-            } else if($criteria == "customer"){
-                $id = $itemList->customer_name; 
-                $name = $itemList->customer_name; 
-            } else if($criteria == "sale"){
-                $user = User::find($itemList->user_id);
-                $id = $itemList->user_id;
-                $name = $user->name; 
-            } 
-            
-            if(count($points) > 0){
-                $avgPoint = array_sum($points) / count($points);
-                $no++;
-                $result[] = [
-                    "no"                => $no,
-                    "id"                => $id,
-                    "name"              => $name,
-                    "countCss"          => $countCss,
-                    "maxPoint"          => self::formatNumber(max($points)),
-                    "minPoint"          => self::formatNumber(min($points)),
-                    "avgPoint"          => self::formatNumber($avgPoint),
-                ];
-            }else{
-                $no++;
-                $result[] = [
-                    "no"                => $no,
-                    "id"                => $id,
-                    "name"              => $name,
-                    "countCss"          => 0,
-                    "maxPoint"          => 0,
-                    "minPoint"          => 0,
-                    "avgPoint"          => 0,
-                ];
             }
         }
         
@@ -1250,7 +1267,6 @@ class CssController extends Controller {
                 $cssCateChild = array();
                 if ($cssCategoryChild) {
                     foreach ($cssCategoryChild as $item_child) {
-
                         $cssQuestionChild = DB::table('css_question')->where('category_id', $item_child->id)->get();
                         foreach($cssQuestionChild as &$itemQuestionChild){
                             $css_result = Css::getCssResultByQuestion($itemQuestionChild->id,$startDate, $endDate,$teamIds);
@@ -1277,8 +1293,12 @@ class CssController extends Controller {
                                 }else{
                                     $itemQuestionChild->avgPoint = "-";
                                 }
+                            }else{
+                                $itemQuestionChild->countCss = 0;
+                                $itemQuestionChild->maxPoint = "-";
+                                $itemQuestionChild->minPoint = "-";
+                                $itemQuestionChild->avgPoint = "-";
                             }
-
                         }
 
                         $cssCateChild[] = array(
@@ -1316,6 +1336,11 @@ class CssController extends Controller {
                         }else{
                             $itemQuestion->avgPoint = "-";
                         }
+                    }else{
+                        $itemQuestion->countCss = 0;
+                        $itemQuestion->maxPoint = "-";
+                        $itemQuestion->minPoint = "-";
+                        $itemQuestion->avgPoint = "-";
 
                     }
                 }
@@ -1333,6 +1358,16 @@ class CssController extends Controller {
         return $cssCate;
     }
     
+    /**
+     * 
+     * @param int $projectTypeId
+     * @param date $startDate
+     * @param date $endDate
+     * @param string $teamIds
+     * @param string $questionIds
+     * @param string $cssResultIds
+     * @return string
+     */
     protected function getHtmlQuestionList($projectTypeId,$startDate,$endDate,$teamIds,$questionIds,$cssResultIds){
         $arrQuestionId = explode(",", $questionIds); 
         $cssCate = self::getListQuestionByProjectType($projectTypeId,$startDate,$endDate,$teamIds);
@@ -1468,5 +1503,16 @@ class CssController extends Controller {
             "paginationRender" => $html,
         ];
         return $data;
+    }
+    
+    /**
+     * 
+     * @param int $questionId
+     * return string
+     */
+    protected function getNumberQuestion($questionId){
+        $question = Css::getQuestionById($questionId);
+        $arr = explode(".", $question->content, 2);
+        return $arr[0];
     }
 }

@@ -42,6 +42,20 @@
                 </section><!-- /.content -->
             </div>
         </div>
+        <!-- jQuery 2.2.0 -->
+        <script src="{{ URL::asset('adminlte/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
+        <!-- jQuery UI -->
+        <script src="{{ URL::asset('adminlte/plugins/jQueryUI/jquery-ui.min.js') }}"></script>
+        <!-- Bootstrap 3.3.6 -->
+        <script src="{{ URL::asset('adminlte/bootstrap/js/bootstrap.min.js') }}"></script>
+        <!-- FastClick -->
+        <script src="{{ URL::asset('adminlte/plugins/fastclick/fastclick.min.js') }}"></script>
+        <!-- AdminLTE App -->
+        <script src="{{ URL::asset('adminlte/dist/js/app.min.js') }}"></script>
+        <!-- Slimscroll -->
+        <script src="{{ URL::asset('adminlte/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
+        
+        <script src="{{ URL::asset('common/js/script.js') }}"></script>
         <!-- Add custom script follow page -->
         @yield('script')
         @yield('scriptCode')

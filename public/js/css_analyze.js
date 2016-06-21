@@ -49,7 +49,6 @@ function filterAnalyze(token){
     });
     
     //check if don't any check project type or team
-    
     if(projectTypeIds == ""){
         if(teamIds == ""){
             $('#modal-warning').modal('show');
@@ -67,8 +66,6 @@ function filterAnalyze(token){
         }
     }
 
-    
-    
     var startDate = $('.ui-rangeSlider-leftLabel .ui-rangeSlider-label-value').text();
     var endDate = $('.ui-rangeSlider-rightLabel .ui-rangeSlider-label-value').text();
     
@@ -89,7 +86,9 @@ function filterAnalyze(token){
         $(".apply-click-modal").hide();
         $("div.theotieuchi").html(data);
         $(".tbl-criteria").hide();
+        $(".no-result").hide();
         $("table[data-id="+criteriaType+"]").show();
+        $(".no-result-"+criteriaType).show();
         $(document).trigger('icheck');
         $("#startDate_val").val(startDate);
         $("#endDate_val").val(endDate);
@@ -157,6 +156,8 @@ function apply(token){
         },
     })
     .done(function (data) {  
+        $("#criteriaIds_val").val(criteriaIds);
+        $("#criteriaType_val").val(criteriaType);
         $(".apply-click-modal").hide();
         $(".ketquaapply").show();
         if(criteriaType == "tcQuestion"){
@@ -265,10 +266,14 @@ function apply(token){
                 }
                 $("#duoi3sao tbody").html(html);
                 $("#duoi3sao").parent().find(".pagination").html(data["lessThreeStar"]["paginationRender"]);
-
-                //danh sach de xuat
-                var countResult = data["proposes"]["cssResultdata"].length; 
-                html = "";
+            }else{
+                $("#duoi3sao tbody").html(noResult);
+            }
+            
+            //danh sach de xuat
+            countResult = data["proposes"]["cssResultdata"].length; 
+            html = "";
+            if(countResult > 0){
                 for(var i=0; i<countResult; i++){
                     html += "<tr>";
                     html += "<td>"+data["proposes"]["cssResultdata"][i]["no"]+"</td>";
@@ -281,7 +286,7 @@ function apply(token){
                 $("#danhsachdexuat tbody").html(html);
                 $("#danhsachdexuat").parent().find(".pagination").html(data["proposes"]["paginationRender"]);
             }else{
-                $("#duoi3sao tbody").html(noResult);
+                
                 $("#danhsachdexuat tbody").html(noResult);
             }
         }else{
@@ -516,68 +521,82 @@ $(document).on('icheck', function(){
     
     // Make "Item" unchecked if checkAll are unchecked
     $('.checkQuestionItem').on('ifUnchecked', function (event) {
-        if (!triggeredByChild) {
+        //if (!triggeredByChild) {
             var parent_id = $(this).attr('data-id');
             $('.checkQuestionItem[parent-id='+parent_id+']').iCheck('uncheck');
-        }
+        //}
         triggeredByChild = false;
     });
     
-    //Remove the checked state from "All" if any checkbox is unchecked
-    $('.checkQuestionItem').on('ifUnchecked', function (event) {
-        triggeredByChild = true;
-        var parent_id = $(this).attr('parent-id');
-        $('.checkQuestionItem[data-id='+parent_id+']').iCheck('uncheck');
-    });
-
-    // Make "All" checked if all checkboxes are checked
-    $('.checkQuestionItem').on('ifChecked', function (event) {
-        var parent_id = $(this).attr('parent-id');
-        if ($('.checkQuestionItem[parent-id='+parent_id+']').filter(':checked').length == $('.checkQuestionItem[parent-id='+parent_id+']').length) {
-            $('.checkQuestionItem[data-id='+parent_id+']').iCheck('check');
-        }
-    });
+//    //Remove the checked state from "All" if any checkbox is unchecked
+//    $('.checkQuestionItem').on('ifUnchecked', function (event) {
+//        triggeredByChild = true;
+//        var parent_id = $(this).attr('parent-id');
+//        $('.checkQuestionItem[data-id='+parent_id+']').iCheck('uncheck');
+//    });
+//
+//    // Make "All" checked if all checkboxes are checked
+//    $('.checkQuestionItem').on('ifChecked', function (event) {
+//        var parent_id = $(this).attr('parent-id');
+//        if ($('.checkQuestionItem[parent-id='+parent_id+']').filter(':checked').length == $('.checkQuestionItem[parent-id='+parent_id+']').length) {
+//            $('.checkQuestionItem[data-id='+parent_id+']').iCheck('check');
+//        }
+//    });
     
     //show table project type
     $('#tcProjectType').on('ifChecked', function (event) {
         $('.tbl-criteria').hide(); 
         $('table[data-id=tcProjectType]').show();
+        $('.no-result').hide();
+        $('.no-result-tcProjectType').show();
     });
 
     //show table team
     $('#tcTeam').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcTeam]').show();
+        $('.no-result').hide();
+        $('.no-result-tcTeam').show();
     });
 
     //show table pm
     $('#tcPm').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcPm]').show();
+        $('.no-result').hide();
+        $('.no-result-tcPm').show();
     });
 
     //show table brse
     $('#tcBrse').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcBrse]').show();
+        $('.no-result').hide();
+        $('.no-result-tcBrse').show();
     });
 
     //show table customer
     $('#tcCustomer').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcCustomer]').show();
+        $('.no-result').hide();
+        $('.no-result-tcCustomer').show();
     });    
 
     //show table sale
     $('#tcSale').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcSale]').show();
+        $('.no-result').hide();
+        $('.no-result-tcSale').show();
     }); 
 
     //show table question
     $('#tcQuestion').on('ifChecked', function (event) {
         $('.tbl-criteria').hide();
         $('table[data-id=tcQuestion]').show();
+        $('.no-result').hide();
+        $('.no-result-tcQuestion').show();
     }); 
 }).trigger('icheck'); // trigger it for page load
     

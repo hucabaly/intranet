@@ -17,6 +17,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
+                                @if(count($css) > 0)
                                 <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                     <thead>
                                         <tr role="row">
@@ -59,8 +60,10 @@
                                         </tr>
                                         @endforeach
                                     </tbody>
-
                                 </table>
+                                @else
+                                <h3>{{trans('sales::view.No result not found')}}</h3>
+                                @endif
                             </div>
                         </div>
                         <div class="row">
@@ -85,8 +88,6 @@
                     <!-- /.col -->
                 </div>
                 <!-- /.row -->
-           
-
 @endsection
 <!-- Styles -->
 @section('css')
@@ -101,5 +102,4 @@
 <script type="text/javascript">
     $(function () { $('#rateit_star').rateit({min: 1, max: 10, step: 2}); });
 </script>
-- See more at: http://hocphp.info/danh-gia-dang-ngoi-sao-voi-jquery-rateit/#sthash.e8vhG2FN.dpuf
 @endsection

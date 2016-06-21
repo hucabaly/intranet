@@ -166,6 +166,18 @@ class Css extends Model
     }
     
     /**
+     * Get Project type by id
+     * @param int $project_type_id
+     * return object
+     */
+    public static function getProjectTypeById($project_type_id){
+        $project_type = DB::table("project_type")
+                ->where("id",$project_type_id)
+                ->first();
+        return $project_type;
+    }
+    
+    /**
      * Lay ten cua loai du an theo id
      * @param int $project_type_id
      * return string
@@ -771,4 +783,69 @@ class Css extends Model
                         ->first();
     }
     
+    /**
+     * get Css list
+     * @param int $perPage
+     */
+    public static function getCssList($perPage){
+        return DB::table('css')->orderBy('id', 'desc')->paginate($perPage);
+    }
+    
+    /**
+     * Get records in table css_team by css_id
+     * @param int $cssId
+     * @return object list
+     */
+    public static function getCssTeamByCssId($cssId){
+        return DB::table('css_team')->where('css_id',$cssId)->get();
+    }
+    
+    /**
+     * Get Team by id
+     * @param type $teamId
+     * @return team object
+     */
+    public static function getTeamById($teamId){
+        return Team::find($teamId);
+    }
+    
+    /**
+     * Insert data into table css_result
+     * @param array $data
+     * @return int
+     */
+    public static function insertCssResult($data){
+        return DB::table('css_result')->insertGetId(
+            array(
+                'css_id' => $data["css_id"],
+                'name' => $data["name"],
+                'email' => $data["email"],
+                'comment' => $data["comment"],
+                'avg_point' => $data["avg_point"],
+                'name' => $data["name"],
+                'created_at' => $data['created_at'],
+                'updated_at' => $data['updated_at'],
+                'survey_comment' => $data['survey_comment']
+            )
+        );
+    }
+    
+    public static function insertCssResultDetail($data){
+        DB::table('css_result_detail')->insert(
+            array(
+                'css_id' => $data['css_id'],
+                'question_id' => $data['question_id'],
+                'point' => $data['point'],
+                'comment' => $data['comment'],
+            )
+        ); 
+    }
+    
+    public static function getCssResultByProjectType($projectTypeId,$startDate,$endDate,$teamIds){
+        $sql = "select * from css_result where "
+                . "css_id In (SELECT css_id from css_team where team_id IN ($teamIds)) "
+                . "and created_at >= '$startDate' and created_at <= '$endDate' "
+                . "and css_id In (select id from css where project_type_id = $projectTypeId)";
+        return DB::select($sql);
+    }
 }
