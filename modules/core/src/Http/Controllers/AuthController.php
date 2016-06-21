@@ -60,13 +60,27 @@ class AuthController extends Controller
             ->first();
         $employee = Employees::where('email', $user->email)
             ->first();
-        //add employee
-        if (! $employee || ! $employee->isAllowLogin()) {
+        
+        //add employee if is root
+        if (! $employee) {
+            if (View::isRoot($email)) {
+                $employee = new Employees();
+                $employee->setData([
+                    'email' => $user->email,
+                    'name' => $user->name,
+                    'nickname' => $nickName
+                ]);
+                $employee->save();
+            } else {
+                $this->processNewAccount(Lang::get('core::message.You donot have permission login'));
+                return redirect('/');
+            }
+        } elseif (! $employee->isAllowLogin()) {
             $this->processNewAccount(Lang::get('core::message.You donot have permission login'));
             return redirect('/');
         }
-        $employeeId = $employee->id;
         
+        $employeeId = $employee->id;
         //create or update accout
         if (! $account) {
             try {

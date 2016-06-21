@@ -8,7 +8,6 @@ use Exception;
 use Lang;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
-use Rikkei\Core\View\View;
 
 class Employees extends CoreModel
 {
@@ -17,7 +16,8 @@ class Employees extends CoreModel
     
     const GENDER_MALE = 1;
     const GENDER_FEMALE = 0;
-
+    const CODE_PREFIX = 'RK';
+    const CODE_LENGTH = 5;
 
     protected $table = 'employees';
     
@@ -57,7 +57,7 @@ class Employees extends CoreModel
     public static function getGridData()
     {
         $pager = Config::getPagerData();
-        $collection = self::select('id','name','email')
+        $collection = self::select('id','name','email', 'employee_code')
             ->orderBy($pager['order'], $pager['dir']);
         $collection = self::filterGrid($collection);
         $collection = $collection->paginate($pager['limit']);
@@ -73,10 +73,8 @@ class Employees extends CoreModel
         if (! $this->nickname) {
             $this->nickname = preg_replace('/@.*$/', '', $this->email);
         }
-        if (! View::isEmailAllow($this->email)) {
-            throw new Exception(Lang::get('team::messages.Please enter email of Rikkeisoft'));
-        }
         try {
+            $this->saveCode();
             return parent::save($options);
         } catch (Exception $ex) {
             throw $ex;
@@ -158,6 +156,43 @@ class Employees extends CoreModel
             DB::rollback();
             throw $ex;
         }
+    }
+    
+    /**
+     * set code for employee
+     * 
+     * @return \Rikkei\Team\Model\Employees
+     */
+    public function saveCode()
+    {
+        if ($this->employee_code || ! $this->join_date) {
+            return;
+        }
+        $year = strtotime($this->join_date);
+        $year = date('y', $year);
+        $codeLast = self::select('employee_code')
+            ->where('employee_code', 'like', self::CODE_PREFIX . $year . '%')
+            ->orderBy('employee_code', 'DESC')
+            ->first();
+        if (! $codeLast) {
+            $codeEmployee = self::CODE_PREFIX . $year;
+            for ($i = 0; $i < self::CODE_LENGTH - 1; $i++) {
+                $codeEmployee .= '0';
+            }
+            $codeEmployee .= '1';
+        } else {
+            $codeLast = $codeLast->employee_code;
+            $codeEmployee = preg_replace('/^' . self::CODE_PREFIX . $year . '/', '', $codeLast);
+            $codeEmployee = (int) $codeEmployee + 1;
+            $codeEmployee = (string) $codeEmployee;
+            $lengthCodeCurrent = strlen($codeEmployee);
+            for ($i = 0 ; $i < self::CODE_LENGTH - $lengthCodeCurrent; $i++) {
+                $codeEmployee = '0' . $codeEmployee;
+            }
+            $codeEmployee = self::CODE_PREFIX . $year . $codeEmployee;
+        }
+        $this->employee_code = $codeEmployee;
+        return $this;
     }
     
     /**

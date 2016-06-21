@@ -62,4 +62,26 @@ class View
         }
         return false;
     }
+    
+    /**
+     * check email is root
+     * 
+     * @return boolean
+     */
+    public static function isRoot($email)
+    {
+        if (trim(Config('services.account_root')) == $email) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * show permission view
+     */
+    public static function viewErrorPermission()
+    {
+        echo view('errors.permission');
+        exit;
+    }
 }

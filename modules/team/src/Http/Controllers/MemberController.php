@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Input;
 use Lang;
 use Rikkei\Core\View\Menu;
 use Illuminate\Support\Facades\Validator;
+use Rikkei\Core\View\View;
+use Rikkei\Recruitment\Model\RecruitmentApplies;
+use Rikkei\Team\View\Permission;
 
 class MemberController extends \Rikkei\Core\Http\Controllers\Controller
 {
@@ -48,10 +51,21 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
         //TODO permission check
         
         Breadcrumb::add($model->name, URL::route('team::team.member.edit', ['id' => $id]));
+        $presenter = null;
+        if ($model->mobile_phone) {
+            $presenter = RecruitmentApplies::getPresenterName($model->mobile_phone);
+            if ($presenter) {
+                Form::setData([
+                    'recruitment.present' => $presenter
+                ]);
+            }
+        }
+        
         Form::setData($model, 'employee');
         return view('team::member.edit', [
             'employeeTeamPositions' => $model->getTeamPositons(),
-            'employeeRoles' => $model->getRoles()
+            'employeeRoles' => $model->getRoles(),
+            'recruitmentPresent' => $presenter
         ]);
     }
     
@@ -67,12 +81,13 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
                 return redirect()->route('team::team.member.index')->withErrors(Lang::get('team::messages.Not found item.'));
             }
             
-            //TODO permission check
+            //TODO permission check greater
             
         } else {
-            
-            //TODO permission check creation
-            
+            //check permission creation
+            if (! Permission::getInstance()->isAllow('team::team.member.create')) {
+                View::viewErrorPermission();
+            }
             $model = new Employees();
         }
         $dataEmployee = Input::get('employee');
@@ -95,6 +110,15 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
             }
             Form::setData($dataEmployee, 'employee');
             return redirect()->route('team::team.member.create')->withErrors($validator);
+        }
+        //check email of rikkei
+        if (! View::isEmailAllow($dataEmployee['email'])) {
+            $message = Lang::get('team::messages.Please enter email of Rikkeisoft');
+            if ($id) {
+                return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors($message);
+            }
+            Form::setData($dataEmployee, 'employee');
+            return redirect()->route('team::team.member.create')->withErrors($message);
         }
         
         //process team

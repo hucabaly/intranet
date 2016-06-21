@@ -122,6 +122,10 @@ Form::forget();
                 'number': '{{ trans('core::view.Please enter a valid number') }}',
                 rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 10]) ; ?>',
             },
+            'employee[birthday]': {
+                required: '<?php echo trans('core::view.This field is required'); ?>',
+                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
+            },
         }
         var rules = {
             'employee[name]': {
@@ -138,6 +142,10 @@ Form::forget();
                 rangelength: [1, 100]
             },
             'employee[join_date]': {
+                required: true,
+                rangelength: [1, 255]
+            },
+            'employee[birthday]': {
                 required: true,
                 rangelength: [1, 255]
             },
@@ -170,6 +178,26 @@ Form::forget();
         }
         $('#employee-birthday').datepicker(optionDatePicker);
         $('#employee-joindate').datepicker(optionDatePicker);
+        
+        @if (! isset($recruitmentPresent) || ! $recruitmentPresent)
+            $('#employee-phone').on('blur', function(event) {
+                $('#employee-presenter').parents('.form-group').find('label i').removeClass('hidden');
+                value = $(this).val();
+                if (value) {
+                    $.ajax({
+                        url: '{{ URL::route('recruitment::get.applies.presenter') }}',
+                        type: 'get',
+                        data: {phone: value},
+                        success: function(data) {
+                            if (data) {
+                                $('#employee-presenter').val(data);
+                            }
+                            $('#employee-presenter').parents('.form-group').find('label i').addClass('hidden');
+                        }
+                    });
+                }
+            });
+        @endif
     });
 </script>
 @endsection
