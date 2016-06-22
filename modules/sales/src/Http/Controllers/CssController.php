@@ -538,7 +538,7 @@ class CssController extends Controller {
         foreach($cssResult as $itemResult){
             $cssResultIds[] = $itemResult->id;
             $pointToHighchart[] = (float)self::getPointCssResult($itemResult->id);
-            $dateToHighchart[] = date('d/m/Y',strtotime($itemResult->created_at));
+            $dateToHighchart[] = date('d/m/Y',strtotime($itemResult->end_date));
         }
         
         //Get data fill to table project list 
@@ -621,8 +621,6 @@ class CssController extends Controller {
         
         $offset = ($cssResultPaginate->currentPage()-1) * $cssResultPaginate->perPage() + 1;
         foreach($cssResultPaginate as &$itemResultPaginate){
-            $css = Css::find($itemResultPaginate->css_id);
-            
             //get teams name of Css result
             $teamName = "";
             $team = DB::table("css_team")->where("css_id",$itemResultPaginate->css_id)->get();
@@ -637,10 +635,8 @@ class CssController extends Controller {
             //end get teams name
             
             $itemResultPaginate->stt = $offset++;
-            $itemResultPaginate->project_name = $css->project_name;
             $itemResultPaginate->teamName = $teamName;
-            $itemResultPaginate->pmName = $css->pm_name;
-            $itemResultPaginate->css_created_at = date('d/m/Y',strtotime($css->created_at));
+            $itemResultPaginate->css_end_date = date('d/m/Y',strtotime($itemResultPaginate->end_date));
             $itemResultPaginate->css_result_created_at = date('d/m/Y',strtotime($itemResultPaginate->created_at));
             $itemResultPaginate->point = self::getPointCssResult($itemResultPaginate->id);
         }

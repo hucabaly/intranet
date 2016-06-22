@@ -178,7 +178,7 @@ function apply(token){
             html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["project_name"]+"</td>";
             html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["teamName"]+"</td>";
             html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["pmName"]+"</td>";
-            html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["css_created_at"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["css_end_date"]+"</td>";
             html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["css_result_created_at"]+"</td>";
             html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["point"]+"</td>";
             html += "</tr>";   
@@ -382,7 +382,7 @@ function showAnalyzeListProject(curpage,token){
             html += "<td>"+data["cssResultdata"]["data"][i]["project_name"]+"</td>";
             html += "<td>"+data["cssResultdata"]["data"][i]["teamName"]+"</td>";
             html += "<td>"+data["cssResultdata"]["data"][i]["pmName"]+"</td>";
-            html += "<td>"+data["cssResultdata"]["data"][i]["css_created_at"]+"</td>";
+            html += "<td>"+data["cssResultdata"]["data"][i]["css_end_date"]+"</td>";
             html += "<td>"+data["cssResultdata"]["data"][i]["css_result_created_at"]+"</td>";
             html += "<td>"+data["cssResultdata"]["data"][i]["point"]+"</td>";
             html += "</tr>";   
