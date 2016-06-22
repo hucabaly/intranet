@@ -268,6 +268,7 @@ function apply(token){
                 $("#duoi3sao").parent().find(".pagination").html(data["lessThreeStar"]["paginationRender"]);
             }else{
                 $("#duoi3sao tbody").html(noResult);
+                $("#duoi3sao").parent().find(".pagination").html('');
             }
             
             //danh sach de xuat
@@ -286,7 +287,7 @@ function apply(token){
                 $("#danhsachdexuat tbody").html(html);
                 $("#danhsachdexuat").parent().find(".pagination").html(data["proposes"]["paginationRender"]);
             }else{
-                
+                $("#danhsachdexuat").parent().find(".pagination").html('');
                 $("#danhsachdexuat tbody").html(noResult);
             }
         }else{

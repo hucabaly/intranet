@@ -76,7 +76,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div  class="theotieuchi">@include('sales::css.include.table_theotieuchi')</div>
+                                        <div  class="theotieuchi"></div>
                                     </div>
                                 </div>
                                 
