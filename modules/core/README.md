@@ -17,8 +17,6 @@ Features
 php artisan vendor:publish --tag=database
 php artisan migrate
 php artisan db:seed
-php artisan db:seed --class=PermissionSeeder
-php artisan db:seed --class=RecruitmentSeeder
 
 #### add menu and acl default
 Run in command line:

@@ -12,7 +12,7 @@ $menuSetting = Menus::getMenuSetting();
 @if(Auth::user())
 <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
-        @if ($menuSetting->id)
+        @if ($menuSetting && $menuSetting->id)
             <?php $menuSettingHtml = Menu::get($menuSetting->id, 1); ?>
             @if (e($menuSettingHtml))
                 <li class="setting dropdown">
