@@ -469,6 +469,9 @@ select option.parent{
 .table-fixed thead {
   width: 100%;
 }
+.table-question-fixed thead {
+  width: 98%;
+}
 .table-fixed tbody {
   height: 345px;
   overflow-y: auto;
@@ -509,4 +512,17 @@ table tr.loading {
 
 .no-result{
     display: none;
+}
+
+.with-textalign-center{
+    text-align: center;
+}
+
+.color-green{
+    color: #439c4d;
+}
+
+.welcome-line{
+    margin-bottom: 0 !important;
+    color: #646666;
 }

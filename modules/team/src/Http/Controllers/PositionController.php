@@ -3,15 +3,14 @@
 namespace Rikkei\Team\Http\Controllers;
 
 use Illuminate\Support\Facades\Input;
-use Rikkei\Team\Model\Team;
 use Lang;
 use Validator;
 use Rikkei\Core\View\Form;
 use Rikkei\Core\View\Breadcrumb;
 use URL;
-use Rikkei\Team\Model\Position;
+use Rikkei\Team\Model\Roles;
 
-class PositionController extends TeamBaseController
+class PositionController extends \Rikkei\Core\Http\Controllers\Controller
 {
     /**
      * construct more
@@ -29,8 +28,8 @@ class PositionController extends TeamBaseController
      */
     public function view($id)
     {
-        $model = Position::find($id);
-        if (! $model) {
+        $model = Roles::find($id);
+        if (! $model || $model->special_flg != Roles::FLAG_POSITION) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         Form::setData($model, 'position');
@@ -45,17 +44,17 @@ class PositionController extends TeamBaseController
         $id = Input::get('position.id');
         $dataItem = Input::get('position');
         if ($id) {
-            $model = Position::find($id);
-            if(!count($model)) {
+            $model = Roles::find($id);
+            if (! $model || $model->special_flg != Roles::FLAG_POSITION) {
                 return redirect()->route('team::setting.team.index')
                     ->withErrors(Lang::get('team::messages.Please choose team to do this action'));
             }
         } else {
-            $model = new Position();
+            $model = new Roles();
         }
         
         $validator = Validator::make($dataItem, [
-            'name' => 'required|max:255',
+            'role' => 'required|max:255',
         ]);
         if ($validator->fails()) {
             Form::setData($dataItem);
@@ -70,20 +69,22 @@ class PositionController extends TeamBaseController
         
         //calculate position level
         if (! $id) { //position new
-            $positionLast = Position::select('level')
-                ->orderBy('level', 'desc')
+            $positionLast = Roles::select('sort_order')
+                ->where('special_flg', Roles::FLAG_POSITION)
+                ->orderBy('sort_order', 'desc')
                 ->first();
             if (count($positionLast)) {
-                $dataItem['level'] = $positionLast->level + 1;
+                $dataItem['sort_order'] = $positionLast->sort_order + 1;
             } else {
-                $dataItem['level'] = 1;
+                $dataItem['sort_order'] = 1;
             }
         }
         
         try {
             $model->setData($dataItem);
+            $model->special_flg = Roles::FLAG_POSITION;
             $result = $model->save();
-            if (!$result) {
+            if (! $result) {
                 return redirect()->route('team::setting.team.index')
                     ->withErrors(Lang::get('team::messages.Error save data, please try again!'));
             }
@@ -110,8 +111,8 @@ class PositionController extends TeamBaseController
         if (!$id) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
-        $model = Position::find($id);
-        if (!$model) {
+        $model = Roles::find($id);
+        if (! $model || ! $model->isPosition()) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         try {
@@ -138,8 +139,8 @@ class PositionController extends TeamBaseController
         if (!$id) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
-        $model = Position::find($id);
-        if (!$model) {
+        $model = Roles::find($id);
+        if (!$model || $model->special_flg != Roles::FLAG_POSITION) {
             return redirect()->route('team::setting.team.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         try {

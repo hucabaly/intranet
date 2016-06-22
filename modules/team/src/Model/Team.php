@@ -5,10 +5,14 @@ use Rikkei\Core\Model\CoreModel;
 use DB;
 use Exception;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Team extends CoreModel
 {
-    protected $table = 'team';
+    
+    use SoftDeletes;
+    
+    protected $table = 'teams';
     
     /**
      * The attributes that are mass assignable.
@@ -16,7 +20,7 @@ class Team extends CoreModel
      * @var array
      */
     protected $fillable = [
-        'name', 'parent_id', 'position', 'permission_as', 'is_function', 'path'
+        'name', 'parent_id', 'sort_order', 'follow_team_id', 'is_function', 'type', 'description', 'leader_id', 'email'
     ];
     
     /**
@@ -26,9 +30,9 @@ class Team extends CoreModel
      */
     public function move($up = true)
     {
-        $siblings = Team::select('id', 'position')
+        $siblings = Team::select('id', 'sort_order')
             ->where('parent_id', $this->parent_id)
-            ->orderBy('position')
+            ->orderBy('sort_order')
             ->get();
         if (count($siblings) < 2) {
             return true;
@@ -42,10 +46,10 @@ class Team extends CoreModel
             }
             for ($i = 1; $i < $countDataOrder; $i++) {
                 if (!$flagIndexToCurrent) {
-                    $dataOrder[$i]['position'] = $i;
+                    $dataOrder[$i]['sort_order'] = $i;
                     if ($dataOrder[$i]['id'] == $this->id) {
-                        $dataOrder[$i]['position'] = $i - 1;
-                        $dataOrder[$i - 1]['position'] = $i;
+                        $dataOrder[$i]['sort_order'] = $i - 1;
+                        $dataOrder[$i - 1]['sort_order'] = $i;
                         $flagIndexToCurrent = true;
                     }
                 } else {
@@ -58,10 +62,10 @@ class Team extends CoreModel
             }
             for ($i = 0; $i < $countDataOrder - 1; $i++) {
                 if (!$flagIndexToCurrent) {
-                    $dataOrder[$i]['position'] = $i;
+                    $dataOrder[$i]['sort_order'] = $i;
                     if ($dataOrder[$i]['id'] == $this->id) {
-                        $dataOrder[$i]['position'] = $i + 1;
-                        $dataOrder[$i + 1]['position'] = $i;
+                        $dataOrder[$i]['sort_order'] = $i + 1;
+                        $dataOrder[$i + 1]['sort_order'] = $i;
                         $flagIndexToCurrent = true;
                         $i++;
                     }
@@ -76,7 +80,7 @@ class Team extends CoreModel
                 DB::table($this->table)
                     ->where('id', $data['id'])
                     ->update([
-                        'position' => $data['position']
+                        'sort_order' => $data['sort_order']
                     ]);
             }
             DB::commit();
@@ -113,12 +117,13 @@ class Team extends CoreModel
             // TO DO check table Relationship: team position, user, css, ...
             
             //delete team rule
-            TeamRule::where('team_id', $this->id)->delete();
+            Permissions::where('team_id', $this->id)->delete();
             //set permission as of  teams follow this team to 0
-            Team::where('permission_as', $this->id)->update([
-                'permission_as' => 0
+            Team::where('follow_team_id', $this->id)->update([
+                'follow_team_id' => null
             ]);
             //delete team item
+            self::flushCache();
             parent::delete();
             DB::commit();
         } catch (Exception $ex) {
@@ -134,15 +139,22 @@ class Team extends CoreModel
      * @return bool
      */
     public function save(array $options = array()) {
+        if (! $this->parent_id) {
+            $this->parent_id = null;
+        }
         // update model
         if ($this->id) {
             //delete team rule of this team
-            if (! $this->is_function) {
-                TeamRule::where('team_id', $this->id)->delete();
-            } elseif ($this->permission_as) {
-                TeamRule::where('team_id', $this->id)->delete();
-            }
+            
+            // TODO delete rule
+            
+//            if (! $this->is_function) {
+//                TeamRule::where('team_id', $this->id)->delete();
+//            } elseif ($this->permission_as) {
+//                TeamRule::where('team_id', $this->id)->delete();
+//            }
         }
+        self::flushCache();
         return parent::save($options);
     }
     
@@ -179,13 +191,22 @@ class Team extends CoreModel
      */
     public function getTeamPermissionAs()
     {
-        if (! $this->permission_as) {
+        if (! $this->follow_team_id) {
             return null;
         }
-        $teamAs = Team::find($this->permission_as);
+        $teamAs = Team::find($this->follow_team_id);
         if (! $teamAs) {
             return null;
         }
         return $teamAs;
+    }
+    
+    /**
+     * get teams by team_id list
+     * @param array $arrTeamIds
+     * @return object list
+     */
+    public function getTeamsByTeamIds($arrTeamIds){
+        return self::whereIn('id', $arrTeamIds)->get();
     }
 }

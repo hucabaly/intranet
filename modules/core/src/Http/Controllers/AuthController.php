@@ -6,16 +6,15 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Config;
 use Auth;
 use Socialite;
-use Rikkei\Team\Model\User;
+use Rikkei\Core\Model\User;
 use URL;
 use Session;
 use Redirect;
 use Illuminate\Support\ViewErrorBag;
 use Lang;
 use Illuminate\Support\MessageBag;
-use Rikkei\Team\Model\TeamMembers;
-use DB;
 use Rikkei\Team\Model\Employees;
+use Rikkei\Core\View\View;
 
 class AuthController extends Controller
 {
@@ -48,68 +47,69 @@ class AuthController extends Controller
         $user = Socialite::driver($provider)->user();
         $email = $user->email;
         if (!$email) {
-            redirect('/')->withErrors('Error Social connect');
+            return redirect('/')->withErrors('Error Social connect');
         }
         //add check email allow
-        $domainAllow = Config::get('domain_logged');
-        if ($domainAllow && count($domainAllow)) {
-            $matchCheck = false;
-            foreach ($domainAllow as $value) {
-                if (preg_match('/@' . $value . '$/', $email)) {
-                    $matchCheck = true;
-                    break;
-                }
-            }
-            if (!$matchCheck) {
-                $this->processNewAccount();
-                return redirect('/');
-            }
+        if (! View::isEmailAllow($email)) {
+            $this->processNewAccount();
+            return redirect('/');
         }
+        
         $nickName = !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email);
         $account = User::where('email', $user->email)
             ->first();
         $employee = Employees::where('email', $user->email)
             ->first();
-        //add employee
+        
+        //add employee if is root
         if (! $employee) {
-            $employee = Employees::create([
-                'email' => $user->email,
-                'name' => $user->name,
-                'nickname' => $nickName
-            ]);
+            if (View::isRoot($email)) {
+                $employee = new Employees();
+                $employee->setData([
+                    'email' => $user->email,
+                    'name' => $user->name,
+                    'nickname' => $nickName
+                ]);
+                $employee->save();
+            } else {
+                $this->processNewAccount(Lang::get('core::message.You donot have permission login'));
+                return redirect('/');
+            }
+        } elseif (! $employee->isAllowLogin()) {
+            $this->processNewAccount(Lang::get('core::message.You donot have permission login'));
+            return redirect('/');
         }
+        
+        $employeeId = $employee->id;
+        //create or update accout
         if (! $account) {
-            DB::beginTransaction();
             try {
                 $account = User::create([
                     'email' => $user->email,
                     'name' => $user->name,
-                    'nickname' => $nickName,
                     'token' => $user->token,
-                    'avatar' => $user->avatar,
-                    'employee_id' => $employee->id
+                    'employee_id' => $employeeId,
+                    'google_id' => $user->id,
                 ]);
-                DB::commit();
+                $account->employee_id = $employeeId;
+                $account->save();
             } catch (Exception $ex) {
-                DB::rollback();
-                throw $ex;
+                return redirect('/')->withErrors($ex);
             }
         } else {
             //update information of user
             $account = $account->setData([
                 'name' => $user->name,
-                'nickname' => $nickName,
                 'token' => $user->token,
-                'avatar' => $user->avatar,
+                'google_id' => $user->id,
             ]);
             if (! $account->employee_id) {
-                $account->employee_id = $employee->id;
+                $account->employee_id = $employeeId;
             }
             $account->save();
         }
+        $this->storeSessionInformationAccount($user);
         Auth::login($account);
-        //contrutor permission;
-        \Rikkei\Team\View\Permission::getInstance();
         return redirect('/');
     }
 
@@ -123,9 +123,13 @@ class AuthController extends Controller
             return redirect('/');
         }
         $user = Auth::user();
-        if($user) {
-            $user->token = '';
-            $user->save();
+        if ($user) {
+            try {
+                $user->token = '';
+                $user->save();
+            } catch (Exception $ex) {
+                return redirect('/')->withErrors($ex);
+            }
         }
         Auth::logout();
         Session::flush();
@@ -151,15 +155,33 @@ class AuthController extends Controller
      * 
      * @return redirect
      */
-    protected function processNewAccount()
+    protected function processNewAccount($message = null)
     {
-        $messageError = new MessageBag([
-            Lang::get('core::message.Please use Rikkisoft\'s Email!')
-        ]);
+        if (! $message) {
+            $message = new MessageBag([
+                Lang::get('core::message.Please use Rikkisoft\'s Email!')
+            ]);
+        } else {
+            $message = new MessageBag([
+                $message
+            ]);
+        }
         Session::flash(
-            'errors', Session::get('errors', new ViewErrorBag)->put('default', $messageError)
+            'errors', Session::get('errors', new ViewErrorBag)->put('default', $message)
         );
         return Redirect::away($this->getGoogleLogoutUrl('/'))
             ->send();
+    }
+    
+    /**
+     * store information of account social into session
+     * 
+     * @param object $user
+     * @return \Rikkei\Core\Http\Controllers\AuthController
+     */
+    protected function storeSessionInformationAccount($user)
+    {
+        Session::put(User::AVATAR, $user->avatar);
+        return $this;
     }
 }

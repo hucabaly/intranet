@@ -5,30 +5,30 @@
         <td class="infomation">{{$css->project_name}}</td>
         <td class="title2"><label>{{ trans('sales::view.Period') }}</label></td>
         <td class="infomation">{{date("d/m/Y",strtotime($css->start_date))}} - {{date("d/m/Y",strtotime($css->end_date))}}</td>
-        <td class="make_date infomation"><label>{{ trans('sales::view.Make date') }} {{date("d/m/Y",strtotime($css_result->created_at))}}</label></td>
+        <td class="make_date infomation"><label>{{ trans('sales::view.Make date') }} {{date("d/m/Y",strtotime($cssResult->created_at))}}</label></td>
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.Sale name') }}</label></td>
-        <td class="infomation">{{$user->name}}</td>
+        <td class="infomation">{{$employee->name}}</td>
         <td class="title2"><label>{{ trans('sales::view.Customer name') }}</label></td>
         <td class="infomation">{{$css->customer_name}}</td>
         <td rowspan="3" class="<?php echo ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' ?>">
             <div>{{ trans('sales::view.Total mark') }}</div>
-            <div class="diem">{{number_format($css_result->mark,2)}}</div>
+            <div class="diem">{{number_format($cssResult->mark,2)}}</div>
         </td>
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.PM name') }}</label></td>
         <td class="infomation">{{$css->pm_name}}</td>
         <td class="title2"><label>{{ trans('sales::view.Make name') }}</label></td>
-        <td class="infomation"><label>{{$css_result->name}}</label></td>
+        <td class="infomation"><label>{{$cssResult->name}}</label></td>
 
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.BrSE name') }}</label></td>
         <td class="infomation">{{$css->brse_name}}</td>
         <td class="title2"><label>{{ trans('sales::view.Make email') }}</label></td>
-        <td class="infomation"><label>{{$css_result->email}}</label></td>
+        <td class="infomation"><label>{{$cssResult->email}}</label></td>
 
     </tr>
 </table>
@@ -82,8 +82,8 @@
     <tr class="cau">
         <td class="title" colspan="2">{{ trans('sales::view.Overview content') }}</td>
         
-        <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-rateit-readonly="true" data-rateit-value="{{$css_result->avg_point}}"></div></td>
-        <td class="title2">{{$css_result->comment}}</td>
+        <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-rateit-readonly="true" data-rateit-value="{{$cssResult->avg_point}}"></div></td>
+        <td class="title2">{{$cssResult->comment}}</td>
     </tr>
 
     <!-- danh gia chung -->
@@ -92,11 +92,11 @@
             {{ trans('sales::view.Proposed') }}
         </td>
         
-        <td class="title2" colspan="2" style="vertical-align:top;">{{$css_result->survey_comment}}</td>
+        <td class="title2" colspan="2" style="vertical-align:top;">{{$cssResult->survey_comment}}</td>
         <td class="title2"></td>
     </tr>
 </table>
 
-<div class="diem-fixed">{{number_format($css_result->mark,2)}}</div>
+<div class="diem-fixed">{{number_format($cssResult->mark,2)}}</div>
 
 

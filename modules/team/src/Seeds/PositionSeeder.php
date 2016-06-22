@@ -2,7 +2,7 @@
 namespace Rikkei\Team\Seeds;
 
 use Illuminate\Database\Seeder;
-use DB;
+use Rikkei\Team\Model\Roles;
 
 class PositionSeeder extends Seeder
 {
@@ -15,21 +15,30 @@ class PositionSeeder extends Seeder
     {
         $dataDemo = [
             [
-                'name' => 'Team Leader',
-                'level' => '1'
+                'role' => 'Team Leader',
+                'sort_order' => '1',
+                'special_flg' => Roles::FLAG_POSITION,
             ],
             [
-                'name' => 'Sub-Leader',
-                'level' => '2'
+                'role' => 'Sub-Leader',
+                'sort_order' => '2',
+                'special_flg' => Roles::FLAG_POSITION,
             ],
             [
-                'name' => 'Member',
-                'level' => '3'
+                'role' => 'Member',
+                'sort_order' => '3',
+                'special_flg' => Roles::FLAG_POSITION,
             ]
         ];
         foreach ($dataDemo as $data) {
-            if (! DB::table('position')->select('id')->where('name', $data['name'])->get()) {
-                DB::table('position')->insert($data);
+            $rolePosition = Roles::where('role', $data['role'])->get();
+            if (count($rolePosition)) {
+                continue;
+            }
+            try {
+                Roles::create($data);
+            } catch (Exception $ex) {
+                throw $ex;
             }
         }
     }

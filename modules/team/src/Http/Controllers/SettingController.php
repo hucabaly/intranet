@@ -4,7 +4,7 @@ namespace Rikkei\Team\Http\Controllers;
 
 use Rikkei\Core\View\Breadcrumb;
 
-class SettingController extends TeamBaseController
+class SettingController extends \Rikkei\Core\Http\Controllers\Controller
 {
     /**
      * setting index

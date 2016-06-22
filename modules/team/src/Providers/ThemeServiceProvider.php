@@ -14,9 +14,10 @@ class ThemeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-//        $this->publishes([
-//            RIKKEI_TEAM_PATH . 'public' => public_path(),
-//        ], 'assets');
+        //copy data sample lang
+        $this->publishes([
+            RIKKEI_TEAM_PATH . 'data-sample' => base_path('resources')
+        ], 'assets');
     }
 
     /**

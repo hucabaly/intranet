@@ -9,8 +9,12 @@ use Rikkei\Core\View\Form;
 use Illuminate\Support\Facades\Input;
 use Lang;
 use Rikkei\Core\View\Menu;
+use Illuminate\Support\Facades\Validator;
+use Rikkei\Core\View\View;
+use Rikkei\Recruitment\Model\RecruitmentApplies;
+use Rikkei\Team\View\Permission;
 
-class MemberController extends TeamBaseController
+class MemberController extends \Rikkei\Core\Http\Controllers\Controller
 {
     /**
      * construct more
@@ -47,10 +51,21 @@ class MemberController extends TeamBaseController
         //TODO permission check
         
         Breadcrumb::add($model->name, URL::route('team::team.member.edit', ['id' => $id]));
-        Form::setData($model);
+        $presenter = null;
+        if ($model->mobile_phone) {
+            $presenter = RecruitmentApplies::getPresenterName($model->mobile_phone);
+            if ($presenter) {
+                Form::setData([
+                    'recruitment.present' => $presenter
+                ]);
+            }
+        }
+        
+        Form::setData($model, 'employee');
         return view('team::member.edit', [
             'employeeTeamPositions' => $model->getTeamPositons(),
-            'employeeRoles' => $model->getRoles()
+            'employeeRoles' => $model->getRoles(),
+            'recruitmentPresent' => $presenter
         ]);
     }
     
@@ -60,23 +75,73 @@ class MemberController extends TeamBaseController
     public function save()
     {
         $id = Input::get('id');
-        $model = Employees::find($id);
-        if (! $model) {
-            return redirect()->route('team::team.member.index')->withErrors(Lang::get('team::messages.Not found item.'));
+        if ($id) {
+            $model = Employees::find($id);
+            if (! $model) {
+                return redirect()->route('team::team.member.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            }
+            
+            //TODO permission check greater
+            
+        } else {
+            //check permission creation
+            if (! Permission::getInstance()->isAllow('team::team.member.create')) {
+                View::viewErrorPermission();
+            }
+            $model = new Employees();
+        }
+        $dataEmployee = Input::get('employee');
+        if (isset($dataEmployee['employee_code'])) {
+            unset($dataEmployee['employee_code']);
+        }
+        $validator = Validator::make($dataEmployee, [
+            'employee_card_id' => 'required|integer',
+            'name' => 'required|max:255',
+            'birthday' => 'required|max:255',
+            'id_card_number' => 'required|max:255',
+            'mobile_phone' => 'required|max:255',
+            'email' => 'required|max:255|email|unique:employees,email,' . $id,
+            'personal_email' => 'required|max:255|email|unique:employees,personal_email,' . $id,
+            'join_date' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            if ($id) {
+                return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors($validator);
+            }
+            Form::setData($dataEmployee, 'employee');
+            return redirect()->route('team::team.member.create')->withErrors($validator);
+        }
+        //check email of rikkei
+        if (! View::isEmailAllow($dataEmployee['email'])) {
+            $message = Lang::get('team::messages.Please enter email of Rikkeisoft');
+            if ($id) {
+                return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors($message);
+            }
+            Form::setData($dataEmployee, 'employee');
+            return redirect()->route('team::team.member.create')->withErrors($message);
         }
         
-        //TODO permission check
-        
+        //process team
         $teamPostions = Input::get('team');
         if (! $teamPostions || ! count($teamPostions)) {
-            return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
+            if ($id) {
+                return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
+            }
+            Form::setData($dataEmployee, 'employee');
+            return redirect()->route('team::team.member.create')->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
         }
+        
+        //process role
         $roles = Input::get('role');
         $teamPostions = (array) $teamPostions;
         $roles = (array) $roles;
         if (isset($teamPostions[0])) {
             unset($teamPostions[0]);
         }
+        
+        //save model
+        $model->setData($dataEmployee);
+        $model->save();
         $model->saveTeamPosition($teamPostions);
         $model->saveRoles($roles);
         
@@ -101,7 +166,8 @@ class MemberController extends TeamBaseController
      */
     public function create()
     {
-        echo 'create';
+        Breadcrumb::add(Lang::get('team::view.Create new'), URL::route('team::team.member.create'));
+        return view('team::member.edit');
     }
 }
 

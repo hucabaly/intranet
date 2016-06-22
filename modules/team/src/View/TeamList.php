@@ -15,7 +15,7 @@ class TeamList
     public static function getTreeHtml($idActive = null)
     {
         $html = '<ul class="treeview team-tree">';
-        $html .= self::getTreeDataRecursive(0, 0, $idActive);
+        $html .= self::getTreeDataRecursive(null, 0, $idActive);
         $html .= '</ul>';
         return $html;
     }
@@ -26,11 +26,11 @@ class TeamList
      * @param int $id
      * @param int $level
      */
-    protected static function getTreeDataRecursive($parentId = 0, $level = 0, $idActive = null) 
+    protected static function getTreeDataRecursive($parentId = null, $level = 0, $idActive = null) 
     {
         $teamList = Team::select('id', 'name', 'parent_id')
                 ->where('parent_id', $parentId)
-                ->orderBy('position', 'asc')
+                ->orderBy('sort_order', 'asc')
                 ->get();
         $countCollection = count($teamList);
         if (!$countCollection) {
@@ -89,7 +89,7 @@ class TeamList
                 'option' => '',
             ];
         }
-        self::toOptionFunctionRecursive($options, 0, $skipId, $isFunction, $level = 0);
+        self::toOptionFunctionRecursive($options, null, $skipId, $isFunction, $level = 0);
         return $options;
     }
     
@@ -104,9 +104,9 @@ class TeamList
      */
     protected static function toOptionFunctionRecursive(&$options, $parentId, $skipId, $isFunction, $level)
     {
-        $teamList = Team::select('id', 'name', 'parent_id', 'is_function', 'permission_as')
+        $teamList = Team::select('id', 'name', 'parent_id', 'is_function', 'follow_team_id')
                 ->where('parent_id', $parentId)
-                ->orderBy('position', 'asc');
+                ->orderBy('sort_order', 'asc');
         if ($skipId) {
             $teamList = $teamList->where('id', '<>', $skipId);
         }
@@ -117,7 +117,7 @@ class TeamList
         }
         $prefixLabel = '';
         for ($i = 0; $i < $level; $i++) {
-            $prefixLabel .= '----&nbsp;&nbsp;';
+            $prefixLabel .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         }
         foreach ($teamList as $team) {
             if ($isFunction && (!$team->is_function || $team->permission_as)) {

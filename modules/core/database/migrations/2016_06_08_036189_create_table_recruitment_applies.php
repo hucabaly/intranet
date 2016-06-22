@@ -22,14 +22,19 @@ class CreateTableRecruitmentApplies extends Migration
             $table->string('name', 100)->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('cv', 50)->nullable();
+            $table->unsignedInteger('presenter_id')->nullable();
             $table->dateTime('created_at');
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
             
             $table->index('campaign_id');
+            $table->index('presenter_id');
             $table->foreign('campaign_id')
                 ->references('id')
                 ->on('recruitment_campaigns');
+            $table->foreign('presenter_id')
+                ->references('id')
+                ->on('employees');
         });
     }
 

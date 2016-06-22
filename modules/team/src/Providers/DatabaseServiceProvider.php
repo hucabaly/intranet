@@ -14,9 +14,9 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            RIKKEI_TEAM_PATH . 'database' => database_path(),
-        ], 'database');
+//        $this->publishes([
+//            RIKKEI_TEAM_PATH . 'database' => database_path(),
+//        ], 'database');
     }
 
     /**

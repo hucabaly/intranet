@@ -1,7 +1,8 @@
 <?php
 namespace Rikkei\Team\View;
 
-use Rikkei\Team\Model\TeamRule;
+use Rikkei\Team\Model\Permissions;
+use Rikkei\Team\Model\Action;
 
 class Acl
 {
@@ -11,18 +12,19 @@ class Acl
      */
     protected static $scopeFind = [];
     
-    protected static $config;
+    protected static $actionList;
+    
     /**
-     * get Acl data
+     * get Acl List Data
      * 
      * @return array
      */
-    public static function getAclData()
+    public static function getAclList()
     {
-        if (! self::$config) {
-            self::$config = \Illuminate\Support\Facades\Config::get('acl');
+        if (! self::$actionList) {
+            self::$actionList = Action::getListData();
         }
-        return self::$config;
+        return self::$actionList;
     }
     
     /**
@@ -59,30 +61,30 @@ class Acl
      * @param type $positionId
      * @return int|boolean
      */
-    public static function findScope($collection, $rule, $positionId)
+    public static function findScope($collection, $actionId, $roleId)
     {
-        if (isset(self::$scopeFind[$rule . '-r-' . $positionId])) {
-            return self::$scopeFind[$rule . '-r-' . $positionId];
+        if (isset(self::$scopeFind[$actionId . '-r-' . $roleId])) {
+            return self::$scopeFind[$actionId . '-r-' . $roleId];
         }
         if (isset(self::$scopeFind['flag_checked'])) {
-            return TeamRule::SCOPE_NONE;
+            return Permissions::SCOPE_NONE;
         }
         if (! $collection && ! count($collection)) {
-            return TeamRule::SCOPE_NONE;
+            return Permissions::SCOPE_NONE;
         }
         foreach ($collection as $item) {
             if (! $item->scope) {
-                $scope = TeamRule::SCOPE_NONE;
+                $scope = Permissions::SCOPE_NONE;
             } else {
                 $scope = (int) $item->scope;
             }
-            self::$scopeFind[$item->rule . '-r-' . $item->position_id] = $scope;
+            self::$scopeFind[$item->action_id . '-r-' . $item->role_id] = $scope;
         }
         self::$scopeFind['flag_checked'] = true;
-        if (isset(self::$scopeFind[$rule . '-r-' . $positionId])) { 
-            return self::$scopeFind[$rule . '-r-' . $positionId];
+        if (isset(self::$scopeFind[$actionId . '-r-' . $roleId])) {
+            return self::$scopeFind[$actionId . '-r-' . $roleId];
         }
-        return TeamRule::SCOPE_NONE;
+        return Permissions::SCOPE_NONE;
     }
     
     /**
@@ -143,15 +145,5 @@ class Acl
             }
         }
         return $keys;
-    }
-    
-    /**
-     * get all key acl
-     * 
-     * @return array
-     */
-    public static function getAclKeyAll()
-    {
-        return 'all:all';
     }
 }

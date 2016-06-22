@@ -23,6 +23,15 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        //
+        if(!defined('RIKKEI_RECRUITMENT_PATH')) {
+            define('RIKKEI_RECRUITMENT_PATH', __DIR__ . '/../');
+        }
+        $providers = [
+            \Rikkei\Recruitment\Providers\RouteServiceProvider::class,
+        ];
+
+        foreach ($providers as $provider) {
+            $this->app->register($provider);
+        }
     }
 }

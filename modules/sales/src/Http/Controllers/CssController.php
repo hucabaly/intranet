@@ -8,100 +8,104 @@ use DB;
 use Rikkei\Core\Model\User;
 use Rikkei\Sales\Model\ProjectType;
 use Rikkei\Sales\Model\Css;
+use Rikkei\Sales\Model\CssTeams;
+use Rikkei\Sales\Model\CssQuestion;
+use Rikkei\Sales\Model\CssCategory;
+use Rikkei\Sales\Model\CssResult;
+use Rikkei\Sales\Model\CssResultDetail;
 use Rikkei\Team\Model\Team;
+use Rikkei\Team\Model\Employees;
 use Lang;
 use Mail;
 use Session;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 
 class CssController extends Controller {
-    static $perPage = 5;
+    static $perPage = 10;
     static $perPageCss = 10;
+    
     /**
-     * Hàm hiển thị form tạo CSS
+     * Create Css page view
      */
     public function create() {
-        $user = Auth::user();
-        $projects = ProjectType::all();
+        $user = Auth::user(); 
+        $employee = Employees::find($user->employee_id);
         $teams = Team::all();
-        $htmlTeam = self::getTreeDataRecursive(0, 0, null);
+        $htmlTeam = self::getTreeDataRecursive(null, 0, null);
 
         return view(
-                'sales::css.create_css', 
+                'sales::css.create', 
                 [
-                    'user'      => $user,
-                    "projects"  => $projects,
-                    "teams"     => $teams,
-                    "htmlTeam"  => $htmlTeam,
+                    'employee'  => $employee,
+                    'teams'     => $teams,
+                    'htmlTeam'  => $htmlTeam,
                 ]
         );
     }
 
     /**
-     * Hàm hiển thị form sửa CSS
+     * Update Css page view
      * @param int $id
      */
     public function update($id) {
         $css = Css::where('id', $id)->first();
 
-        //get user tao css       
-        $user = User::find($css->user_id);
-
-        //get list projects va teams
-        $projects = ProjectType::all();
-        $teams = Team::all();
-
-        //get list team_id cua css theo css_id
-        $team_ids = array();
-        $team_id_by_css_id = DB::table('css_team')->where('css_id', $id)->get();
-
-        foreach ($team_id_by_css_id as $team) {
-            $team_ids[] = $team->team_id;
-        }
-
-        //get team cua css
-        $teams_set = DB::table('team')->whereIn('id', $team_ids)->get();
-
-        //text hien thi cac team cua CSS ra trang update
-        //ngan cach nhau bang dau ','
-        $str_teams_set_name = [];
-        foreach ($teams_set as $team) {
-            $str_teams_set_name[] = $team->name;
-        }
-        $str_teams_set_name = implode(', ', $str_teams_set_name);
+        //get employee create css       
+        $employee = Employees::find($css->employee_id);
         
-        $htmlTeam = self::getTreeDataRecursive(0, 0, null);
+        //get team_id list by css_id
+        $teams = Team::all();
+        $arrTeamId = array();
+        $teamIds = CssTeams::getTeamIdsByCssId($id);
+
+        foreach ($teamIds as $team) {
+            $arrTeamId[] = $team->team_id;
+        }
+
+        //get Css's team list
+        $teamModel = new Team();
+        $teamsSet = $teamModel->getTeamsByTeamIds($arrTeamId);
+
+        //Get Team's name is set
+        $strTeamsNameSet = [];
+        foreach ($teamsSet as $team) {
+            $strTeamsNameSet[] = $team->name;
+        }
+        $strTeamsNameSet = implode(', ', $strTeamsNameSet);
+        
+        $htmlTeam = self::getTreeDataRecursive(null, 0, null);
         return view(
-            'sales::css.update_css', 
+            'sales::css.update', 
             [
-                'css' => $css, //css by css_id
-                'user' => $user, //user by css_id
-                "projects" => $projects, // all project type
-                "teams" => $teams, //all team
-                "teams_set" => $teams_set, // team lien quan cua CSS
-                "str_teams_set_name" => $str_teams_set_name, 
+                'css' => $css, 
+                'employee' => $employee, 
+                "teams" => $teams, 
+                "teamsSet" => $teamsSet, 
+                "strTeamsNameSet" => $strTeamsNameSet, 
                 "htmlTeam"  => $htmlTeam,
             ]
         );
     }
 
     /**
-     * Hàm hiển thị trang preview sau khi tạo CSS
+     * Preview page
      * @param string $token
      * @param int $id
      * @return objects
      */
     public function preview($token, $id) {
-        $css = Css::where('id', $id)
-                ->where('token', $token)
-                ->first();
+        $cssModel = new Css();
+        $css = $cssModel->getCssByIdAndToken($id,$token);
 
         if ($css) {
-            $user = User::find($css->user_id);
-            return view('sales::css.preview_css', [
-                'css' => $css,
-                "user" => $user
-                    ]
+            $employee = Employees::find($css->employee_id);
+            return view(
+                'sales::css.preview', 
+                [
+                    'css' => $css,
+                    "employee" => $employee
+                ]
             );
         } else {
             return redirect("/");
@@ -109,22 +113,20 @@ class CssController extends Controller {
     }
 
     /**
-     * Hàm save CSS vào database
-     * @return void
+     * Save Css (insert or update)
      */
     public function save(Request $request) { 
         $start_date = date('Y-m-d', strtotime($request->input('start_date')));
         $end_date = date('Y-m-d', strtotime($request->input('end_date')));
 
         if ($request->input("create_or_update") == 'create') {
-            $css = new Css;
+            $css = new Css();
         } else {
-            $css_id = $request->input("css_id");
-            $css = Css::find($css_id);
+            $cssId = $request->input("css_id");
+            $css = Css::find($cssId);
         }
         
-        //insert or update to table css
-        $css->user_id = $request->input("user_id");
+        $css->employee_id = $request->input("employee_id");
         $css->company_name = $request->input("company_name");
         $css->customer_name = $request->input("customer_name");
         $css->project_name = $request->input("project_name");
@@ -134,72 +136,73 @@ class CssController extends Controller {
         $css->pm_name = $request->input("pm_name");
         $css->project_type_id = $request->input("project_type_id");
         
-        $user = Auth::user();
-        $user->japanese_name = $request->input("japanese_name");
+        $employee = Employees::find($css->employee_id);
+        $employee->japanese_name = $request->input("japanese_name");
         
         if ($request->input("create_or_update") == 'create') {
             $css->token = md5(rand());
-        } else {
-            DB::table('css_team')->where('css_id', $css_id)->delete();
         }
 
         $css->save();
-        $user->save();
-
+        $employee->save();
+        
         //insert into table css_team
-        $teams = $request->input("teams");
-        foreach ($teams as $k => $v) {
-            DB::table('css_team')->insert(
-                    array(
-                        'css_id' => $css->id,
-                        'team_id' => $k
-                    )
-            );
-        }
-
+        $arrTeamIds = $request->input("teams"); 
+        $cssTeamModel = new CssTeams();
+        $cssTeamModel->insertCssTeam($css->id, $arrTeamIds);
+        
         return redirect('/css/preview/' . $css->token . '/' . $css->id);
     }
 
     /**
-     * Hàm hiển thị trang Welcome và trang làm CSS
+     * Welcome and make Css page
      * @param string $token
      * @param int $id
      * @return objects
      */
     public function make($token, $id) {
+        $cssQuestionModel = new CssQuestion();
+        $cssCategoryModel = new CssCategory();
         $css = Css::where('id', $id)
                 ->where('token', $token)
                 ->first();
 
         if ($css) {
-            $user = User::find($css->user_id);
-            $cssCategory = DB::table('css_category')->where('parent_id', $css->project_type_id)->get();
+            $employee = Employees::find($css->employee_id);
+            $rootCategory = $cssCategoryModel->getRootCategory($css->project_type_id);
+            $cssCategory = $cssCategoryModel->getCategoryByParent($rootCategory->id);
             $cssCate = array();
             if ($cssCategory) {
+                $NoOverView = 0;
                 foreach ($cssCategory as $item) {
-                    $cssCategoryChild = DB::table('css_category')->where('parent_id', $item->id)->get();
+                    $NoOverView++;
+                    $cssCategoryChild = $cssCategoryModel->getCategoryByParent($item->id);
                     $cssCateChild = array();
                     if ($cssCategoryChild) {
                         foreach ($cssCategoryChild as $item_child) {
-                            $cssQuestionChild = DB::table('css_question')->where('category_id', $item_child->id)->get();
+                            $cssQuestionChild = $cssQuestionModel->getQuestionByCategory($item_child->id);
                             $cssCateChild[] = array(
                                 "id" => $item_child->id,
                                 "name" => $item_child->name,
                                 "parent_id" => $item->id,
+                                "sort_order" => $item_child->sort_order,
                                 "questionsChild" => $cssQuestionChild,
                             );
                         }
                     }
-
-                    $cssQuestion = DB::table('css_question')->where('category_id', $item->id)->get();
+                    
+                    $cssQuestion = $cssQuestionModel->getQuestionByCategory($item->id);
                     $cssCate[] = array(
                         "id" => $item->id,
                         "name" => $item->name,
+                        "sort_order" => self::romanic_number($item->sort_order,true),
                         "cssCateChild" => $cssCateChild,
                         "questions" => $cssQuestion,
                     );
                 }
             }
+            
+            $overviewQuestion = $cssQuestionModel->getCommentOverview($rootCategory->id,1);
             
             $arrayValidate = array(
                 "nameRequired" => Lang::get('sales::message.Name validate required'),
@@ -209,13 +212,15 @@ class CssController extends Controller {
                 "questionCommentRequired" => Lang::get('sales::message.Question comment required'),
                 "proposedRequired"  => Lang::get('sales::message.Proposed required'),
             );
-            if(Auth::check()){}
+            
             return view(
-                'sales::css.makecss', [
+                'sales::css.make', [
                     'css' => $css,
-                    "user" => $user,
+                    "employee" => $employee,
                     "cssCate" => $cssCate,
-                    "arrayValidate" => json_encode($arrayValidate)
+                    "arrayValidate" => json_encode($arrayValidate),
+                    "noOverView" => self::romanic_number(++$NoOverView,true),
+                    "overviewQuestionContent" => $overviewQuestion->content,
                 ]
             );
         } else {
@@ -224,10 +229,10 @@ class CssController extends Controller {
     }
     
     /**
-     * Hàm insert bai lam CSS vao database
+     * Insert Css result into database
      * @return void
      */
-    public function saveResult(Request $request){
+    public function saveResult(Request $request){ 
         $arrayQuestion  = $request->input('arrayQuestion');
         $name           = $request->input('make_name');
         $email          = $request->input('make_email');
@@ -235,41 +240,33 @@ class CssController extends Controller {
         $comment        = $request->input('comment');
         $survey_comment = $request->input('proposed');
         $cssId          = $request->input('cssId');
-       
+        
         $dataResult = [
             'css_id' => $cssId,
             'name' => $name,
             'email' => $email,
-            'comment' => $comment,
+            'comment_overview' => $comment,
             'avg_point' => $avgPoint,
-            'name' => $name,
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
-            'survey_comment' => $survey_comment
+            'proposed' => $survey_comment
         ];
-        $css_result_id = Css::insertCssResult($dataResult);
-       
-        if(count($arrayQuestion) > 0){
-           $countQuestion = count($arrayQuestion);
-           for($i=0; $i<$countQuestion; $i++){
-                $dataDetail = [
-                    'css_id' => $css_result_id,
-                    'question_id' => $arrayQuestion[$i][0],
-                    'point' => $arrayQuestion[$i][1],
-                    'comment' => $arrayQuestion[$i][2],
-                ];
-                Css::insertCssResultDetail($dataDetail);
-            }
-        }
         
-        $css = Css::find($cssId);
-        $user = User::find($css->user_id);
-        $email = $user->email; 
+        $cssResultModel = new CssResult();
+        $cssResultId = $cssResultModel->insertCssResult($dataResult);
+        
+        $cssResultDetailModel = new CssResultDetail();
+        $cssResultDetailModel->insertCssResultDetail($cssResultId,$arrayQuestion);
+        
+        $css = Css::find($cssId); 
+        $employee = Employees::find($css->employee_id); 
+        $email = $employee->email; 
         $data = array(
-            'href' => url('/') . "/css/detail/" . $css_result_id,
+            'href' => url('/') . "/css/detail/" . $cssResultId,
             'project_name' => $css->project_name,
         );
-
+        
+        //send mail to sale who created this css
         Mail::send('sales::css.sendMail', $data, function ($message) use($email) {
             $message->from('sales@rikkeisoft.com', 'Rikkeisoft');
             $message->to($email)->subject(Lang::get('sales::view.Subject email notification make css'));
@@ -280,36 +277,42 @@ class CssController extends Controller {
     }
     
     /**
-     * Hien thi danh sach CSS
+     * View Css list 
      * @return void
      */
     public function grid(){
         $css = Css::getCssList(self::$perPageCss);
         
         if(count($css) > 0){
+            $cssResultModel = new CssResult();
             $i = ($css->currentPage()-1) * $css->perPage() + 1;
             foreach($css as &$item){ 
                 $item->stt = $i;
                 $i++;
-                $project_type = Css::getProjectTypeById($item->project_type_id);
-                $item->project_type_name = $project_type->name; 
-                $css_team_list = Css::getCssTeamByCssId($item->id);
+                $item->project_type_name = self::getProjectTypeNameById($item->project_type_id);
+                $cssTeams = CssTeams::getCssTeamByCssId($item->id);
 
                 $arr_team = array();
-                foreach($css_team_list as $css_team_child){
-                    $team = Css::getTeamById($css_team_child->team_id);
+                foreach($cssTeams as $cssTeamChild){
+                    $team = Team::find($cssTeamChild->team_id);
                     $arr_team[] = $team->name;
                 }
-                $item->teams_name = implode(",", $arr_team);
+                $item->teamsName = implode(", ", $arr_team);
 
-                $user = User::find($item->user_id);
-                $item->sale_name = $user->name;
+                $employee = Employees::find($item->employee_id);
+                $item->sale_name = $employee->name;
                 $item->start_date = date('d/m/Y',strtotime($item->start_date));
                 $item->end_date = date('d/m/Y',strtotime($item->end_date));
                 $item->create_date = date('d/m/Y',strtotime($item->created_at));
-
-                /* get count css result by cssId */
-                $item->countCss = DB::table('css_result')->where("css_id",$item->id)->count();
+                $item->url =  url('/') . '/css/make/'. $item->token . '/' . $item->id;
+                // get count css result by cssId 
+                $item->countCss = $cssResultModel->getCountCssResultByCss($item->id);
+                if($item->countCss == 1){
+                    $cssResultDetail = $cssResultModel->getCssResultFirstByCss($item->id);
+                    $item->hrefToView = url('/') . '/css/detail/' . $cssResultDetail->id;
+                }else if($item->countCss > 1){
+                    $item->hrefToView = url('/') . '/css/view/' . $item->id;
+                }
             }
         }
         
@@ -321,91 +324,80 @@ class CssController extends Controller {
     }
     
     /**
-     * Hien thi danh sach bai lam CSS theo cssId
+     * View Css result by Css
      * @param int $cssId
-     * @return void
      */
     public function view($cssId){
         $css = Css::find($cssId);
-        $css_result_list = DB::table('css_result')->where("css_id",$cssId)->orderBy('id', 'desc')->paginate(10);
-        $i = ($css_result_list->currentPage()-1) * $css_result_list->perPage() + 1;
-        foreach($css_result_list as &$item){
-            $item->stt = $i;
-            $i++;
-            $item->make_date = date('d/m/Y',strtotime($item->created_at));
-            
-            $css_result_detail = DB::table('css_result_detail')->where("css_id",$item->id)->get();
-            $mark_child = 0;
-            $tongSoCauDanhGia = 0;
-            foreach($css_result_detail as $item_detail){
-                $mark_child += $item_detail->point;
-                if($item_detail->point > 0){
-                    $tongSoCauDanhGia++;
+        if(count($css)){
+            $cssResultModel = new CssResult();
+            $cssResults = $cssResultModel->getCssResulByCss($cssId,self::$perPageCss);
+            if(count($cssResults)){
+                $i = ($cssResults->currentPage()-1) * $cssResults->perPage() + 1;
+                foreach($cssResults as &$item){
+                    $item->stt = $i;
+                    $i++;
+                    $item->make_date = date('d/m/Y',strtotime($item->created_at));
+                    $item->mark = self::getPointCssResult($item->id);
                 }
             }
-            if($mark_child == 0){
-                $mark = $item->avg_point * 20;
-            }else{
-                $mark = $item->avg_point * 4 + $mark_child/($tongSoCauDanhGia * 5) * 80;
-            }
-            
-            $item->mark = $mark;
         }
+        
         return view(
             'sales::css.view', [
-                'css_result_list' => $css_result_list,
+                'cssResults' => $cssResults,
                 'css' => $css,
             ]
         );
     }
     
     /**
-     * Hien thi chi tiet 1 bai danh gia
-     * @param int $result_id
+     * View Css result detail page
+     * @param int $resultId
      * @return void
      */
-    public function detail($result_id){
-        $css_result = DB::table('css_result')->where("id",$result_id)->first();
-        $css = Css::find($css_result->css_id);
-        $user = User::find($css->user_id);
-        $cssCategory = DB::table('css_category')->where('parent_id', $css->project_type_id)->get();
+    public function detail($resultId){
+        $cssResult = CssResult::find($resultId);
+        $css = Css::find($cssResult->css_id);
+        $employee = Employees::find($css->employee_id);
+        
+        $cssCategoryModel = new CssCategory();
+        $cssQuestionModel = new CssQuestion();
+        $cssResultDetailModel = new CssResultDetail();
+        
+        $rootCategory = $cssCategoryModel->getRootCategory($css->project_type_id);
+        $cssCategory = $cssCategoryModel->getCategoryByParent($rootCategory->id);
         foreach($cssCategory as $item){
-            $cssCategoryChild = DB::table('css_category')->where('parent_id', $item->id)->get();
+            $cssCategoryChild = $cssCategoryModel->getCategoryByParent($item->id);
             $cssCateChild = array();
             if ($cssCategoryChild) {
-                foreach ($cssCategoryChild as $item_child) {
-                    $cssQuestionChild = DB::table('css_question')->where('category_id', $item_child->id)->get();
+                foreach ($cssCategoryChild as $itemChild) {
+                    $cssQuestionChild = $cssQuestionModel->getQuestionByCategory($itemChild->id);
                     $questionsChild = array();
                     foreach($cssQuestionChild as &$question){
-                        $getQuestionsIdByCssResult = DB::table('css_result_detail')
-                                ->where("css_id",$result_id)
-                                ->where("question_id",$question->id)
-                                ->first();
-                        $question->point = $getQuestionsIdByCssResult->point;
-                        $question->comment = $getQuestionsIdByCssResult->comment;
-                        if($getQuestionsIdByCssResult){
+                        $resultDetailRow = $cssResultDetailModel->getResultDetailRow($resultId, $question->id);
+                        $question->point = $resultDetailRow->point;
+                        $question->comment = $resultDetailRow->comment;
+                        if($resultDetailRow){
                             $questionsChild[] = $question;
                         }
                     }
                     $cssCateChild[] = array(
-                        "id" => $item_child->id,
-                        "name" => $item_child->name,
+                        "id" => $itemChild->id,
+                        "name" => $itemChild->name,
                         "parent_id" => $item->id,
                         "questionsChild" => $questionsChild,
                     );
                 }
             }
 
-            $cssQuestion = DB::table('css_question')->where('category_id', $item->id)->get();
+            $cssQuestion = $cssQuestionModel->getQuestionByCategory($item->id);
             $questions = array();
             foreach($cssQuestion as $question){
-                $getQuestionsIdByCssResult = DB::table('css_result_detail')
-                        ->where("css_id",$result_id)
-                        ->where("question_id",$question->id)
-                        ->first();
-                $question->point = $getQuestionsIdByCssResult->point;
-                $question->comment = $getQuestionsIdByCssResult->comment;
-                if($getQuestionsIdByCssResult){
+                $resultDetailRow = $cssResultDetailModel->getResultDetailRow($resultId, $question->id);
+                $question->point = $resultDetailRow->point;
+                $question->comment = $resultDetailRow->comment;
+                if($resultDetailRow){
                     $questions[] = $question;
                 }
             }
@@ -418,28 +410,13 @@ class CssController extends Controller {
             );
         }
         
-        $css_result_detail = DB::table('css_result_detail')->where("css_id",$result_id)->get();
-        $mark_child = 0;
-        $tongSoCauDanhGia = 0;
-        foreach($css_result_detail as $item_detail){
-            $mark_child += $item_detail->point;
-            if($item_detail->point > 0){
-                $tongSoCauDanhGia++;
-            }
-        }
-        if($mark_child == 0){
-            $mark = $css_result->avg_point * 20;
-        }else{
-            $mark = $css_result->avg_point * 4 + $mark_child/($tongSoCauDanhGia * 5) * 80;
-        }
-
-        $css_result->mark = $mark;
+        $cssResult->mark = self::getPointCssResult($resultId);
         return view(
             'sales::css.detail', [
                 'css' => $css,
-                "user" => $user,
+                "employee" => $employee,
                 "cssCate" => $cssCate,
-                "css_result" => $css_result,
+                "cssResult" => $cssResult,
             ]
         );
     }
@@ -473,11 +450,9 @@ class CssController extends Controller {
      * @return void
      */
     public function analyze(){
-        $projectTypes = ProjectType::all();
-        $htmlTeam = self::getTreeDataRecursive(0, 0, null);
+        $htmlTeam = self::getTreeDataRecursive(null, 0, null);
         return view(
             'sales::css.analyze', [
-                'projectTypes' => $projectTypes,
                 'htmlTeam'     => $htmlTeam,
             ]
         );
@@ -536,21 +511,21 @@ class CssController extends Controller {
      * @return array
      */
     protected function applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria){
-        //lay ra cac ban ghi tu bang css_result theo loai du an, ngay lam du an, team set theo css
+        $cssResultModel = new CssResult();
         if($criteria == 'projectType'){
-            $cssResult = Css::getCssResultByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds);
+            $cssResult = $cssResultModel->getCssResultByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'team'){
-            $cssResult = Css::getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds);
+            $cssResult = $cssResultModel->getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds);
         }else if($criteria == 'pm'){
-            $cssResult = Css::getCssResultByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResult = $cssResultModel->getCssResultByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'brse'){
-            $cssResult = Css::getCssResultByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResult = $cssResultModel->getCssResultByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'customer'){
-            $cssResult = Css::getCssResultByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResult = $cssResultModel->getCssResultByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'sale'){
-            $cssResult = Css::getCssResultByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResult = $cssResultModel->getCssResultByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'question'){
-            $cssResult = Css::getCssResultByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResult = $cssResultModel->getCssResultByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }
         
         //display chart all result
@@ -563,12 +538,12 @@ class CssController extends Controller {
         foreach($cssResult as $itemResult){
             $cssResultIds[] = $itemResult->id;
             $pointToHighchart[] = (float)self::getPointCssResult($itemResult->id);
-            $dateToHighchart[] = date('d/m/Y',strtotime($itemResult->created_at));
+            $dateToHighchart[] = date('d/m/Y',strtotime($itemResult->end_date));
         }
         
         //Get data fill to table project list 
         $cssResultPaginate = self::showAnalyzeListProject($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria,1);
-       
+         
         //Get data fill to compare charts in analyze page
         $pointCompareChart = self::getCompareCharts($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria);
         
@@ -582,8 +557,8 @@ class CssController extends Controller {
         if($criteria == 'question'){
             $arrProjectType = explode(",", $projectTypeIds);
             foreach($arrProjectType as $k=>$projectTypeId){
-                $projectType = ProjectType::find($projectTypeId);
-                $htmlQuestionList .= "<option class=\"parent\" disabled=\"disabled\">$projectType->name</option>";
+                $projectType = self::getProjectTypeNameById($projectTypeId);
+                $htmlQuestionList .= "<option class=\"parent\" disabled=\"disabled\">$projectType</option>";
                 $htmlQuestionList .= self::getHtmlQuestionList($projectTypeId,$startDate,$endDate,$teamIds,$criteriaIds,implode(",", $cssResultIds));
             }
             
@@ -599,6 +574,7 @@ class CssController extends Controller {
             "proposes" => $proposes,
             "htmlQuestionList" => $htmlQuestionList,
         ];
+        
         return $data;
     }
     
@@ -614,37 +590,38 @@ class CssController extends Controller {
      * @return object list
      */
     public function showAnalyzeListProject($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria,$curPage){
-        $offset = ($curPage-1) * self::$perPage; 
-        
+        $cssResultModel = new CssResult(); 
+        Paginator::currentPageResolver(function () use ($curPage) {
+            return $curPage;
+        });
         if($criteria == 'projectType'){
             //all result to show charts
-            $cssResult = Css::getCssResultByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds);
+            $cssResult = $cssResultModel->getCssResultByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds);
             //result by pagination
-            $cssResultPaginate = Css::getCssResultPaginateByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds,self::$perPage);
         }else if($criteria == 'team'){
-            $cssResult = Css::getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds);
-            $cssResultPaginate = Css::getCssResultPaginateByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds,$offset,self::$perPage);
+            $cssResult = $cssResultModel->getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds,self::$perPage);
         }else if($criteria == 'pm'){
-            $cssResult = Css::getCssResultByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = Css::getCssResultPaginateByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+            $cssResult = $cssResultModel->getCssResultByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage);
         }else if($criteria == 'brse'){
-            $cssResult = Css::getCssResultByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = Css::getCssResultPaginateByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+            $cssResult = $cssResultModel->getCssResultByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage);
         }else if($criteria == 'customer'){
-            $cssResult = Css::getCssResultByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = Css::getCssResultPaginateByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+            $cssResult = $cssResultModel->getCssResultByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage);
         }else if($criteria == 'sale'){
-            $cssResult = Css::getCssResultByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = Css::getCssResultPaginateByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+            $cssResult = $cssResultModel->getCssResultByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage);
         }else if($criteria == 'question'){
-            $cssResult = Css::getCssResultByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = Css::getCssResultPaginateByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,$offset,self::$perPage);
+            $cssResult = $cssResultModel->getCssResultByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage);
         }
         
+        $offset = ($cssResultPaginate->currentPage()-1) * $cssResultPaginate->perPage() + 1;
         foreach($cssResultPaginate as &$itemResultPaginate){
-            $css = DB::table("css")->where("id",$itemResultPaginate->css_id)->first();
-            
-            //get team_id tu bang css_team
+            //get teams name of Css result
             $teamName = "";
             $team = DB::table("css_team")->where("css_id",$itemResultPaginate->css_id)->get();
             
@@ -655,13 +632,12 @@ class CssController extends Controller {
                     $teamName .= ", " . Css::getTeamNameById($teamId->team_id);
                 }
             }
+            //end get teams name
             
-            $itemResultPaginate->stt = ++$offset;
-            $itemResultPaginate->project_name = $css->project_name;
+            $itemResultPaginate->stt = $offset++;
             $itemResultPaginate->teamName = $teamName;
-            $itemResultPaginate->pmName = $css->pm_name;
-            $itemResultPaginate->css_created_at = date('d/m/Y',strtotime($css->created_at));
-            $itemResultPaginate->created_at = date('d/m/Y',strtotime($itemResultPaginate->created_at));
+            $itemResultPaginate->css_end_date = date('d/m/Y',strtotime($itemResultPaginate->end_date));
+            $itemResultPaginate->css_result_created_at = date('d/m/Y',strtotime($itemResultPaginate->created_at));
             $itemResultPaginate->point = self::getPointCssResult($itemResultPaginate->id);
         }
         
@@ -704,8 +680,8 @@ class CssController extends Controller {
         
         $result = [];
         foreach($lessThreeStar as $item){
-            $cssResult = Css::getCssResultById($item->css_id);
-            $cssPoint = self::getPointCssResult($item->css_id);
+            $cssResult = Css::getCssResultById($item->css_result_id);
+            $cssPoint = self::getPointCssResult($item->css_result_id);
             $question = Css::getQuestionById($item->question_id);
             $css = Css::find($cssResult->css_id);
             
@@ -768,7 +744,7 @@ class CssController extends Controller {
                 "no"   => ++$offset,
                 "cssPoint"   => self::getPointCssResult($propose->id),
                 "projectName"   => $css->project_name,
-                "customerComment" => $propose->survey_comment,
+                "customerComment" => $propose->proposed,
                 "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),
             ];
         }
@@ -814,34 +790,34 @@ class CssController extends Controller {
      * @return array list
      */
     public function getCompareCharts($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria){
-        //lay diem theo tung loai du an de show tren bieu do phan loai theo tieu chi
+        $cssResultModel = new CssResult();
         $criteriaIds = explode(",", $criteriaIds);
         
         $pointCompareChart = array();
         foreach($criteriaIds as $key => $criteriaId){
             if($criteria == 'projectType'){
-                $name = Css::getProjectTypeNameById($criteriaId);
-                $cssResultByCriteria = Css::getCssResultByProjectTypeId($criteriaId,$startDate,$endDate,$teamIds);
+                $name = self::getProjectTypeNameById($criteriaId);
+                $cssResultByCriteria = $cssResultModel->getCssResultByProjectTypeId($criteriaId,$startDate,$endDate,$teamIds);
             }else if($criteria == 'team'){
                 $team = Team::find($criteriaId);
                 $name = $team->name;
-                $cssResultByCriteria = Css::getCssResultByTeamId($criteriaId,$startDate,$endDate,$projectTypeIds);
+                $cssResultByCriteria = $cssResultModel->getCssResultByTeamId($criteriaId,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'pm'){
                 $name = $criteriaId;
-                $cssResultByCriteria = Css::getCssResultByPmName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+                $cssResultByCriteria = $cssResultModel->getCssResultByPmName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'brse'){
                 $name = $criteriaId;
-                $cssResultByCriteria = Css::getCssResultByBrseName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+                $cssResultByCriteria = $cssResultModel->getCssResultByBrseName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'customer'){
                 $name = $criteriaId;
-                $cssResultByCriteria = Css::getCssResultByCustomerName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+                $cssResultByCriteria = $cssResultModel->getCssResultByCustomerName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'sale'){
                 $name = $criteriaId;
-                $cssResultByCriteria = Css::getCssResultBySale($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+                $cssResultByCriteria = $cssResultModel->getCssResultBySale($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'question'){
                 $question = Css::getQuestionById($criteriaId);
                 $name = $question->content;
-                $cssResultByCriteria = Css::getCssResultByQuestionToChart($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+                $cssResultByCriteria = $cssResultModel->getCssResultByQuestionToChart($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }
             
             $pointToHighchart = [];
@@ -893,7 +869,7 @@ class CssController extends Controller {
         $result["sale"] = self::filterAnalyzeByPmOrBrseOrCustomerOrSale($startDate, $endDate, $projectTypeIds,$teamIds,'sale');        
         $result["question"] = self::filterAnalyzeByQuestion($startDate, $endDate, $projectTypeIds,$teamIds);        
         
-        return response()->view('sales::css.include.table_theotieuchi', $result);
+        return response()->view('sales::css.include.table_criterias', $result);
     }
     
     /**
@@ -909,12 +885,10 @@ class CssController extends Controller {
         $css = array();
         $result = array();
         $no = 0;
-        foreach($arrProjectTypeId as $k => $v){
-            $projectType = ProjectType::find($v);
-            $projectTypeId = $projectType->id;
-            $projectTypeName = $projectType->name;
+        foreach($arrProjectTypeId as $k => $projectTypeId){
+            $projectTypeName = self::getProjectTypeNameById($projectTypeId);
             $points = array();
-            $css = Css::getCssByProjectTypeAndTeam($v,$teamIds);
+            $css = Css::getCssByProjectTypeAndTeam($projectTypeId,$teamIds);
             if(count($css) > 0){
                 $countCss = 0;
                 foreach($css as $itemCss){
@@ -971,13 +945,25 @@ class CssController extends Controller {
     protected function filterAnalyzeByQuestion($startDate, $endDate, $projectTypeIds,$teamIds){
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $cssCateList = array();
+        $cssCategoryModel = new CssCategory();
+        $cssQuestionModel = new CssQuestion();
         foreach($arrProjectTypeId as $key => $projectTypeId){
+            $rootCategory = $cssCategoryModel->getRootCategory($projectTypeId);
+            $overviewQuestion = $cssQuestionModel->getCommentOverview($rootCategory->id,1);
+            $dataQuestion = self::getQuestionOverviewInfoAnalyze($projectTypeId,$startDate, $endDate,$teamIds);
             $cssCate = self::getListQuestionByProjectType($projectTypeId,$startDate,$endDate,$teamIds);
-            $projectType = ProjectType::find($projectTypeId);
+            $noOverview = count($cssCate) + 1;
             $cssCateList[] = [
                 "id"    => $projectTypeId,
-                "name"   => $projectType->name,
-                "cssCate" => $cssCate
+                "name"   => self::getProjectTypeNameById($projectTypeId),
+                "cssCate" => $cssCate,
+                "overviewQuestionId" => $overviewQuestion->id,
+                "overviewQuestionContent" => $overviewQuestion->content,
+                "overviewQuestionCountCss"  => $dataQuestion["countCss"],
+                "overviewQuestionMaxPoint"  => $dataQuestion["maxPoint"],
+                "overviewQuestionMinPoint"  => $dataQuestion["minPoint"],
+                "overviewQuestionAvgPoint"  => $dataQuestion["avgPoint"],
+                "overviewTitle" => self::romanic_number($noOverview,true) . ". " . Lang::get('sales::view.Overview'),
             ]; 
         }
         
@@ -1090,7 +1076,7 @@ class CssController extends Controller {
                 }else if($criteria == "customer"){
                     $css = Css::getCssByCustomerAndTeamIdsAndListProjectType($itemList->customer_name, $teamIds,$projectTypeIds);
                 }else if($criteria == "sale"){
-                    $css = Css::getCssBySaleAndTeamIdsAndListProjectType($itemList->user_id, $teamIds,$projectTypeIds);
+                    $css = Css::getCssBySaleAndTeamIdsAndListProjectType($itemList->employee_id, $teamIds,$projectTypeIds);
                 }
 
                 $countCss = 0;
@@ -1120,9 +1106,9 @@ class CssController extends Controller {
                         $id = $itemList->customer_name; 
                         $name = $itemList->customer_name; 
                     } else if($criteria == "sale"){
-                        $user = User::find($itemList->user_id);
-                        $id = $itemList->user_id;
-                        $name = $user->name; 
+                        $employee = Employees::find($itemList->employee_id);
+                        $id = $itemList->employee_id;
+                        $name = $employee->name; 
                     } 
 
                     if(count($points) > 0){
@@ -1136,17 +1122,6 @@ class CssController extends Controller {
                             "maxPoint"          => self::formatNumber(max($points)),
                             "minPoint"          => self::formatNumber(min($points)),
                             "avgPoint"          => self::formatNumber($avgPoint),
-                        ];
-                    }else{
-                        $no++;
-                        $result[] = [
-                            "no"                => $no,
-                            "id"                => $id,
-                            "name"              => $name,
-                            "countCss"          => 0,
-                            "maxPoint"          => "-",
-                            "minPoint"          => "-",
-                            "avgPoint"          => "-",
                         ];
                     }
                 }
@@ -1172,24 +1147,23 @@ class CssController extends Controller {
      * @return int
      */
     protected function getPointCssResult($cssResultId){
-        $cssResult = DB::table("css_result")->where("id",$cssResultId)->first();
-        
-        $css_result_detail = DB::table('css_result_detail')->where("css_id",$cssResultId)->get();
-        $point_child = 0;
+        $cssResult = CssResult::find($cssResultId);
+        $cssResultDetailModel = new CssResultDetail();
+        $cssResultDetail = $cssResultDetailModel->getResultDetailByCssResult($cssResultId);
+        $pointChild = 0;
         $tongSoCauDanhGia = 0;
-        foreach($css_result_detail as $item_detail){
-            $point_child += $item_detail->point;
-            if($item_detail->point > 0){
+        foreach($cssResultDetail as $itemDetail){
+            $pointChild += $itemDetail->point;
+            if($itemDetail->point > 0){
                 $tongSoCauDanhGia++;
             }
         }
-        if($point_child == 0){
+        if($pointChild == 0){
             $point = $cssResult->avg_point * 20;
         }else{
-            $point = $cssResult->avg_point * 4 + $point_child/($tongSoCauDanhGia * 5) * 80;
+            $point = $cssResult->avg_point * 4 + $pointChild/($tongSoCauDanhGia * 5) * 80;
         }
-
-
+        
         return self::formatNumber($point);
     }
     
@@ -1203,7 +1177,7 @@ class CssController extends Controller {
     {
         $teamList = Team::select('id', 'name', 'parent_id')
                 ->where('parent_id', $parentId)
-                ->orderBy('position', 'asc')
+                ->orderBy('sort_order', 'asc')
                 ->get();
         $countCollection = count($teamList);
         if (!$countCollection) {
@@ -1259,94 +1233,47 @@ class CssController extends Controller {
      * @return type
      */
     protected function getListQuestionByProjectType($projectTypeId,$startDate,$endDate,$teamIds){
-        $cssCategory = DB::table('css_category')->where('parent_id', $projectTypeId)->get();
+        $cssCategoryModel = new CssCategory();
+        $cssQuestionModel = new CssQuestion();
+        
+        $rootCategory = $cssCategoryModel->getRootCategory($projectTypeId);
+        $cssCategory = $cssCategoryModel->getCategoryByParent($rootCategory->id);
         $cssCate = array();
         if ($cssCategory) {
             foreach ($cssCategory as $item) {
-                $cssCategoryChild = DB::table('css_category')->where('parent_id', $item->id)->get();
+                $cssCategoryChild = $cssCategoryModel->getCategoryByParent($item->id);
                 $cssCateChild = array();
                 if ($cssCategoryChild) {
-                    foreach ($cssCategoryChild as $item_child) {
-                        $cssQuestionChild = DB::table('css_question')->where('category_id', $item_child->id)->get();
+                    foreach ($cssCategoryChild as $itemChild) {
+                        $cssQuestionChild = $cssQuestionModel->getQuestionByCategory($itemChild->id);
                         foreach($cssQuestionChild as &$itemQuestionChild){
-                            $css_result = Css::getCssResultByQuestion($itemQuestionChild->id,$startDate, $endDate,$teamIds);
-                            if(count($css_result) > 0){
-                                $countCss = 0;
-                                $points = array();
-                                foreach($css_result as $itemCssResult){
-                                    $css_result_detail = DB::table('css_result_detail')
-                                        ->where("css_id",$itemCssResult->id)
-                                        ->where("question_id",$itemQuestionChild->id)
-                                        ->first();
-                                    if($css_result_detail->point > 0){
-                                        $points[] = $css_result_detail->point;
-                                        $countCss++;
-                                    }
-
-                                }
-                                $itemQuestionChild->countCss = $countCss;
-                                $itemQuestionChild->maxPoint = (count($points) > 0) ? self::formatNumber(max($points)) : "-";
-                                $itemQuestionChild->minPoint = (count($points) > 0) ? self::formatNumber(min($points)) : "-";
-                                if(count($points) > 0){
-                                    $avgPoint = array_sum($points) / count($points);
-                                    $itemQuestionChild->avgPoint = self::formatNumber($avgPoint);
-                                }else{
-                                    $itemQuestionChild->avgPoint = "-";
-                                }
-                            }else{
-                                $itemQuestionChild->countCss = 0;
-                                $itemQuestionChild->maxPoint = "-";
-                                $itemQuestionChild->minPoint = "-";
-                                $itemQuestionChild->avgPoint = "-";
-                            }
+                            $dataQuestion = self::getQuestionInfoAnalyze($itemQuestionChild->id,$startDate, $endDate,$teamIds);
+                            $itemQuestionChild->countCss = $dataQuestion["countCss"];
+                            $itemQuestionChild->maxPoint = $dataQuestion["maxPoint"];
+                            $itemQuestionChild->minPoint = $dataQuestion["minPoint"];
+                            $itemQuestionChild->avgPoint = $dataQuestion["avgPoint"];
                         }
 
                         $cssCateChild[] = array(
-                            "id" => $item_child->id,
-                            "name" => $item_child->name,
+                            "id" => $itemChild->id,
+                            "name" => $itemChild->sort_order . ". " . $itemChild->name,
                             "parentId" => $item->id,
                             "questionsChild" => $cssQuestionChild,
                         );
                     }
                 }
 
-                $cssQuestion = DB::table('css_question')->where('category_id', $item->id)->get();
+                $cssQuestion = $cssQuestionModel->getQuestionByCategory($item->id);
                 foreach($cssQuestion as &$itemQuestion){
-                    $css_result = Css::getCssResultByQuestion($itemQuestion->id,$startDate, $endDate,$teamIds);
-                    if(count($css_result) > 0){
-                        $countCss = 0;
-                        $points = array();
-                        foreach($css_result as $itemCssResult){
-                            $css_result_detail = DB::table('css_result_detail')
-                                ->where("css_id",$itemCssResult->id)
-                                ->where("question_id",$itemQuestion->id)
-                                ->first();
-                            if($css_result_detail->point > 0){
-                                $points[] = $css_result_detail->point;
-                                $countCss++;
-                            }
-                        }
-                        //echo count($points);die;
-                        $itemQuestion->countCss = $countCss;
-                        $itemQuestion->maxPoint = (count($points) > 0) ? self::formatNumber(max($points)) : "-";
-                        $itemQuestion->minPoint = (count($points) > 0) ? self::formatNumber(min($points)) : "-";
-                        if(count($points) > 0){
-                            $avgPoint = array_sum($points) / count($points);
-                            $itemQuestion->avgPoint = self::formatNumber($avgPoint);
-                        }else{
-                            $itemQuestion->avgPoint = "-";
-                        }
-                    }else{
-                        $itemQuestion->countCss = 0;
-                        $itemQuestion->maxPoint = "-";
-                        $itemQuestion->minPoint = "-";
-                        $itemQuestion->avgPoint = "-";
-
-                    }
+                    $dataQuestion = self::getQuestionInfoAnalyze($itemQuestion->id,$startDate, $endDate,$teamIds);
+                    $itemQuestion->countCss = $dataQuestion["countCss"];
+                    $itemQuestion->maxPoint = $dataQuestion["maxPoint"];
+                    $itemQuestion->minPoint = $dataQuestion["minPoint"];
+                    $itemQuestion->avgPoint = $dataQuestion["avgPoint"];
                 }
                 $cssCate[] = array(
                     "id" => $item->id,
-                    "name" => $item->name,
+                    "name" => self::romanic_number($item->sort_order,true) . ". " .$item->name,
                     "parentId" => $item->parent_id,
                     "cssCateChild" => $cssCateChild,
                     "questions" => $cssQuestion,
@@ -1358,6 +1285,97 @@ class CssController extends Controller {
         return $cssCate;
     }
     
+    /**
+     * Get max, min, avg point of question
+     * @param int $questionId
+     * @param date $startDate
+     * @param date $endDate
+     * @param string $teamIds
+     * @return type
+     */
+    protected function getQuestionInfoAnalyze($questionId,$startDate, $endDate,$teamIds){
+        $cssResultModel = new CssResult();
+        $cssResult = $cssResultModel->getCssResultByQuestion($questionId,$startDate, $endDate,$teamIds);
+        if(count($cssResult) > 0){
+            $cssResultDetailModel = new CssResultDetail();
+            $countCss = 0;
+            $points = array();
+            foreach($cssResult as $itemCssResult){
+                $cssResultDetail = $cssResultDetailModel->getResultDetailRow($itemCssResult->id,$questionId);
+                if(count($cssResultDetail)){
+                    if($cssResultDetail->point > 0){
+                        $points[] = $cssResultDetail->point;
+                        $countCss++;
+                    }
+                }
+            }
+            $maxPoint = (count($points) > 0) ? self::formatNumber(max($points)) : "-";
+            $minPoint = (count($points) > 0) ? self::formatNumber(min($points)) : "-";
+            if(count($points) > 0){
+                $avgPoint = array_sum($points) / count($points);
+                $avgPoint = self::formatNumber($avgPoint);
+            }else{
+                $avgPoint = "-";
+            }
+        }else{
+            $countCss = 0;
+            $maxPoint = "-";
+            $minPoint = "-";
+            $avgPoint = "-";
+        }
+        
+        return [
+            "countCss"  => $countCss,
+            "maxPoint"  => $maxPoint,
+            "minPoint"  => $minPoint,
+            "avgPoint"  => $avgPoint
+        ];
+    }
+
+    /**
+     * Get max, min, avg point of overview question
+     * @param int $questionId
+     * @param date $startDate
+     * @param date $endDate
+     * @param string $teamIds
+     * @return type
+     */
+    protected function getQuestionOverviewInfoAnalyze($projectTypeId,$startDate, $endDate,$teamIds){
+        $cssResultModel = new CssResult();
+        $cssResult = $cssResultModel->getQuestionOverviewInfoAnalyze($projectTypeId,$startDate, $endDate,$teamIds);
+        if(count($cssResult) > 0){
+            $countCss = 0;
+            $points = array();
+            foreach($cssResult as $itemCssResult){
+                if($itemCssResult->avg_point > 0){
+                    $points[] = $itemCssResult->avg_point;
+                    $countCss++;
+                }
+            }
+            
+            $maxPoint = (count($points) > 0) ? self::formatNumber(max($points)) : "-";
+            $minPoint = (count($points) > 0) ? self::formatNumber(min($points)) : "-";
+            if(count($points) > 0){
+                $avgPoint = array_sum($points) / count($points);
+                $avgPoint = self::formatNumber($avgPoint);
+            }else{
+                $avgPoint = "-";
+            }
+        }else{
+            $countCss = 0;
+            $maxPoint = "-";
+            $minPoint = "-";
+            $avgPoint = "-";
+        }
+        
+        return [
+            "countCss"  => $countCss,
+            "maxPoint"  => $maxPoint,
+            "minPoint"  => $minPoint,
+            "avgPoint"  => $avgPoint
+        ];
+    }
+
     /**
      * 
      * @param int $projectTypeId
@@ -1404,8 +1422,8 @@ class CssController extends Controller {
         
         $result = [];
         foreach($lessThreeStar as $item){
-            $cssResult = Css::getCssResultById($item->css_id);
-            $cssPoint = self::getPointCssResult($item->css_id);
+            $cssResult = CssResult::find($item->css_result_id);
+            $cssPoint = self::getPointCssResult($item->css_result_id);
             $question = Css::getQuestionById($item->question_id);
             $css = Css::find($cssResult->css_id);
             
@@ -1470,7 +1488,7 @@ class CssController extends Controller {
                 "no"   => ++$offset,
                 "cssPoint"   => self::getPointCssResult($propose->id),
                 "projectName"   => $css->project_name,
-                "customerComment" => $propose->survey_comment,
+                "customerComment" => $propose->proposed,
                 "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),
             ];
         }
@@ -1514,5 +1532,39 @@ class CssController extends Controller {
         $question = Css::getQuestionById($questionId);
         $arr = explode(".", $question->content, 2);
         return $arr[0];
+    }
+    
+    public function romanic_number($integer, $upcase = true) 
+    { 
+        $table = array('M'=>1000, 'CM'=>900, 'D'=>500, 'CD'=>400, 'C'=>100, 'XC'=>90, 'L'=>50, 'XL'=>40, 'X'=>10, 'IX'=>9, 'V'=>5, 'IV'=>4, 'I'=>1); 
+        $return = ''; 
+        while($integer > 0) 
+        { 
+            foreach($table as $rom=>$arb) 
+            { 
+                if($integer >= $arb) 
+                { 
+                    $integer -= $arb; 
+                    $return .= $rom; 
+                    break; 
+                } 
+            } 
+        } 
+
+        return $return; 
+    }  
+    
+    public function getProjectTypeNameById($projectTypeId){
+        $projectTypeName = "";
+        switch($projectTypeId){
+            case 1: 
+                $projectTypeName = "OSDC";
+                break;
+            case 2: 
+                $projectTypeName = "Project base";
+                break;
+        }
+        
+        return $projectTypeName;
     }
 }

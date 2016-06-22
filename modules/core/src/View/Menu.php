@@ -8,6 +8,8 @@ namespace Rikkei\Core\View;
 
 use URL;
 use Rikkei\Team\View\Permission;
+use Rikkei\Core\Model\Menus;
+use Rikkei\Core\Model\MenuItems;
 
 class Menu
 {
@@ -57,20 +59,19 @@ class Menu
     /**
      * get menu html
      * 
+     * @param int $menuId id of menus
      * @return string
      */
-    public static function get()
+    public static function get($menuId = null, $level = 0)
     {
-        if (self::$menuHtml) {
-            return self::$menuHtml;
+        if (! $menuId) {
+            $menuId = Menus::getMenuDefault();
+            if(! $menuId) {
+                return;
+            }
+            $menuId = $menuId->id;
         }
-        
-        $menu = config('menu');
-        if (!$menu) {
-            return;
-        }
-        self::$menuHtml = self::getChildMenu($menu, 0);
-        return self::$menuHtml;
+        return self::getChildMenu($menuId, null, $level);
     }
     
     /**
@@ -80,42 +81,52 @@ class Menu
      * @param array $menu
      * @return string
      */
-    protected static function getChildMenu($menu, $level = 0)
+    protected static function getChildMenu($menuId, $parentId = null, $level = 0)
     {
         $html = '';
-        foreach ($menu as $key => $value) {
-            if (!$value['active']) {
+        $menuItems = MenuItems::getChildMenuItems($parentId, $menuId);
+        if (! count($menuItems)) {
+            return;
+        }
+        foreach ($menuItems as $item) {
+            if ($item->state != MenuItems::STATE_ENABLE) {
                 continue;
             }
-            if (isset($value['action']) && $value['action']) {
-                if (! Permission::getInstance()->isAllow($value['action'])) {
+            //check permission menu of current user logged
+            if ($item->action_id) {
+                if (! Permission::getInstance()->isAllow($item->action_id)  ) {
                     continue;
                 }
             }
-            
-            $classLi = self::isActive($key) ? ' active' : '';
+            $hasChild = $item->hasChild();
+            $classLi = self::isActive($item->id) ? ' active' : '';
             $classA = '';
             $optionA = '';
-            if (isset($value['child']) && count($value['child'])) {
+            if ($hasChild) {
                 $classLi .= ' dropdown';
                 $classA .= 'dropdown-toggle';
                 $optionA .= ' data-toggle="dropdown"';
-                $htmlMenuChild = self::getChildMenu($value['child'], $level+1);
+                $htmlMenuChild = self::getChildMenu($menuId, $item->id, $level+1);
                 if ($level > 0) {
                     $classLi .= ' dropdown-submenu';
                 }
             }
             $classLi = $classLi ? " class=\"{$classLi}\"" : '';
             $classA = $classA ? " class=\"{$classA}\"" : '';
-            if($value['path'] != '#') {
-                $value['path'] = URL::to($value['path']);
+            $urlMenu = '#';
+            if($item->url && $item->url != '#') {
+                if (preg_match('/^http(s)?:\/\//', $item->url)) {
+                    $urlMenu = $item->url;
+                } else {
+                    $urlMenu = URL::to($item->url);
+                }
             }
             
             $html .= "<li{$classLi}>";
-            $html .= "<a href=\"{$value['path']}\"{$classA}{$optionA}>";
-            $html .= $value['label'];
+            $html .= "<a href=\"{$urlMenu}\"{$classA}{$optionA}>";
+            $html .= $item->name;
             $html .= '</a>';
-            if (isset($value['child']) && count($value['child'])) {
+            if ($hasChild && e($htmlMenuChild)) {
                 $html .= '<ul class="dropdown-menu" role="menu">';
                 $html .= $htmlMenuChild;
                 $html .= '</ul>';

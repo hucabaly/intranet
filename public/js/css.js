@@ -87,10 +87,13 @@ $(document).ready(function () {
     $('#start_date').on('changeDate', function (ev) {
         $(this).datepicker('hide');
         $('#end_date').focus();
+        $('#start_date').css('color','#555').css('font-size','14px');
+        $('#start_date-error').remove();
     });
     
     $('#end_date').on('changeDate', function (ev) {
         $(this).datepicker('hide');
+        $('#end_date').css('color','#555').css('font-size','14px');;
     });
 });
 
@@ -197,7 +200,7 @@ function confirm(){
 }
 
 /**
- * Function validate va insert CSS vao database
+ * Validate then insert CSS result into database
  * @param string token
  * @param int cssId
  * @param json arrayValidate
@@ -301,7 +304,7 @@ function submit(token, cssId, arrayValidate){
         }
     });
     
-    
+    $(".apply-click-modal").show();
     $.ajax({
         url: '/css/saveResult',
         type: 'post',
@@ -342,3 +345,12 @@ function exportExcel(projectName){
     });
 }
 
+function copyToClipboard(element) {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).attr('data-href')).select();
+  document.execCommand("copy");
+  $temp.remove();
+  
+  $("#modal-clipboard").modal('show');
+}
