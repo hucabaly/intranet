@@ -82,8 +82,8 @@
     <tr class="cau">
         <td class="title" colspan="2">{{ $overviewQuestionContent }}</td>
         
-        <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" onclick="totalMark();"></div></td>
-        <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" id="comment-tongquat"  ></textarea></td>
+        <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-questionid="{{$overviewQuestionId}}" data-rateit-resetable="false" onclick="totalMark();"></div></td>
+        <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" data-questionid="{{$overviewQuestionId}}" id="comment-tongquat"  ></textarea></td>
     </tr>
 
     <!-- Proposed -->

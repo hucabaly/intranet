@@ -36,7 +36,7 @@
                                             <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->stt }}</td>
                                             <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->name }}</td>
                                             <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->email }}</td>
-                                            <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ number_format($item->mark,2) }}</td>
+                                            <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ number_format($item->avg_point,2) }}</td>
                                             <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->make_date }}</td>
                                             <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" class="with-textalign-center" ><a href="/css/detail/{{$item->id}}">{{ trans('sales::view.View') }}</a></td>
                                         </tr>

@@ -112,7 +112,7 @@ return [
     'Min point' => 'Điểm thấp nhất',
     'By project type' => 'Theo loại dự án',
     'By team' => 'Theo team',
-    'By pm' => 'Theo pm',
+    'By pm' => 'Theo PM',
     'By brse' => 'Theo BrSE',
     'By customer' => 'Theo khách hàng',
     'By sale' => 'Theo nhân viên sale',
