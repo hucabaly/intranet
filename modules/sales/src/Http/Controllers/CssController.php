@@ -623,7 +623,7 @@ class CssController extends Controller {
         foreach($cssResultPaginate as &$itemResultPaginate){
             $css = Css::find($itemResultPaginate->css_id);
             
-            //get team_id tu bang css_team
+            //get teams name of Css result
             $teamName = "";
             $team = DB::table("css_team")->where("css_id",$itemResultPaginate->css_id)->get();
             
@@ -634,6 +634,7 @@ class CssController extends Controller {
                     $teamName .= ", " . Css::getTeamNameById($teamId->team_id);
                 }
             }
+            //end get teams name
             
             $itemResultPaginate->stt = $offset++;
             $itemResultPaginate->project_name = $css->project_name;
@@ -872,7 +873,7 @@ class CssController extends Controller {
         $result["sale"] = self::filterAnalyzeByPmOrBrseOrCustomerOrSale($startDate, $endDate, $projectTypeIds,$teamIds,'sale');        
         $result["question"] = self::filterAnalyzeByQuestion($startDate, $endDate, $projectTypeIds,$teamIds);        
         
-        return response()->view('sales::css.include.table_theotieuchi', $result);
+        return response()->view('sales::css.include.table_criterias', $result);
     }
     
     /**
