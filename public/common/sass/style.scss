@@ -32,6 +32,19 @@ html, body {
         -webkit-border-radius: 3px;
     }
 }
+ul.dropdown-menu.input-menu {
+    background-color: #fff;
+    padding-bottom: 10px;
+    li {
+        a {
+            color: #333;
+        }
+        a:hover {
+            background-color: transparent;
+            color: #7f7f7f;
+        }
+    }
+}
 /*-------menu-------*/
 .dropdown-submenu {
     position: relative;
@@ -300,6 +313,9 @@ form{
 .table-grid-data {
     .col-action.col-a1{
         width: 30px;
+    }
+    .col-action.col-a2{
+        width: 90px;
     }
 }
 
