@@ -95,7 +95,7 @@ class AclController extends \Rikkei\Core\Http\Controllers\Controller
         $id = Input::get('id');
         $model = Action::find($id);
         if (! $model) {
-            return redirect()->route('core::setting.acl.index')->withErrors(Lang::get('team::messages.Not found item.'));
+            return redirect()->route('team::setting.acl.index')->withErrors(Lang::get('team::messages.Not found item.'));
         }
         $model->delete();
         $messages = [
@@ -103,6 +103,6 @@ class AclController extends \Rikkei\Core\Http\Controllers\Controller
                     Lang::get('team::messages.Delete item success!'),
                 ]
         ];
-        return redirect()->route('core::setting.menu.item.index')->with('messages', $messages);
+        return redirect()->route('team::setting.acl.index')->with('messages', $messages);
     }
 }

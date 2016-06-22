@@ -44,26 +44,15 @@ use Rikkei\Core\View\Form;
                             <th class="sorting {{ Config::getDirClass('route') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('route')}}';">Route</th>
                             <th class="sorting {{ Config::getDirClass('parent_id') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('parent_id')}}';">{{ trans('team::view.Parent id') }}</th>
                             <th class="sorting {{ Config::getDirClass('sort_order') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('sort_order')}}';">{{ trans('team::view.Sort order') }}</th>
-                            <th class="col-action col-a1">&nbsp;</th>
+                            <th class="col-action col-a2">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="filter-input-grid">
                             <td>
                                 <div class="row">
-                                    <div class="col-md-5">
-                                        <label>{{ trans('team::view.From') }}</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" name="filter[id][from]" value="{{ Form::getFilterData('id', 'from') }}" placeholder="{{ trans('team::view.From') }}" class="filter-grid" />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <label>{{ trans('team::view.To') }}</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" name="filter[id][to]" value="{{ Form::getFilterData('id', 'to') }}" placeholder="{{ trans('team::view.To') }}" class="filter-grid" />
+                                    <div class="col-md-12">
+                                        <input type="text" name="filter[id]" value="{{ Form::getFilterData('id') }}" placeholder="Id" class="filter-grid" />
                                     </div>
                                 </div>
                             </td>
@@ -90,19 +79,8 @@ use Rikkei\Core\View\Form;
                             </td>
                             <td>
                                 <div class="row">
-                                    <div class="col-md-5">
-                                        <label>{{ trans('team::view.From') }}</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" name="filter[parent_id][from]" value="{{ Form::getFilterData('parent_id', 'from') }}" placeholder="{{ trans('team::view.From') }}" class="filter-grid" />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <label>{{ trans('team::view.To') }}</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" name="filter[parent_id][to]" value="{{ Form::getFilterData('parent_id', 'to') }}" placeholder="{{ trans('team::view.To') }}" class="filter-grid" />
+                                    <div class="col-md-12">
+                                        <input type="text" name="filter[parent_id]" value="{{ Form::getFilterData('parent_id') }}" placeholder="{{ trans('team::view.Parent id') }}" class="filter-grid" />
                                     </div>
                                 </div>
                             </td>
@@ -120,6 +98,14 @@ use Rikkei\Core\View\Form;
                                     <td>{{ $item->sort_order }}</td>
                                     <td>
                                         <a href="{{ route('team::setting.acl.edit', ['id' => $item->id ]) }}" class="btn-edit">{{ trans('team::view.Edit') }}</a>
+                                        <form action="{{ route('team::setting.acl.delete') }}" method="post" class="form-inline">
+                                            {!! csrf_field() !!}
+                                            {!! method_field('delete') !!}
+                                            <input type="hidden" name="id" value="{{ $item->id }}" />
+                                            <button href="" class="btn-delete delete-confirm" disabled>
+                                                <span>{{ trans('team::view.Remove') }}</span>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

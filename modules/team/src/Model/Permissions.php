@@ -122,13 +122,15 @@ class Permissions extends \Rikkei\Core\Model\CoreModel
                     $item['team_id'] = null;
                     $item['role_id'] = $teamOrRoleId;
                 }
-                $permissionItem = self::where('role_id', $item['role_id'])
+                $permissionItem = self::withTrashed()
+                    ->where('role_id', $item['role_id'])
                     ->where('action_id', $item['action_id'])
                     ->where('team_id', $item['team_id'])
                     ->first();
                 if (! $permissionItem) {
                     $permissionItem = new Permissions();
                 }
+                $permissionItem->deleted_at = null;
                 $permissionItem->setData($item);
                 $permissionItem->save();
             }

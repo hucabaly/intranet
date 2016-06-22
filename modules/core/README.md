@@ -13,6 +13,13 @@ Features
 - [x] Allow config menu by file
 - [x] Integrate switch localization
 
+#### migration and seed
+php artisan vendor:publish --tag=database
+php artisan migrate
+php artisan db:seed
+php artisan db:seed --class=PermissionSeeder
+php artisan db:seed --class=RecruitmentSeeder
+
 #### add menu and acl default
 Run in command line:
 
