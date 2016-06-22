@@ -90,7 +90,7 @@ return [
     'Project date finish' => 'Ngày hoàn thành',
     'Css point' => 'Điểm CSS',
     'Project list' => 'Danh sách dự án',
-    'Chart title by all' => 'Biểu đồ theo thời gian tất cả',
+    'Chart title by all' => 'Biểu đồ theo thời gian tất cả các kết quả',
     'Chart title by filter' => "Biểu đồ theo thời gian có phân loại theo tiêu chí",
     'List 3 * below' => 'Danh sách câu hỏi chấm điểm dưới 3 sao',
     'Customer proposed' => 'Đề xuất của khách hàng',

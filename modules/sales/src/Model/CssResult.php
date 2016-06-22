@@ -82,7 +82,7 @@ class CssResult extends Model
     }
     
     /**
-     * Get bai lam css theo mot nhom cac project_type_id
+     * Get Css result by projects type 
      * @param string $projectTypeIds
      * @param date $startDate
      * @param date $endDate 
@@ -92,24 +92,20 @@ class CssResult extends Model
     public function getCssResultByProjectTypeIds($projectTypeIds,$startDate, $endDate, $teamIds){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
-     * Get bai lam css theo mot nhom cac project_type_id
+     * Get Css result by projects type 
      * @param string $projectTypeIds
      * @param date $startDate
      * @param date $endDate 
@@ -120,24 +116,20 @@ class CssResult extends Model
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->paginate($perPage);
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->paginate($perPage);
     }
     
     /**
-     * Get bai lam css theo 1 project_type_id
+     * Get Css result by project type
      * @param int $projectTypeId
      * @param date $startDate
      * @param date $endDate 
@@ -146,20 +138,16 @@ class CssResult extends Model
      */
     public function getCssResultByProjectTypeId($projectTypeId,$startDate, $endDate, $teamIds){
         $arrTeamId = explode(",", $teamIds);
-        return self::whereIn('css_id',function($query) use ($projectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->where('project_type_id', $projectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->where('css.project_type_id',$projectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
@@ -172,20 +160,16 @@ class CssResult extends Model
      */
     public function getCssResultByTeamId($teamId,$startDate, $endDate, $projectTypeIds){
         $arrProjectTypeId = explode(",", $projectTypeIds);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($teamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->where('team_id', $teamId);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->where('css_team.team_id',$teamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
@@ -200,25 +184,17 @@ class CssResult extends Model
     public function getCssResultByPmName($pmName,$teamIds,$startDate, $endDate, $projectTypeIds){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($pmName){
-                        $query->select('css_id')
-                            ->from(with(new Css)->getTable())
-                            ->where('pm_name', $pmName);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->where('css.pm_name', $pmName)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
@@ -233,25 +209,17 @@ class CssResult extends Model
     public function getCssResultByBrseName($brseName,$teamIds,$startDate, $endDate, $projectTypeIds){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($brseName){
-                        $query->select('css_id')
-                            ->from(with(new Css)->getTable())
-                            ->where('brse_name', $brseName);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->where('css.brse_name', $brseName)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
@@ -266,25 +234,17 @@ class CssResult extends Model
     public function getCssResultByCustomerName($customerName,$teamIds,$startDate, $endDate, $projectTypeIds){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($customerName){
-                        $query->select('css_id')
-                            ->from(with(new Css)->getTable())
-                            ->where('customer_name', $customerName);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->where('css.customer_name', $customerName)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
@@ -300,25 +260,17 @@ class CssResult extends Model
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrPmName = explode(",", $listPmName);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrPmName){
-                        $query->select('css_id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('pm_name', $arrPmName);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->whereIn('css.pm_name', $arrPmName)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
@@ -334,25 +286,17 @@ class CssResult extends Model
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrPmName = explode(",", $listPmName);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrPmName){
-                        $query->select('css_id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('pm_name', $arrPmName);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->paginate($perPage);
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->whereIn('css.pm_name', $arrPmName)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->paginate($perPage);
     }
     
     /**
@@ -368,25 +312,17 @@ class CssResult extends Model
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrBrseName = explode(",", $listBrseName);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrBrseName){
-                        $query->select('css_id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('brse_name', $arrBrseName);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->whereIn('css.brse_name', $arrBrseName)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
@@ -402,25 +338,17 @@ class CssResult extends Model
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrBrseName = explode(",", $listBrseName);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrBrseName){
-                        $query->select('css_id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('brse_name', $arrBrseName);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->paginate($perPage);
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->whereIn('css.brse_name', $arrBrseName)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->paginate($perPage);
     }
     
     /**
@@ -436,25 +364,17 @@ class CssResult extends Model
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrCustomerName = explode(",", $listCustomerName);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrCustomerName){
-                        $query->select('css_id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('brse_name', $arrCustomerName);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->whereIn('css.customer_name', $arrCustomerName)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
@@ -470,25 +390,17 @@ class CssResult extends Model
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrSaleId = explode(",", $saleIds);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrSaleId){
-                        $query->select('css_id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('employee_id', $arrSaleId);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->whereIn('css.employee_id', $arrSaleId)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
@@ -504,25 +416,17 @@ class CssResult extends Model
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrSaleId = explode(",", $saleIds);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrSaleId){
-                        $query->select('css_id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('employee_id', $arrSaleId);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->paginate($perPage);
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->whereIn('css.employee_id', $arrSaleId)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->paginate($perPage);
     }
     
     /**
@@ -538,25 +442,18 @@ class CssResult extends Model
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrQuestionId = explode(",", $questionIds);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('id',function($query) use ($arrQuestionId){
-                        $query->select('css_result_id')
-                            ->from(with(new CssResultDetail)->getTable())
-                            ->whereIn('question_id', $arrQuestionId);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->join('css_result_detail', 'css_result_detail.css_result_id', '=', 'css_result.id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->whereIn('css_result_detail.question_id', $arrQuestionId)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
@@ -572,25 +469,18 @@ class CssResult extends Model
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrQuestionId = explode(",", $questionIds);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('id',function($query) use ($arrQuestionId){
-                        $query->select('css_result_id')
-                            ->from(with(new CssResultDetail)->getTable())
-                            ->whereIn('question_id', $arrQuestionId);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->paginate($perPage);
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->join('css_result_detail', 'css_result_detail.css_result_id', '=', 'css_result.id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->whereIn('css_result_detail.question_id', $arrQuestionId)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->paginate($perPage);
     }
     
     
@@ -603,29 +493,21 @@ class CssResult extends Model
      * @param string $teamIds
      * @return object
      */
-    public function getCssResultPaginateByListCustomer($listCustomerName,$projectTypeIds,$startDate, $endDate, $teamIds,$offset,$perPage){
+    public function getCssResultPaginateByListCustomer($listCustomerName,$projectTypeIds,$startDate, $endDate, $teamIds,$perPage){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
-        $arrListCustomerName = explode(",", $listCustomerName);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrListCustomerName){
-                        $query->select('css_id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('brse_name', $arrListCustomerName);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->paginate($perPage);
+        $arrCustomerName = explode(",", $listCustomerName);
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->whereIn('css.customer_name', $arrCustomerName)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->paginate($perPage);
     }
     
     /**
@@ -638,20 +520,17 @@ class CssResult extends Model
      */
     public function getCssResultByQuestion($questionId,$startDate,$endDate,$teamIds){
         $arrTeamId = explode(",", $teamIds);
-        return self::whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('id',function($query) use ($questionId){
-                        $query->select('css_result_id')
-                            ->from(with(new CssResultDetail)->getTable())
-                            ->where('question_id', $questionId);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->join('css_result_detail', 'css_result_detail.css_result_id', '=', 'css_result.id')
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->where('css_result_detail.question_id', $questionId)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
@@ -666,29 +545,21 @@ class CssResult extends Model
     public function getCssResultBySale($employee_id,$teamIds,$startDate, $endDate, $projectTypeIds){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                    ->whereIn('css_id',function($query) use ($employee_id){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->where('employee_id', $employee_id);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->where('css.employee_id', $employee_id)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
     
     /**
-     * Get css result by user_id
+     * Get css result by question
      * @param string $questionId
      * @param string $teamIds
      * @param date $startDate
@@ -699,25 +570,17 @@ class CssResult extends Model
     public static function getCssResultByQuestionToChart($questionId,$teamIds,$startDate, $endDate, $projectTypeIds){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
-        return self::whereIn('css_id',function($query) use ($arrProjectTypeId){
-                        $query->select('id')
-                            ->from(with(new Css)->getTable())
-                            ->whereIn('project_type_id', $arrProjectTypeId);
-                        })
-                    ->whereIn('css_id',function($query) use ($arrTeamId){
-                        $query->select('css_id')
-                            ->from(with(new CssTeams)->getTable())
-                            ->whereIn('team_id', $arrTeamId);
-                        })
-                     ->whereIn('id',function($query) use ($questionId){
-                        $query->select('css_result_id')
-                            ->from(with(new CssResultDetail)->getTable())
-                            ->where('question_id', $questionId);
-                        })
-                    ->where('created_at','>=',$startDate)
-                    ->where('created_at','<=',$endDate)
-                    ->orderBy('created_at','ASC')
-                    ->get();
+        return self::join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->join('teams', 'teams.id', '=', 'css_team.team_id')
+                ->join('css_result_detail', 'css_result_detail.css_result_id', '=', 'css_result.id')
+                ->whereIn('css.project_type_id',$arrProjectTypeId)
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->where('css.end_date','>=',$startDate)
+                ->where('css.end_date','<=',$endDate)
+                ->where('css_result_detail.question_id', $questionId)
+                ->orderBy('css.end_date','ASC')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->get();
     }
-    
 }
