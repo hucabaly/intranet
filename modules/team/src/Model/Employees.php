@@ -8,6 +8,7 @@ use Exception;
 use Lang;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
+use Rikkei\Recruitment\Model\RecruitmentApplies;
 
 class Employees extends CoreModel
 {
@@ -75,10 +76,28 @@ class Employees extends CoreModel
         }
         try {
             $this->saveCode();
+            $this->saveRecruitmentAppyId();
             return parent::save($options);
         } catch (Exception $ex) {
             throw $ex;
         }
+    }
+    
+    /**
+     * save recruitment apply id follow phone
+     * 
+     * @return \Rikkei\Team\Model\Employees
+     */
+    public function saveRecruitmentAppyId()
+    {
+        if ($this->recruitment_apply_id || ! $this->mobile_phone) {
+            return;
+        }
+        $recruitment = RecruitmentApplies::select('id')->where('phone', $this->mobile_phone)->first();
+        if ($recruitment) {
+            $this->recruitment_apply_id = $recruitment->id;
+        }
+        return $this;
     }
     
     /**
