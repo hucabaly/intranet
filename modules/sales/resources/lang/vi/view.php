@@ -124,4 +124,5 @@ return [
     'Copy to clipboard' => 'Copy to clipboard',
     'Text notification copy clipboard' => 'Đã copy link URL của bài CSS vào clipboard, bạn có thể paste vào mail để gửi cho khách hàng.',
     'Css result list of'    => 'Danh sách bài làm Css của dự án ',
+    'Overview question' => 'Câu tổng quát',
 ];

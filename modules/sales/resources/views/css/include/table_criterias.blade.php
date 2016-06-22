@@ -329,7 +329,7 @@
                         @if($itemChild['questionsChild'])
                             @foreach($itemChild['questionsChild'] as $questionChild)
                                 <tr>
-                                    <td class="col-xs-7">------ {{$questionChild->content}}</td>
+                                    <td class="col-xs-7">------ {{$questionChild->sort_order . ". " . $questionChild->content}}</td>
                                     <td class="col-xs-1">{{$questionChild->countCss}}</td>
                                     <td class="col-xs-1">{{$questionChild->avgPoint}}</td>
                                     <td class="col-xs-1">{{$questionChild->maxPoint}}</td>
@@ -350,7 +350,7 @@
                 @elseif($itemCssCate['questions'])
                     @foreach($itemCssCate['questions'] as $question)
                         <tr>
-                            <td class="col-xs-7">---- {{$question->content}}</td>
+                            <td class="col-xs-7">---- {{$question->sort_order . ". " . $question->content}}</td>
                             <td class="col-xs-1">{{$question->countCss}}</td>
                             <td class="col-xs-1">{{$question->avgPoint}}</td>
                             <td class="col-xs-1">{{$question->maxPoint}}</td>
