@@ -5,7 +5,6 @@
     <div class="col-xs-12">
         <div class="box box-solid">
             <div class="box-group" id="accordion">
-              <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
               <div class="panel box box-primary">
                   <div id="collapseOne" class="panel-collapse collapse in">
                       <div class="box-body">
@@ -77,7 +76,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div  class="theotieuchi">@include('sales::css.include.table_theotieuchi')</div>
+                                        <div  class="theotieuchi"></div>
                                     </div>
                                 </div>
                                 

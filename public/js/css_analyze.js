@@ -155,7 +155,7 @@ function apply(token){
             criteriaType: criteriaType,
         },
     })
-    .done(function (data) {  
+    .done(function (data) { 
         $("#criteriaIds_val").val(criteriaIds);
         $("#criteriaType_val").val(criteriaType);
         $(".apply-click-modal").hide();
@@ -170,19 +170,19 @@ function apply(token){
         $('html, body').animate({
             scrollTop: $(".ketquaapply").offset().top
         }, 100);
-        var countResult = data["cssResultPaginate"]["cssResultdata"].length; 
+        var countResult = data["cssResultPaginate"]["cssResultdata"]["data"].length; 
         var html = "";
         for(var i=0; i<countResult; i++){
             html += "<tr>";
-            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["stt"]+"</td>";
-            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["project_name"]+"</td>";
-            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["teamName"]+"</td>";
-            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["pmName"]+"</td>";
-            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["css_created_at"]+"</td>";
-            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["created_at"]+"</td>";
-            html += "<td>"+data["cssResultPaginate"]["cssResultdata"][i]["point"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["stt"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["project_name"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["teamName"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["pmName"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["css_created_at"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["css_result_created_at"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["point"]+"</td>";
             html += "</tr>";   
-        }
+        } 
         $("#danhsachduan tbody").html(html);
         $("#danhsachduan").parent().find(".pagination").html(data["cssResultPaginate"]["paginationRender"]);
         $('#chartAll').highcharts({
@@ -268,6 +268,7 @@ function apply(token){
                 $("#duoi3sao").parent().find(".pagination").html(data["lessThreeStar"]["paginationRender"]);
             }else{
                 $("#duoi3sao tbody").html(noResult);
+                $("#duoi3sao").parent().find(".pagination").html('');
             }
             
             //danh sach de xuat
@@ -286,7 +287,7 @@ function apply(token){
                 $("#danhsachdexuat tbody").html(html);
                 $("#danhsachdexuat").parent().find(".pagination").html(data["proposes"]["paginationRender"]);
             }else{
-                
+                $("#danhsachdexuat").parent().find(".pagination").html('');
                 $("#danhsachdexuat tbody").html(noResult);
             }
         }else{
@@ -373,17 +374,17 @@ function showAnalyzeListProject(curpage,token){
         },
     })
     .done(function (data) { 
-        var countResult = data["cssResultdata"].length; 
+        var countResult = data["cssResultdata"]["data"].length; 
         var html = "";
         for(var i=0; i<countResult; i++){
             html += "<tr>";
-            html += "<td>"+data["cssResultdata"][i]["stt"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["project_name"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["teamName"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["pmName"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["css_created_at"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["created_at"]+"</td>";
-            html += "<td>"+data["cssResultdata"][i]["point"]+"</td>";
+            html += "<td>"+data["cssResultdata"]["data"][i]["stt"]+"</td>";
+            html += "<td>"+data["cssResultdata"]["data"][i]["project_name"]+"</td>";
+            html += "<td>"+data["cssResultdata"]["data"][i]["teamName"]+"</td>";
+            html += "<td>"+data["cssResultdata"]["data"][i]["pmName"]+"</td>";
+            html += "<td>"+data["cssResultdata"]["data"][i]["css_created_at"]+"</td>";
+            html += "<td>"+data["cssResultdata"]["data"][i]["css_result_created_at"]+"</td>";
+            html += "<td>"+data["cssResultdata"]["data"][i]["point"]+"</td>";
             html += "</tr>";   
         }
         $("#danhsachduan tbody").html(html);

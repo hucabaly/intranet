@@ -95,8 +95,8 @@
     <thead>
         <tr>
             <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
-            <th class="col-xs-2">{{trans('sales::view.PM')}}</th>
-            <th class="col-xs-2">{{trans('sales::view.Count css')}}</th>
+            <th class="col-xs-3">{{trans('sales::view.PM')}}</th>
+            <th class="col-xs-1">{{trans('sales::view.Count css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Avg css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Max css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Min css')}}</th>
@@ -113,8 +113,8 @@
         @foreach($pm as $item)
         <tr>
             <td class="col-xs-1">{{$item["no"]}}</td>
-            <td class="col-xs-2">{{$item["name"]}}</td>
-            <td class="col-xs-2">{{$item["countCss"]}}</td>
+            <td class="col-xs-3">{{$item["name"]}}</td>
+            <td class="col-xs-1">{{$item["countCss"]}}</td>
             <td class="col-xs-2">{{$item["avgPoint"]}}</td>
             <td class="col-xs-2">{{$item["maxPoint"]}}</td>
             <td class="col-xs-2">{{$item["minPoint"]}}</td>
@@ -141,8 +141,8 @@
     <thead>
         <tr>
             <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
-            <th class="col-xs-2">{{trans('sales::view.BrSE name')}}</th>
-            <th class="col-xs-2">{{trans('sales::view.Count css')}}</th>
+            <th class="col-xs-3">{{trans('sales::view.BrSE name')}}</th>
+            <th class="col-xs-1">{{trans('sales::view.Count css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Avg css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Max css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Min css')}}</th>
@@ -159,8 +159,8 @@
         @foreach($brse as $item)
         <tr>
             <td class="col-xs-1">{{$item["no"]}}</td>
-            <td class="col-xs-2">{{$item["name"]}}</td>
-            <td class="col-xs-2">{{$item["countCss"]}}</td>
+            <td class="col-xs-3">{{$item["name"]}}</td>
+            <td class="col-xs-1">{{$item["countCss"]}}</td>
             <td class="col-xs-2">{{$item["avgPoint"]}}</td>
             <td class="col-xs-2">{{$item["maxPoint"]}}</td>
             <td class="col-xs-2">{{$item["minPoint"]}}</td>
@@ -186,8 +186,8 @@
     <thead>
         <tr>
             <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
-            <th class="col-xs-2">{{trans('sales::view.Customer name')}}</th>
-            <th class="col-xs-2">{{trans('sales::view.Count css')}}</th>
+            <th class="col-xs-3">{{trans('sales::view.Customer name')}}</th>
+            <th class="col-xs-1">{{trans('sales::view.Count css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Avg css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Max css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Min css')}}</th>
@@ -204,8 +204,8 @@
         @foreach($customer as $item)
         <tr>
             <td class="col-xs-1">{{$item["no"]}}</td>
-            <td class="col-xs-2">{{$item["name"]}}</td>
-            <td class="col-xs-2">{{$item["countCss"]}}</td>
+            <td class="col-xs-3">{{$item["name"]}}</td>
+            <td class="col-xs-1">{{$item["countCss"]}}</td>
             <td class="col-xs-2">{{$item["avgPoint"]}}</td>
             <td class="col-xs-2">{{$item["maxPoint"]}}</td>
             <td class="col-xs-2">{{$item["minPoint"]}}</td>
@@ -232,8 +232,8 @@
     <thead>
         <tr>
             <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
-            <th class="col-xs-2">{{trans('sales::view.Sale name')}}</th>
-            <th class="col-xs-2">{{trans('sales::view.Count css')}}</th>
+            <th class="col-xs-3">{{trans('sales::view.Sale name')}}</th>
+            <th class="col-xs-1">{{trans('sales::view.Count css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Avg css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Max css')}}</th>
             <th class="col-xs-2">{{trans('sales::view.Min css')}}</th>
@@ -250,8 +250,8 @@
         @foreach($sale as $item)
         <tr>
             <td class="col-xs-1">{{$item["no"]}}</td>
-            <td class="col-xs-2">{{$item["name"]}}</td>
-            <td class="col-xs-2">{{$item["countCss"]}}</td>
+            <td class="col-xs-3">{{$item["name"]}}</td>
+            <td class="col-xs-1">{{$item["countCss"]}}</td>
             <td class="col-xs-2">{{$item["avgPoint"]}}</td>
             <td class="col-xs-2">{{$item["maxPoint"]}}</td>
             <td class="col-xs-2">{{$item["minPoint"]}}</td>
@@ -274,14 +274,14 @@
 
 <!------ table questions -------------->
 @if(isset($question) && count($question) > 0)
-<table class="table table-hover dataTable tbl-criteria table-fixed" data-id="tcQuestion">
+<table class="table table-hover dataTable tbl-criteria table-fixed table-question-fixed" data-id="tcQuestion">
     <thead>
         <tr>
             <th class="col-xs-7">{{trans('sales::view.Css')}}</th>
-            <th class="col-xs-1">{{trans('sales::view.Count css')}}</th>
-            <th class="col-xs-1">{{trans('sales::view.Avg point')}}</th>
-            <th class="col-xs-1">{{trans('sales::view.Max point')}}</th>
-            <th class="col-xs-1">{{trans('sales::view.Min point')}}</th>
+            <th class="col-xs-1">{{trans('sales::view.Count css found')}}</th>
+            <th class="col-xs-1">{{trans('sales::view.Avg css question')}}</th>
+            <th class="col-xs-1">{{trans('sales::view.Max css question')}}</th>
+            <th class="col-xs-1">{{trans('sales::view.Min css question')}}</th>
             <th class="col-xs-1">{{trans('sales::view.Check')}}
                 <label class="label-normal">
                     <div class="icheckbox">
@@ -368,6 +368,26 @@
                     @endforeach
                 @endif
             @endforeach
+            <tr>
+                <td class="col-xs-11 root-category" colspan="6">-- {{$item["overviewTitle"]}}</td>
+                
+            </tr>
+            <tr>
+                <td class="col-xs-7">---- {{$item["overviewQuestionContent"]}}</td>
+                <td class="col-xs-1">{{$item["overviewQuestionCountCss"]}}</td>
+                <td class="col-xs-1">{{$item["overviewQuestionAvgPoint"]}}</td>
+                <td class="col-xs-1">{{$item["overviewQuestionMaxPoint"]}}</td>
+                <td class="col-xs-1">{{$item["overviewQuestionMinPoint"]}}</td>
+                <td class="col-xs-1">
+                    <label class="label-normal">
+                        <div class="icheckbox">
+                        @if($question->countCss > 0)
+                            <input type="checkbox" data-questionid='{{$item["overviewQuestionId"]}}' parent-id='{{$item["id"]}}' class="checkQuestionItem">
+                        @endif
+                        </div>
+                    </label>
+                </td>
+            </tr>
         @endforeach
     </tbody>
 </table> 
