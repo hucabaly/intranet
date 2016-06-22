@@ -202,7 +202,7 @@ class CssController extends Controller {
                 }
             }
             
-            $overviewQuestion = $cssQuestionModel->getCommentOverview($rootCategory->id,1);
+            $overviewQuestion = $cssQuestionModel->getOverviewQuestionByCategory($rootCategory->id,1);
             
             $arrayValidate = array(
                 "nameRequired" => Lang::get('sales::message.Name validate required'),
@@ -220,6 +220,7 @@ class CssController extends Controller {
                     "cssCate" => $cssCate,
                     "arrayValidate" => json_encode($arrayValidate),
                     "noOverView" => self::romanic_number(++$NoOverView,true),
+                    "overviewQuestionId" => $overviewQuestion->id,
                     "overviewQuestionContent" => $overviewQuestion->content,
                 ]
             );
@@ -237,19 +238,17 @@ class CssController extends Controller {
         $name           = $request->input('make_name');
         $email          = $request->input('make_email');
         $avgPoint       = $request->input('totalMark');
-        $comment        = $request->input('comment');
-        $survey_comment = $request->input('proposed');
+        $proposed       = $request->input('proposed');
         $cssId          = $request->input('cssId');
         
         $dataResult = [
             'css_id' => $cssId,
             'name' => $name,
             'email' => $email,
-            'comment_overview' => $comment,
             'avg_point' => $avgPoint,
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
-            'proposed' => $survey_comment
+            'proposed' => $proposed
         ];
         
         $cssResultModel = new CssResult();
@@ -338,7 +337,6 @@ class CssController extends Controller {
                     $item->stt = $i;
                     $i++;
                     $item->make_date = date('d/m/Y',strtotime($item->created_at));
-                    $item->mark = self::getPointCssResult($item->id);
                 }
             }
         }
@@ -367,56 +365,64 @@ class CssController extends Controller {
         
         $rootCategory = $cssCategoryModel->getRootCategory($css->project_type_id);
         $cssCategory = $cssCategoryModel->getCategoryByParent($rootCategory->id);
-        foreach($cssCategory as $item){
-            $cssCategoryChild = $cssCategoryModel->getCategoryByParent($item->id);
-            $cssCateChild = array();
-            if ($cssCategoryChild) {
-                foreach ($cssCategoryChild as $itemChild) {
-                    $cssQuestionChild = $cssQuestionModel->getQuestionByCategory($itemChild->id);
-                    $questionsChild = array();
-                    foreach($cssQuestionChild as &$question){
-                        $resultDetailRow = $cssResultDetailModel->getResultDetailRow($resultId, $question->id);
-                        $question->point = $resultDetailRow->point;
-                        $question->comment = $resultDetailRow->comment;
-                        if($resultDetailRow){
-                            $questionsChild[] = $question;
+        $NoOverView = 0;
+        if($cssCategory){
+            foreach($cssCategory as $item){
+                $NoOverView++;
+                $cssCategoryChild = $cssCategoryModel->getCategoryByParent($item->id);
+                $cssCateChild = array();
+                if ($cssCategoryChild) {
+                    foreach ($cssCategoryChild as $itemChild) {
+                        $cssQuestionChild = $cssQuestionModel->getQuestionByCategory($itemChild->id);
+                        $questionsChild = array();
+                        foreach($cssQuestionChild as &$question){
+                            $resultDetailRow = $cssResultDetailModel->getResultDetailRow($resultId, $question->id);
+                            $question->point = $resultDetailRow->point;
+                            $question->comment = $resultDetailRow->comment;
+                            if($resultDetailRow){
+                                $questionsChild[] = $question;
+                            }
                         }
+                        $cssCateChild[] = array(
+                            "id" => $itemChild->id,
+                            "name" => $itemChild->name,
+                            "parent_id" => $item->id,
+                            "questionsChild" => $questionsChild,
+                        );
                     }
-                    $cssCateChild[] = array(
-                        "id" => $itemChild->id,
-                        "name" => $itemChild->name,
-                        "parent_id" => $item->id,
-                        "questionsChild" => $questionsChild,
-                    );
                 }
-            }
 
-            $cssQuestion = $cssQuestionModel->getQuestionByCategory($item->id);
-            $questions = array();
-            foreach($cssQuestion as $question){
-                $resultDetailRow = $cssResultDetailModel->getResultDetailRow($resultId, $question->id);
-                $question->point = $resultDetailRow->point;
-                $question->comment = $resultDetailRow->comment;
-                if($resultDetailRow){
-                    $questions[] = $question;
+                $cssQuestion = $cssQuestionModel->getQuestionByCategory($item->id);
+                $questions = array();
+                foreach($cssQuestion as $question){
+                    $resultDetailRow = $cssResultDetailModel->getResultDetailRow($resultId, $question->id);
+                    $question->point = $resultDetailRow->point;
+                    $question->comment = $resultDetailRow->comment;
+                    if($resultDetailRow){
+                        $questions[] = $question;
+                    }
                 }
+
+                $cssCate[] = array(
+                    "id" => $item->id,
+                    "name" => $item->name,
+                    "cssCateChild" => $cssCateChild,
+                    "questions" => $questions,
+                );
             }
-            
-            $cssCate[] = array(
-                "id" => $item->id,
-                "name" => $item->name,
-                "cssCateChild" => $cssCateChild,
-                "questions" => $questions,
-            );
         }
         
-        $cssResult->mark = self::getPointCssResult($resultId);
+        $overviewQuestion = $cssQuestionModel->getOverviewQuestionByCategory($rootCategory->id,1);
+        $resultDetailRow = $cssResultDetailModel->getResultDetailRowOfOverview($resultId, $rootCategory->id);
         return view(
             'sales::css.detail', [
                 'css' => $css,
                 "employee" => $employee,
                 "cssCate" => $cssCate,
                 "cssResult" => $cssResult,
+                "noOverView" => self::romanic_number(++$NoOverView,true),
+                "overviewQuestionContent" => $overviewQuestion->content,
+                "resultDetailRowOfOverview" => $resultDetailRow,
             ]
         );
     }
@@ -537,7 +543,7 @@ class CssController extends Controller {
         //Get data chart all result 
         foreach($cssResult as $itemResult){
             $cssResultIds[] = $itemResult->id;
-            $pointToHighchart[] = (float)self::getPointCssResult($itemResult->id);
+            $pointToHighchart[] = (float)$itemResult->avg_point;
             $dateToHighchart[] = date('d/m/Y',strtotime($itemResult->end_date));
         }
         
@@ -638,7 +644,7 @@ class CssController extends Controller {
             $itemResultPaginate->teamName = $teamName;
             $itemResultPaginate->css_end_date = date('d/m/Y',strtotime($itemResultPaginate->end_date));
             $itemResultPaginate->css_result_created_at = date('d/m/Y',strtotime($itemResultPaginate->created_at));
-            $itemResultPaginate->point = self::getPointCssResult($itemResultPaginate->id);
+            $itemResultPaginate->point = $itemResultPaginate->avg_point;
         }
         
         //Get html pagination render
@@ -680,8 +686,9 @@ class CssController extends Controller {
         
         $result = [];
         foreach($lessThreeStar as $item){
-            $cssResult = Css::getCssResultById($item->css_result_id);
-            $cssPoint = self::getPointCssResult($item->css_result_id);
+            
+            $cssResult = CssResult::find($item->css_result_id);
+            $cssPoint = $cssResult->avg_point;
             $question = Css::getQuestionById($item->question_id);
             $css = Css::find($cssResult->css_id);
             
@@ -742,7 +749,7 @@ class CssController extends Controller {
             
             $result[] = [
                 "no"   => ++$offset,
-                "cssPoint"   => self::getPointCssResult($propose->id),
+                "cssPoint"   => $propose->avg_point,
                 "projectName"   => $css->project_name,
                 "customerComment" => $propose->proposed,
                 "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),
@@ -836,7 +843,7 @@ class CssController extends Controller {
             }else{
                 $pointToHighchart["name"] = $name;
                 foreach($cssResultByCriteria as $item){
-                    $pointToHighchart["data"][] = (float)self::getPointCssResult($item->id);
+                    $pointToHighchart["data"][] = (float)$item->avg_point;
                 }
             }
             $pointCompareChart[] = [
@@ -896,7 +903,7 @@ class CssController extends Controller {
                     if(count($css_result) > 0){
                         $countCss += count($css_result);
                         foreach($css_result as $itemCssResult){
-                            $points[] = self::getPointCssResult($itemCssResult->id);
+                            $points[] = $itemCssResult->avg_point;
                         }
                     }
                 }
@@ -949,8 +956,8 @@ class CssController extends Controller {
         $cssQuestionModel = new CssQuestion();
         foreach($arrProjectTypeId as $key => $projectTypeId){
             $rootCategory = $cssCategoryModel->getRootCategory($projectTypeId);
-            $overviewQuestion = $cssQuestionModel->getCommentOverview($rootCategory->id,1);
-            $dataQuestion = self::getQuestionOverviewInfoAnalyze($projectTypeId,$startDate, $endDate,$teamIds);
+            $overviewQuestion = $cssQuestionModel->getOverviewQuestionByCategory($rootCategory->id,1);
+            $dataQuestion = self::getQuestionInfoAnalyze($overviewQuestion->id,$startDate, $endDate,$teamIds);
             $cssCate = self::getListQuestionByProjectType($projectTypeId,$startDate,$endDate,$teamIds);
             $noOverview = count($cssCate) + 1;
             $cssCateList[] = [
@@ -997,7 +1004,7 @@ class CssController extends Controller {
                     if(count($css_result) > 0){
                         $countCss += count($css_result);
                         foreach($css_result as $itemCssResult){
-                            $points[] = self::getPointCssResult($itemCssResult->id);
+                            $points[] = $itemCssResult->avg_point;
                         }
                     }
                 }
@@ -1091,7 +1098,7 @@ class CssController extends Controller {
                         if(count($css_result) > 0){
                             $countCss += count($css_result);
                             foreach($css_result as $itemCssResult){
-                                $points[] = self::getPointCssResult($itemCssResult->id);
+                                $points[] = $itemCssResult->avg_point;
                             }
                         }
                     }
@@ -1140,33 +1147,6 @@ class CssController extends Controller {
         return number_format($number, 2, ".",",");
     }
 
-
-    /**
-     * Tinh diem cua mot bai danh gia (css_result)
-     * @param int $cssResultId
-     * @return int
-     */
-    protected function getPointCssResult($cssResultId){
-        $cssResult = CssResult::find($cssResultId);
-        $cssResultDetailModel = new CssResultDetail();
-        $cssResultDetail = $cssResultDetailModel->getResultDetailByCssResult($cssResultId);
-        $pointChild = 0;
-        $tongSoCauDanhGia = 0;
-        foreach($cssResultDetail as $itemDetail){
-            $pointChild += $itemDetail->point;
-            if($itemDetail->point > 0){
-                $tongSoCauDanhGia++;
-            }
-        }
-        if($pointChild == 0){
-            $point = $cssResult->avg_point * 20;
-        }else{
-            $point = $cssResult->avg_point * 4 + $pointChild/($tongSoCauDanhGia * 5) * 80;
-        }
-        
-        return self::formatNumber($point);
-    }
-    
     /**
      * get team tree option recursive
      * 
@@ -1333,50 +1313,6 @@ class CssController extends Controller {
     }
 
     /**
-     * Get max, min, avg point of overview question
-     * @param int $questionId
-     * @param date $startDate
-     * @param date $endDate
-     * @param string $teamIds
-     * @return type
-     */
-    protected function getQuestionOverviewInfoAnalyze($projectTypeId,$startDate, $endDate,$teamIds){
-        $cssResultModel = new CssResult();
-        $cssResult = $cssResultModel->getQuestionOverviewInfoAnalyze($projectTypeId,$startDate, $endDate,$teamIds);
-        if(count($cssResult) > 0){
-            $countCss = 0;
-            $points = array();
-            foreach($cssResult as $itemCssResult){
-                if($itemCssResult->avg_point > 0){
-                    $points[] = $itemCssResult->avg_point;
-                    $countCss++;
-                }
-            }
-            
-            $maxPoint = (count($points) > 0) ? self::formatNumber(max($points)) : "-";
-            $minPoint = (count($points) > 0) ? self::formatNumber(min($points)) : "-";
-            if(count($points) > 0){
-                $avgPoint = array_sum($points) / count($points);
-                $avgPoint = self::formatNumber($avgPoint);
-            }else{
-                $avgPoint = "-";
-            }
-        }else{
-            $countCss = 0;
-            $maxPoint = "-";
-            $minPoint = "-";
-            $avgPoint = "-";
-        }
-        
-        return [
-            "countCss"  => $countCss,
-            "maxPoint"  => $maxPoint,
-            "minPoint"  => $minPoint,
-            "avgPoint"  => $avgPoint
-        ];
-    }
-
-    /**
      * 
      * @param int $projectTypeId
      * @param date $startDate
@@ -1390,21 +1326,36 @@ class CssController extends Controller {
         $arrQuestionId = explode(",", $questionIds); 
         $cssCate = self::getListQuestionByProjectType($projectTypeId,$startDate,$endDate,$teamIds);
         $html = "";
-        foreach($cssCate as $itemCate){
-            $html .= "<option class=\"parent\" disabled=\"disabled\">-- ".$itemCate["name"]."</option>";
-            foreach($itemCate["cssCateChild"] as $itemCateChild){
-                $html .= "<option class=\"parent\" disabled=\"disabled\">---- ".$itemCateChild["name"]."</option>";
-                foreach($itemCateChild["questionsChild"] as $itemQuestionChild){
-                    if(in_array($itemQuestionChild->id, $arrQuestionId)){
-                        $html .= '<option value="'.$itemQuestionChild->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'" >------ '.$itemQuestionChild->content.'</option>';
+        if($cssCate){
+            $NoOverView = 0;
+            foreach($cssCate as $itemCate){
+                $NoOverView++;
+                $html .= "<option class=\"parent\" disabled=\"disabled\">-- ".$itemCate["name"]."</option>";
+                foreach($itemCate["cssCateChild"] as $itemCateChild){
+                    $html .= "<option class=\"parent\" disabled=\"disabled\">---- ".$itemCateChild["name"]."</option>";
+                    foreach($itemCateChild["questionsChild"] as $itemQuestionChild){
+                        //if is question checked when click apply
+                        if(in_array($itemQuestionChild->id, $arrQuestionId)){
+                            $html .= '<option value="'.$itemQuestionChild->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'" >------ '.$itemQuestionChild->content.'</option>';
+                        }
+                    }
+                }
+                foreach($itemCate["questions"] as $itemQuestion){
+                    //if is question checked when click apply
+                    if(in_array($itemQuestion->id, $arrQuestionId)){
+                        $html .= '<option value="'.$itemQuestion->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'">------ '.$itemQuestion->content.'</option>';
                     }
                 }
             }
-            foreach($itemCate["questions"] as $itemQuestion){
-                if(in_array($itemQuestion->id, $arrQuestionId)){
-                    $html .= '<option value="'.$itemQuestion->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'">------ '.$itemQuestion->content.'</option>';
-                }
-            }
+        }    
+        
+        $cssCategoryModel = new CssCategory();
+        $rootCategory = $cssCategoryModel->getRootCategory($projectTypeId);
+        $cssQuestionModel = new CssQuestion();
+        $overviewQuestion = $cssQuestionModel->getOverviewQuestionByCategory($rootCategory->id,1);
+        if(in_array($overviewQuestion->id, $arrQuestionId)){
+            $html .= "<option class=\"parent\" disabled=\"disabled\">-- ".self::romanic_number(++$NoOverView,true) . ". " . Lang::get('sales::view.Overview') ."</option>";
+            $html .= '<option value="'.$overviewQuestion->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'">------ '.$overviewQuestion->content.'</option>';
         }
         
         return $html;
@@ -1423,7 +1374,7 @@ class CssController extends Controller {
         $result = [];
         foreach($lessThreeStar as $item){
             $cssResult = CssResult::find($item->css_result_id);
-            $cssPoint = self::getPointCssResult($item->css_result_id);
+            $cssPoint = $cssResult->avg_point;
             $question = Css::getQuestionById($item->question_id);
             $css = Css::find($cssResult->css_id);
             
@@ -1486,7 +1437,7 @@ class CssController extends Controller {
             
             $result[] = [
                 "no"   => ++$offset,
-                "cssPoint"   => self::getPointCssResult($propose->id),
+                "cssPoint"   => $propose->avg_point,
                 "projectName"   => $css->project_name,
                 "customerComment" => $propose->proposed,
                 "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),

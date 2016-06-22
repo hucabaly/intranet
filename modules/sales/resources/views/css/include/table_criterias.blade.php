@@ -381,9 +381,7 @@
                 <td class="col-xs-1">
                     <label class="label-normal">
                         <div class="icheckbox">
-                        @if($question->countCss > 0)
                             <input type="checkbox" data-questionid='{{$item["overviewQuestionId"]}}' parent-id='{{$item["id"]}}' class="checkQuestionItem">
-                        @endif
                         </div>
                     </label>
                 </td>

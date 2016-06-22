@@ -9,11 +9,11 @@ class CssQuestion extends Model
     protected $table = 'css_question';
     
     /**
-     * Get comment overview question 
+     * Get overview question by category
      * @param ing $categoryId
      * @param int $isOverviewQuestion
      */
-    public function getCommentOverview($categoryId, $isOverviewQuestion = 1){
+    public function getOverviewQuestionByCategory($categoryId, $isOverviewQuestion = 1){
         return self::where("category_id",$categoryId)->where('is_overview_question',$isOverviewQuestion)->first();
     }
     

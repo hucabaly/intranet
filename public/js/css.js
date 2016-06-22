@@ -154,6 +154,13 @@ $(document).ready(function () {
  * @returns void
  */
 function totalMark() {
+    
+    $(".diem").html(getTotalPoint());
+    $(".diem-fixed").html('Tổng điểm: ' + getTotalPoint());
+    
+}
+
+function getTotalPoint(){
     var tongSoCauDanhGia = 0;
     var total = 0;
     $(".rateit").each(function(){
@@ -173,10 +180,7 @@ function totalMark() {
         total = diemTongQuat * 4 + total/(tongSoCauDanhGia * 5) * 80;
     }
     
-    total = total.toFixed(2);
-    $(".diem").html(total);
-    $(".diem-fixed").html('Tổng điểm: ' + total);
-    
+    return total.toFixed(2);
 }
 
 /**
@@ -291,17 +295,15 @@ function submit(token, cssId, arrayValidate){
     
     var make_name = $("#make_name").val();
     var make_email = $("#make_email").val();
-    var totalMark = parseInt($("#tongquat").rateit('value'));
+    var totalMark = getTotalPoint();
     var proposed = $("#proposed").val();
     var arrayQuestion = [];
     $(".rateit").each(function(){
         var danhGia = parseInt($(this).rateit('value'));
-        if($(this).attr("id") != "tongquat"){
-            var questionId = $(this).attr("data-questionid");
-            var diem = danhGia;
-            var comment = $(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val();
-            arrayQuestion.push([questionId,diem,comment]);
-        }
+        var questionId = $(this).attr("data-questionid");
+        var diem = danhGia;
+        var comment = $(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val();
+        arrayQuestion.push([questionId,diem,comment]);
     });
     
     $(".apply-click-modal").show();
@@ -314,7 +316,6 @@ function submit(token, cssId, arrayValidate){
             make_name: make_name, 
             make_email: make_email, 
             totalMark: totalMark,
-            comment : $.trim($("#comment-tongquat").val()),
             proposed: proposed,
             cssId: cssId
         },

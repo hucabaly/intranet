@@ -50,4 +50,17 @@ class CssResultDetail extends Model
     public function getResultDetailRow($resultId, $questionId){
         return self::where(['css_result_id' => $resultId, 'question_id' => $questionId])->first();
     }
+    
+    /**
+     * Get row of overview question
+     * @param int $resultId
+     * @param int $rootCategoryId
+     */
+    public function getResultDetailRowOfOverview($resultId, $rootCategoryId){
+        return self::join('css_question', 'css_question.id', '=', 'css_result_detail.question_id')
+                    ->where('css_result_detail.css_result_id',$resultId)
+                    ->where('css_question.is_overview_question',1)
+                    ->where('css_question.category_id',$rootCategoryId)
+                    ->first();
+    }
 }

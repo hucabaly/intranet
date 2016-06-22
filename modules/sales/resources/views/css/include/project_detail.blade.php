@@ -14,7 +14,7 @@
         <td class="infomation">{{$css->customer_name}}</td>
         <td rowspan="3" class="<?php echo ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' ?>">
             <div>{{ trans('sales::view.Total mark') }}</div>
-            <div class="diem">{{number_format($cssResult->mark,2)}}</div>
+            <div class="diem">{{number_format($cssResult->avg_point,2)}}</div>
         </td>
     </tr>
     <tr>
@@ -75,15 +75,15 @@
 @endforeach
     <!-- muc to 4 -->
     <tr class="mucto">
-        <td class="title" colspan="4"><?php echo trans('sales::view.Overview',["number" => ($css->project_type_id==1) ? "V" : "IV"]) ?></td>
+        <td class="title" colspan="4">{{$noOverView . ". " .trans('sales::view.Overview') }}</td>
     </tr>
 
     <!-- cau tong quat -->
     <tr class="cau">
-        <td class="title" colspan="2">{{ trans('sales::view.Overview content') }}</td>
+        <td class="title" colspan="2">{{ $overviewQuestionContent }}</td>
         
-        <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-rateit-readonly="true" data-rateit-value="{{$cssResult->avg_point}}"></div></td>
-        <td class="title2">{{$cssResult->comment}}</td>
+        <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-rateit-readonly="true" data-rateit-value="{{$resultDetailRowOfOverview->point}}"></div></td>
+        <td class="title2">{{$resultDetailRowOfOverview->comment}}</td>
     </tr>
 
     <!-- danh gia chung -->
@@ -92,11 +92,11 @@
             {{ trans('sales::view.Proposed') }}
         </td>
         
-        <td class="title2" colspan="2" style="vertical-align:top;">{{$cssResult->survey_comment}}</td>
+        <td class="title2" colspan="2" style="vertical-align:top;">{{$cssResult->proposed}}</td>
         <td class="title2"></td>
     </tr>
 </table>
 
-<div class="diem-fixed">{{number_format($cssResult->mark,2)}}</div>
+<div class="diem-fixed">{{number_format($cssResult->avg_point,2)}}</div>
 
 

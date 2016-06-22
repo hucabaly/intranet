@@ -228,7 +228,7 @@ class Css extends Model
         $cssResult = DB::select("Select * from css_result "
                 . "where id in ($cssResultIds) "
                     . "and proposed <> '' "
-                    . "and id in (Select css_id from css_result_detail where point between 1 and 2 and question_id = ".$questionId.")"
+                    . "and id in (Select css_result_id from css_result_detail where point between 1 and 2 and question_id = ".$questionId.")"
                 . "limit " . $offset . "," . $perPage );
         return $cssResult;
     }

@@ -4,9 +4,6 @@ namespace Rikkei\Sales\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use Rikkei\Sales\Model\Css;
-use Rikkei\Sales\Model\CssTeams;
-use Rikkei\Sales\Model\CssResultDetail;
-use DB;
 
 class CssResult extends Model
 {
@@ -22,7 +19,6 @@ class CssResult extends Model
             $cssResult->css_id = $data["css_id"];
             $cssResult->name = $data["name"];
             $cssResult->email = $data["email"];
-            $cssResult->comment_overview = $data["comment_overview"];
             $cssResult->proposed = $data["proposed"];
             $cssResult->avg_point = $data["avg_point"];
             $cssResult->save();        
@@ -100,6 +96,7 @@ class CssResult extends Model
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -124,6 +121,7 @@ class CssResult extends Model
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->paginate($perPage);
     }
@@ -146,6 +144,7 @@ class CssResult extends Model
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -168,6 +167,7 @@ class CssResult extends Model
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -193,6 +193,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->where('css.pm_name', $pmName)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -218,6 +219,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->where('css.brse_name', $brseName)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -243,6 +245,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->where('css.customer_name', $customerName)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -269,6 +272,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.pm_name', $arrPmName)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -295,6 +299,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.pm_name', $arrPmName)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->paginate($perPage);
     }
@@ -321,6 +326,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.brse_name', $arrBrseName)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -347,6 +353,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.brse_name', $arrBrseName)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->paginate($perPage);
     }
@@ -373,6 +380,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.customer_name', $arrCustomerName)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -399,6 +407,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.employee_id', $arrSaleId)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -425,6 +434,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.employee_id', $arrSaleId)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->paginate($perPage);
     }
@@ -452,6 +462,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css_result_detail.question_id', $arrQuestionId)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -469,16 +480,17 @@ class CssResult extends Model
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrQuestionId = explode(",", $questionIds);
-        return self::join('css', 'css.id', '=', 'css_result.css_id')
-                ->join('css_team', 'css_result.css_id', '=', 'css_team.css_id')
-                ->join('teams', 'teams.id', '=', 'css_team.team_id')
-                ->join('css_result_detail', 'css_result_detail.css_result_id', '=', 'css_result.id')
+        return self::leftJoin('css', 'css.id', '=', 'css_result.css_id')
+                ->leftJoin('css_team', 'css_result.css_id', '=', 'css_team.css_id')
+                ->leftJoin('teams', 'teams.id', '=', 'css_team.team_id')
+                ->leftJoin('css_result_detail', 'css_result_detail.css_result_id', '=', 'css_result.id')
                 ->whereIn('css.project_type_id',$arrProjectTypeId)
                 ->whereIn('css_team.team_id',$arrTeamId)
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css_result_detail.question_id', $arrQuestionId)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->paginate($perPage);
     }
@@ -506,6 +518,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.customer_name', $arrCustomerName)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->paginate($perPage);
     }
@@ -529,6 +542,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->where('css_result_detail.question_id', $questionId)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -554,6 +568,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->where('css.employee_id', $employee_id)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }
@@ -580,6 +595,7 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->where('css_result_detail.question_id', $questionId)
                 ->orderBy('css.end_date','ASC')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
     }

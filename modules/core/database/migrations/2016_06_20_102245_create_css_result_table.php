@@ -17,7 +17,6 @@ class CreateCssResultTable extends Migration
             $table->unsignedInteger('css_id');
             $table->string('name');
             $table->string('email');
-            $table->string('comment_overview');
             $table->string('proposed');
             $table->string('avg_point');
             $table->timestamps();
