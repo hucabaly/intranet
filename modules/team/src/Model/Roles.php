@@ -242,4 +242,31 @@ class Roles extends CoreModel
             ->first();
         return $children->count;
     }
+    
+    /**
+     * check role position is leader - sort order min
+     * 
+     * @param int $id
+     * @return boolean|null
+     */
+    public static function isPositionLeader($id)
+    {
+        $position = self::find($id);
+        //not found position
+        if (! $position || ! $position->isPosition()) {
+            return null;
+        }
+        $position = self::select('id')
+            ->where('id', $id)
+            ->where('sort_order', function ($query) {
+                $query->from(Roles::getTableName())
+                    ->select(DB::raw('MIN(sort_order)'))
+                    ->where('special_flg', self::FLAG_POSITION);
+            })
+            ->first();
+        if ($position) {
+            return true;
+        }
+        return false;
+    }
 }

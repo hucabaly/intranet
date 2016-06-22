@@ -8,6 +8,7 @@ use Exception;
 use Lang;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
+use Rikkei\Recruitment\Model\RecruitmentApplies;
 
 class Employees extends CoreModel
 {
@@ -75,10 +76,28 @@ class Employees extends CoreModel
         }
         try {
             $this->saveCode();
+            $this->saveRecruitmentAppyId();
             return parent::save($options);
         } catch (Exception $ex) {
             throw $ex;
         }
+    }
+    
+    /**
+     * save recruitment apply id follow phone
+     * 
+     * @return \Rikkei\Team\Model\Employees
+     */
+    public function saveRecruitmentAppyId()
+    {
+        if ($this->recruitment_apply_id || ! $this->mobile_phone) {
+            return;
+        }
+        $recruitment = RecruitmentApplies::select('id')->where('phone', $this->mobile_phone)->first();
+        if ($recruitment) {
+            $this->recruitment_apply_id = $recruitment->id;
+        }
+        return $this;
     }
     
     /**
@@ -109,9 +128,30 @@ class Employees extends CoreModel
         }
         DB::beginTransaction();
         try {
+            //delete all team position of employee before insert new
             TeamMembers::where('employee_id', $this->id)->delete();
+            // set null leader id before set leader new
+            Team::where('leader_id', $this->id)->update([
+                'leader_id' => null
+            ]);
             if (count($teamPostions)) {
                 foreach ($teamPostions as $teamPostion) {
+                    $team = Team::find($teamPostion['team']);
+                    if (! $team) {
+                        continue;
+                    }
+                    $positionLeader = Roles::isPositionLeader($teamPostion['position']);
+                    if ($positionLeader === null) { //not found position
+                        continue;
+                    } else if ($positionLeader === true) { //position is leader
+                        $teamLeader = $team->getLeader();
+                        if (Team::MAX_LEADER == 1 && $teamLeader && $teamLeader->id != $this->id) { //flag team only have 1 leader
+                            throw new Exception(Lang::get('team::messages.Team :name had leader!', ['name' => $team->name]));
+                        } elseif (! $teamLeader) { //save leader for team
+                            $team->leader_id = $this->id;
+                            $team->save();
+                        }
+                    }
                     $teamMember = new TeamMembers();
                     $teamMember->setData([
                         'team_id' => $teamPostion['team'],

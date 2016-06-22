@@ -12,6 +12,8 @@ class Team extends CoreModel
     
     use SoftDeletes;
     
+    const MAX_LEADER = 1;
+    
     protected $table = 'teams';
     
     /**
@@ -145,14 +147,9 @@ class Team extends CoreModel
         // update model
         if ($this->id) {
             //delete team rule of this team
-            
-            // TODO delete rule
-            
-//            if (! $this->is_function) {
-//                TeamRule::where('team_id', $this->id)->delete();
-//            } elseif ($this->permission_as) {
-//                TeamRule::where('team_id', $this->id)->delete();
-//            }
+            if (! $this->is_function || $this->follow_team_id) {
+                Permissions::where('team_id', $this->id)->delete();
+            }
         }
         self::flushCache();
         return parent::save($options);
@@ -208,5 +205,22 @@ class Team extends CoreModel
      */
     public function getTeamsByTeamIds($arrTeamIds){
         return self::whereIn('id', $arrTeamIds)->get();
+    }
+    
+    /**
+     * get leader of team
+     * 
+     * @return model|null
+     */
+    public function getLeader()
+    {
+        if (! $this->leader_id) {
+            return null;
+        }
+        $leader = Employees::find($this->leader_id);
+        if (! $leader) {
+            return null;
+        }
+        return $leader;
     }
 }

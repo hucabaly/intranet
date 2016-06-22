@@ -9,5 +9,6 @@ return [
     "Position :name has :number members, can't delete!" => 'Chức vụ :name đã có :number thành viên, không thể xóa!',
     "Team :name has :number members, can't delete!" => "Team :name đã có :number thành viên, không thể xóa!",
     'Please enter email of Rikkeisoft' => 'Vui lòng nhập email của Rikkeisoft',
+    'Team :name had leader!' => 'Team :name đã có leader!',
     
 ];

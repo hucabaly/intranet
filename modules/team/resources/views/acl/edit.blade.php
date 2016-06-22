@@ -11,7 +11,7 @@ $actionOptions = Action::toOption();
     {{ trans('team::view.Create new') }} Acl
 @else
     Acl: 
-    @if (Lang::has('acl.' . Form::getData('acl.description')))
+    @if (Lang::get('acl.' . Form::getData('acl.description')))
         {{ trans('acl.' . Form::getData('acl.description')) }}
     @else
         {{ Form::getData('acl.description') }}

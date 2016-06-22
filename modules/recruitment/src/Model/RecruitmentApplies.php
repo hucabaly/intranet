@@ -15,11 +15,39 @@ class RecruitmentApplies extends CoreModel
     /**
      * get presenter name follow phone
      * 
-     * @param type $phone
+     * @param string|int $phoneOrId
      * @return string
      */
-    public static function getPresenterName($phone)
+    public static function getPresenterName($phoneOrId, $isPhone = true)
     {
+        $employeeTable = Employees::getTableName();
+        $recruimentApplyTable = self::getTableName();
+        $recruitmentApply = self::select("{$employeeTable}.name as e_name")
+            ->join($employeeTable, "{$employeeTable}.id", '=', "{$recruimentApplyTable}.presenter_id");
+        if ($isPhone) {
+            $recruitmentApply->where('phone', $phoneOrId);
+        } else {
+            $recruitmentApply->where("{$recruimentApplyTable}.id", $phoneOrId);
+        }
+        $recruitmentApply = $recruitmentApply->first();
+        if ($recruitmentApply) {
+            return $recruitmentApply->e_name;
+        }
+        return '';
+    }
+    
+    /**
+     * get presenter name follow phone
+     * 
+     * @param int $idApply
+     * @return string
+     */
+    public static function getPresenterNameFromId($idApply)
+    {
+        $recruitmentApply = self::find($idApply);
+        if (! $recruitmentApply) {
+            return;
+        }
         $employeeTable = Employees::getTableName();
         $recruimentApplyTable = self::getTableName();
         $recruitmentApply = self::select("{$employeeTable}.name as e_name")
@@ -33,4 +61,3 @@ class RecruitmentApplies extends CoreModel
     }
     
 }
-

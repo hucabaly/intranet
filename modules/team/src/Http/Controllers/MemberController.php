@@ -52,8 +52,8 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
         
         Breadcrumb::add($model->name, URL::route('team::team.member.edit', ['id' => $id]));
         $presenter = null;
-        if ($model->mobile_phone) {
-            $presenter = RecruitmentApplies::getPresenterName($model->mobile_phone);
+        if ($model->recruitment_apply_id) {
+            $presenter = RecruitmentApplies::getPresenterName($model->recruitment_apply_id, false);
             if ($presenter) {
                 Form::setData([
                     'recruitment.present' => $presenter

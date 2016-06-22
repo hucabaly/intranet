@@ -50,7 +50,7 @@ if (! function_exists('teamHtmladdTeamPostion')) {
                     $postionsOption, 
                     $i, 
                     $employeeTeamPosition->team_id, 
-                    $employeeTeamPosition->position_id
+                    $employeeTeamPosition->role_id
                 ); ?>
             <?php $i++; ?>
         @endforeach
