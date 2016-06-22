@@ -49,6 +49,7 @@
                         @include("include.menu_right")
                     </div><!-- /.container-fluid -->
                 </nav>
+                <div class="clearfix"></div>
             </header>
             <!-- Full Width Column -->
             <div class="content-wrapper">
@@ -129,18 +130,6 @@
             <!-- /.modal-dialog -->
         </div><!-- end modal warning cofirm -->
         
-        <!-- menu mobile -->
-        <?php /*div class="menu-left-wraper">
-            <nav id="mmenu-left" class="left">
-                <div class="mmenu-close mmenu-toggle">
-                    <a href="#"><span></span></a>
-                </div>
-                <ul class="collapse-wrapper collapse-mmenu">
-                    {!! Rikkei\Core\View\Menu::get() !!}
-                </ul>
-            </nav>
-        </div*/ ?> <!-- end menu mobile -->
-
         <!-- jQuery 2.2.0 -->
         <script src="{{ URL::asset('adminlte/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
         <!-- jQuery UI -->

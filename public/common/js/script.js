@@ -177,7 +177,7 @@ jQuery(document).ready(function($) {
         $(this).children('ul').addClass('treeview-menu');
     });
     $('.main-sidebar .sidebar .sidebar-menu').html(menuMobileClone.html());
-    //$('.main-sidebar .sidebar .sidebar-menu').collapse();
+    $.AdminLTE.layout.fix();
     
     $('.sidebar-toggle').on('click', function(event) {
         windowWidth = $(window).width();
