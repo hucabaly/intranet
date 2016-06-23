@@ -530,3 +530,9 @@ table tr.loading {
 .with-margin-left-0{
     margin-left:0;
 }
+
+.myHeading{
+    border:none;
+    font: 18px Roboto;
+    padding-left:10%;
+}

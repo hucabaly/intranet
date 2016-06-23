@@ -346,8 +346,12 @@ function isValidEmailAddress(emailAddress) {
 function exportExcel(projectName){
     $(".make-css").table2excel({
         exclude: ".noExl",
-        name: "Worksheet Name",
-        filename: projectName //do not include extension
+        name: "Excel Document Name",
+        filename: "myFileName",
+        fileext: ".xls",
+        exclude_img: true,
+        exclude_links: true,
+        exclude_inputs: true
     });
 }
 
