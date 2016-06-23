@@ -26,7 +26,7 @@
                                         <input type="text" class="form-control" id="japanese_name" name="japanese_name" value="{{$employee->japanese_name}}" tabindex=1 maxlength="100" >
                                     </div>
                                     <div class="form-group">
-                                        <label for="company_name">{{ trans('sales::view.Customer company') }} <span class="required">*</span></label>
+                                        <label for="company_name">{{ trans('sales::view.Customer company name') }} <span class="required">*</span></label>
                                         <input type="text" class="form-control" id="company_name" name="company_name" tabindex=2 maxlength="200"  >
                                     </div>
                                     <div class="form-group" style="position: relative;">
