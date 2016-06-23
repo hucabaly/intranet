@@ -14,10 +14,12 @@ class ActionSeeder extends Seeder
      */
     public function run()
     {
-        if (! file_exists(RIKKEI_TEAM_PATH . 'config/acl.php')) {
+        $dataFilePath = RIKKEI_TEAM_PATH . 'data-sample' . DIRECTORY_SEPARATOR . 'seed' . 
+                DIRECTORY_SEPARATOR .  'acl.php';
+        if (! file_exists($dataFilePath)) {
             return;
         }
-        $dataDemo = require RIKKEI_TEAM_PATH . 'config/acl.php';
+        $dataDemo = require $dataFilePath;
         if (! $dataDemo || ! count($dataDemo)) {
             return;
         }

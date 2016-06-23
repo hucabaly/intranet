@@ -21,7 +21,7 @@ class TeamSeeder extends Seeder
         $dataDemo = [
             [
                 'name' => 'BOD',
-                'is_function' => '0',
+                'is_function' => '1',
                 'follow_team_id' => '0',
                 'child' => [
                     [

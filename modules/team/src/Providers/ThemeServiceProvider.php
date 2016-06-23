@@ -16,7 +16,8 @@ class ThemeServiceProvider extends ServiceProvider
     {
         //copy data sample lang
         $this->publishes([
-            RIKKEI_TEAM_PATH . 'data-sample' => base_path('resources')
+            RIKKEI_TEAM_PATH . 'data-sample' . DIRECTORY_SEPARATOR . 'lang' => 
+                base_path('resources' . DIRECTORY_SEPARATOR . 'lang')
         ], 'assets');
     }
 
