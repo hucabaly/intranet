@@ -225,7 +225,7 @@ class CssController extends Controller {
                 ]
             );
         } else {
-            return redirect("/");
+            return redirect(url('/'));
         }
     }
     
@@ -828,10 +828,25 @@ class CssController extends Controller {
             }
             
             $pointToHighchart = [];
-            
             $pointToHighchart["data"] = [];
+            
             if($criteria == 'question'){
-                $pointToHighchart["name"] = self::getNumberQuestion($criteriaId);
+                //get root category
+                $model = new CssCategory();
+                $cate = $model->getCateByQuestion($criteriaId);
+                if($cate->parent_id == 0){
+                    $rootCate = $cate;
+                }else{
+                    $rootCate = self::getRootCateByCate($cate);
+                }
+                //end get root category
+                
+                $question = CssQuestion::find($criteriaId);
+                if($question->is_overview_question == 0){
+                    $pointToHighchart["name"] = $rootCate->name . '.' . $question->sort_order;
+                }else{
+                    $pointToHighchart["name"] = $rootCate->name . '.' . Lang::get('sales::view.Overview question');
+                }
                 foreach($cssResultByCriteria as $itemCssResult){
                     $css_result_detail = Css::getCssResultDetail($itemCssResult->id,$criteriaId);
                     if($css_result_detail->point > 0){
@@ -1474,17 +1489,6 @@ class CssController extends Controller {
         return $data;
     }
     
-    /**
-     * 
-     * @param int $questionId
-     * return string
-     */
-    protected function getNumberQuestion($questionId){
-        $question = Css::getQuestionById($questionId);
-        $arr = explode(".", $question->content, 2);
-        return $arr[0];
-    }
-    
     public function romanic_number($integer, $upcase = true) 
     { 
         $table = array('M'=>1000, 'CM'=>900, 'D'=>500, 'CD'=>400, 'C'=>100, 'XC'=>90, 'L'=>50, 'XL'=>40, 'X'=>10, 'IX'=>9, 'V'=>5, 'IV'=>4, 'I'=>1); 
@@ -1505,6 +1509,11 @@ class CssController extends Controller {
         return $return; 
     }  
     
+    /**
+     * Get Project Type's name
+     * @param int $projectTypeId
+     * @return string
+     */
     public function getProjectTypeNameById($projectTypeId){
         $projectTypeName = "";
         switch($projectTypeId){
@@ -1517,5 +1526,23 @@ class CssController extends Controller {
         }
         
         return $projectTypeName;
+    }
+    
+    /**
+     * Get root category by question
+     * @param int $questionId
+     */
+    public function getRootCateByCate($cate){
+        $cateParent = CssCategory::find($cate->parent_id);
+        
+        if(count($cateParent)){
+            if($cateParent->parent_id == 0){
+                return $cateParent;
+            }else{
+                return self::getRootCateByCate($cateParent);
+            }
+        }else{
+            return null;
+        }
     }
 }

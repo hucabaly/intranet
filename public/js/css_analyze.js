@@ -71,7 +71,7 @@ function filterAnalyze(token){
     
     $(".apply-click-modal").show();
     $.ajax({
-        url: '/css/filter_analyze',
+        url: baseUrl + '/css/filter_analyze',
         type: 'post',
         data: {
             _token: token, 
@@ -143,7 +143,7 @@ function apply(token){
     var endDate = $("#endDate_val").val();
     $(".apply-click-modal").show();
     $.ajax({
-        url: '/css/apply_analyze',
+        url: baseUrl + '/css/apply_analyze',
         type: 'post',
         data: {
             _token: token, 
@@ -528,22 +528,7 @@ $(document).on('icheck', function(){
         //}
         triggeredByChild = false;
     });
-    
-//    //Remove the checked state from "All" if any checkbox is unchecked
-//    $('.checkQuestionItem').on('ifUnchecked', function (event) {
-//        triggeredByChild = true;
-//        var parent_id = $(this).attr('parent-id');
-//        $('.checkQuestionItem[data-id='+parent_id+']').iCheck('uncheck');
-//    });
-//
-//    // Make "All" checked if all checkboxes are checked
-//    $('.checkQuestionItem').on('ifChecked', function (event) {
-//        var parent_id = $(this).attr('parent-id');
-//        if ($('.checkQuestionItem[parent-id='+parent_id+']').filter(':checked').length == $('.checkQuestionItem[parent-id='+parent_id+']').length) {
-//            $('.checkQuestionItem[data-id='+parent_id+']').iCheck('check');
-//        }
-//    });
-    
+
     //show table project type
     $('#tcProjectType').on('ifChecked', function (event) {
         $('.tbl-criteria').hide(); 

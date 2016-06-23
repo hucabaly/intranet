@@ -57,7 +57,7 @@
                 @foreach($itemChild['questionsChild'] as $questionChild)
                     <tr class="cau">
                         <td class="title" colspan="2">{{$questionChild->sort_order . ". " .$questionChild->content}}</td>
-                        <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$questionChild->id}}" onclick="totalMark();"></div></td>
+                        <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$questionChild->id}}" onclick="totalMark(this);"></div></td>
                         <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" data-questionid="{{$questionChild->id}}"  ></textarea></td>
                     </tr>
                 @endforeach
@@ -67,7 +67,7 @@
         @foreach($item['questions'] as $question)
             <tr class="cau">
                 <td class="title" colspan="2">{{$question->sort_order . ". " .$question->content}}</td>
-                <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$question->id}}" onclick="totalMark();"></div></td>
+                <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$question->id}}" onclick="totalMark(this);"></div></td>
                 <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" data-questionid="{{$question->id}}"  ></textarea></td>
             </tr>
         @endforeach
@@ -82,7 +82,7 @@
     <tr class="cau">
         <td class="title" colspan="2">{{ $overviewQuestionContent }}</td>
         
-        <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-questionid="{{$overviewQuestionId}}" data-rateit-resetable="false" onclick="totalMark();"></div></td>
+        <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-questionid="{{$overviewQuestionId}}" data-rateit-resetable="false" onclick="totalMark(this);"></div></td>
         <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" data-questionid="{{$overviewQuestionId}}" id="comment-tongquat"  ></textarea></td>
     </tr>
 
@@ -96,7 +96,7 @@
         <td class="title2"></td>
     </tr>
 </table>
-<div class="container-submit"><button type="button" class="btn btn-primary" onclick="confirm();">Submit</button></div>
+<div class="container-submit"><button type="button" class="btn btn-primary" onclick="confirm('{{$arrayValidate}}');">Submit</button></div>
 <div class="diem-fixed">Tổng điểm: 00.00</span></div>
 <div class="modal modal-danger" id="modal-alert">
     <div class="modal-dialog">
@@ -131,7 +131,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">{{ trans('sales::view.Cancel make css') }}</button>
-                <button type="button" class="btn btn-outline" onclick="submit('{{ Session::token() }}',{{$css->id}},'{{$arrayValidate}}');">{{ trans('sales::view.Submit make css') }}</button>
+                <button type="button" class="btn btn-outline" onclick="submit('{{ Session::token() }}',{{$css->id}});">{{ trans('sales::view.Submit make css') }}</button>
             </div>
         </div>
         <!-- /.modal-content -->

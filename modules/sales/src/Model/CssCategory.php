@@ -3,6 +3,7 @@
 namespace Rikkei\Sales\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Rikkei\Sales\Model\CssQuestion;
 
 class CssCategory extends Model
 {
@@ -25,4 +26,16 @@ class CssCategory extends Model
     public function getCategoryByParent($parentId){
         return self::where('parent_id', $parentId)->get();
     }
+    
+    /**
+     * Get category by question
+     * @param int $questionId
+     */
+    public function getCateByQuestion($questionId){
+        return self::where('id', function($query) use ($questionId){
+                    $query->select('category_id')
+                    ->from(with(new CssQuestion)->getTable())
+                    ->where('id', $questionId);
+                })->first();
+    }    
 }
