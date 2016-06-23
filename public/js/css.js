@@ -153,11 +153,17 @@ $(document).ready(function () {
  * Tinh tong diem realtime
  * @returns void
  */
-function totalMark() {
+function totalMark(elem) {
+    var point = $(elem).rateit('value');
+    var dataQuestionid = $(elem).attr('data-questionid');
+    if(point < 3){
+        $(".comment-question[data-questionid='"+dataQuestionid+"']").css("border","1px solid red");
+    }else{
+        $(".comment-question[data-questionid='"+dataQuestionid+"']").css("border","1px solid #d2d6de");
+    }
     
     $(".diem").html(getTotalPoint());
     $(".diem-fixed").html('Tổng điểm: ' + getTotalPoint());
-    
 }
 
 function getTotalPoint(){
@@ -198,19 +204,7 @@ $(window).scroll(function(){
  * Function confirm CSS
  * @returns void
  */
-function confirm(){
-    $('#modal-confirm .modal-body').html("Số điểm hiện tại của CSS là "+$(".diem").html()+" Điểm. Bạn có chắc muốn hoàn thành CSS tại đây không?");
-    $('#modal-confirm').modal('show');
-}
-
-/**
- * Validate then insert CSS result into database
- * @param string token
- * @param int cssId
- * @param json arrayValidate
- * @returns void
- */
-function submit(token, cssId, arrayValidate){ 
+function confirm(arrayValidate){
     var invalid = false;
     var strInvalid = "";
     $('#modal-confirm').modal('hide');
@@ -267,7 +261,6 @@ function submit(token, cssId, arrayValidate){
                 if($(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val() == ""){
                     arrValidate.push($(this).attr("data-questionid"));
                 }
-                
             }
         }
     }); 
@@ -293,6 +286,18 @@ function submit(token, cssId, arrayValidate){
         return false;
     }
     
+    $('#modal-confirm .modal-body').html("Số điểm hiện tại của CSS là "+$(".diem").html()+" Điểm. Bạn có chắc muốn hoàn thành CSS tại đây không?");
+    $('#modal-confirm').modal('show');
+}
+
+/**
+ * Validate then insert CSS result into database
+ * @param string token
+ * @param int cssId
+ * @param json arrayValidate
+ * @returns void
+ */
+function submit(token, cssId){ 
     var make_name = $("#make_name").val();
     var make_email = $("#make_email").val();
     var totalMark = getTotalPoint();
@@ -308,7 +313,7 @@ function submit(token, cssId, arrayValidate){
     
     $(".apply-click-modal").show();
     $.ajax({
-        url: '/css/saveResult',
+        url: baseUrl + '/css/saveResult',
         type: 'post',
         data: {
             _token: token, 
@@ -321,7 +326,7 @@ function submit(token, cssId, arrayValidate){
         },
     })
     .done(function (data) { 
-        location.href = "/css/success/"+cssId;
+        location.href = baseUrl + "/css/success/"+cssId;
     })
     .fail(function () {
         alert("Ajax failed to fetch data");

@@ -225,7 +225,7 @@ class CssController extends Controller {
                 ]
             );
         } else {
-            return redirect("/");
+            return redirect(url('/'));
         }
     }
     
