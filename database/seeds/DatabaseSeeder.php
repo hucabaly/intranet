@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(Rikkei\Recruitment\Seeds\RecruitmentAppliesSeeder::class);
         
         $this->call(Rikkei\Team\Seeds\UserSeeder::class);
+        $this->call(Rikkei\Team\Seeds\PermissionSeeder::class);
         
     }
 }

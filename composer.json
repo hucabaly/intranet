@@ -53,12 +53,14 @@
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
             "php artisan vendor:publish --tag=assets",
             "php artisan vendor:publish --tag=config",
+            "php artisan vendor:publish --tag=database",
             "php artisan optimize"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
             "php artisan vendor:publish --tag=assets",
             "php artisan vendor:publish --tag=config",
+            "php artisan vendor:publish --tag=database",
             "php artisan optimize"
         ]
     },
