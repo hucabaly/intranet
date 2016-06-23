@@ -6,6 +6,7 @@ use DB;
 use Exception;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Rikkei\Core\View\CacheHelper;
 
 class Team extends CoreModel
 {
@@ -13,6 +14,8 @@ class Team extends CoreModel
     use SoftDeletes;
     
     const MAX_LEADER = 1;
+    
+    const KEY_CACHE = 'team';
     
     protected $table = 'teams';
     
@@ -124,8 +127,6 @@ class Team extends CoreModel
             Team::where('follow_team_id', $this->id)->update([
                 'follow_team_id' => null
             ]);
-            //delete team item
-            self::flushCache();
             parent::delete();
             DB::commit();
         } catch (Exception $ex) {
@@ -191,10 +192,14 @@ class Team extends CoreModel
         if (! $this->follow_team_id) {
             return null;
         }
+        if ($teamAs = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return $teamAs;
+        }
         $teamAs = Team::find($this->follow_team_id);
         if (! $teamAs) {
             return null;
         }
+        CacheHelper::put(self::KEY_CACHE, $teamAs, $this->id);
         return $teamAs;
     }
     

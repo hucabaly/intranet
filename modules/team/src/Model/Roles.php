@@ -99,32 +99,6 @@ class Roles extends CoreModel
     }
     
     /**
-     * save rule
-     * 
-     * @param array $rules
-     * @return boolean
-     */
-    public function saveRule(array $rules = [], array $options = [])
-    {
-        if (! count($rules) ) {
-            return true;
-        }
-        foreach ($rules as &$item) {
-            $item['role_id'] = $this->id;
-        }
-        DB::beginTransaction();
-        try {
-            RoleRule::where('role_id', $this->id)->delete();
-            RoleRule::insert($rules);
-            DB::commit();
-        } catch (Exception $ex) {
-            DB::rollback();
-            throw $ex;
-        }
-        return true;
-    }
-    
-    /**
      * move position roles
      * 
      * @param boolean $up

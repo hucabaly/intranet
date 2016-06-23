@@ -5,6 +5,7 @@ use DB;
 use Lang;
 use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Rikkei\Core\View\CacheHelper;
 
 class Permissions extends \Rikkei\Core\Model\CoreModel
 {
@@ -133,8 +134,24 @@ class Permissions extends \Rikkei\Core\Model\CoreModel
                 $permissionItem->deleted_at = null;
                 $permissionItem->setData($item);
                 $permissionItem->save();
+                var_dump($item['team_id'] . '_' . $item['role_id']);
+                CacheHelper::forget(
+                    Employees::KEY_CACHE_PERMISSION_TEAM_ACTION,
+                    $item['team_id'] . '_' . $item['role_id']
+                );
+                CacheHelper::forget(
+                    Employees::KEY_CACHE_PERMISSION_TEAM_ROUTE,
+                    $item['team_id'] . '_' . $item['role_id']
+                );
+                CacheHelper::forget(
+                    Employees::KEY_CACHE_PERMISSION_ROLE_ACTION,
+                    $item['role_id']
+                );
+                CacheHelper::forget(
+                    Employees::KEY_CACHE_PERMISSION_ROLE_ROUTE,
+                    $item['role_id']
+                );
             }
-            Employees::flushCache();
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();

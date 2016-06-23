@@ -8,6 +8,7 @@ use Exception;
 use DB;
 use Rikkei\Core\Model\MenuItems;
 use Illuminate\Support\Facades\Cache;
+use Rikkei\Core\View\CacheHelper;
 
 /**
  * Menus object
@@ -18,6 +19,8 @@ class Menus extends CoreModel
     const FLAG_ACTIVE = 1;
     const FLAG_MAIN = 2;
     const FLAG_SETTING = 3;
+    
+    const KEY_CACHE = 'menu_groups';
     
     protected $table = 'menus';
     
@@ -30,13 +33,13 @@ class Menus extends CoreModel
      */
     public static function getMenuDefault()
     {
-        $keyCache = self::getKeyCache();
-        if (Cache::has($keyCache)) {
-            return Cache::get($keyCache);
+        if ($menu = CacheHelper::get(self::KEY_CACHE)) {
+            return $menu;
         }
+        
         $menu = self::where('state', self::FLAG_MAIN)
             ->first();
-        Cache::put($keyCache, $menu, self::$timeStoreCache);
+        CacheHelper::put(self::KEY_CACHE, $menu);
         return $menu;
     }
     
@@ -47,13 +50,13 @@ class Menus extends CoreModel
      */
     public static function getMenuSetting()
     {
-        $keyCache = self::getKeyCache();
-        if (Cache::has($keyCache)) {
-            return Cache::get($keyCache);
+        if ($menu = CacheHelper::get(self::KEY_CACHE)) {
+            return $menu;
         }
+        
         $menu = self::where('state', self::FLAG_SETTING)
             ->first();
-        Cache::put($keyCache, $menu, self::$timeStoreCache);
+        CacheHelper::put(self::KEY_CACHE, $menu);
         return $menu;
     }
     
@@ -122,7 +125,7 @@ class Menus extends CoreModel
                         'state' => self::FLAG_ACTIVE
                     ]);
             }
-            self::flushCache();
+            CacheHelper::forget(self::KEY_CACHE);
             parent::save($options);
             Db::commit();
         } catch (Exception $ex) {
@@ -152,6 +155,7 @@ class Menus extends CoreModel
             throw new Exception($message);
         }
         try {
+            CacheHelper::forget(self::KEY_CACHE);
             return parent::delete();
         } catch (Exception $ex) {
             throw $ex;
