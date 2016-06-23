@@ -5,15 +5,15 @@
 <div class="container content-container box box-primary" style="background-color: #fff;">
     <div class="row">
         <div class="col-md-12">
-            <div class="box-header with-border">
-                <h3 box-title>Url của CSS</h3>
+            <div class="box-header">
+                <h3 box-title>{{trans('sales::view.Url css')}}</h3>
             </div>
             <div class="container-fluid">
                 <div class="row-fluid">
 
                     <div class="span12">
-                        <p>Link đường dẫn URL đến trang CSS bạn cần gửi cho khách hàng ở bên dưới, bạn chỉ cần copy URL này và gửi qua mail cho khách hàng.</p>
-                        <p>Bạn có thể xem trang preview lời chào mừng và chi tiết bài CSS ở bên dưới, đây chính xác là những gì khách hàng có thể nhìn thấy được, nếu chưa ok, bạn có thể bấm nút back để quay lại màn hình đăng ký thông tin cho CSS</p>
+                        <p>{{trans('sales::view.Link make css info')}}</p>
+                        <p>{{trans('sales::view.Link make css preview')}}</p>
                         <div class="url_make">
                             <h2 id="link-make">{{ url('/') }}/css/make/{{$css->token}}/{{$css->id}}</h2>
                             <button type="button" class="btn btn-primary" onclick="location.href='/css/update/{{$css->id}}'">Back</button>

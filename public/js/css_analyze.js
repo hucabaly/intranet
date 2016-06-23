@@ -163,6 +163,7 @@ function apply(token){
         if(criteriaType == "tcQuestion"){
             $(".box-select-question").show();
             $(".box-select-question #question-choose").html(data["htmlQuestionList"]);
+            removeEmptyCate();
         }else{
             $(".box-select-question").hide();
             $(".box-select-question #question-choose").html('');
@@ -687,4 +688,43 @@ function getProposesQuestion(questionId,curpage,token,cssresultids){
     .fail(function () {
         alert("Ajax failed to fetch data");
     })
+}
+
+/**
+ * When apply is question type
+ * In combobox question, remove empty cate (haven't any question)
+ */
+function removeEmptyCate(){
+    var arr = []; // Storage questions id
+    var arrCate = []; // Storage not empty categories id
+    
+    // Get questions id
+    $("#question-choose option[data-type=question]").each(function(){
+        arr.push($(this).attr('parent-id'));
+    });
+    
+    // Get not empty categories id
+    $("#question-choose option[class=parent]").each(function(){
+        if(jQuery.inArray($(this).attr('data-id'), arr) !== -1){
+            arrCate.push($(this).attr('data-id'));
+            var parentId = $(this).attr('parent-id');
+            // If have parent category
+            if($("#question-choose option[class=parent][data-id="+parentId+"]").length > 0){
+                arrCate.push($(this).attr('parent-id'));
+                var elem = $("#question-choose option[class=parent][data-id="+parentId+"]");
+                var grandId = elem.attr('parent-id');
+                // If have grand parent category
+                if($("#question-choose option[class=parent][data-id="+grandId+"]").length > 0){
+                    arrCate.push(elem.attr('parent-id'));
+                }
+            }
+        }
+    });
+    
+    // Remove empty cate
+    $("#question-choose option[class=parent]").each(function(){
+        if(jQuery.inArray($(this).attr('data-id'), arrCate) == -1){
+            $(this).remove();
+        }
+    });
 }

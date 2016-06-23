@@ -30,6 +30,7 @@
 @section('script')
 <script src="{{ asset('js/jquery.rateit.js') }}"></script>
 <script src="{{ asset('js/jquery.visible.js') }}"></script>
+<script src="{{ asset('js/jquery.table2excel.js') }}"></script>
 <script src="{{ asset('js/css.js') }}"></script>
 <script type="text/javascript">
     function goto_make() {

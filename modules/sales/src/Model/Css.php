@@ -33,30 +33,6 @@ class Css extends Model
     }
     
     /**
-     * Get Project type by id
-     * @param int $project_type_id
-     * return object
-     */
-    public static function getProjectTypeById($project_type_id){
-        $project_type = DB::table("project_type")
-                ->where("id",$project_type_id)
-                ->first();
-        return $project_type;
-    }
-    
-    /**
-     * Lay ten cua loai du an theo id
-     * @param int $project_type_id
-     * return string
-     */
-    public static function getProjectTypeNameById($project_type_id){
-        $project_type = DB::table("project_type")
-                ->where("id",$project_type_id)
-                ->first();
-        return $project_type->name;
-    }
-    
-    /**
      * get css by project_type_id and list team ids
      * @param ing $project_type_id
      * @param string $team_ids
@@ -190,23 +166,6 @@ class Css extends Model
     }
     
     /**
-     * @param int $cssResultId
-     */
-    public static function getCssResultById($cssResultId){
-        $cssResult = DB::table("css_result")->where("id",$cssResultId)->first();
-        return $cssResult;
-    }
-    
-    /**
-     * get cau hoi by id
-     * @param int $questionId
-     */
-    public static function getQuestionById($questionId){
-        $cssResult = DB::table("css_question")->where("id",$questionId)->first();
-        return $cssResult;
-    }
-    
-    /**
      * get proposes list
      * @param string $cssResultIds
      * @return object list
@@ -290,15 +249,6 @@ class Css extends Model
         return $sale;
     }
     
-    
-    
-    /**
-     * @param int $projectTypeIds
-     */
-    public static function getCategoryByProjectType($projectTypeId){
-        return DB::table("css_category")->where('id',$projectTypeId)->first();
-    }
-    
     /**
      * 
      * @param ing $cssId
@@ -314,63 +264,10 @@ class Css extends Model
     }
     
     /**
-     * 
-     * @param int $cssResultId
-     * @param int $questionId
-     */
-    public static function getCssResultDetail($cssResultId,$questionId){
-        return DB::table('css_result_detail')
-                        ->where("css_result_id",$cssResultId)
-                        ->where("question_id",$questionId)
-                        ->first();
-    }
-    
-    /**
      * get Css list
      * @param int $perPage
      */
     public static function getCssList($perPage){
         return self::orderBy('id', 'desc')->paginate($perPage);
     }
-    
-    /**
-     * Get Team by id
-     * @param type $teamId
-     * @return team object
-     */
-    public static function getTeamById($teamId){
-        return Team::find($teamId);
-    }
-    
-    /**
-     * Insert data into table css_result
-     * @param array $data
-     * @return int
-     */
-    public static function insertCssResult($data){
-        return DB::table('css_result')->insertGetId(
-            array(
-                'css_id' => $data["css_id"],
-                'name' => $data["name"],
-                'email' => $data["email"],
-                'comment' => $data["comment"],
-                'avg_point' => $data["avg_point"],
-                'name' => $data["name"],
-                'created_at' => $data['created_at'],
-                'updated_at' => $data['updated_at'],
-                'survey_comment' => $data['survey_comment']
-            )
-        );
-    }
-    
-    public static function insertCssResultDetail($data){
-        DB::table('css_result_detail')->insert(
-            array(
-                'css_id' => $data['css_id'],
-                'question_id' => $data['question_id'],
-                'point' => $data['point'],
-                'comment' => $data['comment'],
-            )
-        ); 
-    }   
 }
