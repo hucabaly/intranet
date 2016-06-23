@@ -8,7 +8,7 @@
               <div class="panel box box-primary">
                   <div id="collapseOne" class="panel-collapse collapse in">
                       <div class="box-body">
-                          <div class="row">
+                          <div class="row with-margin-left-0">
                             <div class="col-md-3">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">{{trans("sales::view.Analyze step 1")}}</h3>

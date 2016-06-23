@@ -35,7 +35,7 @@ return [
     'Project date' => 'Thời gian dự án',
     'Sale name' => 'Sales Rikkei',
     'Customer name' => 'Đại diện khách hàng',
-    'PM' => 'PM',
+    'PM' => 'Tên PM',
     'Make name' => 'Người làm CSS',
     'Make email' => 'Email người làm CSS',
     'BrSE name' => 'BrSE',

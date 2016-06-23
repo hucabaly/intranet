@@ -526,3 +526,7 @@ table tr.loading {
     margin-bottom: 0 !important;
     color: #646666;
 }
+
+.with-margin-left-0{
+    margin-left:0;
+}
