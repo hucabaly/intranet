@@ -25,6 +25,9 @@ html, body {
 }
 /*breadcrumb*/
 .content-header {
+    h1 {
+        color: #414141;
+    }
     .breadcrumb {
         top: 5px;
         border-radius: 3px;
@@ -408,6 +411,9 @@ form{
         .navbar-form {
             padding-right: 0;
         }
+        .img-logo-mobile {
+            display: none;
+        }
     }
     ul.dropdown-menu {
         background-color: $menuSubColor;
@@ -439,6 +445,12 @@ form{
                     right: auto;
                 }
             }
+        }
+        .img-logo-desk {
+            display: none;
+        }
+        .img-logo-mobile {
+            max-height: 35px;
         }
     }
     .navbar-header {
@@ -573,7 +585,7 @@ form{
     .main-sidebar {
         .sidebar {
             .sidebar-form {
-                border-color: $menuMobileFormBorderColor;
+                border: none;
                 input[type="text"] {
                         color: $menuMobileFormInputTextColor;
                         background-color: $menuMobileFormInputColor;
