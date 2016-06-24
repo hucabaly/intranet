@@ -28,7 +28,7 @@ class PositionSeeder extends Seeder
                 'role' => 'Member',
                 'sort_order' => '3',
                 'special_flg' => Roles::FLAG_POSITION,
-            ]
+            ],
         ];
         foreach ($dataDemo as $data) {
             $rolePosition = Roles::where('role', $data['role'])->get();
@@ -36,7 +36,9 @@ class PositionSeeder extends Seeder
                 continue;
             }
             try {
-                Roles::create($data);
+                $roles = new Roles();
+                $roles->setData($data);
+                $roles->save();
             } catch (Exception $ex) {
                 throw $ex;
             }

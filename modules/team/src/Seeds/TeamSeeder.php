@@ -135,7 +135,9 @@ class TeamSeeder extends Seeder
                 unset($item['flag_permission_children']);
             }
             $item = array_merge($item, $itemDataAddtional);
-            $team = Team::create($item);
+            $team = new Team();
+            $team->setData($item);
+            $team->save();
             if ($dataChild) {
                 if ($permissionAsId === true) {
                     $permissionAsId = $team->id;
