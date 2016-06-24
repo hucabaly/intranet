@@ -7,6 +7,7 @@ use DB;
 use Exception;
 use Lang;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Rikkei\Core\View\CacheHelper;
 
 class Roles extends CoreModel
 {
@@ -18,7 +19,10 @@ class Roles extends CoreModel
      */
     const FLAG_ROLE = 0; //role another
     const FLAG_POSITION = 1; //role position of team
-
+    
+    const KEY_CACHE_POSITION = 'role_position';
+    const KEY_CACHE_ROLE = 'role_role';
+    
     protected $table = 'roles';
     
     /**
@@ -38,10 +42,15 @@ class Roles extends CoreModel
      */
     public static function getAllPosition($dir = 'asc')
     {
-        return self::select('id', 'role')
+        if ($positions = CacheHelper::get(self::KEY_CACHE_POSITION)) {
+            return $positions;
+        }
+        $positions = self::select('id', 'role')
             ->where('special_flg', self::FLAG_POSITION)
             ->orderBy('sort_order', $dir)
             ->get();
+        CacheHelper::put(self::KEY_CACHE_POSITION, $positions);
+        return $positions;
     }
     
     /**
@@ -51,10 +60,15 @@ class Roles extends CoreModel
      */
     public static function getAllRole()
     {
-        return self::select('id', 'role')
+        if ($roles = CacheHelper::get(self::KEY_CACHE_ROLE)) {
+            return $roles;
+        }
+        $roles = self::select('id', 'role')
             ->where('special_flg', self::FLAG_ROLE)
             ->orderBy('role')
             ->get();
+        CacheHelper::put(self::KEY_CACHE_ROLE, $roles);
+        return $roles;
     }
     
     /**
@@ -88,8 +102,24 @@ class Roles extends CoreModel
             Permissions::where('role_id', $this->id)->delete();
             if ($this->isRole()) {
                 EmployeeRole::where('role_id', $this->id)->delete();
+                CacheHelper::forget(
+                    Employees::KEY_CACHE
+                );
             }
             $result = parent::delete();
+            CacheHelper::forget(
+                Employees::KEY_CACHE_PERMISSION_ROLE_ACTION,
+                $this->id
+            );
+            CacheHelper::forget(
+                Employees::KEY_CACHE_PERMISSION_ROLE_ROUTE,
+                $this->id
+            );
+            if ($this->isPosition()) {
+                CacheHelper::forget(self::KEY_CACHE_POSITION);
+            } else {
+                CacheHelper::forget(self::KEY_CACHE_ROLE);
+            }
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
@@ -205,16 +235,24 @@ class Roles extends CoreModel
     }
     
     /**
-     * get number member of a position
+     * get number member of a role
      * 
      * @return int
      */
     public function getNumberMember()
     {
-        $children = TeamMembers::select(DB::raw('count(*) as count'))
+        if ($this->isPosition()) {
+            $children = TeamMembers::select(DB::raw('count(*) as count'))
             ->where('role_id', $this->id)
             ->first();
-        return $children->count;
+            return $children->count;
+        }
+        if ($this->isRole()) {
+            $children = EmployeeRole::select(DB::raw('count(*) as count'))
+            ->where('role_id', $this->id)
+            ->first();
+            return $children->count;
+        }
     }
     
     /**
@@ -242,5 +280,23 @@ class Roles extends CoreModel
             return true;
         }
         return false;
+    }
+    
+    /**
+     * rewrite save model
+     * 
+     * @param array $options
+     */
+    public function save(array $options = array()) {
+        try {
+            if ($this->isPosition()) {
+                CacheHelper::forget(self::KEY_CACHE_POSITION);
+            } else {
+                CacheHelper::forget(self::KEY_CACHE_ROLE);
+            }
+            return parent::save($options);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
     }
 }

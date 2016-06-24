@@ -150,9 +150,23 @@ class Team extends CoreModel
             //delete team rule of this team
             if (! $this->is_function || $this->follow_team_id) {
                 Permissions::where('team_id', $this->id)->delete();
+                
+                //flush cache
+                $positions = Roles::getAllPosition();
+                if (count($positions)) {
+                    foreach ($positions as $position) {
+                        CacheHelper::forget(
+                        Employees::KEY_CACHE_PERMISSION_TEAM_ACTION,
+                        $this->id . '_' . $position->id
+                        );
+                        CacheHelper::forget(
+                            Employees::KEY_CACHE_PERMISSION_TEAM_ROUTE,
+                            $this->id . '_' . $position->id
+                        );
+                    }
+                }
             }
         }
-        self::flushCache();
         return parent::save($options);
     }
     

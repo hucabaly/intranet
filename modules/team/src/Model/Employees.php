@@ -7,7 +7,6 @@ use DB;
 use Exception;
 use Lang;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Cache;
 use Rikkei\Recruitment\Model\RecruitmentApplies;
 use Rikkei\Core\View\CacheHelper;
 
@@ -432,13 +431,15 @@ class Employees extends CoreModel
         }
         $routesAllow = [];
         $actionIdsAllow = [];
+        $routesAllowOfRole = [];
+        $actionIdsAllowOfRole = [];
         $actionTable = Action::getTableName();
         $permissionTable = Permissions::getTableName();
         foreach ($roles as $role) {
             if ($actionIdAllow = CacheHelper::get(
                     self::KEY_CACHE_PERMISSION_ROLE_ACTION,
                     $role->role_id)) {
-                $actionIdsAllow = $actionIdAllow;
+                $actionIdsAllowOfRole = $actionIdAllow;
             } else {
                 $rolePermission = Permissions::select('action_id',  'route', 'scope')
                     ->join($actionTable, $actionTable . '.id', '=', $permissionTable . '.action_id')
@@ -450,42 +451,59 @@ class Employees extends CoreModel
                         continue;
                     }
                     if ($item->action_id) {
-                        //get scope greater of role
-                        if (isset($actionIdsAllow[$item->action_id]) && $actionIdsAllow[$item->action_id] > (int) $item->scope) {
-                            continue;
-                        }
-                        $actionIdsAllow[$item->action_id] = (int) $item->scope;
+                        $actionIdsAllowOfRole[$item->action_id] = (int) $item->scope;
                     }
                 }
                 CacheHelper::put(
                     self::KEY_CACHE_PERMISSION_ROLE_ACTION, 
-                    $actionIdsAllow,
+                    $actionIdsAllowOfRole,
                     $role->role_id
                 );
             }
-        }
-        
-        //get scope of route name from action id
-        if ($actionIdsAllow) {
-            $actionIds = array_keys($actionIdsAllow);
-            if (Cache::has($keyCache)) {
-                $routesAllow = Cache::get($keyCache);
-            } else {
-                $routes = Action::getRouteChildren($actionIds);
-                foreach ($routes as $route => $valueIds) {
-                    if ($valueIds['id'] && isset($actionIdAllow[$valueIds['id']])) {
-                        $routesAllow[$route] = $actionIdAllow[$valueIds['id']];
-                    } else if ($valueIds['parent_id'] && isset($actionIdAllow[$valueIds['parent_id']])) {
-                        $routesAllow[$route] = $actionIdAllow[$valueIds['parent_id']];
+            
+            //get scope of route name from action id
+            if ($actionIdsAllowOfRole) {
+                if ($routeAllow = CacheHelper::get(
+                    self::KEY_CACHE_PERMISSION_ROLE_ROUTE,
+                    $role->role_id)) {
+                    $routesAllowOfRole = $routeAllow;
+                } else {
+                    $actionIds = array_keys($actionIdsAllowOfRole);
+                    $routes = Action::getRouteChildren($actionIds);
+                    foreach ($routes as $route => $valueIds) {
+                        if ($valueIds['id'] && isset($actionIdsAllowOfRole[$valueIds['id']])) {
+                            $routesAllowOfRole[$route] = $actionIdsAllowOfRole[$valueIds['id']];
+                        } else if ($valueIds['parent_id'] && isset($actionIdsAllowOfRole[$valueIds['parent_id']])) {
+                            $routesAllowOfRole[$route] = $actionIdsAllowOfRole[$valueIds['parent_id']];
+                        }
                     }
+                    CacheHelper::put(
+                            self::KEY_CACHE_PERMISSION_ROLE_ROUTE, 
+                            $routesAllowOfRole, 
+                            $role->role_id
+                    );
                 }
-                Cache::put($keyCache, $routesAllow, self::$timeStoreCache);
+            }
+            
+            //get scope greater of role for user
+            foreach ($actionIdsAllowOfRole as $actionId => $scope) {
+                if (isset($actionIdsAllow[$actionId]) && $actionIdsAllow[$actionId] > $scope) {
+                    continue;
+                }
+                $actionIdsAllow[$actionId] = $scope;
+            }
+            
+            foreach ($routesAllowOfRole as $route => $scope) {
+                if (isset($routesAllow[$route]) && $routesAllow[$route] > $scope) {
+                    continue;
+                }
+                $routesAllow[$route] = $scope;
             }
         }
         
         return [
             'route' => $routesAllow,
-            'action' => $actionIdAllow,
+            'action' => $actionIdsAllow,
         ];
     }
     

@@ -134,7 +134,6 @@ class Permissions extends \Rikkei\Core\Model\CoreModel
                 $permissionItem->deleted_at = null;
                 $permissionItem->setData($item);
                 $permissionItem->save();
-                var_dump($item['team_id'] . '_' . $item['role_id']);
                 CacheHelper::forget(
                     Employees::KEY_CACHE_PERMISSION_TEAM_ACTION,
                     $item['team_id'] . '_' . $item['role_id']
@@ -185,9 +184,14 @@ class Permissions extends \Rikkei\Core\Model\CoreModel
             ->get();
     }
     
+    /**
+     * rewrite delete model
+     * 
+     * @return type
+     * @throws Exception
+     */
     public function delete() {
         try {
-            Employees::flushCache();
             return parent::delete();
         } catch (Exception $ex) {
             throw $ex;
