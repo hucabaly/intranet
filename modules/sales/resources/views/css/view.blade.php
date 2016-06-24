@@ -23,7 +23,7 @@
                                         <tr role="row">
                                             <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.STT') }}</th>
                                             <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Make name') }}</th>
-                                            <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Make email') }}</th>
+                                            <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Sale name 2') }}</th>
                                             <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.CSS mark') }}</th>
                                             <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Make date css') }}</th>
                                             <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.View css detail') }}</th>
@@ -35,7 +35,7 @@
                                         <tr role="row" class="odd">
                                             <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->stt }}</td>
                                             <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->name }}</td>
-                                            <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->email }}</td>
+                                            <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->sale_name }}</td>
                                             <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ number_format($item->avg_point,2) }}</td>
                                             <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->make_date }}</td>
                                             <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" class="with-textalign-center" ><a href="/css/detail/{{$item->id}}">{{ trans('sales::view.View') }}</a></td>

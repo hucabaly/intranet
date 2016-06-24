@@ -3,7 +3,6 @@ Route::group([
 	'middleware' => 'auth',
 	'as' => 'css.'
 ], function() {
-	
 	Route::get('css/create', 'CssController@create')->name('create');
 	Route::get('css/update/{id}', 'CssController@update')->name('update');
 	Route::post('css/save', 'CssController@save')->name('save');

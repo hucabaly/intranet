@@ -386,6 +386,7 @@ class CssController extends Controller {
                         $cssCateChild[] = array(
                             "id" => $itemChild->id,
                             "name" => $itemChild->name,
+                            "sort_order" => $itemChild->sort_order,
                             "parent_id" => $item->id,
                             "questionsChild" => $questionsChild,
                         );
@@ -406,6 +407,7 @@ class CssController extends Controller {
                 $cssCate[] = array(
                     "id" => $item->id,
                     "name" => $item->name,
+                    "sort_order" => self::romanic_number($item->sort_order,true),
                     "cssCateChild" => $cssCateChild,
                     "questions" => $questions,
                 );
@@ -562,9 +564,10 @@ class CssController extends Controller {
         $htmlQuestionList = "<option value='0'>".Lang::get('sales::view.Please choose question')."</option>";
         if($criteria == 'question'){
             $arrProjectType = explode(",", $projectTypeIds);
+            $cssCategoryModel = new CssCategory();
             foreach($arrProjectType as $k=>$projectTypeId){
-                $projectType = self::getProjectTypeNameById($projectTypeId);
-                $htmlQuestionList .= "<option class=\"parent\" disabled=\"disabled\">$projectType</option>";
+                $rootCategory = $cssCategoryModel->getRootCategory($projectTypeId);
+                $htmlQuestionList .= "<option data-id='".$rootCategory->id."' class=\"parent\" disabled=\"disabled\">".$rootCategory->name."</option>";
                 $htmlQuestionList .= self::getHtmlQuestionList($projectTypeId,$startDate,$endDate,$teamIds,$criteriaIds,implode(",", $cssResultIds));
             }
             
@@ -689,7 +692,7 @@ class CssController extends Controller {
             
             $cssResult = CssResult::find($item->css_result_id);
             $cssPoint = $cssResult->avg_point;
-            $question = Css::getQuestionById($item->question_id);
+            $question = CssQuestion::find($item->question_id);
             $css = Css::find($cssResult->css_id);
             
             $result[] = [
@@ -798,6 +801,7 @@ class CssController extends Controller {
      */
     public function getCompareCharts($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria){
         $cssResultModel = new CssResult();
+        $cssResultDetailModel = new CssResultDetail();
         $criteriaIds = explode(",", $criteriaIds);
         
         $pointCompareChart = array();
@@ -822,7 +826,7 @@ class CssController extends Controller {
                 $name = $criteriaId;
                 $cssResultByCriteria = $cssResultModel->getCssResultBySale($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'question'){
-                $question = Css::getQuestionById($criteriaId);
+                $question = CssQuestion::find($criteriaId);
                 $name = $question->content;
                 $cssResultByCriteria = $cssResultModel->getCssResultByQuestionToChart($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }
@@ -848,7 +852,7 @@ class CssController extends Controller {
                     $pointToHighchart["name"] = $rootCate->name . '.' . Lang::get('sales::view.Overview question');
                 }
                 foreach($cssResultByCriteria as $itemCssResult){
-                    $css_result_detail = Css::getCssResultDetail($itemCssResult->id,$criteriaId);
+                    $css_result_detail = $cssResultDetailModel->getResultDetailRow($itemCssResult->id,$criteriaId);
                     if($css_result_detail->point > 0){
                         $pointToHighchart["data"][] = $css_result_detail->point;
                     }else{
@@ -1342,28 +1346,27 @@ class CssController extends Controller {
         $cssCate = self::getListQuestionByProjectType($projectTypeId,$startDate,$endDate,$teamIds);
         $html = "";
         if($cssCate){
-            $NoOverView = 0;
             foreach($cssCate as $itemCate){
-                $NoOverView++;
-                $html .= "<option class=\"parent\" disabled=\"disabled\">-- ".$itemCate["name"]."</option>";
+                $html .= "<option parent-id='".$itemCate["parentId"]."' class=\"parent\" disabled=\"disabled\" data-id='".$itemCate["id"]."'>-- ".$itemCate["name"]."</option>";
                 foreach($itemCate["cssCateChild"] as $itemCateChild){
-                    $html .= "<option class=\"parent\" disabled=\"disabled\">---- ".$itemCateChild["name"]."</option>";
+                    $html .= "<option parent-id='".$itemCate["id"]."' class=\"parent\" disabled=\"disabled\" data-id='".$itemCateChild["id"]."'>---- ".$itemCateChild["name"]."</option>";
                     foreach($itemCateChild["questionsChild"] as $itemQuestionChild){
                         //if is question checked when click apply
                         if(in_array($itemQuestionChild->id, $arrQuestionId)){
-                            $html .= '<option value="'.$itemQuestionChild->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'" >------ '.$itemQuestionChild->content.'</option>';
+                            $html .= '<option data-type="question" parent-id="'.$itemCateChild["id"].'" value="'.$itemQuestionChild->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'" >------ '.$itemQuestionChild->sort_order. ". " .$itemQuestionChild->content.'</option>';
                         }
                     }
                 }
                 foreach($itemCate["questions"] as $itemQuestion){
                     //if is question checked when click apply
                     if(in_array($itemQuestion->id, $arrQuestionId)){
-                        $html .= '<option value="'.$itemQuestion->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'">------ '.$itemQuestion->content.'</option>';
+                        $html .= '<option data-type="question" parent-id="'.$itemCate["id"].'" value="'.$itemQuestion->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'">------ '.$itemQuestion->sort_order. ". " .$itemQuestion->content.'</option>';
                     }
                 }
             }
         }    
         
+        //Show overview question if chosen
         $cssCategoryModel = new CssCategory();
         $rootCategory = $cssCategoryModel->getRootCategory($projectTypeId);
         $cssQuestionModel = new CssQuestion();
@@ -1390,7 +1393,7 @@ class CssController extends Controller {
         foreach($lessThreeStar as $item){
             $cssResult = CssResult::find($item->css_result_id);
             $cssPoint = $cssResult->avg_point;
-            $question = Css::getQuestionById($item->question_id);
+            $question = CssQuestion::find($item->question_id);
             $css = Css::find($cssResult->css_id);
             
             $result[] = [

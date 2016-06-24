@@ -27,7 +27,6 @@
                                         <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Team relate') }}</th>
                                         <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Sale name 2') }}</th>
                                         <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.PM') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.BrSE') }}</th>
                                         <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Project date') }}</th>
                                         <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Customer company') }}</th>
                                         <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Customer name') }}</th>
@@ -46,7 +45,6 @@
                                         <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->teamsName }}</td>
                                         <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->sale_name }}</td>
                                         <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->pm_name }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->brse_name }}</td>
                                         <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->start_date }} - {{ $item->end_date }}</td>
                                         <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->company_name }}</td>
                                         <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->customer_name }}</td>
