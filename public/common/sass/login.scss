@@ -1,4 +1,5 @@
 $sizeMobile: 768px;
+$sizeSMobile: 480px;
 
 /*message alert*/
 .flash-message {
@@ -26,27 +27,49 @@ $sizeMobile: 768px;
         margin-top: 40px;
         .login-button {
             .login-btn-item {
-                border: 1px solid;
-                height: 55px;
                 display: inline-block;
                 text-align: center;
             }
             .login-btn-content {
                 font-size: 18px;
                 background: #bb2327;
-                padding-top: 15px;
                 padding: 15px 35px;
-                border-top-right-radius: 5px;
-                -moz-border-top-right-radius: 5px;
-                -webkit-border-top-right-radius: 5px;
-                border-bottom-right-radius: 5px;
-                -moz-border-bottom-right-radius: 5px;
-                -webkit-border-bottom-right-radius: 5px;
+                border-top-right-radius: 10px;
+                -moz-border-top-right-radius: 10px;
+                -webkit-border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                -moz-border-bottom-right-radius: 10px;
+                -webkit-border-bottom-right-radius: 10px;
                 font-weight: 800;
                 color: #fff;
+                height: 55px;
             }
             .login-btn-head {
-                
+                background: #949192;
+                border-top-left-radius: 10px;
+                -moz-border-top-left-radius: 10px;
+                -webkit-border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+                -moz-border-bottom-left-radius: 10px;
+                -webkit-border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+                -moz-border-bottom-right-radius: 10px;
+                -webkit-border-bottom-right-radius: 10px;
+                width: 50px;
+                position: relative;
+                top: -6px;
+                right: -15px;
+                height: 55px;
+                img {
+                    width: 25px;
+                    margin-top: 10px;
+                    margin-left: 4px;
+                }
+            }
+        }
+        .login-button:hover {
+            .login-btn-content{
+                background: #aa2729;
             }
         }
     }
@@ -65,15 +88,32 @@ $sizeMobile: 768px;
         list-style: none;
     }
 }
-
-@media (max-width: $sizeMobile) {
+.jumbotron {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+@media (max-width: $sizeSMobile) {
     .login-title {
         img {
-            
+            max-width: 60%;
+        }
+    }
+    .login-wrapper  {
+        .login-action {
+            margin-left: 30px;
+            .login-button {
+                .login-btn-content {
+                    height: auto;
+                    font-size: 10px;
+                }
+                .login-btn-head {
+
+                }
+            }
         }
     }
 }
-@media (min-width: $sizeMobile + 1) {
+@media (min-width: $sizeSMobile + 1) {
     .login-title {
         img {
             
