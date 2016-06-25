@@ -1,5 +1,8 @@
 $sizeMobile: 768px;
 $sizeSMobile: 480px;
+$sizeMMobile: 320px;
+$sizeLarge: 2000px;
+$sizeXLarge: 3000px;
 
 /*message alert*/
 .flash-message {
@@ -52,9 +55,10 @@ $sizeSMobile: 480px;
                 top: 0;
                 left: -40px;
                 width: 50px;
-                height: 55px;
+                height: 100%;
                 content: '';
                 background-image: url(../../img/login-r.png);
+                background-size: 100% 100%;
             }
         }
         .login-button:hover {
@@ -98,10 +102,44 @@ $sizeSMobile: 480px;
                 }
                 .login-btn-content:before {
                     width: 40px;
-                    height: 44px;
-                    background-image: url(../../img/login-r.png);
-                    background-size: 40px 44px;
                     left: -30px;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: $sizeLarge) {
+    .login-wrapper {
+        h1.login-title {
+            img {
+                width: 20%;
+            }
+        }
+    }
+    .login-wrapper  {
+        .login-action {
+            .login-button {
+                .login-btn-content {
+                    width: 30%;
+                    font-size: 1vw;
+                    height: auto;
+                }
+                .login-btn-content:before {
+                    width: 10%;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: $sizeXLarge) {
+    .login-wrapper  {
+        .login-action {
+            margin-top: 80px;
+            .login-button {
+                .login-btn-content:before {
+                    width: 7%;
                 }
             }
         }
