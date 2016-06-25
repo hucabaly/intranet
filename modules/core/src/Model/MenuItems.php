@@ -79,7 +79,7 @@ class MenuItems extends CoreModel
         if ($nullable) {
             $options[] = [
                 'value' => '',
-                'label' => ''
+                'label' => '&nbsp;'
             ];
         }
         self::toOptionRecursive($options, null, $skipId, 0);
@@ -105,7 +105,7 @@ class MenuItems extends CoreModel
         }
         $prefixLabel = '';
         for ($i = 0 ; $i < $level ; $i++) {
-            $prefixLabel .= ' ---- ';
+            $prefixLabel .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         }
         foreach ($menuItem as $item) {
             $options[] = [
