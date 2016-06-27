@@ -12,7 +12,7 @@ Login
         <p>
             <a class="login-button" href="{{ url('auth/connect', ['google']) }}" 
                role="button">
-                <span class="login-btn-item login-btn-head"><img src="{{ URL::asset('img/favicon-r.png') }}" /></span>
+<!--                <span class="login-btn-item login-btn-head"><img src="{{ URL::asset('img/favicon-r.png') }}" /></span>-->
                 <span class="login-btn-item login-btn-content">LOGIN WITH   RIKKEISOFT ACCOUNT</span>
             </a>
         </p>
@@ -34,31 +34,18 @@ Login
         {
             windowHeight = $(window).height();
             loginHeight = $('.login-wrapper').height();
-            if (windowHeight < 2 * loginHeight) {
-                $('.login-wrapper').css('margin-top', '0px');
-                return;
-            }
             placeHeight = windowHeight - loginHeight;
-            $('.login-wrapper').css('margin-top', placeHeight / 3 + 'px');
-        }
-        
-        function fixPositionRButton()
-        {
-            topPosition = $('.login-btn-content').offset().top;
-            leftPosition = $('.login-btn-content').offset().left;
-            heightContent = $('.login-btn-content').outerHeight();
-            leftPosition = leftPosition - 40;
-            $('.login-btn-head').css('position', 'absolute').css('top', topPosition + 'px').css('left', leftPosition + 'px').height(heightContent);
-            heightImageHead = $('.login-btn-head img').outerHeight();
-            $('.login-btn-head img').css('margin-top', ((heightContent - heightImageHead ) / 2 ) + 'px ');
+            if (placeHeight > 30) {
+                $('.login-wrapper').css('margin-top', placeHeight / 3 - 30 + 'px');
+            } else {
+                $('.login-wrapper').css('margin-top', '-30px');
+            }
+            
         }
         
         fixPositionLoginBlock();
-        fixPositionRButton();
-        fixPositionRButton();
         $(window).resize(function (event) {
             fixPositionLoginBlock();
-            fixPositionRButton();
         })
     });
     

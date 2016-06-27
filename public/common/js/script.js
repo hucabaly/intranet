@@ -15,7 +15,7 @@ var optionCustomR = {
  * select2 reload and trim text result
  */
 function selectSearchReload(showSearch) {
-    var selectSearch = jQuery(".select-search").select2({
+    jQuery(".select-search").select2({
         minimumResultsForSearch: Infinity
     });
     jQuery('.select-search').each(function(i,k){

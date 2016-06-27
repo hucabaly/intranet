@@ -18,7 +18,7 @@ if (! function_exists('teamHtmladdTeamPostion')) {
                     @foreach($teamsOption as $option)
                         <option value="{{ $option['value'] }}"<?php
                             if ($option['value'] == $teamId): ?> selected<?php endif; 
-                        ?>>{{ $option['label'] }}</option>
+                        ?>{{ $option['option'] }}>{{ $option['label'] }}</option>
                     @endforeach
                 </select>
             </div>

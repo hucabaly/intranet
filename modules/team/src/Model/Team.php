@@ -242,4 +242,17 @@ class Team extends CoreModel
         }
         return $leader;
     }
+    
+    /**
+     * check team is function
+     * 
+     * @return boolean
+     */
+    public function isFunction()
+    {
+        if ($this->is_function) {
+            return true;
+        }
+        return false;
+    }
 }

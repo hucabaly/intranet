@@ -147,6 +147,9 @@ class Employees extends CoreModel
                     if (! $team) {
                         continue;
                     }
+                    if (! $team->isFunction()) {
+                        throw new Exception(Lang::get('team::messages.Team :name isnot function', ['name' => $team->name]));
+                    }
                     $positionLeader = Roles::isPositionLeader($teamPostion['position']);
                     if ($positionLeader === null) { //not found position
                         continue;
@@ -353,6 +356,9 @@ class Employees extends CoreModel
         $permissionTable = Permissions::getTableName();
         foreach ($teams as $teamMember) {
             $team = Team::find($teamMember->team_id);
+            if (! $team->isFunction()) {
+                continue;
+            }
             $teamAs = $team->getTeamPermissionAs();
             $teamIdOrgin = $team->id;
             if ($teamAs) {
@@ -370,19 +376,23 @@ class Employees extends CoreModel
                     ->where('team_id', $team->id)
                     ->where('role_id', $teamMember->role_id)
                     ->get();
-                foreach ($teamPermission as $item) {
-                    if (! $item->scope) {
-                        continue;
+                if (count($teamPermission)) {
+                    foreach ($teamPermission as $item) {
+                        if (! $item->scope) {
+                            continue;
+                        }
+                        if ($item->action_id) {
+                            $actionIdsAllow[$teamIdOrgin][$item->action_id] = $item->scope;
+                        }
                     }
-                    if ($item->action_id) {
-                        $actionIdsAllow[$teamIdOrgin][$item->action_id] = $item->scope;
+                    if (isset($actionIdsAllow[$teamIdOrgin]) && $actionIdsAllow[$teamIdOrgin]) {
+                        CacheHelper::put(
+                            self::KEY_CACHE_PERMISSION_TEAM_ACTION, 
+                            $actionIdsAllow[$teamIdOrgin],
+                            $teamIdAs . '_' . $teamMember->role_id
+                        );
                     }
                 }
-                CacheHelper::put(
-                    self::KEY_CACHE_PERMISSION_TEAM_ACTION, 
-                    $actionIdsAllow[$teamIdOrgin],
-                    $teamIdAs . '_' . $teamMember->role_id
-                );
             }
             
             //get scope of route name from action id
@@ -398,20 +408,27 @@ class Employees extends CoreModel
                 continue;
             }
             $routes = Action::getRouteChildren($actionIds);
-            foreach ($routes as $route => $valueIds) {
-                if ($valueIds['id'] && isset($actionIdsAllow[$teamIdOrgin][$valueIds['id']])) {
-                    $routesAllow[$teamId][$route] = $actionIdsAllow[$teamIdOrgin][$valueIds['id']];
-                } else if ($valueIds['parent_id'] && isset($actionIdsAllow[$teamIdOrgin][$valueIds['parent_id']])) {
-                    $routesAllow[$teamIdOrgin][$route] = $actionIdsAllow[$teamIdOrgin][$valueIds['parent_id']];
+            if (count($routes)) {
+                foreach ($routes as $route => $valueIds) {
+                    if ($valueIds['id'] && isset($actionIdsAllow[$teamIdOrgin][$valueIds['id']])) {
+                        $routesAllow[$teamId][$route] = $actionIdsAllow[$teamIdOrgin][$valueIds['id']];
+                    } else if ($valueIds['parent_id'] && isset($actionIdsAllow[$teamIdOrgin][$valueIds['parent_id']])) {
+                        $routesAllow[$teamIdOrgin][$route] = $actionIdsAllow[$teamIdOrgin][$valueIds['parent_id']];
+                    }
+                }
+                if (isset($routesAllow[$teamIdOrgin]) && $routesAllow[$teamIdOrgin]) {
+                    CacheHelper::put(
+                            self::KEY_CACHE_PERMISSION_TEAM_ROUTE, 
+                            $routesAllow[$teamIdOrgin],
+                            $teamIdAs . '_' . $teamMember->role_id
+                        );
                 }
             }
-            CacheHelper::put(
-                    self::KEY_CACHE_PERMISSION_TEAM_ROUTE, 
-                    $routesAllow[$teamIdOrgin],
-                    $teamIdAs . '_' . $teamMember->role_id
-                );
         }
         
+        if (! $routesAllow && ! $actionIdsAllow) {
+            return [];
+        }
         return [
             'route' => $routesAllow,
             'action' => $actionIdsAllow,

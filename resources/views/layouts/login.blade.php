@@ -21,7 +21,7 @@
     </head>
     <body class="hold-transition guest">
         <div class="jumbotron">
-            <div class="container">
+            <div class="container-fluid">
                 @include('messages.success')
                 @include('messages.errors')
                 <section class="content">
