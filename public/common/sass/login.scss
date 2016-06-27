@@ -4,6 +4,12 @@ $sizeMMobile: 320px;
 $sizeLarge: 2000px;
 $sizeXLarge: 3000px;
 
+@font-face {
+  font-family: 'MyriadPro-Semibold';
+  src: url('../fonts/MyriadPro-Semibold.otf');
+  font-weight: bold;
+}
+
 /*message alert*/
 .flash-message {
     margin-top: 20px;
@@ -35,25 +41,24 @@ $sizeXLarge: 3000px;
                 text-align: center;
             }
             .login-btn-content {
+                font-family: MyriadPro-Semibold;
                 font-size: 18px;
                 background: #bb2327;
-                padding: 15px 35px;
+                padding: 15px 35px 15px 60px;
                 border-top-right-radius: 10px;
                 -moz-border-top-right-radius: 10px;
                 -webkit-border-top-right-radius: 10px;
                 border-bottom-right-radius: 10px;
                 -moz-border-bottom-right-radius: 10px;
                 -webkit-border-bottom-right-radius: 10px;
-                font-weight: 800;
                 color: #fff;
-                height: 55px;
                 position: relative;
             }
             .login-btn-content:before {
                 display: block;
                 position: absolute;
                 top: 0;
-                left: -40px;
+                left: -20px;
                 width: 50px;
                 height: 100%;
                 content: '';
@@ -96,20 +101,18 @@ $sizeXLarge: 3000px;
         .login-action {
             .login-button {
                 .login-btn-content {
-                    height: 44px;
                     font-size: 10px;
-                    padding: 15px 20px;
+                    padding: 10px 20px 10px 35px;
                 }
                 .login-btn-content:before {
-                    width: 40px;
-                    left: -30px;
+                    width: 35px;
                 }
             }
         }
     }
 }
 
-@media (min-width: $sizeLarge) {
+/*@media (min-width: $sizeLarge) {
     .login-wrapper {
         h1.login-title {
             img {
@@ -144,4 +147,4 @@ $sizeXLarge: 3000px;
             }
         }
     }
-}
+}*/
