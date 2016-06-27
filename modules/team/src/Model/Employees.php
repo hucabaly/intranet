@@ -80,6 +80,9 @@ class Employees extends CoreModel
         if (! $this->nickname) {
             $this->nickname = preg_replace('/@.*$/', '', $this->email);
         }
+        if (! $this->birthday) {
+            $this->birthday = null;
+        }
         try {
             $this->saveCode();
             $this->saveRecruitmentAppyId();
