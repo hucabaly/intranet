@@ -37,6 +37,9 @@ class Translate
         $data[$wordOrgin] = $wordTranslate;
         try {
             $dataExport = var_export($data, true);
+            if (file_exists($filePath)) {
+                @chmod($filePath, 0777);
+            }
             $fileTranslate = fopen($filePath, "w");
             $dataExport = $prefixFile . $dataExport . $suffixFile;
             fwrite($fileTranslate, $dataExport);

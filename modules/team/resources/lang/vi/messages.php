@@ -12,5 +12,7 @@ return [
     'Please enter email of Rikkeisoft' => 'Vui lòng nhập email của Rikkeisoft',
     'Team :name had leader!' => 'Team :name đã có leader!',
     'Team :name isnot function' =>  'Team :name không phải là đơn vị chức năng',
+    'Code data exists' => 'Mã code đã tồn tại',
+    'Route data exists, please fill another route' => 'Route đã tồn tại, vui lòng điền route khác',
     
 ];

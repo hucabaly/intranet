@@ -1,4 +1,4 @@
-@extends('layouts.default')
+('layouts.default')
 <?php
 use Rikkei\Core\View\Form;
 use Rikkei\Core\Model\Menus;
@@ -139,7 +139,7 @@ Form::forget();
         var rules = {
             'item[name]': {
                 required: true,
-                rangelength: [1, 255]
+                rangelength: [1, 50]
             }
         };
         $('#form-edit-menu-item').validate({

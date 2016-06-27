@@ -10,6 +10,8 @@ use DB;
 use Rikkei\Core\Model\MenuItems;
 use Rikkei\Team\Model\Permissions;
 use Rikkei\Core\View\CacheHelper;
+use Rikkei\Team\View\Translate;
+use Illuminate\Support\Facades\Input;
 
 class Action extends CoreModel
 {
@@ -117,7 +119,7 @@ class Action extends CoreModel
         if ($nullable) {
             $options[] = [
                 'value' => '',
-                'label' => ''
+                'label' => '&nbsp;'
             ];
         }
         self::toOptionRecursive($options, null, 0, $translate);
@@ -176,8 +178,12 @@ class Action extends CoreModel
                 ->where('id', '<>', $this->id)
                 ->first();
             if ($actionRouteSame->count) {
-                throw new Exception(Lang::get('team::view.Route data exists, please fill another route'));
+                throw new Exception(Lang::get('team::messages.Route data exists, please fill another route'));
             }
+        }
+        $actionNameSame = self::select('id')->where('name', $this->name)->where('id', '<>', $this->id)->first();
+        if ($actionNameSame) {
+            throw new Exception(Lang::get('team::messages.Code data exists'));
         }
         try {
             CacheHelper::forget(
@@ -192,6 +198,7 @@ class Action extends CoreModel
             CacheHelper::forget(
                 Employees::KEY_CACHE_PERMISSION_ROLE_ROUTE
             );
+            Translate::writeWord($this->description, Input::get('trans.description'), 'acl');
             return parent::save($options);
         } catch (Exception $ex) {
             throw $ex;
