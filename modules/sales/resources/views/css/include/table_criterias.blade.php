@@ -1,6 +1,6 @@
 <!------ table project type -------------->
 @if(isset($projectType) && count($projectType) > 0)
-<table class="table table-hover dataTable tbl-criteria table-fixed" data-id="tcProjectType" >
+<table class="table table-hover  tbl-criteria table-fixed" data-id="tcProjectType" >
     <thead>
         <tr>
             <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
@@ -45,7 +45,7 @@
 @endif
 <!------ table team -------------->
 @if(isset($team) && count($team) > 0)
-<table class="table table-hover dataTable tbl-criteria table-fixed" data-id="tcTeam">
+<table class="table table-hover  tbl-criteria table-fixed" data-id="tcTeam">
     <thead>
         <tr>
             <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
@@ -91,7 +91,7 @@
 
 <!------ table PM -------------->
 @if(isset($pm) && count($pm) > 0)
-<table class="table table-hover dataTable tbl-criteria table-fixed" data-id="tcPm">
+<table class="table table-hover  tbl-criteria table-fixed" data-id="tcPm">
     <thead>
         <tr>
             <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
@@ -137,7 +137,7 @@
 
 <!------ table BrSE -------------->
 @if(isset($brse) && count($brse) > 0)
-<table class="table table-hover dataTable tbl-criteria table-fixed" data-id="tcBrse">
+<table class="table table-hover  tbl-criteria table-fixed" data-id="tcBrse">
     <thead>
         <tr>
             <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
@@ -182,7 +182,7 @@
 @endif
 <!------ table Customer -------------->
 @if(isset($customer) && count($customer) > 0)
-<table class="table table-hover dataTable tbl-criteria table-fixed" data-id="tcCustomer">
+<table class="table table-hover  tbl-criteria table-fixed" data-id="tcCustomer">
     <thead>
         <tr>
             <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
@@ -228,7 +228,7 @@
 
 <!------ table sale -------------->
 @if(isset($sale) && count($sale) > 0)
-<table class="table table-hover dataTable tbl-criteria table-fixed" data-id="tcSale">
+<table class="table table-hover  tbl-criteria table-fixed" data-id="tcSale">
     <thead>
         <tr>
             <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
@@ -274,7 +274,7 @@
 
 <!------ table questions -------------->
 @if(isset($question) && count($question) > 0)
-<table class="table table-hover dataTable tbl-criteria table-fixed table-question-fixed" data-id="tcQuestion">
+<table class="table table-hover  tbl-criteria table-fixed table-question-fixed" data-id="tcQuestion">
     <thead>
         <tr>
             <th class="col-xs-7">{{trans('sales::view.Css')}}</th>
@@ -379,11 +379,13 @@
                 <td class="col-xs-1">{{$item["overviewQuestionMaxPoint"]}}</td>
                 <td class="col-xs-1">{{$item["overviewQuestionMinPoint"]}}</td>
                 <td class="col-xs-1">
+                    @if($item["overviewQuestionCountCss"] > 0)
                     <label class="label-normal">
                         <div class="icheckbox">
                             <input type="checkbox" data-questionid='{{$item["overviewQuestionId"]}}' parent-id='{{$item["id"]}}' class="checkQuestionItem">
                         </div>
                     </label>
+                    @endif
                 </td>
             </tr>
         @endforeach

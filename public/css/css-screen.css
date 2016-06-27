@@ -536,3 +536,17 @@ table tr.loading {
     font: 18px Roboto;
     padding-left:10%;
 }
+
+#danhsachduan th, #duoi3sao th, #danhsachdexuat th{
+    cursor: pointer;
+}
+
+#danhsachduan th:first-child, #duoi3sao th:first-child, #danhsachdexuat th:first-child{
+    cursor: auto;
+}
+
+table.dataTable thead th, table.dataTable thead td {
+    padding: 8px !important;
+    vertical-align: middle;
+    border-bottom: 1px solid #f4f4f4 !important;
+}

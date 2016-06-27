@@ -84,16 +84,17 @@ $(document).ready(function () {
     $(".team-tree a").attr("onclick", "change_bgcolor_element(this)");
 
     //hide calendar sau khi select
-    $('#start_date').on('changeDate', function (ev) {
+    $('#start_date').on('changeDate', function () {
         $(this).datepicker('hide');
         $('#end_date').focus();
         $('#start_date').css('color','#555').css('font-size','14px');
         $('#start_date-error').remove();
     });
     
-    $('#end_date').on('changeDate', function (ev) {
+    $('#end_date').on('changeDate', function () {
         $(this).datepicker('hide');
-        $('#end_date').css('color','#555').css('font-size','14px');;
+        $('#end_date').css('color','#555').css('font-size','14px');
+        $('#end_date-error').remove();
     });
 });
 

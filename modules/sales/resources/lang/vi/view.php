@@ -124,7 +124,7 @@ return [
     'Url css' => 'URL gửi khách hàng',
     'Copy to clipboard' => 'Copy to clipboard',
     'Text notification copy clipboard' => 'Đã copy link URL của bài CSS vào clipboard, bạn có thể paste vào mail để gửi cho khách hàng.',
-    'Css result list of'    => 'Danh sách bài làm Css của dự án ',
+    'Css result list of'    => 'Danh sách bài làm CSS của dự án ',
     'Overview question' => 'Câu tổng quát',
     'Url css'   => 'URL của CSS',
     'Link make css info' => 'Link đường dẫn URL đến trang CSS bạn cần gửi cho khách hàng ở bên dưới, bạn chỉ cần copy URL này và gửi qua mail cho khách hàng.',
