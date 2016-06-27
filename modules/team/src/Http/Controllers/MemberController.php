@@ -118,14 +118,32 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
             return redirect()->route('team::team.member.create')->withErrors($message);
         }
         
+        //check employee_card_id same
+        $employeeSameCard = Employees::select('id')
+            ->where('id', '<>', $id)
+            ->where('employee_card_id', $dataEmployee['employee_card_id'])
+            ->where('leave_date', null)
+            ->first();
+        if ($employeeSameCard) {
+            if ($id) {
+                return redirect()->route('team::team.member.edit', ['id' => $id])
+                    ->withErrors(Lang::get('team::messages.Coinciding employee card code'));
+            }
+            Form::setData($dataEmployee, 'employee');
+            return redirect()->route('team::team.member.create')
+                ->withErrors(Lang::get('team::messages.Coinciding employee card code'));
+        }
+        
         //process team
         $teamPostions = Input::get('team');
         if (! $teamPostions || ! count($teamPostions)) {
             if ($id) {
-                return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
+                return redirect()->route('team::team.member.edit', ['id' => $id])
+                        ->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
             }
             Form::setData($dataEmployee, 'employee');
-            return redirect()->route('team::team.member.create')->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
+            return redirect()->route('team::team.member.create')
+                ->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
         }
         
         //process role

@@ -14,5 +14,6 @@ return [
     'Team :name isnot function' =>  'Team :name không phải là đơn vị chức năng',
     'Code data exists' => 'Mã code đã tồn tại',
     'Route data exists, please fill another route' => 'Route đã tồn tại, vui lòng điền route khác',
+    'Coinciding employee card code' => 'Trùng mã thẻ nhân viên',
     
 ];
