@@ -27,7 +27,7 @@ $actionOptions = Action::toOption();
 
 @section('content')
 <div class="row member-profile">
-    <form action="{{ route('team::setting.acl.save') }}" method="post" class="form-horizontal">
+    <form action="{{ route('team::setting.acl.save') }}" method="post" class="form-horizontal" id="form-acl-edit">
         {!! csrf_field() !!}
         <input type="hidden" name="id" value="{{ Form::getData('acl.id') }}" />
         <div class=" col-md-12 box-action">
@@ -43,7 +43,7 @@ $actionOptions = Action::toOption();
                 <div class="box-body">
                     
                     <div class="form-group form-label-left">
-                        <label class="col-md-3 control-label">Code</label>
+                        <label class="col-md-3 control-label required">Code<em>*</em></label>
                         <div class="input-box col-md-9">
                             <input type="text" name="item[name]" class="form-control" placeholder="{{ trans('team::view.Name') }}" value="{{ Form::getData('acl.name') }}" />
                         </div>
@@ -103,11 +103,28 @@ Form::forget();
 @endsection
 
 @section('script')
+<script src="{{ URL::asset('js/jquery.validate.min.js') }}"></script>
 <script src="{{ URL::asset('adminlte/plugins/select2/select2.full.min.js') }}"></script>
 <script src="{{ URL::asset('team/js/script.js') }}"></script>
 <script>
     jQuery(document).ready(function($) {
-        $(".select-search").select2();
+        selectSearchReload({showSearch: true});
+        messages = {
+            'item[name]': {
+                required: '<?php echo trans('core::view.This field is required'); ?>',
+                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
+              }
+          };
+          rules = {
+            'item[name]': {
+                required: true,
+                rangelength: [1, 255]
+            }
+          };
+          $('#form-acl-edit').validate({
+                rules: rules,
+                messages: messages
+            });
     });
     
 </script>

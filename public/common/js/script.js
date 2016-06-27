@@ -14,10 +14,19 @@ var optionCustomR = {
 /**
  * select2 reload and trim text result
  */
-function selectSearchReload(showSearch) {
-    jQuery(".select-search").select2({
-        minimumResultsForSearch: Infinity
-    });
+function selectSearchReload(option) {
+    optionDefault = {
+        showSearch: false
+    };
+    option = jQuery.extend(optionDefault, option);
+    if (option.showSearch) {
+        jQuery(".select-search").select2();
+    } else {
+        jQuery(".select-search").select2({
+            minimumResultsForSearch: Infinity
+        });
+    }
+    
     jQuery('.select-search').each(function(i,k){
         text = jQuery(this).find('option:selected').text().trim();
         jQuery(this).siblings('.select2-container').find('.select2-selection__rendered').text(text);

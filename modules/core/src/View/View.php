@@ -4,6 +4,7 @@ namespace Rikkei\Core\View;
 
 use DateTime;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Route;
 
 /**
  * View ouput gender
@@ -83,5 +84,21 @@ class View
     {
         echo view('errors.permission');
         exit;
+    }
+    
+    public static function routeListToOption()
+    {
+        $routeCollection = Route::getRoutes();
+        $option = [];
+        foreach ($routeCollection as $value) {
+            if (preg_match('/[{}?]/', $value->getPath())) {
+                continue;
+            }
+            $option[] = [
+               'value' => $value->getPath(),
+                'label' => $value->getPath(),
+            ];
+        }
+        return $option;
     }
 }

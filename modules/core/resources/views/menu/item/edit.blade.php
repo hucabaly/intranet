@@ -1,14 +1,17 @@
 @extends('layouts.default')
+
 <?php
 use Rikkei\Core\View\Form;
 use Rikkei\Core\Model\Menus;
 use Rikkei\Core\Model\MenuItems;
 use Rikkei\Team\Model\Action;
+use Rikkei\Core\View\View;
 
 $activeOptions = MenuItems::toOptionState();
 $menusOptions = Menus::toOption();
 $menuItemOptions = MenuItems::toOption(Form::getData('menuitem.id'));
 $actionsOptions = Action::toOption();
+$routeListOption = View::routeListToOption();
 ?>
 
 @section('title')
@@ -84,7 +87,13 @@ $actionsOptions = Action::toOption();
                     <div class="form-group form-label-left">
                         <label class="col-md-3 control-label">Url</label>
                         <div class="input-box col-md-9">
-                            <input type="text" name="item[url]" class="form-control" placeholder="Url" value="{{ Form::getData('menuitem.url') }}" />
+                            <select name="item[url]" class="form-control">
+                                @if ($routeListOption)
+                                    @foreach ($routeListOption as $option)
+                                        <option value="{{ $option['value'] }}"<?php if ($option['value'] == Form::getData('menuitem.url')): ?> selected<?php endif; ?>>{{ $option['label'] }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
                         </div>
                     </div>
                     
@@ -131,7 +140,7 @@ Form::forget();
         var rules = {
             'item[name]': {
                 required: true,
-                rangelength: [1, 255]
+                rangelength: [1, 50]
             }
         };
         $('#form-edit-menu-item').validate({

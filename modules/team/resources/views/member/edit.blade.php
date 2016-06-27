@@ -81,7 +81,7 @@ Form::forget();
 @section('script')
 <script src="{{ URL::asset('js/jquery.validate.min.js') }}"></script>
 <script src="{{ URL::asset('adminlte/plugins/select2/select2.full.min.js') }}"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script src="{{ URL::asset('js/moment.min.js') }}"></script>
 <script src="{{ URL::asset('adminlte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
 <script src="{{ URL::asset('team/js/script.js') }}"></script>
 <script>
@@ -95,15 +95,6 @@ Form::forget();
                 required: '<?php echo trans('core::view.This field is required'); ?>',
                 rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
               },
-            'employee[mobile_phone]': {
-                required: '<?php echo trans('core::view.This field is required'); ?>',
-                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
-            },
-            'employee[personal_email]': {
-                required: '<?php echo trans('core::view.This field is required'); ?>',
-                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
-                email: '<?php echo trans('core::view.Please enter a valid email address'); ?>'
-            },
             'employee[join_date]': {
                 required: '<?php echo trans('core::view.This field is required'); ?>',
                 rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
@@ -121,31 +112,14 @@ Form::forget();
                 required: '<?php echo trans('core::view.This field is required'); ?>',
                 'number': '{{ trans('core::view.Please enter a valid number') }}',
                 rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 10]) ; ?>',
-            },
-            'employee[birthday]': {
-                required: '<?php echo trans('core::view.This field is required'); ?>',
-                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
-            },
+            }
         }
         var rules = {
             'employee[name]': {
                 required: true,
                 rangelength: [1, 255]
             },
-            'employee[mobile_phone]': {
-                required: true,
-                rangelength: [1, 20]
-            },
-            'employee[personal_email]': {
-                required: true,
-                email: true,
-                rangelength: [1, 100]
-            },
             'employee[join_date]': {
-                required: true,
-                rangelength: [1, 255]
-            },
-            'employee[birthday]': {
                 required: true,
                 rangelength: [1, 255]
             },
@@ -181,9 +155,9 @@ Form::forget();
         
         @if (! isset($recruitmentPresent) || ! $recruitmentPresent)
             $('#employee-phone').on('blur', function(event) {
-                $('#employee-presenter').parents('.form-group').find('label i').removeClass('hidden');
                 value = $(this).val();
                 if (value) {
+                    $('#employee-presenter').parents('.form-group').find('label i').removeClass('hidden');
                     $.ajax({
                         url: '{{ URL::route('recruitment::get.applies.presenter') }}',
                         type: 'get',
