@@ -81,7 +81,7 @@ Form::forget();
 @section('script')
 <script src="{{ URL::asset('js/jquery.validate.min.js') }}"></script>
 <script src="{{ URL::asset('adminlte/plugins/select2/select2.full.min.js') }}"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script src="{{ URL::asset('js/moment.min.js') }}"></script>
 <script src="{{ URL::asset('adminlte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
 <script src="{{ URL::asset('team/js/script.js') }}"></script>
 <script>
