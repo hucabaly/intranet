@@ -108,7 +108,7 @@ Form::forget();
 <script src="{{ URL::asset('team/js/script.js') }}"></script>
 <script>
     jQuery(document).ready(function($) {
-        $(".select-search").select2();
+        selectSearchReload({showSearch: true});
         messages = {
             'item[name]': {
                 required: '<?php echo trans('core::view.This field is required'); ?>',

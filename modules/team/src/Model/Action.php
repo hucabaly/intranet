@@ -148,7 +148,7 @@ class Action extends CoreModel
         }
         $prefixLabel = '';
         for ($i = 0 ; $i < $level ; $i++) {
-            $prefixLabel .= ' ---- ';
+            $prefixLabel .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         }
         foreach ($actions as $action) {
             if ($translate && Lang::has('acl.' . $action->description) && Lang::get('acl.' . $action->description)) {
