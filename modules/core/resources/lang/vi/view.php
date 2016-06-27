@@ -31,5 +31,6 @@ return [
     'Please enter a valid email address' => 'Vui lòng nhập đúng email',
     'This field not be greater than :number characters' => 'Trường dữ liệu không được lớn hơn :number ký tự',
     'Please enter a valid number' => 'Vui lòng chỉ nhập số',
+    'Remove' => 'Xóa',
     
 ];

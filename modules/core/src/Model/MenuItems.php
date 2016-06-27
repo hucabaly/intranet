@@ -157,6 +157,7 @@ class MenuItems extends CoreModel
                     $item->delete();
                 }
             }
+            parent::delete();
             CacheHelper::forget(self::KEY_CACHE);
         } catch (Exception $ex) {
             throw $ex;
