@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Input;
 use Lang;
 use Rikkei\Core\View\Menu;
 use Rikkei\Team\Model\Action;
-use Rikkei\Team\View\Translate;
+use Illuminate\Support\Facades\Validator;
 
 class AclController extends \Rikkei\Core\Http\Controllers\Controller
 {
@@ -64,13 +64,39 @@ class AclController extends \Rikkei\Core\Http\Controllers\Controller
                 return redirect()->route('team::setting.acl.index')->withErrors(Lang::get('team::messages.Not found item.'));
             }
         }
+        
         $itemData = (array) Input::get('item');
+        $validator = Validator::make($itemData, [
+            'name' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            if ($model->id) {
+                return redirect()->route('team::setting.acl.edit', [
+                        'id' => $model->id
+                    ])->withErrors($validator);
+            }
+            Form::setData($itemData, 'acl');
+            return redirect()->route('team::setting.acl.index')->withErrors($validator);
+        }
+        
+        // check same name
+        $actionNameSame = Action::select('id')->where('name', $itemData['name'])
+            ->where('id', '<>', $id)->first();
+        if ($actionNameSame) {
+            if ($model->id) {
+                return redirect()->route('team::setting.acl.edit', [
+                        'id' => $model->id
+                    ])->withErrors(Lang::get('team::messages.Code data exists'));
+            }
+            Form::setData($itemData, 'acl');
+            return redirect()->route('team::setting.acl.create')->withErrors(Lang::get('team::messages.Code data exists'));
+        }
+        
         if (isset($itemData['parent_id']) && ! $itemData['parent_id']) {
             $itemData['parent_id'] = null;
         }
         $model->setData($itemData);
         $model->save();
-        Translate::writeWord($model->description, Input::get('trans.description'), 'acl');
         $messages = [
                 'success'=> [
                     Lang::get('team::messages.Save data success!'),

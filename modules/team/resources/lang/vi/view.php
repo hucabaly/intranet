@@ -92,8 +92,7 @@ return [
     'Sort order' => 'Sắp xếp',
     'Parent' => 'Cha',
     'Create' => 'Tạo',
-    'Translate (vi) "description"' => 'Dịch (vi) "miêu tả"',
-    'Route data exists, please fill another route' => 'Route đã tồn tại, vui lòng điền route khác',
+    'Translate (vi) "description"' => 'Dịch (vi) "miêu tả"',    
     'Female' => 'Nữ',
     'Male' => 'Nam',
     'Full name' => "Họ và tên",
@@ -106,6 +105,6 @@ return [
     'Presenter' => 'Người giới thiệu',
     'Join date' => 'Ngày vào cty',
     'Register new member' => 'Đăng ký thành viên mới',
-    'Employee card id' => 'Mã thẻ nhân viên',
+    'Employee card id' => 'Mã thẻ',
     
 ];

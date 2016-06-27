@@ -97,11 +97,8 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
         $validator = Validator::make($dataEmployee, [
             'employee_card_id' => 'required|integer',
             'name' => 'required|max:255',
-            'birthday' => 'required|max:255',
             'id_card_number' => 'required|max:255',
-            'mobile_phone' => 'required|max:255',
             'email' => 'required|max:255|email|unique:employees,email,' . $id,
-            'personal_email' => 'required|max:255|email|unique:employees,personal_email,' . $id,
             'join_date' => 'required|max:255',
         ]);
         if ($validator->fails()) {
@@ -121,14 +118,32 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
             return redirect()->route('team::team.member.create')->withErrors($message);
         }
         
+        //check employee_card_id same
+        $employeeSameCard = Employees::select('id')
+            ->where('id', '<>', $id)
+            ->where('employee_card_id', $dataEmployee['employee_card_id'])
+            ->where('leave_date', null)
+            ->first();
+        if ($employeeSameCard) {
+            if ($id) {
+                return redirect()->route('team::team.member.edit', ['id' => $id])
+                    ->withErrors(Lang::get('team::messages.Coinciding employee card code'));
+            }
+            Form::setData($dataEmployee, 'employee');
+            return redirect()->route('team::team.member.create')
+                ->withErrors(Lang::get('team::messages.Coinciding employee card code'));
+        }
+        
         //process team
         $teamPostions = Input::get('team');
         if (! $teamPostions || ! count($teamPostions)) {
             if ($id) {
-                return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
+                return redirect()->route('team::team.member.edit', ['id' => $id])
+                        ->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
             }
             Form::setData($dataEmployee, 'employee');
-            return redirect()->route('team::team.member.create')->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
+            return redirect()->route('team::team.member.create')
+                ->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
         }
         
         //process role

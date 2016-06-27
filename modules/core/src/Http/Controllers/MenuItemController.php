@@ -70,7 +70,7 @@ class MenuItemController extends Controller
         }
         $dataItem = Input::get('item');
         $validator = Validator::make($dataItem, [
-            'name' => 'required|max:255',
+            'name' => 'required|max:50',
         ]);
         if ($validator->fails()) {
             if ($id) {
