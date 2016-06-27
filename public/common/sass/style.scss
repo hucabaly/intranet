@@ -116,6 +116,14 @@ ul.dropdown-menu.input-menu {
                 }
             }
         }
+        li.user {
+            a {
+                cursor: default;
+            }
+            a:hover {
+                background: transparent;
+            }
+        }
     }
 }
 /*end menu*/
