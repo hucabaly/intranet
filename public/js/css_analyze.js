@@ -186,8 +186,6 @@ function apply(token){
         } 
         $("#danhsachduan tbody").html(html);
         $("#danhsachduan").parent().find(".pagination").html(data["cssResultPaginate"]["paginationRender"]);
-        $("#danhsachduan thead th:not(:first)").removeClass('sorting_asc').removeClass('sorting_desc').addClass('sorting');
-        $("#danhsachduan thead th[data-sort-type=projectDate]").removeClass('sorting').addClass('sorting_asc');
         
         $('#chartAll').highcharts({
             title: {
@@ -294,13 +292,20 @@ function apply(token){
                 $("#danhsachdexuat").parent().find(".pagination").html('');
                 $("#danhsachdexuat tbody").html(noResult);
             }
+            
+            //sort column by all result
+            $("#duoi3sao thead th").attr('data-type','all');
         }else{
             $("#duoi3sao tbody").html('');
             $("#duoi3sao").parent().find(".pagination").html('');
             $("#danhsachdexuat tbody").html('');
             $("#danhsachdexuat").parent().find(".pagination").html('');
+            
+            //sort column by all question
+            $("#duoi3sao thead th").attr('data-type','question');
         }
-        
+        //Set css resultids 
+        $('#cssResultIds').val(data["strResultIds"]);
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
@@ -380,10 +385,10 @@ function showAnalyzeListProject(curpage,token,orderBy,ariaType){
  * @param int curpage
  * @param string token
  */
-function getListLessThreeStar(curpage,token,cssresultids){
+function getListLessThreeStar(curpage,token,cssresultids,orderby,ariatype){
     $("#duoi3sao tbody").html(strLoading);
     $.ajax({
-        url: baseUrl + 'css/get_list_less_three_star/'+cssresultids+'/'+curpage,
+        url: baseUrl + 'css/get_list_less_three_star/'+cssresultids+'/'+curpage+'/'+orderby+'/'+ariatype,
         type: 'post',
         data: {
             _token: token, 
@@ -580,7 +585,7 @@ $(document).ready(function(){
            var cssresultids = $("#question-choose option:selected").data("cssresult");
            var token = $("#question-choose option:selected").data("token");
            
-           getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids);
+           getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids,'result_make','asc');
            getProposesQuestion(questionId,curpage,token,cssresultids);
        }
    }); 
@@ -593,10 +598,10 @@ $(document).ready(function(){
  * @param string token
  * @param string cssresultids
  */
-function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids){
+function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids,orderby,ariatype){
     $("#duoi3sao tbody").html(strLoading);
     $.ajax({
-        url: baseUrl + 'css/get_list_less_three_star_question/'+questionId+'/'+cssresultids+'/'+curpage,
+        url: baseUrl + 'css/get_list_less_three_star_question/'+questionId+'/'+cssresultids+'/'+curpage+'/'+orderby+'/'+ariatype,
         type: 'post',
         data: {
             _token: token, 
@@ -621,6 +626,7 @@ function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids){
             $("#duoi3sao").parent().find(".pagination").html(data["paginationRender"]);
         }else {
             $("#duoi3sao tbody").html(noResult);
+            $("#duoi3sao").parent().find(".pagination").html('');
         }
     })
     .fail(function () {
