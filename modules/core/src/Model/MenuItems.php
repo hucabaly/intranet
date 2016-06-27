@@ -38,8 +38,13 @@ class MenuItems extends CoreModel
      */
     public static function getGridData()
     {
+        $menuItemsTable = self::getTableName();
+        $menuGroupTable = Menus::getTableName();
         $pager = Config::getPagerData();
-        $collection = self::select('id','name', 'parent_id', 'menu_id', 'action_id', 'url')
+        $collection = self::select("{$menuItemsTable}.id as id","{$menuItemsTable}.name as name", 
+            'menu_item_parent.name as name_parent ', "{$menuItemsTable}.url", "{$menuGroupTable}.name as nane_group")
+            ->join($menuGroupTable, "{$menuGroupTable}.id", '=', 'menu_id')
+            ->leftJoin("$menuItemsTable as menu_item_parent", 'menu_item_parent.id', '=', "{$menuItemsTable}.parent_id")
             ->orderBy($pager['order'], $pager['dir']);
         $collection = self::filterGrid($collection);
         $collection = $collection->paginate($pager['limit']);

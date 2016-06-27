@@ -20,6 +20,11 @@ class GridFilterController extends Controller
         return redirect('/');
     }
     
+    /**
+     * remove filter data
+     * 
+     * @return type
+     */
     public function remove()
     {
         if (! Input::get('current_url')) {
@@ -29,5 +34,15 @@ class GridFilterController extends Controller
         Session::forget('filter.' . $urlEncode);
         return redirect('/');
     }
+    
+    /**
+     * flush filter data
+     * 
+     * @return type
+     */
+    public function flush()
+    {
+        Session::forget('filter');
+        return redirect('/');
+    }
 }
-

@@ -16,6 +16,7 @@ Route::get('errors', 'ErrorController@errors')->name('errors.system');
 //grid filter action
 Route::get('/grid/filter/request', 'GridFilterController@request')->name('grid.filter.request');
 Route::get('/grid/filter/remove', 'GridFilterController@remove')->name('grid.filter.remove');
+Route::get('/grid/filter/flush', 'GridFilterController@flush')->name('grid.filter.flush');
 
 //manage setting
 Route::group([
