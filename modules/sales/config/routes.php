@@ -14,7 +14,7 @@ Route::group([
         Route::get('css/analyze', 'CssController@analyze')->name('analyze');
         Route::post('css/filter_analyze', 'CssController@filterAnalyze')->name('filterAnalyze');
         Route::post('css/apply_analyze', 'CssController@applyAnalyze')->name('applyAnalyze');
-        Route::post('css/show_analyze_list_project/{criteriaIds}/{teamIds}/{projectTypeIds}/{startDate}/{endDate}/{criteriaType}/{curpage}', 'CssController@showAnalyzeListProject')->name('showAnalyzeListProject');
+        Route::post('css/show_analyze_list_project/{criteriaIds}/{teamIds}/{projectTypeIds}/{startDate}/{endDate}/{criteriaType}/{curpage}/{orderBy}/{ariaType}', 'CssController@showAnalyzeListProject')->name('showAnalyzeListProject');
         Route::post('css/get_list_less_three_star/{cssresultids}/{curpage}', 'CssController@getListLessThreeStar')->name('getListLessThreeStar');
         Route::post('css/get_proposes/{cssresultids}/{curpage}', 'CssController@getProposes')->name('getProposes');
         Route::post('css/get_list_less_three_star_question/{questionid}/{cssresultids}/{curpage}', 'CssController@getListLessThreeStarByQuestion')->name('getListLessThreeStarByQuestion');

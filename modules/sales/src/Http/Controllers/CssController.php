@@ -22,7 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 
 class CssController extends Controller {
-    static $perPage = 10;
+    static $perPage = 2;
     static $perPageCss = 10;
     
     /**
@@ -261,7 +261,7 @@ class CssController extends Controller {
         $employee = Employees::find($css->employee_id); 
         $email = $employee->email; 
         $data = array(
-            'href' => url('/') . "/css/detail/" . $cssResultId,
+            'href' => url("/css/detail/" . $cssResultId) ,
             'project_name' => $css->project_name,
         );
         
@@ -296,6 +296,7 @@ class CssController extends Controller {
                     $team = Team::find($cssTeamChild->team_id);
                     $arr_team[] = $team->name;
                 }
+                sort($arr_team); 
                 $item->teamsName = implode(", ", $arr_team);
 
                 $employee = Employees::find($item->employee_id);
@@ -303,14 +304,14 @@ class CssController extends Controller {
                 $item->start_date = date('d/m/Y',strtotime($item->start_date));
                 $item->end_date = date('d/m/Y',strtotime($item->end_date));
                 $item->create_date = date('d/m/Y',strtotime($item->created_at));
-                $item->url =  url('/') . '/css/make/'. $item->token . '/' . $item->id;
+                $item->url =  url('/css/make/'. $item->token . '/' . $item->id);
                 // get count css result by cssId 
                 $item->countCss = $cssResultModel->getCountCssResultByCss($item->id);
                 if($item->countCss == 1){
                     $cssResultDetail = $cssResultModel->getCssResultFirstByCss($item->id);
-                    $item->hrefToView = url('/') . '/css/detail/' . $cssResultDetail->id;
+                    $item->hrefToView = url('/css/detail/' . $cssResultDetail->id);
                 }else if($item->countCss > 1){
-                    $item->hrefToView = url('/') . '/css/view/' . $item->id;
+                    $item->hrefToView = url('/css/view/' . $item->id);
                 }
             }
         }
@@ -536,53 +537,58 @@ class CssController extends Controller {
             $cssResult = $cssResultModel->getCssResultByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }
         
-        //display chart all result
-        $pointToHighchart = [];
-        
-        //cssResultIds list
-        $cssResultIds = [];
-        
-        //Get data chart all result 
-        foreach($cssResult as $itemResult){
-            $cssResultIds[] = $itemResult->id;
-            $pointToHighchart[] = (float)$itemResult->avg_point;
-            $dateToHighchart[] = date('d/m/Y',strtotime($itemResult->end_date));
-        }
-        
-        //Get data fill to table project list 
-        $cssResultPaginate = self::showAnalyzeListProject($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria,1);
-         
-        //Get data fill to compare charts in analyze page
-        $pointCompareChart = self::getCompareCharts($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria);
-        
-        //Get data fill to table criteria less 3 star
-        $lessThreeStar = self::getListLessThreeStar(implode(",", $cssResultIds),1);
-        
-        //Get data fill to table customer's proposes
-        $proposes = self::getProposes(implode(",", $cssResultIds),1);
-        
-        $htmlQuestionList = "<option value='0'>".Lang::get('sales::view.Please choose question')."</option>";
-        if($criteria == 'question'){
-            $arrProjectType = explode(",", $projectTypeIds);
-            $cssCategoryModel = new CssCategory();
-            foreach($arrProjectType as $k=>$projectTypeId){
-                $rootCategory = $cssCategoryModel->getRootCategory($projectTypeId);
-                $htmlQuestionList .= "<option data-id='".$rootCategory->id."' class=\"parent\" disabled=\"disabled\">".$rootCategory->name."</option>";
-                $htmlQuestionList .= self::getHtmlQuestionList($projectTypeId,$startDate,$endDate,$teamIds,$criteriaIds,implode(",", $cssResultIds));
+        if(count($cssResult)){
+            //display chart all result
+            $pointToHighchart = [];
+
+            //cssResultIds list
+            $cssResultIds = [];
+
+            //Get data chart all result 
+            foreach($cssResult as $itemResult){
+                $cssResultIds[] = $itemResult->id;
+                $pointToHighchart[] = (float)self::formatNumber($itemResult->avg_point);
+                $dateToHighchart[] = date('d/m/Y',strtotime($itemResult->end_date));
             }
-            
+
+            //Get data fill to table project list 
+            $cssResultPaginate = self::showAnalyzeListProject($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria,1,'css.end_date','asc');
+
+            //Get data fill to compare charts in analyze page
+            $pointCompareChart = self::getCompareCharts($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria);
+
+            //Get data fill to table criteria less 3 star
+            $lessThreeStar = self::getListLessThreeStar(implode(",", $cssResultIds),1);
+
+            //Get data fill to table customer's proposes
+            $proposes = self::getProposes(implode(",", $cssResultIds),1);
+
+            $htmlQuestionList = "<option value='0'>".Lang::get('sales::view.Please choose question')."</option>";
+            if($criteria == 'question'){
+                $arrProjectType = explode(",", $projectTypeIds);
+                $cssCategoryModel = new CssCategory();
+                foreach($arrProjectType as $k=>$projectTypeId){
+                    $rootCategory = $cssCategoryModel->getRootCategory($projectTypeId);
+                    $htmlQuestionList .= "<option data-id='".$rootCategory->id."' class=\"parent\" disabled=\"disabled\">".$rootCategory->name."</option>";
+                    $htmlQuestionList .= self::getHtmlQuestionList($projectTypeId,$startDate,$endDate,$teamIds,$criteriaIds,implode(",", $cssResultIds));
+                }
+
+            }
+
+            $data = [
+                "cssResult" => $cssResult,
+                "cssResultPaginate" => $cssResultPaginate,
+                "pointToHighchart" => $pointToHighchart,
+                "dateToHighchart" => $dateToHighchart,
+                "pointCompareChart" => $pointCompareChart,
+                "lessThreeStar" =>$lessThreeStar,
+                "proposes" => $proposes,
+                "htmlQuestionList" => $htmlQuestionList,
+            ];
+        }else{
+            $data = [];
         }
         
-        $data = [
-            "cssResult" => $cssResult,
-            "cssResultPaginate" => $cssResultPaginate,
-            "pointToHighchart" => $pointToHighchart,
-            "dateToHighchart" => $dateToHighchart,
-            "pointCompareChart" => $pointCompareChart,
-            "lessThreeStar" =>$lessThreeStar,
-            "proposes" => $proposes,
-            "htmlQuestionList" => $htmlQuestionList,
-        ];
         
         return $data;
     }
@@ -598,7 +604,7 @@ class CssController extends Controller {
      * @param int $curPage
      * @return object list
      */
-    public function showAnalyzeListProject($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria,$curPage){
+    public function showAnalyzeListProject($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria,$curPage,$orderBy,$ariaType){
         $cssResultModel = new CssResult(); 
         Paginator::currentPageResolver(function () use ($curPage) {
             return $curPage;
@@ -607,25 +613,25 @@ class CssController extends Controller {
             //all result to show charts
             $cssResult = $cssResultModel->getCssResultByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds);
             //result by pagination
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds,self::$perPage);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'team'){
             $cssResult = $cssResultModel->getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds,self::$perPage);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'pm'){
             $cssResult = $cssResultModel->getCssResultByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'brse'){
             $cssResult = $cssResultModel->getCssResultByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'customer'){
             $cssResult = $cssResultModel->getCssResultByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'sale'){
             $cssResult = $cssResultModel->getCssResultByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'question'){
             $cssResult = $cssResultModel->getCssResultByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage);
+            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }
         
         $offset = ($cssResultPaginate->currentPage()-1) * $cssResultPaginate->perPage() + 1;
@@ -633,21 +639,19 @@ class CssController extends Controller {
             //get teams name of Css result
             $teamName = "";
             $team = DB::table("css_team")->where("css_id",$itemResultPaginate->css_id)->get();
-            
+            $arrTeam = [];
             foreach($team as $teamId){
-                if($teamName == ""){
-                    $teamName = Css::getTeamNameById($teamId->team_id);
-                }else{
-                    $teamName .= ", " . Css::getTeamNameById($teamId->team_id);
-                }
+                $arrTeam[] = Css::getTeamNameById($teamId->team_id);
             }
+            rsort($arrTeam);
+            $teamName = implode(', ', $arrTeam);
             //end get teams name
             
             $itemResultPaginate->stt = $offset++;
             $itemResultPaginate->teamName = $teamName;
             $itemResultPaginate->css_end_date = date('d/m/Y',strtotime($itemResultPaginate->end_date));
             $itemResultPaginate->css_result_created_at = date('d/m/Y',strtotime($itemResultPaginate->created_at));
-            $itemResultPaginate->point = $itemResultPaginate->avg_point;
+            $itemResultPaginate->point = self::formatNumber($itemResultPaginate->avg_point);
         }
         
         //Get html pagination render
@@ -657,19 +661,19 @@ class CssController extends Controller {
             if($curPage == 1){
                 $html .= '<li class="disabled"><span>«</span></li>';
             }else{
-                $html .= '<li><a href="javascript:void(0)" onclick="showAnalyzeListProject('.($curPage-1).',\''.Session::token().'\');" rel="back">«</a></li>';
+                $html .= '<li><a href="javascript:void(0)" onclick="showAnalyzeListProject('.($curPage-1).',\''.Session::token().'\',\''.$orderBy.'\',\''.$ariaType.'\');" rel="back">«</a></li>';
             }
             for($i=1; $i<=$totalPage; $i++){
                 if($i == $curPage){
                     $html .= '<li class="active"><span>'.$i.'</span></li>';
                 }else{
-                    $html .= '<li><a href="javascript:void(0)" onclick="showAnalyzeListProject('.$i.',\''.Session::token().'\');">'.$i.'</a></li>';
+                    $html .= '<li><a href="javascript:void(0)" onclick="showAnalyzeListProject('.$i.',\''.Session::token().'\',\''.$orderBy.'\',\''.$ariaType.'\');">'.$i.'</a></li>';
                 }
             }
             if($curPage == $totalPage){
                 $html .= '<li class="disabled"><span>»</span></li>';
             }else{
-                $html .= '<li><a href="javascript:void(0)" onclick="showAnalyzeListProject('.($curPage+1).',\''.Session::token().'\');" rel="next">»</a></li>';
+                $html .= '<li><a href="javascript:void(0)" onclick="showAnalyzeListProject('.($curPage+1).',\''.Session::token().'\',\''.$orderBy.'\',\''.$ariaType.'\');" rel="next">»</a></li>';
             }
         }
         
@@ -691,7 +695,7 @@ class CssController extends Controller {
         foreach($lessThreeStar as $item){
             
             $cssResult = CssResult::find($item->css_result_id);
-            $cssPoint = $cssResult->avg_point;
+            $cssPoint = self::formatNumber($cssResult->avg_point);
             $question = CssQuestion::find($item->question_id);
             $css = Css::find($cssResult->css_id);
             
@@ -752,7 +756,7 @@ class CssController extends Controller {
             
             $result[] = [
                 "no"   => ++$offset,
-                "cssPoint"   => $propose->avg_point,
+                "cssPoint"   => self::formatNumber($propose->avg_point),
                 "projectName"   => $css->project_name,
                 "customerComment" => $propose->proposed,
                 "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),
@@ -862,7 +866,7 @@ class CssController extends Controller {
             }else{
                 $pointToHighchart["name"] = $name;
                 foreach($cssResultByCriteria as $item){
-                    $pointToHighchart["data"][] = (float)$item->avg_point;
+                    $pointToHighchart["data"][] = (float)self::formatNumber($item->avg_point);
                 }
             }
             $pointCompareChart[] = [
@@ -922,7 +926,7 @@ class CssController extends Controller {
                     if(count($css_result) > 0){
                         $countCss += count($css_result);
                         foreach($css_result as $itemCssResult){
-                            $points[] = $itemCssResult->avg_point;
+                            $points[] = self::formatNumber($itemCssResult->avg_point);
                         }
                     }
                 }
@@ -1023,7 +1027,7 @@ class CssController extends Controller {
                     if(count($css_result) > 0){
                         $countCss += count($css_result);
                         foreach($css_result as $itemCssResult){
-                            $points[] = $itemCssResult->avg_point;
+                            $points[] = self::formatNumber($itemCssResult->avg_point);
                         }
                     }
                 }
@@ -1117,7 +1121,7 @@ class CssController extends Controller {
                         if(count($css_result) > 0){
                             $countCss += count($css_result);
                             foreach($css_result as $itemCssResult){
-                                $points[] = $itemCssResult->avg_point;
+                                $points[] = self::formatNumber($itemCssResult->avg_point);
                             }
                         }
                     }
@@ -1345,8 +1349,10 @@ class CssController extends Controller {
         $arrQuestionId = explode(",", $questionIds); 
         $cssCate = self::getListQuestionByProjectType($projectTypeId,$startDate,$endDate,$teamIds);
         $html = "";
+        $NoOverView = 0;
         if($cssCate){
             foreach($cssCate as $itemCate){
+                $NoOverView++;
                 $html .= "<option parent-id='".$itemCate["parentId"]."' class=\"parent\" disabled=\"disabled\" data-id='".$itemCate["id"]."'>-- ".$itemCate["name"]."</option>";
                 foreach($itemCate["cssCateChild"] as $itemCateChild){
                     $html .= "<option parent-id='".$itemCate["id"]."' class=\"parent\" disabled=\"disabled\" data-id='".$itemCateChild["id"]."'>---- ".$itemCateChild["name"]."</option>";
@@ -1372,7 +1378,7 @@ class CssController extends Controller {
         $cssQuestionModel = new CssQuestion();
         $overviewQuestion = $cssQuestionModel->getOverviewQuestionByCategory($rootCategory->id,1);
         if(in_array($overviewQuestion->id, $arrQuestionId)){
-            $html .= "<option class=\"parent\" disabled=\"disabled\">-- ".self::romanic_number(++$NoOverView,true) . ". " . Lang::get('sales::view.Overview') ."</option>";
+            $html .= "<option data-type='overview' class=\"parent\" disabled=\"disabled\">-- ".self::romanic_number(++$NoOverView,true) . ". " . Lang::get('sales::view.Overview') ."</option>";
             $html .= '<option value="'.$overviewQuestion->id.'" data-token="'.Session::token().'" data-cssresult="'.$cssResultIds.'">------ '.$overviewQuestion->content.'</option>';
         }
         
@@ -1392,7 +1398,7 @@ class CssController extends Controller {
         $result = [];
         foreach($lessThreeStar as $item){
             $cssResult = CssResult::find($item->css_result_id);
-            $cssPoint = $cssResult->avg_point;
+            $cssPoint = self::formatNumber($cssResult->avg_point);
             $question = CssQuestion::find($item->question_id);
             $css = Css::find($cssResult->css_id);
             
@@ -1455,7 +1461,7 @@ class CssController extends Controller {
             
             $result[] = [
                 "no"   => ++$offset,
-                "cssPoint"   => $propose->avg_point,
+                "cssPoint"   => self::formatNumber($propose->avg_point),
                 "projectName"   => $css->project_name,
                 "customerComment" => $propose->proposed,
                 "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),

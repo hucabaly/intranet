@@ -99,12 +99,12 @@
                                             <thead>
                                                 <tr>
                                                     <th>{{trans('sales::view.No.')}}</th>
-                                                    <th>{{trans('sales::view.Project name')}}</th>
-                                                    <th>{{trans('sales::view.Team')}}</th>
-                                                    <th>{{trans('sales::view.PM')}}</th>
-                                                    <th>{{trans('sales::view.Project date finish')}}</th>
-                                                    <th>{{trans('sales::view.Make date css')}}</th>
-                                                    <th>{{trans('sales::view.Css point')}}</th>
+                                                    <th onclick="sortProject(this,'{{ Session::token() }}');" data-sort-type="projectName" aria-type="asc" class="sorting">{{trans('sales::view.Project name')}}</th>
+                                                    <th onclick="sortProject(this,'{{ Session::token() }}');" data-sort-type="team" aria-type="asc" class="sorting">{{trans('sales::view.Team')}}</th>
+                                                    <th onclick="sortProject(this,'{{ Session::token() }}');" data-sort-type="pm" aria-type="asc" class="sorting">{{trans('sales::view.PM')}}</th>
+                                                    <th onclick="sortProject(this,'{{ Session::token() }}');" data-sort-type="projectDate" aria-type="asc" class="sorting-asc">{{trans('sales::view.Project date finish')}}</th>
+                                                    <th onclick="sortProject(this,'{{ Session::token() }}');" data-sort-type="makeDate" aria-type="asc" class="sorting">{{trans('sales::view.Make date css')}}</th>
+                                                    <th onclick="sortProject(this,'{{ Session::token() }}');" data-sort-type="projectPoint" aria-type="asc" class="sorting">{{trans('sales::view.Css point')}}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -132,7 +132,7 @@
                             </div>
                           </div>
                         
-                      <div class="row">
+                            <div class="row">
                               <div class="col-md-12">
                                 <div class="box-header with-border box-select-question">
                                     <div class="form-group">
@@ -232,6 +232,7 @@
 <link href="{{ asset('plugins/rangeSlider/css/iThing.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('plugins/rangeSlider/demo/rangeSlider.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('adminlte/plugins/iCheck/minimal/_all.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
 <!-- Script -->
@@ -244,4 +245,5 @@
 <script src="{{ asset('plugins/hightcharts/hightcharts.js') }}"></script>
 <script src="{{ asset('plugins/hightcharts/exporting.js') }}"></script>
 <script src="{{ asset('js/css_analyze.js') }}"></script>
+<script src="{{ asset('js/css_dataTables.js') }}"></script>
 @endsection

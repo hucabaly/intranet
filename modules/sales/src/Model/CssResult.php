@@ -113,7 +113,7 @@ class CssResult extends Model
      * @param string $teamIds
      * @return object
      */
-    public function getCssResultPaginateByProjectTypeIds($projectTypeIds,$startDate, $endDate, $teamIds,$perPage){
+    public function getCssResultPaginateByProjectTypeIds($projectTypeIds,$startDate, $endDate, $teamIds,$perPage,$orderBy,$ariaType){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         
@@ -124,9 +124,9 @@ class CssResult extends Model
                 ->whereIn('css_team.team_id',$arrTeamId)
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
-                ->orderBy('css.end_date','ASC')
+                ->orderBy($orderBy,$ariaType)
                 ->groupBy('css_result.id')
-                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName','css_result.avg_point as result_point','css_result.created_at as result_make')
                 ->paginate($perPage);
     }
     
@@ -290,7 +290,7 @@ class CssResult extends Model
      * @param string $teamIds
      * @return object
      */
-    public function getCssResultPaginateByListPm($listPmName,$projectTypeIds,$startDate, $endDate, $teamIds,$perPage){
+    public function getCssResultPaginateByListPm($listPmName,$projectTypeIds,$startDate, $endDate, $teamIds,$perPage,$orderBy,$ariaType){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrPmName = explode(",", $listPmName);
@@ -302,9 +302,9 @@ class CssResult extends Model
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.pm_name', $arrPmName)
-                ->orderBy('css.end_date','ASC')
+                ->orderBy($orderBy,$ariaType)
                 ->groupBy('css_result.id')
-                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName','css_result.avg_point as result_point','css_result.created_at as result_make')
                 ->paginate($perPage);
     }
     
@@ -344,7 +344,7 @@ class CssResult extends Model
      * @param string $teamIds
      * @return object
      */
-    public function getCssResultPaginateByListBrse($listBrseName,$projectTypeIds,$startDate, $endDate, $teamIds,$perPage){
+    public function getCssResultPaginateByListBrse($listBrseName,$projectTypeIds,$startDate, $endDate, $teamIds,$perPage,$orderBy,$ariaType){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrBrseName = explode(",", $listBrseName);
@@ -356,9 +356,9 @@ class CssResult extends Model
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.brse_name', $arrBrseName)
-                ->orderBy('css.end_date','ASC')
+                ->orderBy($orderBy,$ariaType)
                 ->groupBy('css_result.id')
-                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName','css_result.avg_point as result_point','css_result.created_at as result_make')
                 ->paginate($perPage);
     }
     
@@ -425,7 +425,7 @@ class CssResult extends Model
      * @param string $teamIds
      * @return object
      */
-    public function getCssResultPaginateByListSale($saleIds,$projectTypeIds,$startDate, $endDate, $teamIds,$perPage){
+    public function getCssResultPaginateByListSale($saleIds,$projectTypeIds,$startDate, $endDate, $teamIds,$perPage,$orderBy,$ariaType){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrSaleId = explode(",", $saleIds);
@@ -437,9 +437,9 @@ class CssResult extends Model
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.employee_id', $arrSaleId)
-                ->orderBy('css.end_date','ASC')
+                ->orderBy($orderBy,$ariaType)
                 ->groupBy('css_result.id')
-                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName','css_result.avg_point as result_point','css_result.created_at as result_make')
                 ->paginate($perPage);
     }
     
@@ -480,7 +480,7 @@ class CssResult extends Model
      * @param string $teamIds
      * @return object list
      */
-    public function getCssResultPaginateByListQuestion($questionIds,$projectTypeIds,$startDate, $endDate, $teamIds,$perPage){
+    public function getCssResultPaginateByListQuestion($questionIds,$projectTypeIds,$startDate, $endDate, $teamIds,$perPage,$orderBy,$ariaType){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrQuestionId = explode(",", $questionIds);
@@ -493,9 +493,9 @@ class CssResult extends Model
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css_result_detail.question_id', $arrQuestionId)
-                ->orderBy('css.end_date','ASC')
+                ->orderBy($orderBy,$ariaType)
                 ->groupBy('css_result.id')
-                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName','css_result.avg_point as result_point','css_result.created_at as result_make')
                 ->paginate($perPage);
     }
     
@@ -509,7 +509,7 @@ class CssResult extends Model
      * @param string $teamIds
      * @return object
      */
-    public function getCssResultPaginateByListCustomer($listCustomerName,$projectTypeIds,$startDate, $endDate, $teamIds,$perPage){
+    public function getCssResultPaginateByListCustomer($listCustomerName,$projectTypeIds,$startDate, $endDate, $teamIds,$perPage,$orderBy,$ariaType){
         $arrTeamId = explode(",", $teamIds);
         $arrProjectTypeId = explode(",", $projectTypeIds);
         $arrCustomerName = explode(",", $listCustomerName);
@@ -521,9 +521,9 @@ class CssResult extends Model
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->whereIn('css.customer_name', $arrCustomerName)
-                ->orderBy('css.end_date','ASC')
+                ->orderBy($orderBy,$ariaType)
                 ->groupBy('css_result.id')
-                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
+                ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName','css_result.avg_point as result_point','css_result.created_at as result_make')
                 ->paginate($perPage);
     }
     

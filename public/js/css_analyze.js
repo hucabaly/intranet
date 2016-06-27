@@ -186,6 +186,9 @@ function apply(token){
         } 
         $("#danhsachduan tbody").html(html);
         $("#danhsachduan").parent().find(".pagination").html(data["cssResultPaginate"]["paginationRender"]);
+        $("#danhsachduan thead th:not(:first)").removeClass('sorting_asc').removeClass('sorting_desc').addClass('sorting');
+        $("#danhsachduan thead th[data-sort-type=projectDate]").removeClass('sorting').addClass('sorting_asc');
+        
         $('#chartAll').highcharts({
             title: {
                 text: 'Điểm CSS',
@@ -334,41 +337,17 @@ noResult = '<tr><td colspan="7" style="text-align:center;">Không có kết qu�
  * @param int curpage
  * @param string token
  */
-function showAnalyzeListProject(curpage,token){
+function showAnalyzeListProject(curpage,token,orderBy,ariaType){
     var startDate = $("#startDate_val").val();
     var endDate = $("#endDate_val").val();
     var criteriaIds = $("#criteriaIds_val").val();
     var teamIds = $("#teamIds_val").val();
     var projectTypeIds = $("#projectTypeIds_val").val();
-    var criteriaType = "";
-     
-    switch($("#criteriaType_val").val()){
-        case 'tcProjectType':
-            criteriaType = "projectType";
-            break;
-        case 'tcTeam':
-            criteriaType = "team";
-            break;
-        case 'tcPm':
-            criteriaType = "pm";
-            break;
-        case 'tcBrse':
-            criteriaType = "brse";
-            break;
-        case 'tcCustomer':
-            criteriaType = "customer";
-            break;
-        case 'tcSale':
-            criteriaType = "sale";
-            break;
-        case 'tcQuestion':
-            criteriaType = "question";
-            break;
-    }
+    var criteriaType = getCriteriaType($("#criteriaType_val").val());
     
     $("#danhsachduan tbody").html(strLoading);
     $.ajax({
-        url: baseUrl + 'css/show_analyze_list_project/'+criteriaIds+'/'+teamIds+'/'+ projectTypeIds+'/'+startDate+'/'+endDate+'/'+criteriaType+'/'+curpage,
+        url: baseUrl + 'css/show_analyze_list_project/'+criteriaIds+'/'+teamIds+'/'+ projectTypeIds+'/'+startDate+'/'+endDate+'/'+criteriaType+'/'+curpage+'/'+orderBy+'/'+ariaType,
         type: 'post',
         data: {
             _token: token, 
@@ -723,8 +702,35 @@ function removeEmptyCate(){
     
     // Remove empty cate
     $("#question-choose option[class=parent]").each(function(){
-        if(jQuery.inArray($(this).attr('data-id'), arrCate) == -1){
+        if(jQuery.inArray($(this).attr('data-id'), arrCate) == -1 && $(this).attr('data-type') !== 'overview'){
             $(this).remove();
         }
     });
 }
+
+function getCriteriaType(type){
+        switch(type){
+            case 'tcProjectType':
+                criteriaType = "projectType";
+                break;
+            case 'tcTeam':
+                criteriaType = "team";
+                break;
+            case 'tcPm':
+                criteriaType = "pm";
+                break;
+            case 'tcBrse':
+                criteriaType = "brse";
+                break;
+            case 'tcCustomer':
+                criteriaType = "customer";
+                break;
+            case 'tcSale':
+                criteriaType = "sale";
+                break;
+            case 'tcQuestion':
+                criteriaType = "question";
+                break;
+        }
+        return criteriaType;
+    }
