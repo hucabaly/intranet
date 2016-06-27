@@ -105,6 +105,6 @@ return [
     'Presenter' => 'Người giới thiệu',
     'Join date' => 'Ngày vào cty',
     'Register new member' => 'Đăng ký thành viên mới',
-    'Employee card id' => 'Mã thẻ nhân viên',
+    'Employee card id' => 'Mã thẻ',
     
 ];
