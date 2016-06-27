@@ -97,11 +97,8 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
         $validator = Validator::make($dataEmployee, [
             'employee_card_id' => 'required|integer',
             'name' => 'required|max:255',
-            'birthday' => 'required|max:255',
             'id_card_number' => 'required|max:255',
-            'mobile_phone' => 'required|max:255',
             'email' => 'required|max:255|email|unique:employees,email,' . $id,
-            'personal_email' => 'required|max:255|email|unique:employees,personal_email,' . $id,
             'join_date' => 'required|max:255',
         ]);
         if ($validator->fails()) {

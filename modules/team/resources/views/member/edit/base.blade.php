@@ -36,7 +36,7 @@ $genderOption = Employees::toOptionGender();
 
 <div class="form-horizontal form-label-left">
     <div class="form-group">
-        <label class="col-md-3 control-label required">{{ trans('team::view.Birthday') }}<em>*</em></label>
+        <label class="col-md-3 control-label">{{ trans('team::view.Birthday') }}</label>
         <div class="input-box col-md-9">
             <input type="text" name="employee[birthday]" id="employee-birthday" class="form-control date-picker" placeholder="yyyy-mm-dd" value="{{ Form::getData('employee.birthday') }}" />
         </div>
@@ -67,7 +67,7 @@ $genderOption = Employees::toOptionGender();
 
 <div class="form-horizontal form-label-left">
     <div class="form-group">
-        <label class="col-md-3 control-label required">{{ trans('team::view.Phone') }}<em>*</em></label>
+        <label class="col-md-3 control-label">{{ trans('team::view.Phone') }}</label>
         <div class="input-box col-md-9">
             <input type="text" name="employee[mobile_phone]" id="employee-phone" class="form-control" placeholder="{{ trans('team::view.Phone') }}" value="{{ Form::getData('employee.mobile_phone') }}" />
         </div>
@@ -85,7 +85,7 @@ $genderOption = Employees::toOptionGender();
 
 <div class="form-horizontal form-label-left">
     <div class="form-group">
-        <label class="col-md-3 control-label required">{{ trans('team::view.Email another') }}<em>*</em></label>
+        <label class="col-md-3 control-label">{{ trans('team::view.Email another') }}</label>
         <div class="input-box col-md-9">
             <input type="text" name="employee[personal_email]" class="form-control" placeholder="{{ trans('team::view.Email another') }}" value="{{ Form::getData('employee.personal_email') }}" />
         </div>
