@@ -34,8 +34,8 @@ Login
         {
             windowHeight = $(window).height();
             loginHeight = $('.login-wrapper').height();
-            placeHeight = windowHeight / 2 - loginHeight;
-            $('.login-wrapper').css('margin-top', placeHeight + 30 + 'px');
+            placeHeight = windowHeight / 2 - loginHeight / 2;
+            $('.login-wrapper').css('margin-top', placeHeight + 'px');
         }
         
         fixPositionLoginBlock();
