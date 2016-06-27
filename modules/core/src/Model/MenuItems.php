@@ -6,7 +6,7 @@ use DB;
 use Rikkei\Team\View\Config;
 use Lang;
 use Exception;
-use Illuminate\Support\Facades\Cache;
+use Rikkei\Core\View\CacheHelper;
 
 class MenuItems extends CoreModel
 {
@@ -15,6 +15,9 @@ class MenuItems extends CoreModel
     
     public $timestamps = false;
     
+    const KEY_CACHE = 'menu_items';
+
+
     /**
      * count child of menu item
      * 
@@ -76,7 +79,7 @@ class MenuItems extends CoreModel
         if ($nullable) {
             $options[] = [
                 'value' => '',
-                'label' => ''
+                'label' => '&nbsp;'
             ];
         }
         self::toOptionRecursive($options, null, $skipId, 0);
@@ -102,7 +105,7 @@ class MenuItems extends CoreModel
         }
         $prefixLabel = '';
         for ($i = 0 ; $i < $level ; $i++) {
-            $prefixLabel .= ' ---- ';
+            $prefixLabel .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         }
         foreach ($menuItem as $item) {
             $options[] = [
@@ -130,7 +133,7 @@ class MenuItems extends CoreModel
         }
         try {
             $result = parent::save($options);
-            self::flushCache();
+            CacheHelper::forget(self::KEY_CACHE);
             return $result;
         } catch (Exception $ex) {
             throw $ex;
@@ -149,8 +152,7 @@ class MenuItems extends CoreModel
                     $item->delete();
                 }
             }
-            self::flushCache();
-            return parent::delete();
+            CacheHelper::forget(self::KEY_CACHE);
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -164,14 +166,14 @@ class MenuItems extends CoreModel
      */
     public static function getChildMenuItems($parentId, $menuGroupId)
     {
-        $keyCache = self::getKeyCache();
-        if (Cache::has($keyCache)) {
-            return Cache::get($keyCache);
+        if ($menuItemsCache = CacheHelper::get(self::KEY_CACHE)) {
+            return $menuItemsCache;
         }
         $menuItems = MenuItems::where('menu_id', $menuGroupId)
             ->where('parent_id', $parentId)
+            ->orderBy('sort_order')
             ->get();
-        Cache::put($keyCache, $menuItems, self::$timeStoreCache);
+        CacheHelper::put(self::KEY_CACHE, $menuItems);
         return $menuItems;
     }
 }

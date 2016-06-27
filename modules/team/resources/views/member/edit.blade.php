@@ -5,7 +5,7 @@ use Rikkei\Team\View\TeamList;
 use Rikkei\Team\Model\Roles;
 
 $postionsOption = Roles::toOptionPosition();
-$teamsOption = TeamList::toOption(null, false, false);
+$teamsOption = TeamList::toOption(null, true, false);
 
 ?>
 

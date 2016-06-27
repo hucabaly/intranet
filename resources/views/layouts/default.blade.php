@@ -40,7 +40,10 @@
             <header class="main-header">
                 <!-- Logo -->
                 <a href="{{ URL::to('/') }}" class="logo" id="logo">
-                  <span class="logo-lg"><img src="{{ asset('/common/images/intranet_logo.png') }}" /></span>
+                  <span class="logo-lg">
+                      <img src="{{ asset('/common/images/intranet_logo.png') }}" class="img-logo-desk" />
+                      <img src="{{ asset('/common/images/rikkei.png') }}" class="img-logo-mobile" />
+                  </span>
                 </a>
                 <nav class="navbar navbar-static-top">
                     <div class="container-fluid">

@@ -9,6 +9,7 @@ use Exception;
 use DB;
 use Rikkei\Core\Model\MenuItems;
 use Rikkei\Team\Model\Permissions;
+use Rikkei\Core\View\CacheHelper;
 
 class Action extends CoreModel
 {
@@ -179,7 +180,18 @@ class Action extends CoreModel
             }
         }
         try {
-            Employees::flushCache();
+            CacheHelper::forget(
+                Employees::KEY_CACHE_PERMISSION_TEAM_ACTION
+            );
+            CacheHelper::forget(
+                Employees::KEY_CACHE_PERMISSION_TEAM_ROUTE
+            );
+            CacheHelper::forget(
+                Employees::KEY_CACHE_PERMISSION_ROLE_ACTION
+            );
+            CacheHelper::forget(
+                Employees::KEY_CACHE_PERMISSION_ROLE_ROUTE
+            );
             return parent::save($options);
         } catch (Exception $ex) {
             throw $ex;
@@ -211,6 +223,21 @@ class Action extends CoreModel
                 }
             }
             parent::delete();
+            CacheHelper::forget(
+                Employees::KEY_CACHE_PERMISSION_TEAM_ACTION
+            );
+            CacheHelper::forget(
+                Employees::KEY_CACHE_PERMISSION_TEAM_ROUTE
+            );
+            CacheHelper::forget(
+                Employees::KEY_CACHE_PERMISSION_ROLE_ACTION
+            );
+            CacheHelper::forget(
+                Employees::KEY_CACHE_PERMISSION_ROLE_ROUTE
+            );
+            CacheHelper::forget(
+                MenuItems::KEY_CACHE
+            );
         } catch (Exception $ex) {
             throw $ex;
         }

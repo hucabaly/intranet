@@ -5,7 +5,6 @@ namespace Rikkei\Core\Http\Controllers;
 use Auth;
 use Rikkei\Core\View\Breadcrumb;
 use Rikkei\Core\View\Menu;
-use URL;
 use Illuminate\Support\Facades\Session;
 
 class PagesController extends Controller
@@ -26,7 +25,6 @@ class PagesController extends Controller
         }
         Breadcrumb::add('Dashboard');
         Menu::setActive('home');
-        // TODO: get user data
         return view('core::dashbroad');
     }
 }

@@ -36,7 +36,7 @@ $actionOptions = Menus::toOptionState();
                 <div class="box-body">
                     
                     <div class="form-group form-label-left">
-                        <label class="col-md-3 control-label">{{ trans('team::view.Name') }}</label>
+                        <label class="col-md-3 control-label required">{{ trans('team::view.Name') }}<em>*</em></label>
                         <div class="input-box col-md-9">
                             <input type="text" name="item[name]" class="form-control" placeholder="{{ trans('team::view.Name') }}" value="{{ Form::getData('menus.name') }}" />
                         </div>
@@ -71,8 +71,8 @@ Form::forget();
     jQuery(document).ready(function ($) {
         var messages = {
             'item[name]': {
-                required: '<?php echo trans('core::view.Please enter') . ' ' . trans('core::view.menu name') ; ?>',
-                rangelength: '<?php echo trans('team::view.Menu name') . ' ' . trans('core::view.not be greater than :number characters', ['number' => 255]) ; ?>'
+                required: '<?php echo trans('core::view.This field is required'); ?>',
+                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
               }
         }
         var rules = {

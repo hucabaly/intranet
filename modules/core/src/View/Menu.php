@@ -103,10 +103,13 @@ class Menu
             $classA = '';
             $optionA = '';
             if ($hasChild) {
+                $htmlMenuChild = self::getChildMenu($menuId, $item->id, $level+1);
+                 if (! e($htmlMenuChild)) {
+                     continue;
+                 }
                 $classLi .= ' dropdown';
                 $classA .= 'dropdown-toggle';
                 $optionA .= ' data-toggle="dropdown"';
-                $htmlMenuChild = self::getChildMenu($menuId, $item->id, $level+1);
                 if ($level > 0) {
                     $classLi .= ' dropdown-submenu';
                 }
