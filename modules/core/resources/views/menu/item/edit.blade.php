@@ -1,4 +1,5 @@
-('layouts.default')
+@extends('layouts.default')
+
 <?php
 use Rikkei\Core\View\Form;
 use Rikkei\Core\Model\Menus;
