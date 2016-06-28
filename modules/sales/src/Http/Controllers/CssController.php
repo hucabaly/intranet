@@ -286,6 +286,7 @@ class CssController extends Controller {
         
         if(count($css) > 0){
             $cssResultModel = new CssResult();
+            $teamModel = new Team();
             $i = ($css->currentPage()-1) * $css->perPage() + 1;
             foreach($css as &$item){ 
                 $item->stt = $i;
@@ -295,7 +296,7 @@ class CssController extends Controller {
 
                 $arr_team = array();
                 foreach($cssTeams as $cssTeamChild){
-                    $team = Team::find($cssTeamChild->team_id);
+                    $team = $teamModel->getTeamWithTrashedById($cssTeamChild->team_id);
                     $arr_team[] = $team->name;
                 }
                 sort($arr_team); 
