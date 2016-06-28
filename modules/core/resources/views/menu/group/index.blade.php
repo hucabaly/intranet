@@ -79,6 +79,14 @@ use Rikkei\Core\View\Form;
                                     <td>{{ $item->name }}</td>
                                     <td>
                                         <a href="{{ route('core::setting.menu.group.edit', ['id' => $item->id ]) }}" class="btn-edit">{{ trans('team::view.Edit') }}</a>
+                                        <form action="{{ route('core::setting.menu.group.delete') }}" method="post" class="form-inline">
+                                            {!! csrf_field() !!}
+                                            {!! method_field('delete') !!}
+                                            <input type="hidden" name="id" value="{{ $item->id }}" />
+                                            <button href="" class="btn-delete delete-confirm" disabled>
+                                                <span>{{ trans('core::view.Remove') }}</span>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
