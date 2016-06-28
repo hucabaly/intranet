@@ -158,7 +158,10 @@ function totalMark(elem) {
     var point = $(elem).rateit('value');
     var dataQuestionid = $(elem).attr('data-questionid');
     if(point < 3){
-        $(".comment-question[data-questionid='"+dataQuestionid+"']").css("border","1px solid red");
+        var text = $(".comment-question[data-questionid='"+dataQuestionid+"']").val();
+        if($.trim(text) == ''){
+            $(".comment-question[data-questionid='"+dataQuestionid+"']").css("border","1px solid red");
+        }
     }else{
         $(".comment-question[data-questionid='"+dataQuestionid+"']").css("border","1px solid #d2d6de");
     }
@@ -244,40 +247,25 @@ function confirm(arrayValidate){
         invalid = true;
         strInvalid += '<div>'+arrayValidate['totalMarkValidateRequired']+'</div>';
         $("#tongquat").css("border","1px solid red");
-    }else if(diemTongQuat < 3){
-        var comment_tong = $.trim($("#comment-tongquat").val());
-        if(comment_tong == ""){
-            strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
-            $("#comment-tongquat").css("border","1px solid red");
-            invalid = true;
-        }
-        
     }
     
     var arrValidate = [];
     $(".rateit").each(function(){
         var danhGia = parseInt($(this).rateit('value'));
-        if($(this).attr("id") != "tongquat"){
+       
             if(danhGia > 0 && danhGia < 3){
                 if($(".comment-question[data-questionid='"+$(this).attr("data-questionid")+"']").val() == ""){
                     arrValidate.push($(this).attr("data-questionid"));
                 }
             }
-        }
+        
     }); 
     
     if(arrValidate.length > 0) {
         for(var i=0; i<arrValidate.length; i++){
             $(".comment-question[data-questionid='"+arrValidate[i]+"']").css("border","1px solid red");
         }
-        if(diemTongQuat > 2){
-            strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
-        }else {
-            var comment_tong = $.trim($("#comment-tongquat").val());
-            if(comment_tong != ""){
-                strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
-            }
-        }
+        strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
         invalid = true;
     }
     

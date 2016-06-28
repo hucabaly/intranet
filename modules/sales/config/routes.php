@@ -15,10 +15,10 @@ Route::group([
         Route::post('css/filter_analyze', 'CssController@filterAnalyze')->name('filterAnalyze');
         Route::post('css/apply_analyze', 'CssController@applyAnalyze')->name('applyAnalyze');
         Route::post('css/show_analyze_list_project/{criteriaIds}/{teamIds}/{projectTypeIds}/{startDate}/{endDate}/{criteriaType}/{curpage}/{orderBy}/{ariaType}', 'CssController@showAnalyzeListProject')->name('showAnalyzeListProject');
-        Route::post('css/get_list_less_three_star/{cssresultids}/{curpage}', 'CssController@getListLessThreeStar')->name('getListLessThreeStar');
-        Route::post('css/get_proposes/{cssresultids}/{curpage}', 'CssController@getProposes')->name('getProposes');
-        Route::post('css/get_list_less_three_star_question/{questionid}/{cssresultids}/{curpage}', 'CssController@getListLessThreeStarByQuestion')->name('getListLessThreeStarByQuestion');
-        Route::post('css/get_proposes_question/{questionid}/{cssresultids}/{curpage}', 'CssController@getProposesByQuestion')->name('getProposesByQuestion');
+        Route::post('css/get_list_less_three_star/{cssresultids}/{curpage}/{orderby}/{ariatype}', 'CssController@getListLessThreeStar')->name('getListLessThreeStar');
+        Route::post('css/get_proposes/{cssresultids}/{curpage}/{orderby}/{ariatype}', 'CssController@getProposes')->name('getProposes');
+        Route::post('css/get_list_less_three_star_question/{questionid}/{cssresultids}/{curpage}/{orderby}/{ariatype}', 'CssController@getListLessThreeStarByQuestion')->name('getListLessThreeStarByQuestion');
+        Route::post('css/get_proposes_question/{questionid}/{cssresultids}/{curpage}/{orderby}/{ariatype}', 'CssController@getProposesByQuestion')->name('getProposesByQuestion');
 });
 Route::get('css/success/{id}', 'CssController@success')->name('success');
 Route::get('css/make/{token}/{id}', 'CssController@make')->name('make') ;

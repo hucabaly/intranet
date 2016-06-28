@@ -94,10 +94,36 @@ function filterAnalyze(token){
         $("#endDate_val").val(endDate);
         $("#teamIds_val").val(teamIds);
         $("#projectTypeIds_val").val(projectTypeIds);
+        fixWithScroll();
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
     })
+}
+
+/**
+ * Set thead width for tables
+ */
+function fixWithScroll(){
+    var arrTable = ['tcProjectType', 'tcTeam', 'tcPm', 'tcBrse', 'tcCustomer', 'tcSale'];
+    var count = arrTable.length;
+    for(var i=0; i<count; i++){
+        var elem = $('table[data-id='+arrTable[i]+'] tbody');
+        if(hasScroll(elem)){
+           elem.parent().find('thead').css('width','98%');
+        }else{
+           elem.parent().find('thead').css('width','100%');
+        }
+    }
+}
+
+/**
+ * Detect element has scroll or not
+ */
+function hasScroll(elem){
+    var height = elem.height();
+    var scrollHeight = elem[0].scrollHeight;
+    return (scrollHeight > height);
 }
 
 /**
@@ -186,8 +212,6 @@ function apply(token){
         } 
         $("#danhsachduan tbody").html(html);
         $("#danhsachduan").parent().find(".pagination").html(data["cssResultPaginate"]["paginationRender"]);
-        $("#danhsachduan thead th:not(:first)").removeClass('sorting_asc').removeClass('sorting_desc').addClass('sorting');
-        $("#danhsachduan thead th[data-sort-type=projectDate]").removeClass('sorting').addClass('sorting_asc');
         
         $('#chartAll').highcharts({
             title: {
@@ -294,13 +318,22 @@ function apply(token){
                 $("#danhsachdexuat").parent().find(".pagination").html('');
                 $("#danhsachdexuat tbody").html(noResult);
             }
+            
+            //sort column by all result
+            $("#duoi3sao thead th").attr('data-type','all');
+            $("#danhsachdexuat thead th").attr('data-type','all');
         }else{
             $("#duoi3sao tbody").html('');
             $("#duoi3sao").parent().find(".pagination").html('');
             $("#danhsachdexuat tbody").html('');
             $("#danhsachdexuat").parent().find(".pagination").html('');
+            
+            //sort column by all question
+            $("#duoi3sao thead th").attr('data-type','question');
+            $("#danhsachdexuat thead th").attr('data-type','question');
         }
-        
+        //Set css resultids 
+        $('#cssResultIds').val(data["strResultIds"]);
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
@@ -380,10 +413,10 @@ function showAnalyzeListProject(curpage,token,orderBy,ariaType){
  * @param int curpage
  * @param string token
  */
-function getListLessThreeStar(curpage,token,cssresultids){
+function getListLessThreeStar(curpage,token,cssresultids,orderby,ariatype){
     $("#duoi3sao tbody").html(strLoading);
     $.ajax({
-        url: baseUrl + 'css/get_list_less_three_star/'+cssresultids+'/'+curpage,
+        url: baseUrl + 'css/get_list_less_three_star/'+cssresultids+'/'+curpage+'/'+orderby+'/'+ariatype,
         type: 'post',
         data: {
             _token: token, 
@@ -420,10 +453,10 @@ function getListLessThreeStar(curpage,token,cssresultids){
  * @param int curpage
  * @param string token
  */
-function getProposes(curpage,token,cssresultids){
+function getProposes(curpage,token,cssresultids,orderby,ariatype){
     $("#danhsachdexuat tbody").html(strLoading);
     $.ajax({
-        url: baseUrl + 'css/get_proposes/'+cssresultids+'/'+curpage,
+        url: baseUrl + 'css/get_proposes/'+cssresultids+'/'+curpage+'/'+orderby+'/'+ariatype,
         type: 'post',
         data: {
             _token: token, 
@@ -565,7 +598,10 @@ $(document).on('icheck', function(){
         $('.no-result-tcQuestion').show();
     }); 
 }).trigger('icheck'); // trigger it for page load
-    
+
+/**
+ * Question less 3* change event
+ */
 $(document).ready(function(){
    $(".box-select-question #question-choose").change(function(){
        $(".box-select-question #question-choose option[value=0]").remove();
@@ -580,8 +616,8 @@ $(document).ready(function(){
            var cssresultids = $("#question-choose option:selected").data("cssresult");
            var token = $("#question-choose option:selected").data("token");
            
-           getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids);
-           getProposesQuestion(questionId,curpage,token,cssresultids);
+           getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids,'result_make','asc');
+           getProposesQuestion(questionId,curpage,token,cssresultids,'result_make','asc');
        }
    }); 
 });
@@ -593,10 +629,10 @@ $(document).ready(function(){
  * @param string token
  * @param string cssresultids
  */
-function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids){
+function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids,orderby,ariatype){
     $("#duoi3sao tbody").html(strLoading);
     $.ajax({
-        url: baseUrl + 'css/get_list_less_three_star_question/'+questionId+'/'+cssresultids+'/'+curpage,
+        url: baseUrl + 'css/get_list_less_three_star_question/'+questionId+'/'+cssresultids+'/'+curpage+'/'+orderby+'/'+ariatype,
         type: 'post',
         data: {
             _token: token, 
@@ -621,6 +657,7 @@ function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids){
             $("#duoi3sao").parent().find(".pagination").html(data["paginationRender"]);
         }else {
             $("#duoi3sao tbody").html(noResult);
+            $("#duoi3sao").parent().find(".pagination").html('');
         }
     })
     .fail(function () {
@@ -635,10 +672,10 @@ function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids){
  * @param string token
  * @param string cssresultids
  */
-function getProposesQuestion(questionId,curpage,token,cssresultids){
+function getProposesQuestion(questionId,curpage,token,cssresultids,orderby,ariatype){
     $("#danhsachdexuat tbody").html(strLoading);
     $.ajax({
-        url: baseUrl + 'css/get_proposes_question/'+questionId+'/'+cssresultids+'/'+curpage,
+        url: baseUrl + 'css/get_proposes_question/'+questionId+'/'+cssresultids+'/'+curpage+'/'+orderby+'/'+ariatype,
         type: 'post',
         data: {
             _token: token, 
@@ -662,6 +699,7 @@ function getProposesQuestion(questionId,curpage,token,cssresultids){
             $("#danhsachdexuat").parent().find(".pagination").html(data["paginationRender"]);
         }else{
             $("#danhsachdexuat tbody").html(noResult);
+            $("#danhsachdexuat").parent().find(".pagination").html('');
         }
     })
     .fail(function () {
@@ -709,28 +747,30 @@ function removeEmptyCate(){
 }
 
 function getCriteriaType(type){
-        switch(type){
-            case 'tcProjectType':
-                criteriaType = "projectType";
-                break;
-            case 'tcTeam':
-                criteriaType = "team";
-                break;
-            case 'tcPm':
-                criteriaType = "pm";
-                break;
-            case 'tcBrse':
-                criteriaType = "brse";
-                break;
-            case 'tcCustomer':
-                criteriaType = "customer";
-                break;
-            case 'tcSale':
-                criteriaType = "sale";
-                break;
-            case 'tcQuestion':
-                criteriaType = "question";
-                break;
-        }
-        return criteriaType;
+    switch(type){
+        case 'tcProjectType':
+            criteriaType = "projectType";
+            break;
+        case 'tcTeam':
+            criteriaType = "team";
+            break;
+        case 'tcPm':
+            criteriaType = "pm";
+            break;
+        case 'tcBrse':
+            criteriaType = "brse";
+            break;
+        case 'tcCustomer':
+            criteriaType = "customer";
+            break;
+        case 'tcSale':
+            criteriaType = "sale";
+            break;
+        case 'tcQuestion':
+            criteriaType = "question";
+            break;
     }
+    return criteriaType;
+}
+
+
