@@ -119,11 +119,18 @@ class Css extends Model
      * @param string $cssResultIds
      * return object
      */
-    public static function getListLessThreeStar($cssResultIds,$offset,$perPage){
-        $result = DB::select('select * from css_result_detail '
-                . 'where css_result_id IN ('.$cssResultIds.') and point between 1 and 2 '
-                . 'limit ' . $offset . ',' . $perPage );
-        return $result;
+    public static function getListLessThreeStar($cssResultIds,$perPage,$orderBy,$ariaType){
+        $arrResultId = explode(',', $cssResultIds);
+        return DB::table('css_result')->join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_result_detail', 'css_result_detail.css_result_id', '=', 'css_result.id')
+                ->join('css_question', 'css_result_detail.question_id', '=', 'css_question.id')
+                ->whereIn('css_result.id',$arrResultId)
+                ->where('css_result_detail.point','>=',1)
+                ->where('css_result_detail.point','<=',2)
+                ->orderBy($orderBy,$ariaType)
+                ->orderBy('comment', 'ASC')
+                ->select('css_result.*','css_question.content as question_name','css.project_name','css_result_detail.point as point','css_result_detail.comment as comment','css_result.avg_point as result_point','css_result.created_at as result_make')
+                ->paginate($perPage);
     }
     
     /**
@@ -134,12 +141,19 @@ class Css extends Model
      * @param int $perPage
      * return object
      */
-    public static function getListLessThreeStarByQuestionId($questionId,$cssResultIds,$offset,$perPage){
-        $result = DB::select('select * from css_result_detail '
-                . 'where css_result_id IN ('.$cssResultIds.') and point between 1 and 2 '
-                    . 'and question_id = ' . $questionId . ' '
-                . 'limit ' . $offset . ',' . $perPage );
-        return $result;
+    public static function getListLessThreeStarByQuestionId($questionId,$cssResultIds,$perPage,$orderBy,$ariaType){
+        $arrResultId = explode(',', $cssResultIds);
+        return DB::table('css_result')->join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_result_detail', 'css_result_detail.css_result_id', '=', 'css_result.id')
+                ->join('css_question', 'css_result_detail.question_id', '=', 'css_question.id')
+                ->whereIn('css_result.id',$arrResultId)
+                ->where('css_result_detail.point','>=',1)
+                ->where('css_result_detail.point','<=',2)
+                ->where('css_question.id',$questionId)
+                ->orderBy($orderBy,$ariaType)
+                ->orderBy('comment', 'ASC')
+                ->select('css_result.*','css_question.content as question_name','css.project_name','css_result_detail.point as point','css_result_detail.comment as comment','css_result.avg_point as result_point','css_result.created_at as result_make')
+                ->paginate($perPage);
     }
     
     /**

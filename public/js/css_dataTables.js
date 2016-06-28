@@ -1,5 +1,5 @@
 /**
- * Sort by project name in Project list table
+ * Sort data by comlumns in Project list table
  * @param html element elem
  * @param string token
  */
@@ -46,9 +46,59 @@ function sortProject(elem,token){
         }
         $("#danhsachduan tbody").html(html);
         $("#danhsachduan").parent().find(".pagination").html(data["paginationRender"]);
-        $(document).ready(function() {
-            $('#danhsachduan').dataTable();
-          });
+    })
+}
+
+function sortLess3Star(elem,token){
+    var cssresultids = $('#cssResultIds').val();
+    var sortType = getSortProjectType($(elem).attr('data-sort-type'));
+    var curpage = 1;
+    var ariaType = $(elem).attr('aria-type');
+    $("#duoi3sao tbody").html(strLoading);
+    var dataType = $(elem).attr('data-type'); 
+    if(dataType === "question"){
+        questionId = $(".box-select-question #question-choose").val();
+        url = baseUrl + 'css/get_list_less_three_star_question/'+questionId+'/'+cssresultids+'/'+curpage+'/'+sortType+'/'+ariaType;
+    }else if(dataType === 'all'){
+        url = baseUrl + 'css/get_list_less_three_star/'+cssresultids+'/'+curpage+'/'+sortType+'/'+ariaType;
+    }
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: {
+            _token: token, 
+        },
+    })
+    .done(function (data) { 
+        $(elem).parent().find('th:not(:first)').removeClass('sorting_asc').removeClass('sorting_desc').addClass('sorting');
+        $(elem).parent().find('th:not(:first)').attr('aria-type','asc');
+        if(ariaType == 'asc'){
+            $(elem).attr('aria-type','desc');
+            $(elem).removeClass('sorting').removeClass('sorting_desc').addClass('sorting_asc');
+        }else if(ariaType == 'desc'){
+            $(elem).attr('aria-type','asc');
+            $(elem).removeClass('sorting').removeClass('sorting_asc').addClass('sorting_desc');
+        }
+        var countResult = data["cssResultdata"].length; 
+        html = "";
+        if(countResult > 0){
+            for(var i=0; i<countResult; i++){
+                html += "<tr>";
+                html += "<td>"+data["cssResultdata"][i]["no"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["projectName"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["questionName"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["stars"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["comment"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["makeDateCss"]+"</td>";
+                html += "<td>"+data["cssResultdata"][i]["cssPoint"]+"</td>";
+                html += "</tr>";   
+            }
+            $("#duoi3sao tbody").html(html);
+            $("#duoi3sao").parent().find(".pagination").html(data["paginationRender"]);
+        }else{
+            $("#duoi3sao tbody").html(noResult);
+            $("#duoi3sao").parent().find(".pagination").html('');
+        }
     })
 }
 
@@ -71,6 +121,15 @@ function getSortProjectType(sortType){
             break;
         case 'projectPoint':
             return 'result_point';
+            break;
+        case 'questionName':
+            return 'question_name';
+            break;
+        case 'questionPoint':
+            return 'point';
+            break;
+        case 'customerComment':
+            return 'comment';
             break;
     }
 }
