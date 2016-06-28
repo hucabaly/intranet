@@ -85,7 +85,7 @@ $actionOptions = Action::toOption();
                     <div class="form-group form-label-left">
                         <label class="col-md-3 control-label">{{ trans('team::view.Translate (vi) "description"') }}</label>
                         <div class="input-box col-md-9">
-                            <textarea name="trans[description]" class="form-control"><?php
+                            <textarea name="trans[description]" class="form-control" disabled><?php
                                 if (Lang::has('acl.' . Form::getData('acl.description'))): ?>{{ trans('acl.' . Form::getData('acl.description')) }}<?php
                                 else: ?>{{ Form::getData('acl.description') }}<?php endif; ?></textarea>
                         </div>
