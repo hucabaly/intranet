@@ -18,9 +18,6 @@ use Rikkei\Core\View\Form;
 <div class="row">
     <div class="col-sm-12">
         <div class="box box-info">
-            <div class="box-header with-border">
-                <h2 class="box-title">{{ trans('team::view.Member list') }}</h2>
-            </div>
             <div class="box-body">
                 @include('team::include.filter')
                 @include('team::include.pager')
