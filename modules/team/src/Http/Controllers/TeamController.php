@@ -11,6 +11,7 @@ use Rikkei\Core\View\Breadcrumb;
 use URL;
 use Rikkei\Team\Model\Roles;
 use Rikkei\Team\Model\Permissions;
+use Rikkei\Core\View\Menu;
 
 class TeamController extends \Rikkei\Core\Http\Controllers\Controller
 {
@@ -21,6 +22,7 @@ class TeamController extends \Rikkei\Core\Http\Controllers\Controller
     {
         Breadcrumb::add('Setting');
         Breadcrumb::add('Team', URL::route('team::setting.team.index'));
+        Menu::setActive(null, null, 'setting');
     }
 
     /**

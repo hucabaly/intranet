@@ -9,6 +9,8 @@ use Lang;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Rikkei\Recruitment\Model\RecruitmentApplies;
 use Rikkei\Core\View\CacheHelper;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Pagination\Paginator;
 
 class Employees extends CoreModel
 {
@@ -67,7 +69,7 @@ class Employees extends CoreModel
         $collection = self::select('id','name','email', 'employee_code')
             ->orderBy($pager['order'], $pager['dir']);
         $collection = self::filterGrid($collection);
-        $collection = $collection->paginate($pager['limit']);
+        $collection = self::pagerCollection($collection, $pager['limit'], $pager['page']);
         return $collection;
     }
     
@@ -83,12 +85,19 @@ class Employees extends CoreModel
         if (! $this->birthday) {
             $this->birthday = null;
         }
+        
+        DB::beginTransaction();
         try {
             $this->saveCode();
             $this->saveRecruitmentAppyId();
             CacheHelper::forget(self::KEY_CACHE, $this->id);
-            return parent::save($options);
+            $result = parent::save($options);
+            $this->saveTeamPosition();
+            $this->saveRoles();
+            DB::commit();
+            return $result;
         } catch (Exception $ex) {
+            DB::rollback();
             throw $ex;
         }
     }
@@ -118,6 +127,21 @@ class Employees extends CoreModel
      */
     public function saveTeamPosition(array $teamPostions = [])
     {
+        if (! $this->id) {
+            return;
+        }
+        
+        if (! $teamPostions) {
+            $teamPostions = (array) Input::get('team');
+            if (isset($teamPostions[0])) {
+                unset($teamPostions[0]);
+            }
+        }
+        
+        if (! $teamPostions) {
+            return;
+        }
+        
         //check miss data
         foreach ($teamPostions as $teamPostion) {
             if (! isset($teamPostion['team']) || 
@@ -127,6 +151,7 @@ class Employees extends CoreModel
                 throw new Exception(Lang::get('team::view.Miss data team or position'));
             }
         }
+        
         //check data team not same
         $lengthTeamPostionsSubmit = count($teamPostions);
         for ($i = 1 ; $i < $lengthTeamPostionsSubmit ;  $i++) {
@@ -144,42 +169,43 @@ class Employees extends CoreModel
             Team::where('leader_id', $this->id)->update([
                 'leader_id' => null
             ]);
-            if (count($teamPostions)) {
-                foreach ($teamPostions as $teamPostion) {
-                    $team = Team::find($teamPostion['team']);
-                    if (! $team) {
-                        continue;
-                    }
-                    if (! $team->isFunction()) {
-                        throw new Exception(Lang::get('team::messages.Team :name isnot function', ['name' => $team->name]));
-                    }
-                    $positionLeader = Roles::isPositionLeader($teamPostion['position']);
-                    if ($positionLeader === null) { //not found position
-                        continue;
-                    } else if ($positionLeader === true) { //position is leader
-                        $teamLeader = $team->getLeader();
-                        if (Team::MAX_LEADER == 1 && $teamLeader && $teamLeader->id != $this->id) { //flag team only have 1 leader
-                            throw new Exception(Lang::get('team::messages.Team :name had leader!', ['name' => $team->name]));
-                        } elseif (! $teamLeader) { //save leader for team
-                            $team->leader_id = $this->id;
-                            $team->save();
-                        }
-                    }
-                    $teamMember = new TeamMembers();
-                    $teamMember->setData([
-                        'team_id' => $teamPostion['team'],
-                        'role_id' => $teamPostion['position'],
-                        'employee_id' => $this->id
-                    ]);
-                    $teamMember->save();
+
+            foreach ($teamPostions as $teamPostion) {
+                $team = Team::find($teamPostion['team']);
+                if (! $team) {
+                    continue;
                 }
+                if (! $team->isFunction()) {
+                    throw new Exception(Lang::get('team::messages.Team :name isnot function', ['name' => $team->name]));
+                }
+
+                $positionLeader = Roles::isPositionLeader($teamPostion['position']);
+                if ($positionLeader === null) { //not found position
+                    continue;
+                } else if ($positionLeader === true) { //position is leader
+                    $teamLeader = $team->getLeader();
+                    if (Team::MAX_LEADER == 1 && $teamLeader && $teamLeader->id != $this->id) { //flag team only have 1 leader
+                        throw new Exception(Lang::get('team::messages.Team :name had leader!', ['name' => $team->name]));
+                    } elseif (! $teamLeader) { //save leader for team
+                        $team->leader_id = $this->id;
+                        $team->save();
+                    }
+                }
+
+                $teamMember = new TeamMembers();
+                $teamMember->setData([
+                    'team_id' => $teamPostion['team'],
+                    'role_id' => $teamPostion['position'],
+                    'employee_id' => $this->id
+                ]);
+                $teamMember->save();
             }
-            CacheHelper::forget(self::KEY_CACHE, $this->id);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
             throw $ex;
         }
+        CacheHelper::forget(self::KEY_CACHE, $this->id);
     }
     
     /**
@@ -190,6 +216,16 @@ class Employees extends CoreModel
      */
     public function saveRoles(array $roles = [])
     {
+        if (! $this->id) {
+            return;
+        }
+        if (! $roles) {
+            $roles = (array) Input::get('role');
+        }
+        if (! $roles) {
+            return;
+        }
+        
         DB::beginTransaction();
         try {
             EmployeeRole::where('employee_id', $this->id)->delete();
@@ -259,7 +295,9 @@ class Employees extends CoreModel
             return $employeeTeam;
         }
         $employeeTeam = TeamMembers::select('team_id', 'role_id')->where('employee_id', $this->id)->get();
-        CacheHelper::put(self::KEY_CACHE, $employeeTeam, $this->id);
+        if ($this->id) {
+            CacheHelper::put(self::KEY_CACHE, $employeeTeam, $this->id);
+        }
         return $employeeTeam;
     }
     
@@ -278,7 +316,9 @@ class Employees extends CoreModel
                 ->where('employee_id', $this->id)
                 ->orderBy('role')
                 ->get();
-        CacheHelper::put(self::KEY_CACHE, $employeeRole, $this->id);
+        if ($this->id) {
+            CacheHelper::put(self::KEY_CACHE, $employeeRole, $this->id);
+        }
         return $employeeRole;
     }
     
@@ -295,7 +335,9 @@ class Employees extends CoreModel
         $employeeRole = EmployeeRole::select('role_id')
             ->where('employee_id', $this->id)
             ->get();
-        CacheHelper::put(self::KEY_CACHE, $employeeRole, $this->id);
+        if ($this->id) {
+            CacheHelper::put(self::KEY_CACHE, $employeeRole, $this->id);
+        }
         return $employeeRole;
     }
     

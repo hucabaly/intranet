@@ -35,20 +35,37 @@ html, body {
         -webkit-border-radius: 3px;
     }
 }
-ul.dropdown-menu.input-menu {
-    background-color: #fff;
-    padding-bottom: 10px;
-    li {
-        a {
-            color: #333;
+/*-------menu-------*/
+.main-header {
+    .navbar {
+        #navbar-collapse {
+            .nav {
+                li {
+                    a {
+                        color: $menuTextColor;
+                    }
+                    a:hover {
+                        color: $menuTextColorHover;
+                    }
+                }
+                li.hover {
+                    > a {
+                        background-color: $menuColorHover;
+                    }
+                }
+            }
         }
-        a:hover {
-            background-color: transparent;
-            color: #7f7f7f;
+    }
+    .navbar-custom-menu {
+        .nav {
+            li.hover {
+                > a {
+                    background-color: $menuColorHover;
+                }
+            }
         }
     }
 }
-/*-------menu-------*/
 .dropdown-submenu {
     position: relative;
     >.dropdown-menu {
@@ -82,14 +99,15 @@ ul.dropdown-menu.input-menu {
         border-radius: 6px 0 6px 6px;
     }
 }
-.skin-blue .main-header .navbar .nav>li>a:hover, 
 .skin-blue .main-header .navbar .nav>li>a:active,
-.skin-blue .main-header .navbar .nav>li>a:focus, 
 .skin-blue .main-header .navbar .nav .open>a, 
 .skin-blue .main-header .navbar .nav .open>a:hover, 
-.skin-blue .main-header .navbar .nav .open>a:focus, 
 .skin-blue .main-header .navbar .nav>.active>a {
-    background-color: $menuColorHover;
+    background-color: $menuColorActive;
+}
+.skin-blue .main-header .navbar .nav>li>a:focus,
+.skin-blue .main-header .navbar .nav .open>a:focus{
+    background-color: transparent;
 }
 .navbar-custom-menu {
     .nav.navbar-nav {
@@ -277,9 +295,56 @@ form{
 .tab-content {
     margin-top: 10px;
 }
-.grid-pager {
-    margin-top: 12px;
+/*grid data*/
+.filter-action {
+    text-align: right;
 }
+.grid-pager {
+    margin-top: 20px;
+    .data-pager-info {
+        margin-top: 3px;
+    }
+    .dataTables_paginate {
+        margin-top: -3px;
+    }
+    .grid-pager-box {
+        float: left;
+        margin-right: 20px;
+    }
+    .pagination-wrapper {
+        margin-right: 0;
+    }
+    .grid-pager-box-right {
+        float:right;
+    }
+    ul.pagination {
+        > li {
+            float: left;
+            input {
+                width: 50px;
+                text-align: center;
+            }
+        }
+    }
+}
+.table-grid-data {
+    .filter-input-grid {
+        input {
+            width: 100%;
+        }
+    }
+    .col-checkbox {
+        width: 20px;
+        text-align: center;
+    }
+    .col-id {
+        width: 100px;
+    }
+    .col-action {
+        width: 200px;
+    }
+}
+
 .form-input-dropdown {
     .dropdown-toggle {
         width: 37px;
@@ -377,6 +442,11 @@ form{
         #logo {
             width: auto;
             margin-left: 15px;
+            height: 100%;
+            img {
+                height: 100%;
+                width: 100px;
+            }
         }
         > .navbar {
             margin-left: 126px;
@@ -412,6 +482,13 @@ form{
             }
         }
     }
+    .grid-pager {
+        .grid-pager-box-right {
+            float:left;
+            margin-top: 20px;
+            width: 100%;
+        }
+    }
 }
 /*change size width nav mobile*/
 @media (min-width: $navmobile + 1) {
@@ -422,25 +499,25 @@ form{
         .img-logo-mobile {
             display: none;
         }
-    }
-    ul.dropdown-menu {
-        background-color: $menuSubColor;
-        color: $menuTextColor;
-        border: none;
-        padding-top: 0;
-        padding-bottom: 0;
-        border-radius: 0;
-        -moz-border-radius: 0;
-        -webkit-border-radius: 0;
-        li {
-            a {
-                color: $menuTextColor;
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
-            a:hover {
-                color: $menuTextColor;
-                background-color: $menuColorHover;
+        ul.dropdown-menu {
+            background-color: $menuSubColor;
+            color: $menuTextColor;
+            border: none;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-radius: 0;
+            -moz-border-radius: 0;
+            -webkit-border-radius: 0;
+            li {
+                a {
+                    color: $menuTextColor;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }
+                a:hover {
+                    color: $menuTextColor;
+                    background-color: $menuColorHover;
+                }
             }
         }
     }
@@ -595,8 +672,8 @@ form{
             .sidebar-form {
                 border: none;
                 input[type="text"] {
-                        color: $menuMobileFormInputTextColor;
-                        background-color: $menuMobileFormInputColor;
+                    color: $menuMobileFormInputTextColor;
+                    background-color: $menuMobileFormInputColor;
                 }
                 .btn {
                     color: $menuMobileFormSubmitTextColor;

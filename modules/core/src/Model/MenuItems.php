@@ -47,7 +47,7 @@ class MenuItems extends CoreModel
             ->leftJoin("$menuItemsTable as menu_item_parent", 'menu_item_parent.id', '=', "{$menuItemsTable}.parent_id")
             ->orderBy($pager['order'], $pager['dir']);
         $collection = self::filterGrid($collection);
-        $collection = $collection->paginate($pager['limit']);
+        $collection = self::pagerCollection($collection, $pager['limit'], $pager['page']);
         return $collection;
     }
     
@@ -181,5 +181,43 @@ class MenuItems extends CoreModel
             ->get();
         CacheHelper::put(self::KEY_CACHE, $menuItems);
         return $menuItems;
+    }
+    
+    /**
+     * find menu id level 0 follow name or path url
+     * 
+     * @param string $name
+     * @param $url $menuGroupId
+     */
+    public static function getIdMenuevel0($name = null, $url = null)
+    {
+        if ($menuItemsCache = CacheHelper::get(self::KEY_CACHE)) {
+            return $menuItemsCache;
+        }
+        $menuItem = null;
+        if ($name) {
+            $menuItem = MenuItems::select('id')
+                ->where('parent_id', null)
+                ->where('name', $name)
+                ->first();
+            if ($menuItem) {
+                $menuItem = $menuItem->id;
+                CacheHelper::put(self::KEY_CACHE, $menuItem);
+                return $menuItem;
+            }
+        }
+        
+        if ($url) {
+            $menuItem = MenuItems::select('id')
+                ->where('parent_id', null)
+                ->where('url', $url)
+                ->first();
+            if ($menuItem) {
+                $menuItem = $menuItem->id;
+                CacheHelper::put(self::KEY_CACHE, $menuItem);
+                return $menuItem;
+            }
+        }
+        return null;
     }
 }

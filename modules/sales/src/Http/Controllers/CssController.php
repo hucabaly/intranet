@@ -19,8 +19,21 @@ use Mail;
 use Session;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
+use Rikkei\Core\View\Breadcrumb;
+use Rikkei\Core\View\Menu;
 
 class CssController extends Controller {
+    
+    /**
+     * construct more
+     */
+    protected function _construct()
+    {
+        Breadcrumb::add('Sales');
+        Breadcrumb::add('Css');
+        Menu::setActive('sales', 'sales');
+    }
+    
     static $perPage = 10;
     static $perPageCss = 10;
     

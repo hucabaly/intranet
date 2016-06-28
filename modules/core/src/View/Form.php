@@ -13,6 +13,9 @@ class Form
      */
     public static function setData($data = null, $key = null)
     {
+        if ($key && ! $data) {
+            return;
+        }
         if(!$data || is_string($data)) {
             self::setDataInput($data, $key);
         } elseif (is_array($data)) {
@@ -159,6 +162,30 @@ class Form
              return null;
          }
          return $data[$key2];
+    }
+    
+    /**
+     * get filter data pager follow current url
+     * 
+     * @param string $key
+     * @return string
+     */
+    public static function getFilterPagerData($key = null)
+    {
+        $url = app('request')->url() . '/';
+        $url = md5($url);
+        $data = Session::get('filter_pager.' . $url);
+        if (! isset($data[0])) {
+            return null;
+        }
+        $data = $data[0];
+        if (! $key) {
+            return $data;
+        }
+        if (! isset($data[$key])) {
+            return null;
+        }
+         return $data[$key];
     }
     
     /**

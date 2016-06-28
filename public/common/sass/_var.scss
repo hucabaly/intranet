@@ -5,8 +5,10 @@ $navmobile: 1195px;
 /*color*/
 $menuColor: #ba2226;
 $menuSubColor: #ba2226;
-$menuColorHover: #d53f3f;
+$menuColorHover: rgba(0,0,0,0.1);
+$menuColorActive: #d53f3f;
 $menuTextColor: #fff;
+$menuTextColorHover: #fff;
 
 $menuMobileColor: #414141;
 $menuMobileLineColor: #ba2226;

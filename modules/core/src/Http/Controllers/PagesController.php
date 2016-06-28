@@ -24,7 +24,7 @@ class PagesController extends Controller
             return view('core::welcome');
         }
         Breadcrumb::add('Dashboard');
-        Menu::setActive('home');
+        Menu::setActive('home', '/');
         return view('core::dashbroad');
     }
 }

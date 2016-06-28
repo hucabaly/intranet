@@ -2,6 +2,7 @@
 namespace Rikkei\Team\View;
 
 use Illuminate\Support\Facades\Input;
+use Rikkei\Core\View\Form;
 
 class Config
 {
@@ -59,8 +60,11 @@ class Config
             'limit' => 10,
             'order' => 'id',
             'dir' => 'asc',
+            'page' => 1
         ];
-        $pager = array_merge($pager, Input::all());
+        if ($pagerFilter = Form::getFilterPagerData()) {
+            $pager = array_merge($pager, (array) Form::getFilterPagerData());
+        }
         return $pager;
     }
     

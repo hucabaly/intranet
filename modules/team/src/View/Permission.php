@@ -5,6 +5,11 @@ use Auth;
 use Route;
 use Config;
 use Rikkei\Team\Model\Permissions;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\ViewErrorBag;
+use Rikkei\Core\Http\Controllers\AuthController;
 
 /**
  * class permission
@@ -48,6 +53,10 @@ class Permission
     {
         if (! $this->employee) {
             $this->employee = Auth::user()->getEmployee();
+        }
+        if (! $this->employee || ! $this->employee->isAllowLogin()) {
+            $auth = new AuthController();
+            return $auth->logout(Lang::get('core::message.You donot have permission login'));
         }
         return $this;
     }

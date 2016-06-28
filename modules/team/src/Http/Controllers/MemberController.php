@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Rikkei\Core\View\View;
 use Rikkei\Recruitment\Model\RecruitmentApplies;
 use Rikkei\Team\View\Permission;
+use Rikkei\Team\Model\Roles;
 
 class MemberController extends \Rikkei\Core\Http\Controllers\Controller
 {
@@ -91,8 +92,26 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
             $model = new Employees();
         }
         $dataEmployee = Input::get('employee');
+        $teamPostions = (array) Input::get('team');
         if (isset($dataEmployee['employee_code'])) {
             unset($dataEmployee['employee_code']);
+        }
+        if (isset($teamPostions[0])) {
+            unset($teamPostions[0]);
+        }
+        
+        if (! $id) {
+            Form::setData($dataEmployee, 'employee');
+            Form::setData($teamPostions, 'employee_team');
+            $roles = (array) Input::get('role');
+            $employeeRole = Roles::select('id as role_id', 'role')
+                ->whereIn('id', $roles)
+                ->where('special_flg', Roles::FLAG_ROLE)
+                ->orderBy('role')
+                ->get();
+            if (count($employeeRole)) {
+                Form::setData($employeeRole, 'employee_role');
+            }
         }
         $validator = Validator::make($dataEmployee, [
             'employee_card_id' => 'required|integer',
@@ -105,7 +124,6 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
             if ($id) {
                 return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors($validator);
             }
-            Form::setData($dataEmployee, 'employee');
             return redirect()->route('team::team.member.create')->withErrors($validator);
         }
         //check email of rikkei
@@ -114,7 +132,6 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
             if ($id) {
                 return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors($message);
             }
-            Form::setData($dataEmployee, 'employee');
             return redirect()->route('team::team.member.create')->withErrors($message);
         }
         
@@ -129,36 +146,23 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
                 return redirect()->route('team::team.member.edit', ['id' => $id])
                     ->withErrors(Lang::get('team::messages.Coinciding employee card code'));
             }
-            Form::setData($dataEmployee, 'employee');
             return redirect()->route('team::team.member.create')
                 ->withErrors(Lang::get('team::messages.Coinciding employee card code'));
         }
         
         //process team
-        $teamPostions = Input::get('team');
         if (! $teamPostions || ! count($teamPostions)) {
             if ($id) {
                 return redirect()->route('team::team.member.edit', ['id' => $id])
                         ->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
             }
-            Form::setData($dataEmployee, 'employee');
             return redirect()->route('team::team.member.create')
                 ->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
-        }
-        
-        //process role
-        $roles = Input::get('role');
-        $teamPostions = (array) $teamPostions;
-        $roles = (array) $roles;
-        if (isset($teamPostions[0])) {
-            unset($teamPostions[0]);
         }
         
         //save model
         $model->setData($dataEmployee);
         $model->save();
-        $model->saveTeamPosition($teamPostions);
-        $model->saveRoles($roles);
         
         $messages = [
                 'success'=> [
@@ -181,6 +185,7 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
      */
     public function create()
     {
+        Menu::setActive('hr', '/');
         Breadcrumb::add(Lang::get('team::view.Create new'), URL::route('team::team.member.create'));
         return view('team::member.edit');
     }

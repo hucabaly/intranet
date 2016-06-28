@@ -20,7 +20,7 @@ class MenuItemController extends Controller
     protected function _construct()
     {
         Breadcrumb::add('Menu item', URL::route('core::setting.menu.item.index'));
-        Menu::setActive('setting');
+        Menu::setActive(null, null, 'setting');
     }
     
     /**

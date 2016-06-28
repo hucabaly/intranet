@@ -19,7 +19,7 @@ $genderOption = Employees::toOptionGender();
 <div class="form-horizontal form-label-left">
     <div class="form-group">
         <label class="col-md-3 control-label required">{{ trans('team::view.Employee card id') }}<em>*</em></label>
-        <div class="input-box col-md-8">
+        <div class="input-box col-md-9">
             <input type="text" class="form-control" name="employee[employee_card_id]" placeholder="{{ trans('team::view.Employee card id') }}" value="{{ Form::getData('employee.employee_card_id') }}" />
         </div>
     </div>

@@ -56,6 +56,11 @@ class CoreModel extends \Illuminate\Database\Eloquent\Model
         return $collection;
     }
     
+    public static function pagerCollection(&$collection, $limit, $page)
+    {
+        return $collection->paginate($limit, ['*'], 'page', $page);
+    }
+    
     /**
      * get table name of model
      * 

@@ -10,6 +10,7 @@ use Lang;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Rikkei\Team\Model\Permissions;
+use Rikkei\Core\View\Menu;
 
 class RoleController extends \Rikkei\Core\Http\Controllers\Controller
 {
@@ -20,6 +21,7 @@ class RoleController extends \Rikkei\Core\Http\Controllers\Controller
     {
         Breadcrumb::add('Setting');
         Breadcrumb::add('Role');
+        Menu::setActive(null, null, 'setting');
     }
     
     /**
