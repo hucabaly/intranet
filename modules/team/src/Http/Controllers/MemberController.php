@@ -147,18 +147,16 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
         }
         
         //process role
-        $roles = Input::get('role');
         $teamPostions = (array) $teamPostions;
-        $roles = (array) $roles;
         if (isset($teamPostions[0])) {
             unset($teamPostions[0]);
         }
-        
+        if (! $id) {
+            Form::setData($dataEmployee, 'employee');
+        }
         //save model
         $model->setData($dataEmployee);
         $model->save();
-        $model->saveTeamPosition($teamPostions);
-        $model->saveRoles($roles);
         
         $messages = [
                 'success'=> [
