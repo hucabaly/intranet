@@ -58,7 +58,7 @@
                     <tr class="cau">
                         <td class="title" colspan="2">{{$questionChild->sort_order . ". " .$questionChild->content}}</td>
                         <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$questionChild->id}}" onclick="totalMark(this);"></div></td>
-                        <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" data-questionid="{{$questionChild->id}}"  ></textarea></td>
+                        <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$questionChild->id}}"  ></textarea></td>
                     </tr>
                 @endforeach
             @endif
@@ -68,7 +68,7 @@
             <tr class="cau">
                 <td class="title" colspan="2">{{$question->sort_order . ". " .$question->content}}</td>
                 <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$question->id}}" onclick="totalMark(this);"></div></td>
-                <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" data-questionid="{{$question->id}}"  ></textarea></td>
+                <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$question->id}}"  ></textarea></td>
             </tr>
         @endforeach
     @endif
@@ -83,7 +83,7 @@
         <td class="title" colspan="2">{{ $overviewQuestionContent }}</td>
         
         <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-questionid="{{$overviewQuestionId}}" data-rateit-resetable="false" onclick="totalMark(this);"></div></td>
-        <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" data-questionid="{{$overviewQuestionId}}" id="comment-tongquat"  ></textarea></td>
+        <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$overviewQuestionId}}" id="comment-tongquat"  ></textarea></td>
     </tr>
 
     <!-- Proposed -->
@@ -92,7 +92,7 @@
             {{ trans('sales::view.Proposed') }}
         </td>
         
-        <td class="title2" colspan="2"><textarea class="proposed form-control" id="proposed" placeholder="{{ trans('sales::view.Proposed placeholder') }}"></textarea></td>
+        <td class="title2" colspan="2"><textarea class="proposed form-control" id="proposed" maxlength="2000" placeholder="{{ trans('sales::view.Proposed placeholder') }}"></textarea></td>
         <td class="title2"></td>
     </tr>
 </table>
