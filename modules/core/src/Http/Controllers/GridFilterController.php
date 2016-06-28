@@ -16,7 +16,22 @@ class GridFilterController extends Controller
         }
         $urlEncode = md5(Input::get('current_url'));
         Session::forget('filter.' . $urlEncode);
+        Session::forget('filter_pager');
         Session::push('filter.' . $urlEncode, Input::get('filter'));
+        return redirect('/');
+    }
+    
+    /**
+     * add data grid filter follow url
+     */
+    public function pager()
+    {
+        if (! Input::get('current_url')) {
+            return redirect('/');
+        }
+        $urlEncode = md5(Input::get('current_url'));
+        Session::forget('filter_pager.' . $urlEncode);
+        Session::push('filter_pager.' . $urlEncode, Input::get('filter_pager'));
         return redirect('/');
     }
     
@@ -32,6 +47,7 @@ class GridFilterController extends Controller
         }
         $urlEncode = md5(Input::get('current_url'));
         Session::forget('filter.' . $urlEncode);
+        Session::forget('filter_pager');
         return redirect('/');
     }
     
@@ -43,6 +59,12 @@ class GridFilterController extends Controller
     public function flush()
     {
         Session::forget('filter');
+        Session::forget('filter_pager');
         return redirect('/');
+    }
+    
+    public function forgerPager()
+    {
+        Session::forget('filter_pager');
     }
 }

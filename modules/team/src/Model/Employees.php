@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Rikkei\Recruitment\Model\RecruitmentApplies;
 use Rikkei\Core\View\CacheHelper;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Pagination\Paginator;
 
 class Employees extends CoreModel
 {
@@ -68,7 +69,7 @@ class Employees extends CoreModel
         $collection = self::select('id','name','email', 'employee_code')
             ->orderBy($pager['order'], $pager['dir']);
         $collection = self::filterGrid($collection);
-        $collection = $collection->paginate($pager['limit']);
+        $collection = self::pagerCollection($collection, $pager['limit'], $pager['page']);
         return $collection;
     }
     

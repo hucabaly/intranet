@@ -147,6 +147,27 @@ jQuery(document).ready(function($) {
             }
         });
     }
+    //filter pager with param filter
+    function filterPager(pagerValue)
+    {
+        if (pagerValue == undefined) {
+            pagerValue = $('.grid-pager form.form-pager input[name=page]').val();
+        }
+        data = {};
+        data['limit'] = $('.grid-pager select[name=limit] option:selected').data('value');
+        data['page'] = pagerValue;
+        dataSubmit = {'filter_pager': data, 'current_url': currentUrl};
+        $('.btn-search-filter .fa').removeClass('hidden');
+        $.ajax({
+            url: baseUrl + 'grid/filter/pager',
+            type: 'GET',
+            data: dataSubmit,
+            success: function() {
+                window.location.href = currentUrl;
+            }
+        });
+    }
+    
     //input filter grid key down - request filter action
     $(document).on('keydown','input.filter-grid',function(event) {
         if(event.which == 13) {
@@ -173,6 +194,26 @@ jQuery(document).ready(function($) {
         filterRequest();
         return false;
     });
+    
+    //pager 
+    $('.grid-pager select[name=limit]').on('change', function(event) {
+        event.preventDefault();
+        filterPager(1);
+    });
+    $('.grid-pager .pagination a').on('click', function(event) {
+        page = $(this).data('page');
+        if (page) {
+            event.preventDefault();
+            filterPager(page);
+        }
+    });
+    $('.grid-pager .pagination form.form-pager').on('submit', function(event) {
+        event.preventDefault();
+        page = $(this).find('input[name=page]').val();
+        filterPager(page);
+    });
+    
+    /* ---- endfilter-grid action */
     
     //menu mobile
     var domOpenChild = '<i class="fa fa-angle-left pull-right"></i>';

@@ -28,15 +28,8 @@ $menuGroupTable = \Rikkei\Core\Model\Menus::getTableName();
     <div class="col-sm-12">
         <div class="box box-info">
             <div class="box-body">
+                @include('team::include.filter')
                 @include('team::include.pager')
-                <div class="filter-action">
-                    <button class="btn btn-primary btn-reset-filter">
-                        <span>{{ trans('team::view.Reset filter') }} <i class="fa fa-spin fa-refresh hidden"></i></span>
-                    </button>
-                    <button class="btn btn-primary btn-search-filter">
-                        <span>{{ trans('team::view.Search') }} <i class="fa fa-spin fa-refresh hidden"></i></span>
-                    </button>
-                </div>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped dataTable table-bordered table-hover table-grid-data">
