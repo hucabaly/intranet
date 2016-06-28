@@ -304,13 +304,39 @@ class Css extends Model
     }
     
     /**
-     * get Css list
+     * Get all Css list
      * @param int $perPage
+     * @return Css list
      */
-    public static function getCssList($perPage){
+    public function getCssList($perPage){
         return self::orderBy('id', 'desc')->paginate($perPage);
         
     }
     
+    /**
+     * Get Css by employee
+     * @param int $employeeId
+     * @param int $perPage
+     * @return Css list
+     */
+    public function getCssListByEmployee($employeeId,$perPage){
+        return self::where('employee_id',$employeeId)
+                ->orderBy('id', 'desc')
+                ->paginate($perPage);
+        
+    }
     
+    /**
+     * Get Css by team list
+     * @param array $arrTeamId
+     * @param int $perPage
+     * @return Css list
+     */
+    public function getCssListByCssIdAndArrTeamId($arrTeamId,$perPage){
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeamId)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->paginate($perPage);
+    }
 }

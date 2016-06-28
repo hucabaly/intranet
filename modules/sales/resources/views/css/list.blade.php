@@ -10,14 +10,14 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                    <div class="row">
-                        <div class="col-sm-6"></div>
-                        <div class="col-sm-6"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            @if(count($css) > 0)
+                <div class="row">
+                    <div class="col-sm-6"></div>
+                    <div class="col-sm-6"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        @if(count($css) > 0)
+                        <div class="table-responsive">
                             <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                 <thead>
                                     <tr role="row">
@@ -62,19 +62,19 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            @else
-                            <h3>{{trans('sales::view.No result not found')}}</h3>
-                            @endif
-                        </div>
+                        </div>    
+                        @else
+                        <h3>{{trans('sales::view.No result not found')}}</h3>
+                        @endif
                     </div>
-                    <div class="row">
-                        <div class="col-sm-5">
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
 
-                        </div>
-                        <div class="col-sm-7">
-                            <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
-                                <?php echo $css->render(); ?>
-                            </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                            <?php echo $css->render(); ?>
                         </div>
                     </div>
                 </div>
@@ -109,14 +109,9 @@
 <!-- Styles -->
 @section('css')
 <link href="{{ asset('css/css-screen.css') }}" rel="stylesheet" type="text/css" >
-<link href="{{ asset('css/rateit.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
 <!-- Script -->
 @section('script')
-<script src="{{ asset('js/jquery.rateit.js') }}"></script>
 <script src="{{ asset('js/css.js') }}"></script>
-<script type="text/javascript">
-    $(function () { $('#rateit_star').rateit({min: 1, max: 10, step: 2}); });
-</script>
 @endsection
