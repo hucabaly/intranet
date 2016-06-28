@@ -39,7 +39,7 @@ use Rikkei\Core\View\Form;
             </label>
         </div>
 
-            <div class="dataTables_paginate paging_simple_numbers grid-pager-box">
+            <div class="dataTables_paginate paging_simple_numbers grid-pager-box pagination-wrapper">
                 <ul class="pagination">
                     <li class="paginate_button first-page<?php if($collectionModel->currentPage() == 1): ?> disabled<?php endif; ?>">
                         <a href="<?php if($collectionModel->currentPage() != 1): ?>{{ Config::urlParams(['page' => 1]) }}<?php else: ?>#<?php endif; ?>" data-page="1">

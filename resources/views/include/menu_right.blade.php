@@ -6,6 +6,11 @@ use Rikkei\Core\View\Menu;
 use Rikkei\Core\Model\Menus;
 
 $menuSetting = Menus::getMenuSetting();
+if (Menu::getActive() == 'setting') {
+    $userSetting = ' active';
+} else {
+    $userSetting = '';
+}
 ?>
 
 <!-- Navbar Right Menu -->
@@ -15,7 +20,7 @@ $menuSetting = Menus::getMenuSetting();
         @if ($menuSetting && $menuSetting->id)
             <?php $menuSettingHtml = Menu::get($menuSetting->id, 1); ?>
             @if (e($menuSettingHtml))
-                <li class="setting dropdown">
+                <li class="setting dropdown{{ $userSetting }}">
                     <a href="{{ URL::route('team::setting.team.index') }}" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-gears"></i>
                     </a>

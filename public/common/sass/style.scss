@@ -35,20 +35,37 @@ html, body {
         -webkit-border-radius: 3px;
     }
 }
-ul.dropdown-menu.input-menu {
-    background-color: #fff;
-    padding-bottom: 10px;
-    li {
-        a {
-            color: #333;
+/*-------menu-------*/
+.main-header {
+    .navbar {
+        #navbar-collapse {
+            .nav {
+                li {
+                    a {
+                        color: $menuTextColor;
+                    }
+                    a:hover {
+                        color: $menuTextColorHover;
+                    }
+                }
+                li.hover {
+                    > a {
+                        background-color: $menuColorHover;
+                    }
+                }
+            }
         }
-        a:hover {
-            background-color: transparent;
-            color: #7f7f7f;
+    }
+    .navbar-custom-menu {
+        .nav {
+            li.hover {
+                > a {
+                    background-color: $menuColorHover;
+                }
+            }
         }
     }
 }
-/*-------menu-------*/
 .dropdown-submenu {
     position: relative;
     >.dropdown-menu {
@@ -82,14 +99,15 @@ ul.dropdown-menu.input-menu {
         border-radius: 6px 0 6px 6px;
     }
 }
-.skin-blue .main-header .navbar .nav>li>a:hover, 
 .skin-blue .main-header .navbar .nav>li>a:active,
-.skin-blue .main-header .navbar .nav>li>a:focus, 
 .skin-blue .main-header .navbar .nav .open>a, 
 .skin-blue .main-header .navbar .nav .open>a:hover, 
-.skin-blue .main-header .navbar .nav .open>a:focus, 
 .skin-blue .main-header .navbar .nav>.active>a {
-    background-color: $menuColorHover;
+    background-color: $menuColorActive;
+}
+.skin-blue .main-header .navbar .nav>li>a:focus,
+.skin-blue .main-header .navbar .nav .open>a:focus{
+    background-color: transparent;
 }
 .navbar-custom-menu {
     .nav.navbar-nav {
@@ -293,6 +311,9 @@ form{
         float: left;
         margin-right: 20px;
     }
+    .pagination-wrapper {
+        margin-right: 0;
+    }
     .grid-pager-box-right {
         float:right;
     }
@@ -301,6 +322,7 @@ form{
             float: left;
             input {
                 width: 50px;
+                text-align: center;
             }
         }
     }
@@ -420,6 +442,11 @@ form{
         #logo {
             width: auto;
             margin-left: 15px;
+            height: 100%;
+            img {
+                height: 100%;
+                width: 100px;
+            }
         }
         > .navbar {
             margin-left: 126px;
@@ -472,25 +499,25 @@ form{
         .img-logo-mobile {
             display: none;
         }
-    }
-    ul.dropdown-menu {
-        background-color: $menuSubColor;
-        color: $menuTextColor;
-        border: none;
-        padding-top: 0;
-        padding-bottom: 0;
-        border-radius: 0;
-        -moz-border-radius: 0;
-        -webkit-border-radius: 0;
-        li {
-            a {
-                color: $menuTextColor;
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
-            a:hover {
-                color: $menuTextColor;
-                background-color: $menuColorHover;
+        ul.dropdown-menu {
+            background-color: $menuSubColor;
+            color: $menuTextColor;
+            border: none;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-radius: 0;
+            -moz-border-radius: 0;
+            -webkit-border-radius: 0;
+            li {
+                a {
+                    color: $menuTextColor;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }
+                a:hover {
+                    color: $menuTextColor;
+                    background-color: $menuColorHover;
+                }
             }
         }
     }
@@ -645,8 +672,8 @@ form{
             .sidebar-form {
                 border: none;
                 input[type="text"] {
-                        color: $menuMobileFormInputTextColor;
-                        background-color: $menuMobileFormInputColor;
+                    color: $menuMobileFormInputTextColor;
+                    background-color: $menuMobileFormInputColor;
                 }
                 .btn {
                     color: $menuMobileFormSubmitTextColor;
