@@ -94,10 +94,36 @@ function filterAnalyze(token){
         $("#endDate_val").val(endDate);
         $("#teamIds_val").val(teamIds);
         $("#projectTypeIds_val").val(projectTypeIds);
+        fixWithScroll();
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
     })
+}
+
+/**
+ * Set thead width for tables
+ */
+function fixWithScroll(){
+    var arrTable = ['tcProjectType', 'tcTeam', 'tcPm', 'tcBrse', 'tcCustomer', 'tcSale'];
+    var count = arrTable.length;
+    for(var i=0; i<count; i++){
+        var elem = $('table[data-id='+arrTable[i]+'] tbody');
+        if(hasScroll(elem)){
+           elem.parent().find('thead').css('width','98%');
+        }else{
+           elem.parent().find('thead').css('width','100%');
+        }
+    }
+}
+
+/**
+ * Detect element has scroll or not
+ */
+function hasScroll(elem){
+    var height = elem.height();
+    var scrollHeight = elem[0].scrollHeight;
+    return (scrollHeight > height);
 }
 
 /**
@@ -572,7 +598,10 @@ $(document).on('icheck', function(){
         $('.no-result-tcQuestion').show();
     }); 
 }).trigger('icheck'); // trigger it for page load
-    
+
+/**
+ * Question less 3* change event
+ */
 $(document).ready(function(){
    $(".box-select-question #question-choose").change(function(){
        $(".box-select-question #question-choose option[value=0]").remove();
@@ -718,28 +747,30 @@ function removeEmptyCate(){
 }
 
 function getCriteriaType(type){
-        switch(type){
-            case 'tcProjectType':
-                criteriaType = "projectType";
-                break;
-            case 'tcTeam':
-                criteriaType = "team";
-                break;
-            case 'tcPm':
-                criteriaType = "pm";
-                break;
-            case 'tcBrse':
-                criteriaType = "brse";
-                break;
-            case 'tcCustomer':
-                criteriaType = "customer";
-                break;
-            case 'tcSale':
-                criteriaType = "sale";
-                break;
-            case 'tcQuestion':
-                criteriaType = "question";
-                break;
-        }
-        return criteriaType;
+    switch(type){
+        case 'tcProjectType':
+            criteriaType = "projectType";
+            break;
+        case 'tcTeam':
+            criteriaType = "team";
+            break;
+        case 'tcPm':
+            criteriaType = "pm";
+            break;
+        case 'tcBrse':
+            criteriaType = "brse";
+            break;
+        case 'tcCustomer':
+            criteriaType = "customer";
+            break;
+        case 'tcSale':
+            criteriaType = "sale";
+            break;
+        case 'tcQuestion':
+            criteriaType = "question";
+            break;
     }
+    return criteriaType;
+}
+
+
