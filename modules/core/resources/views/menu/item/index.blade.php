@@ -28,15 +28,8 @@ $menuGroupTable = \Rikkei\Core\Model\Menus::getTableName();
     <div class="col-sm-12">
         <div class="box box-info">
             <div class="box-body">
+                @include('team::include.filter')
                 @include('team::include.pager')
-                <div class="filter-action">
-                    <button class="btn btn-primary btn-reset-filter">
-                        <span>{{ trans('team::view.Reset filter') }} <i class="fa fa-spin fa-refresh hidden"></i></span>
-                    </button>
-                    <button class="btn btn-primary btn-search-filter">
-                        <span>{{ trans('team::view.Search') }} <i class="fa fa-spin fa-refresh hidden"></i></span>
-                    </button>
-                </div>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped dataTable table-bordered table-hover table-grid-data">
@@ -45,7 +38,7 @@ $menuGroupTable = \Rikkei\Core\Model\Menus::getTableName();
                             <th class="sorting {{ Config::getDirClass('id') }} col-id" onclick="window.location.href = '{{Config::getUrlOrder('id')}}';">Id</th>
                             <th class="sorting {{ Config::getDirClass('name') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('name')}}';">{{ trans('team::view.Name') }}</th>
                             <th class="sorting {{ Config::getDirClass('nane_group') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('nane_group')}}';">Menu group</th>
-                            <th class="sorting {{ Config::getDirClass('name_parent') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('name_parent')}}';">{{ trans('team::view.Parent') }}</th>
+                            <th class="sorting {{ Config::getDirClass('name_parent') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('name_parent')}}';">Menu Parent</th>
                             <th class="sorting {{ Config::getDirClass('url') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('url')}}';">Url</th>
                             <th class="col-action">&nbsp;</th>
                         </tr>

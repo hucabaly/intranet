@@ -106,5 +106,6 @@ return [
     'Join date' => 'Ngày vào cty',
     'Register new member' => 'Đăng ký thành viên mới',
     'Employee card id' => 'Mã thẻ',
+    'Sum :itemTotal entries / :pagerTotal pager' => 'Tổng :itemTotal đối tượng / :pagerTotal trang',
     
 ];

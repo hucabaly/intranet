@@ -1,6 +1,12 @@
 <?php
+
+use Rikkei\Core\View\Form;
+
 $rolesData = Rikkei\Team\Model\Roles::getAllRole();
 $employeeRoleIds = [];
+if (! Form::getData('employee.id') && Form::getData('employee_role')) {
+    $employeeRoles = Form::getData('employee_role');
+}
 ?>
 
 <div class="form-horizontal form-label-left">
@@ -10,9 +16,21 @@ $employeeRoleIds = [];
                 @if (isset($employeeRoles) && count($employeeRoles))
                     @foreach ($employeeRoles as $employeeRole)
                         <li>
-                            <span>{{ $employeeRole->role }}</span>
+                            <span>
+                                @if (is_array($employeeRoles))
+                                    {{ $employeeRole['role'] }}
+                                @else
+                                    {{ $employeeRole->role }}
+                                @endif
+                            </span>
                         </li>
-                        <?php $employeeRoleIds[] = $employeeRole->role_id; ?>
+                        <?php 
+                            if (is_array($employeeRoles)) {
+                                $employeeRoleIds[] = $employeeRole['role_id'];
+                            } else {
+                                $employeeRoleIds[] = $employeeRole->role_id;
+                            }
+                         ?>
                     @endforeach
                 @endif
             </ul>
