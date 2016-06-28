@@ -9,6 +9,7 @@ use Rikkei\Core\View\Form;
 use Rikkei\Core\View\Breadcrumb;
 use URL;
 use Rikkei\Team\Model\Roles;
+use Rikkei\Core\View\Menu;
 
 class PositionController extends \Rikkei\Core\Http\Controllers\Controller
 {
@@ -19,6 +20,7 @@ class PositionController extends \Rikkei\Core\Http\Controllers\Controller
     {
         Breadcrumb::add('Setting');
         Breadcrumb::add('Team', URL::route('team::setting.team.index'));
+        Menu::setActive(null, null, 'setting');
     }
 
     /**

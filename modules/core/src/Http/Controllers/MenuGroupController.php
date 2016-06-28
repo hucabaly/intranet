@@ -19,7 +19,7 @@ class MenuGroupController extends Controller
     protected function _construct()
     {
         Breadcrumb::add('Menu', URL::route('core::setting.menu.group.index'));
-        Menu::setActive('setting');
+        Menu::setActive(null, null, 'setting');
     }
     
     /**

@@ -100,12 +100,14 @@ html, body {
     }
 }
 .skin-blue .main-header .navbar .nav>li>a:active,
-.skin-blue .main-header .navbar .nav>li>a:focus, 
 .skin-blue .main-header .navbar .nav .open>a, 
 .skin-blue .main-header .navbar .nav .open>a:hover, 
-.skin-blue .main-header .navbar .nav .open>a:focus, 
 .skin-blue .main-header .navbar .nav>.active>a {
     background-color: $menuColorActive;
+}
+.skin-blue .main-header .navbar .nav>li>a:focus,
+.skin-blue .main-header .navbar .nav .open>a:focus{
+    background-color: transparent;
 }
 .navbar-custom-menu {
     .nav.navbar-nav {
@@ -309,6 +311,9 @@ form{
         float: left;
         margin-right: 20px;
     }
+    .pagination-wrapper {
+        margin-right: 0;
+    }
     .grid-pager-box-right {
         float:right;
     }
@@ -317,6 +322,7 @@ form{
             float: left;
             input {
                 width: 50px;
+                text-align: center;
             }
         }
     }

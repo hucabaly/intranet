@@ -27,9 +27,14 @@ class Menu
      * 
      * @param string $name
      * @param string $path
+     * @param string $flag
      */
-    public static function setActive($name = null, $path = null)
+    public static function setActive($name = null, $path = null, $flag = null)
     {
+        if ($flag) {
+            self::$active = $flag;
+            return;
+        }
         self::$active = MenuItems::getIdMenuevel0($name, $path);
     }
     

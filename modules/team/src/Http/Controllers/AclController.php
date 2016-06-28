@@ -19,7 +19,8 @@ class AclController extends \Rikkei\Core\Http\Controllers\Controller
     protected function _construct()
     {
         Breadcrumb::add('Acl', URL::route('team::setting.acl.index'));
-        Menu::setActive('setting');
+        Menu::setActive(null, null, 'setting');
+
     }
     
     /**
