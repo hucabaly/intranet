@@ -172,10 +172,10 @@
                                             <thead>
                                                 <tr>
                                                     <th>{{trans('sales::view.No.')}}</th>
-                                                    <th>{{trans('sales::view.Project name')}}</th>
-                                                    <th>{{trans('sales::view.Customer comment')}}</th>
-                                                    <th>{{trans('sales::view.Make date css')}}</th>
-                                                    <th>{{trans('sales::view.Css point')}}</th>
+                                                    <th onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="projectName" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Project name')}}</th>
+                                                    <th onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="proposed" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Customer comment')}}</th>
+                                                    <th onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="makeDate" aria-type="desc" class="sorting_asc" data-type="all">{{trans('sales::view.Make date css')}}</th>
+                                                    <th onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="projectPoint" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Css point')}}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

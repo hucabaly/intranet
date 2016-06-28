@@ -561,7 +561,7 @@ class CssController extends Controller {
             $lessThreeStar = self::getListLessThreeStar($strResultIds,1,'result_make','asc');
 
             //Get data fill to table customer's proposes
-            $proposes = self::getProposes($strResultIds,1);
+            $proposes = self::getProposes($strResultIds,1,'result_make','asc');
 
             $htmlQuestionList = "<option value='0'>".Lang::get('sales::view.Please choose question')."</option>";
             if($criteria == 'question'){
@@ -694,7 +694,6 @@ class CssController extends Controller {
         });
         
         $lessThreeStar = Css::getListLessThreeStar($cssResultIds,self::$perPage,$orderBy,$ariaType);
-        
         $offset = ($lessThreeStar->currentPage()-1) * $lessThreeStar->perPage() + 1;
         $result = [];
         foreach($lessThreeStar as $item){
@@ -747,17 +746,19 @@ class CssController extends Controller {
      * @param array $cssResultIds
      * @param int $curPage
      */
-    protected function getProposes($cssResultIds,$curPage){
-        $offset = ($curPage-1) * self::$perPage;
-        $proposes = Css::getProposes($cssResultIds,$offset,self::$perPage);
+    protected function getProposes($cssResultIds,$curPage,$orderBy,$ariaType){
+        Paginator::currentPageResolver(function () use ($curPage) {
+            return $curPage;
+        });
+        
+        $proposes = Css::getProposes($cssResultIds,self::$perPage,$orderBy,$ariaType);
+        $offset = ($proposes->currentPage()-1) * $proposes->perPage() + 1;
         $result =[];
         foreach($proposes as $propose){
-            $css = Css::find($propose->css_id);
-            
             $result[] = [
-                "no"   => ++$offset,
+                "no"   => $offset++,
                 "cssPoint"   => self::formatNumber($propose->avg_point),
-                "projectName"   => $css->project_name,
+                "projectName"   => $propose->project_name,
                 "customerComment" => $propose->proposed,
                 "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),
             ];
@@ -770,19 +771,19 @@ class CssController extends Controller {
             if($curPage == 1){
                 $html .= '<li class="disabled"><span>«</span></li>';
             }else{
-                $html .= '<li><a href="javascript:void(0)" onclick="getProposes('.($curPage-1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="back">«</a></li>';
+                $html .= '<li><a href="javascript:void(0)" onclick="getProposes('.($curPage-1).',\''.Session::token().'\',\''.$cssResultIds.'\',\''.$orderBy.'\',\''.$ariaType.'\');" rel="back">«</a></li>';
             }
             for($i=1; $i<=$totalPage; $i++){
                 if($i == $curPage){
                     $html .= '<li class="active"><span>'.$i.'</span></li>';
                 }else{
-                    $html .= '<li><a href="javascript:void(0)" onclick="getProposes('.$i.',\''.Session::token().'\',\''.$cssResultIds.'\');">'.$i.'</a></li>';
+                    $html .= '<li><a href="javascript:void(0)" onclick="getProposes('.$i.',\''.Session::token().'\',\''.$cssResultIds.'\',\''.$orderBy.'\',\''.$ariaType.'\');">'.$i.'</a></li>';
                 }
             }
             if($curPage == $totalPage){
                 $html .= '<li class="disabled"><span>»</span></li>';
             }else{
-                $html .= '<li><a href="javascript:void(0)" onclick="getProposes('.($curPage+1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="next">»</a></li>';
+                $html .= '<li><a href="javascript:void(0)" onclick="getProposes('.($curPage+1).',\''.Session::token().'\',\''.$cssResultIds.'\',\''.$orderBy.'\',\''.$ariaType.'\');" rel="next">»</a></li>';
             }
         }
         
@@ -1448,43 +1449,46 @@ class CssController extends Controller {
      * @param array $cssResultIds
      * @param int $curPage
      */
-    protected function getProposesByQuestion($questionId,$cssResultIds,$curPage){
-        $offset = ($curPage-1) * self::$perPage;
-        $proposes = Css::getProposesByQuestion($questionId,$cssResultIds,$offset,self::$perPage);
+    protected function getProposesByQuestion($questionId,$cssResultIds,$curPage,$orderBy,$ariaType){
+        Paginator::currentPageResolver(function () use ($curPage) {
+            return $curPage;
+        });
         
+        $proposes = Css::getProposesByQuestion($questionId,$cssResultIds,self::$perPage,$orderBy,$ariaType);
+        
+        $offset = ($proposes->currentPage()-1) * $proposes->perPage() + 1;
         $result =[];
         foreach($proposes as $propose){
-            $css = Css::find($propose->css_id);
-            
             $result[] = [
-                "no"   => ++$offset,
+                "no"   => $offset++,
                 "cssPoint"   => self::formatNumber($propose->avg_point),
-                "projectName"   => $css->project_name,
+                "projectName"   => $propose->project_name,
                 "customerComment" => $propose->proposed,
                 "makeDateCss" => date('d/m/Y',strtotime($propose->created_at)),
             ];
         }
         //Get html pagination render
         $count = Css::getCountProposesByQuestion($questionId,$cssResultIds); 
+        
         $totalPage = ceil($count / self::$perPage);
         $html = "";
         if($totalPage > 1){
             if($curPage == 1){
                 $html .= '<li class="disabled"><span>«</span></li>';
             }else{
-                $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.($curPage-1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="back">«</a></li>';
+                $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.($curPage-1).',\''.Session::token().'\',\''.$cssResultIds.'\',\''.$orderBy.'\',\''.$ariaType.'\');" rel="back">«</a></li>';
             }
             for($i=1; $i<=$totalPage; $i++){
                 if($i == $curPage){
                     $html .= '<li class="active"><span>'.$i.'</span></li>';
                 }else{
-                    $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.$i.',\''.Session::token().'\',\''.$cssResultIds.'\');">'.$i.'</a></li>';
+                    $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.$i.',\''.Session::token().'\',\''.$cssResultIds.'\',\''.$orderBy.'\',\''.$ariaType.'\');">'.$i.'</a></li>';
                 }
             }
             if($curPage == $totalPage){
                 $html .= '<li class="disabled"><span>»</span></li>';
             }else{
-                $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.($curPage+1).',\''.Session::token().'\',\''.$cssResultIds.'\');" rel="next">»</a></li>';
+                $html .= '<li><a href="javascript:void(0)" onclick="getProposesQuestion('.$questionId.','.($curPage+1).',\''.Session::token().'\',\''.$cssResultIds.'\',\''.$orderBy.'\',\''.$ariaType.'\');" rel="next">»</a></li>';
             }
         }
         
@@ -1535,8 +1539,8 @@ class CssController extends Controller {
     }
     
     /**
-     * Get root category by question
-     * @param int $questionId
+     * Get root category by cate
+     * @param CssCategory $cate
      */
     public function getRootCateByCate($cate){
         $cateParent = CssCategory::find($cate->parent_id);

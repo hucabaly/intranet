@@ -295,6 +295,7 @@ function apply(token){
             
             //sort column by all result
             $("#duoi3sao thead th").attr('data-type','all');
+            $("#danhsachdexuat thead th").attr('data-type','all');
         }else{
             $("#duoi3sao tbody").html('');
             $("#duoi3sao").parent().find(".pagination").html('');
@@ -303,6 +304,7 @@ function apply(token){
             
             //sort column by all question
             $("#duoi3sao thead th").attr('data-type','question');
+            $("#danhsachdexuat thead th").attr('data-type','question');
         }
         //Set css resultids 
         $('#cssResultIds').val(data["strResultIds"]);
@@ -425,10 +427,10 @@ function getListLessThreeStar(curpage,token,cssresultids,orderby,ariatype){
  * @param int curpage
  * @param string token
  */
-function getProposes(curpage,token,cssresultids){
+function getProposes(curpage,token,cssresultids,orderby,ariatype){
     $("#danhsachdexuat tbody").html(strLoading);
     $.ajax({
-        url: baseUrl + 'css/get_proposes/'+cssresultids+'/'+curpage,
+        url: baseUrl + 'css/get_proposes/'+cssresultids+'/'+curpage+'/'+orderby+'/'+ariatype,
         type: 'post',
         data: {
             _token: token, 
@@ -586,7 +588,7 @@ $(document).ready(function(){
            var token = $("#question-choose option:selected").data("token");
            
            getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids,'result_make','asc');
-           getProposesQuestion(questionId,curpage,token,cssresultids);
+           getProposesQuestion(questionId,curpage,token,cssresultids,'result_make','asc');
        }
    }); 
 });
@@ -641,10 +643,10 @@ function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids,or
  * @param string token
  * @param string cssresultids
  */
-function getProposesQuestion(questionId,curpage,token,cssresultids){
+function getProposesQuestion(questionId,curpage,token,cssresultids,orderby,ariatype){
     $("#danhsachdexuat tbody").html(strLoading);
     $.ajax({
-        url: baseUrl + 'css/get_proposes_question/'+questionId+'/'+cssresultids+'/'+curpage,
+        url: baseUrl + 'css/get_proposes_question/'+questionId+'/'+cssresultids+'/'+curpage+'/'+orderby+'/'+ariatype,
         type: 'post',
         data: {
             _token: token, 
@@ -668,6 +670,7 @@ function getProposesQuestion(questionId,curpage,token,cssresultids){
             $("#danhsachdexuat").parent().find(".pagination").html(data["paginationRender"]);
         }else{
             $("#danhsachdexuat tbody").html(noResult);
+            $("#danhsachdexuat").parent().find(".pagination").html('');
         }
     })
     .fail(function () {
