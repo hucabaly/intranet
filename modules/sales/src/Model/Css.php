@@ -186,11 +186,16 @@ class Css extends Model
      */
     public static function getProposes($cssResultIds,$perPage,$orderBy,$ariaType){
         $arrResultId = explode(',', $cssResultIds);
-        return DB::table('css_result')->join('css', 'css.id', '=', 'css_result.css_id')
+        return DB::table('css_result')
+                ->join('css', 'css.id', '=', 'css_result.css_id')
+                ->join('css_result_detail', 'css_result_detail.css_result_id', '=', 'css_result.id')
                 ->whereIn('css_result.id',$arrResultId)
                 ->where('css_result.proposed','<>','')
+                ->where('css_result_detail.point','>=',1)
+                ->where('css_result_detail.point','<=',2)
                 ->orderBy($orderBy,$ariaType)
                 ->orderBy('proposed', 'desc')
+                ->groupBy('css_result_id')
                 ->select('css_result.*','css_result.proposed as proposed','css.project_name','css_result.avg_point as result_point','css_result.created_at as result_make')
                 ->paginate($perPage);
     }
@@ -305,4 +310,6 @@ class Css extends Model
     public static function getCssList($perPage){
         return self::orderBy('id', 'desc')->paginate($perPage);
     }
+    
+    
 }

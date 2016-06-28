@@ -32,5 +32,5 @@ return [
     'This field not be greater than :number characters' => 'Trường dữ liệu không được lớn hơn :number ký tự',
     'Please enter a valid number' => 'Vui lòng chỉ nhập số',
     'Remove' => 'Xóa',
-    
+    'Permission denied' => 'Bạn không có quyền truy cập trang này',
 ];

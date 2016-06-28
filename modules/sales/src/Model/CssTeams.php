@@ -52,4 +52,16 @@ class CssTeams extends CoreModel
     public static function getCssTeamByCssId($cssId){
         return self::where('css_id',$cssId)->get();
     }
+    
+    /**
+     * Get CssTeam list css_id and array of team_id 
+     * @param int $cssId
+     * @param array $arrTeamId
+     * @return CssTeam list
+     */
+    public static function getCssTeamByCssIdAndTeamIds($cssId, $arrTeamId){
+        return self::where('css_id',$cssId)
+                ->whereIn('team_id',$arrTeamId)
+                ->get();
+    }
 }
