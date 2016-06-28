@@ -442,6 +442,11 @@ form{
         #logo {
             width: auto;
             margin-left: 15px;
+            height: 100%;
+            img {
+                height: 100%;
+                width: 100px;
+            }
         }
         > .navbar {
             margin-left: 126px;
