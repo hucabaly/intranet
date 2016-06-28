@@ -226,6 +226,12 @@ class Team extends CoreModel
         return self::whereIn('id', $arrTeamIds)->get();
     }
     
+    public function getTeamWithTrashedById($teamId){
+        return self::where('id',$teamId)
+                ->withTrashed()
+                ->first();
+    }
+    
     /**
      * get leader of team
      * 

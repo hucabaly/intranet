@@ -309,6 +309,7 @@ class Css extends Model
      */
     public static function getCssList($perPage){
         return self::orderBy('id', 'desc')->paginate($perPage);
+        
     }
     
     
