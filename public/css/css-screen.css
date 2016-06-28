@@ -550,3 +550,12 @@ table.dataTable thead th, table.dataTable thead td {
     vertical-align: middle;
     border-bottom: 1px solid #f4f4f4 !important;
 }
+
+.dataTable {
+    table-layout: fixed;
+}
+
+.dataTable td {
+    word-wrap:break-word;
+}
+
