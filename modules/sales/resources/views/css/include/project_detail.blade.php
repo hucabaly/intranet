@@ -13,7 +13,7 @@
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.Sale name') }}</label></td>
-        <td class="infomation">{{$employee->name}}</td>
+        <td class="infomation">{{$employee->japanese_name}}</td>
         <td class="title2"><label>{{ trans('sales::view.Customer name') }}</label></td>
         <td class="infomation">{{$css->customer_name}}</td>
         <td rowspan="3" class="<?php echo ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' ?>">

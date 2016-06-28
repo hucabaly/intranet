@@ -14,7 +14,9 @@ use Rikkei\Sales\Model\CssCategory;
 use Rikkei\Sales\Model\CssResult;
 use Rikkei\Sales\Model\CssResultDetail;
 use Rikkei\Team\Model\Team;
+use Rikkei\Team\Model\TeamMembers;
 use Rikkei\Team\Model\Employees;
+use Rikkei\Team\View\Permission;
 use Lang;
 use Mail;
 use Session;
@@ -351,6 +353,46 @@ class CssController extends Controller {
     }
     
     /**
+     * Check Css detail of self
+     * @param int $cssId
+     * @param int $employeeId
+     * @return boolean
+     */
+    protected function isCssDetailSelf($cssId){
+        $userAccount = Auth::user(); 
+        return ($cssId == $userAccount->employee_id);
+    }
+    
+    /**
+     * Check Css detail of self team
+     * @param int $cssId
+     * @param int $employeeId
+     * @return boolean
+     */
+    protected function isCssDetailTeam($cssId){
+        $userAccount = Auth::user(); 
+        $teamMembersModel = new TeamMembers();
+        $teamMembers = $teamMembersModel->getTeamMembersByEmployee($userAccount->employee_id);
+        
+        //get teams of current user
+        $arrTeamId = [];
+        foreach($teamMembers as $item){
+            $arrTeamId[] = $item->team_id;
+        }
+        
+        //Get CssTeam by teams
+        $cssTeamModel = new CssTeams();
+        $cssTeams = $cssTeamModel->getCssTeamByCssIdAndTeamIds($cssId, $arrTeamId);
+        
+        //Check is css team
+        if(count($cssTeams)){
+            return true; //is css of self team
+        }
+        
+        return false; //is not css of self team
+    }
+
+    /**
      * View Css result detail page
      * @param int $resultId
      * @return void
@@ -359,7 +401,25 @@ class CssController extends Controller {
         $cssResult = CssResult::find($resultId);
         $css = Css::find($cssResult->css_id);
         $employee = Employees::find($css->employee_id);
+        $permissionFlag = true;
         
+        $permission = new Permission();
+        if($permission->isScopeSelf()){
+            $permissionFlag = self::isCssDetailSelf($css->employee_id);
+        }elseif ($permission->isScopeTeam()) {
+            $permissionFlag = self::isCssDetailTeam($cssResult->css_id);
+        }elseif ($permission->isScopeNone()){
+            $permissionFlag = false;
+        }
+        
+        //If hasn't permission
+        if(!$permissionFlag){
+            return view(
+                'core::errors.permission_denied'
+            );
+        }
+        
+        //If has permission
         $cssCategoryModel = new CssCategory();
         $cssQuestionModel = new CssQuestion();
         $cssResultDetailModel = new CssResultDetail();
