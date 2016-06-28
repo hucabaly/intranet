@@ -13,6 +13,9 @@ class Form
      */
     public static function setData($data = null, $key = null)
     {
+        if ($key && ! $data) {
+            return;
+        }
         if(!$data || is_string($data)) {
             self::setDataInput($data, $key);
         } elseif (is_array($data)) {

@@ -1,4 +1,7 @@
 <?php
+
+use Rikkei\Core\View\Form;
+
 /**
  * html add team / position
  * 
@@ -42,8 +45,8 @@ if (! function_exists('teamHtmladdTeamPostion')) {
 ?>
 
 <div class="form-label-left box-form-team-position">
+    <?php $i = 1; ?>
     @if (isset($employeeTeamPositions) && $employeeTeamPositions)
-        <?php $i = 1; ?>
         @foreach ($employeeTeamPositions as $employeeTeamPosition)
             <?php teamHtmladdTeamPostion(
                     $teamsOption, 
@@ -51,6 +54,17 @@ if (! function_exists('teamHtmladdTeamPostion')) {
                     $i, 
                     $employeeTeamPosition->team_id, 
                     $employeeTeamPosition->role_id
+                ); ?>
+            <?php $i++; ?>
+        @endforeach
+    @elseif (! Form::getData('employee.id') && Form::getData('employee_team'))
+        @foreach (Form::getData('employee_team') as $employeeTeamPosition)
+            <?php teamHtmladdTeamPostion(
+                    $teamsOption, 
+                    $postionsOption, 
+                    $i,
+                    $employeeTeamPosition['team'], 
+                    $employeeTeamPosition['position']
                 ); ?>
             <?php $i++; ?>
         @endforeach

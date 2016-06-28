@@ -294,7 +294,9 @@ class Employees extends CoreModel
             return $employeeTeam;
         }
         $employeeTeam = TeamMembers::select('team_id', 'role_id')->where('employee_id', $this->id)->get();
-        CacheHelper::put(self::KEY_CACHE, $employeeTeam, $this->id);
+        if ($this->id) {
+            CacheHelper::put(self::KEY_CACHE, $employeeTeam, $this->id);
+        }
         return $employeeTeam;
     }
     
@@ -313,7 +315,9 @@ class Employees extends CoreModel
                 ->where('employee_id', $this->id)
                 ->orderBy('role')
                 ->get();
-        CacheHelper::put(self::KEY_CACHE, $employeeRole, $this->id);
+        if ($this->id) {
+            CacheHelper::put(self::KEY_CACHE, $employeeRole, $this->id);
+        }
         return $employeeRole;
     }
     
@@ -330,7 +334,9 @@ class Employees extends CoreModel
         $employeeRole = EmployeeRole::select('role_id')
             ->where('employee_id', $this->id)
             ->get();
-        CacheHelper::put(self::KEY_CACHE, $employeeRole, $this->id);
+        if ($this->id) {
+            CacheHelper::put(self::KEY_CACHE, $employeeRole, $this->id);
+        }
         return $employeeRole;
     }
     
