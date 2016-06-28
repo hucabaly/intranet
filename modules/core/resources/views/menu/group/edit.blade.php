@@ -72,13 +72,13 @@ Form::forget();
         var messages = {
             'item[name]': {
                 required: '<?php echo trans('core::view.This field is required'); ?>',
-                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>'
+                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 50]) ; ?>'
               }
         };
         var rules = {
             'item[name]': {
                 required: true,
-                rangelength: [1, 255]
+                rangelength: [1, 50]
             }
         };
         $('#form-edit-menus').validate({
