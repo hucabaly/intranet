@@ -117,7 +117,7 @@ class AuthController extends Controller
      * 
      * @return redirect
      */
-    public function logout()
+    public function logout($message = null)
     {
         if (! Auth::check()) {
             return redirect('/');
@@ -133,6 +133,14 @@ class AuthController extends Controller
         }
         Auth::logout();
         Session::flush();
+        if ($message) {
+            $message = new MessageBag([
+                $message
+            ]);
+            Session::flash(
+                'errors', Session::get('errors', new ViewErrorBag)->put('default', $message)
+            );
+        }
         return Redirect::away($this->getGoogleLogoutUrl())
             ->send();
     }
