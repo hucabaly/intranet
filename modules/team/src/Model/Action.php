@@ -10,8 +10,6 @@ use DB;
 use Rikkei\Core\Model\MenuItems;
 use Rikkei\Team\Model\Permissions;
 use Rikkei\Core\View\CacheHelper;
-use Rikkei\Team\View\Translate;
-use Illuminate\Support\Facades\Input;
 
 class Action extends CoreModel
 {
@@ -198,7 +196,7 @@ class Action extends CoreModel
             CacheHelper::forget(
                 Employees::KEY_CACHE_PERMISSION_ROLE_ROUTE
             );
-            Translate::writeWord($this->description, Input::get('trans.description'), 'acl');
+            //Translate::writeWord($this->description, Input::get('trans.description'), 'acl');
             return parent::save($options);
         } catch (Exception $ex) {
             throw $ex;
