@@ -216,6 +216,13 @@ jQuery(document).ready(function($) {
     /* ---- endfilter-grid action */
     
     //menu mobile
+    $('.main-header .dropdown-menu').on('mouseover', function(event) {
+        $(this).parents('li.dropdown').addClass('hover');
+    });
+    $('.main-header .dropdown-menu').on('mouseleave', function(event) {
+        $(this).parents('li.dropdown').removeClass('hover');
+    });
+    
     var domOpenChild = '<i class="fa fa-angle-left pull-right"></i>';
     menuMobileClone = $('#navbar-collapse .navbar-nav').clone();
     menuMobileClone.find('li:has(ul)',this).each(function() {

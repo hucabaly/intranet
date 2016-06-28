@@ -185,6 +185,7 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
      */
     public function create()
     {
+        Menu::setActive('hr', '/');
         Breadcrumb::add(Lang::get('team::view.Create new'), URL::route('team::team.member.create'));
         return view('team::member.edit');
     }

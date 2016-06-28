@@ -182,4 +182,42 @@ class MenuItems extends CoreModel
         CacheHelper::put(self::KEY_CACHE, $menuItems);
         return $menuItems;
     }
+    
+    /**
+     * find menu id level 0 follow name or path url
+     * 
+     * @param string $name
+     * @param $url $menuGroupId
+     */
+    public static function getIdMenuevel0($name = null, $url = null)
+    {
+        if ($menuItemsCache = CacheHelper::get(self::KEY_CACHE)) {
+            return $menuItemsCache;
+        }
+        $menuItem = null;
+        if ($name) {
+            $menuItem = MenuItems::select('id')
+                ->where('parent_id', null)
+                ->where('name', $name)
+                ->first();
+            if ($menuItem) {
+                $menuItem = $menuItem->id;
+                CacheHelper::put(self::KEY_CACHE, $menuItem);
+                return $menuItem;
+            }
+        }
+        
+        if ($url) {
+            $menuItem = MenuItems::select('id')
+                ->where('parent_id', null)
+                ->where('url', $url)
+                ->first();
+            if ($menuItem) {
+                $menuItem = $menuItem->id;
+                CacheHelper::put(self::KEY_CACHE, $menuItem);
+                return $menuItem;
+            }
+        }
+        return null;
+    }
 }

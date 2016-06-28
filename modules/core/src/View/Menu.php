@@ -25,11 +25,12 @@ class Menu
     /**
      * set active menu
      * 
-     * @param string $menu
+     * @param string $name
+     * @param string $path
      */
-    public static function setActive($menu)
+    public static function setActive($name = null, $path = null)
     {
-        self::$active = $menu;
+        self::$active = MenuItems::getIdMenuevel0($name, $path);
     }
     
     /**
@@ -45,12 +46,12 @@ class Menu
     /**
      * check menu is active
      * 
-     * @param string $menu
+     * @param string $id
      * @return boolean
      */
-    public static function isActive($menu)
+    public static function isActive($id)
     {
-        if($menu == self::$active) {
+        if($id == self::$active) {
             return true;
         }
         return false;
