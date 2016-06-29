@@ -371,6 +371,9 @@ form{
         border-radius: 0;
         height: 34px
     }
+    .select2.select2-container {
+        width: 100% !important;
+    }
 }
 .rule-noti {
     b {
@@ -446,6 +449,7 @@ form{
             img {
                 height: 100%;
                 width: 100px;
+                min-height: 50px;
             }
         }
         > .navbar {
