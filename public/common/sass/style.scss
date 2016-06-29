@@ -36,7 +36,7 @@ html, body {
     }
 }
 /*-------menu-------*/
-.main-header {
+#main-heaer-top {
     .navbar {
         #navbar-collapse {
             .nav {
@@ -47,20 +47,6 @@ html, body {
                     a:hover {
                         color: $menuTextColorHover;
                     }
-                }
-                li.hover {
-                    > a {
-                        background-color: $menuColorHover;
-                    }
-                }
-            }
-        }
-    }
-    .navbar-custom-menu {
-        .nav {
-            li.hover {
-                > a {
-                    background-color: $menuColorHover;
                 }
             }
         }
@@ -100,8 +86,6 @@ html, body {
     }
 }
 .skin-blue .main-header .navbar .nav>li>a:active,
-.skin-blue .main-header .navbar .nav .open>a, 
-.skin-blue .main-header .navbar .nav .open>a:hover, 
 .skin-blue .main-header .navbar .nav>.active>a {
     background-color: $menuColorActive;
 }
@@ -109,37 +93,38 @@ html, body {
 .skin-blue .main-header .navbar .nav .open>a:focus{
     background-color: transparent;
 }
-.navbar-custom-menu {
-    .nav.navbar-nav {
-        li.setting {
-            .dropdown-menu {
-                background-color: $menuSubColor;
-                color: $menuTextColor;
-                border: none;
-                padding-top: 0;
-                padding-bottom: 0;
-                border-radius: 0;
-                -moz-border-radius: 0;
-                -webkit-border-radius: 0;
-                li {
-                    a {
-                        color: $menuTextColor;
-                        padding-top: 10px;
-                        padding-bottom: 10px;
-                    }
-                    a:hover {
-                        color: $menuTextColor;
-                        background-color: $menuColorHover;
+#main-heaer-top {
+    .navbar-custom-menu {
+        .nav.navbar-nav {
+            li.setting {
+                .dropdown-menu {
+                    background-color: $menuSubColor;
+                    color: $menuTextColor;
+                    border: none;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    border-radius: 0;
+                    -moz-border-radius: 0;
+                    -webkit-border-radius: 0;
+                    li {
+                        a {
+                            color: $menuTextColor;
+                            padding-top: 10px;
+                            padding-bottom: 10px;
+                        }
+                        a:hover {
+                            color: $menuTextColor;
+                        }
                     }
                 }
             }
-        }
-        li.user {
-            a {
-                cursor: default;
-            }
-            a:hover {
-                background: transparent;
+            li.user {
+                a {
+                    cursor: default;
+                }
+                a:hover {
+                    background: transparent;
+                }
             }
         }
     }
@@ -498,7 +483,7 @@ form{
 }
 /*change size width nav mobile*/
 @media (min-width: $navmobile + 1) {
-    .main-header {
+    #main-heaer-top {
         .navbar-form {
             padding-right: 0;
         }
@@ -519,10 +504,37 @@ form{
                     color: $menuTextColor;
                     padding-top: 10px;
                     padding-bottom: 10px;
+                    background-color: $menuSubColor;
                 }
                 a:hover {
                     color: $menuTextColor;
-                    background-color: $menuColorHover;
+                    background-color: $menuSubColorHover;
+                }
+            }
+            li.hover {
+                > a {
+                    background-color: $menuSubColorHover;
+                }
+            }
+        }
+
+        .navbar {
+            ul.nav.navbar-nav {
+                > li.hover {
+                    > a {
+                        background-color: $menuColorHover;
+                    }
+                }
+                .open {
+                    > a {
+                        background: $menuColorHover;
+                    }
+                }
+
+                > li {
+                    > a:hover {
+                        background: $menuColorHover;
+                    }
                 }
             }
         }
