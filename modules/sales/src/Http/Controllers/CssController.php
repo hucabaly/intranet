@@ -639,6 +639,7 @@ class CssController extends Controller {
      */
     public function showAnalyzeListProject($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria,$curPage,$orderBy,$ariaType){
         $cssResultModel = new CssResult(); 
+        $teamModel = new Team();
         Paginator::currentPageResolver(function () use ($curPage) {
             return $curPage;
         });
@@ -674,7 +675,8 @@ class CssController extends Controller {
             $team = DB::table("css_team")->where("css_id",$itemResultPaginate->css_id)->get();
             $arrTeam = [];
             foreach($team as $teamId){
-                $arrTeam[] = Css::getTeamNameById($teamId->team_id);
+                $team = $teamModel->getTeamWithTrashedById($teamId->team_id);
+                $arrTeam[] = $team->name;
             }
             rsort($arrTeam);
             $teamName = implode(', ', $arrTeam);
@@ -840,6 +842,7 @@ class CssController extends Controller {
         $cssResultModel = new CssResult();
         $cssResultDetailModel = new CssResultDetail();
         $criteriaIds = explode(",", $criteriaIds);
+        $teamModel = new Team();
         
         $pointCompareChart = array();
         foreach($criteriaIds as $key => $criteriaId){
@@ -847,7 +850,7 @@ class CssController extends Controller {
                 $name = self::getProjectTypeNameById($criteriaId);
                 $cssResultByCriteria = $cssResultModel->getCssResultByProjectTypeId($criteriaId,$startDate,$endDate,$teamIds);
             }else if($criteria == 'team'){
-                $team = Team::find($criteriaId);
+                $team = $teamModel->getTeamWithTrashedById($criteriaId);
                 $name = $team->name;
                 $cssResultByCriteria = $cssResultModel->getCssResultByTeamId($criteriaId,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'pm'){
@@ -1046,10 +1049,11 @@ class CssController extends Controller {
         $css = array();
         $result = array();
         $no = 0;
+        $teamModel = new Team();
         foreach($arrTeamId as $k => $teamId){
             $points = array();
             $css = Css::getCssByTeamIdAndListProjectType($teamId,$projectTypeIds);
-            $team = Team::find($teamId);
+            $team = $teamModel->getTeamWithTrashedById($teamId);
             $teamId = $team->id;
             $teamName = $team->name;
             if(count($css) > 0){

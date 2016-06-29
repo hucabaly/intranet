@@ -23,16 +23,6 @@ class Css extends Model
     }
 
     /**
-     * get name by id team
-     * @param int $teamId
-     * return string
-     */
-    public static function getTeamNameById($teamId){
-        $team = Team::find($teamId);
-        return $team->name;
-    }
-    
-    /**
      * get css by project_type_id and list team ids
      * @param ing $project_type_id
      * @param string $team_ids
