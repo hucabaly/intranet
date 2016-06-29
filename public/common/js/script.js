@@ -285,4 +285,81 @@ jQuery(document).ready(function($) {
         }
     });
     //------------------end menu mobile
+
 });
+
+/*  table thead fixed  */ 
+(function($){
+    function calculatorWidthThead(domTable) {
+        tbodyTrFirst = domTable.children('tbody');
+        if (! tbodyTrFirst.length) {
+            return;
+        }
+        tbodyTrFirst = tbodyTrFirst.children('tr:nth-child(2)');
+        if (! tbodyTrFirst.length) {
+            return;
+        }
+        tbodyTrFirst = tbodyTrFirst.children('td');
+        if (! tbodyTrFirst.length) {
+            return;
+        }
+        width = {};
+        tbodyTrFirst.each(function(i) {
+            width[i] = $(this).width();
+        });
+        return width;
+    }
+    
+    function fixThead(thisWrapper, THeadDom, tdTheadDom) {
+        thisWrapper.removeClass('fixing');
+        topHeightThead = THeadDom.offset().top;
+        $(window).scroll(function() {
+            topScroll = $(window).scrollTop();
+            if (topScroll > topHeightThead) {
+                thisWrapper.addClass('fixing');
+                widthTd = calculatorWidthThead(thisWrapper);
+                if (! widthTd) {
+                    thisWrapper.removeClass('fixing');
+                } else {
+                    tdTheadDom.each(function(i) {
+                        $(this).width(widthTd[i]);
+                    });
+                }
+            } else {
+                thisWrapper.removeClass('fixing');
+                tdTheadDom.removeAttr('style');
+            }
+        });
+    }
+    
+    $.fn.tableTHeadFixed = function(object) {
+        var thisWrapper = $(this),
+            THeadDom = thisWrapper.children('thead');
+        if (! THeadDom.length) {
+            return;
+        }
+        tdTheadDom = THeadDom.children('tr');
+        if (! tdTheadDom.length) {
+            return;
+        }
+        tdTheadDom = tdTheadDom.children();
+        if (! tdTheadDom.length) {
+            return;
+        }
+        
+        fixThead(thisWrapper, THeadDom, tdTheadDom);
+        $(window).load(function() {
+            if (thisWrapper.hasClass('fixing')) {
+                widthTd = calculatorWidthThead(thisWrapper);
+                tdTheadDom.each(function(i) {
+                    $(this).width(widthTd[i]);
+                });
+            }
+        });
+        
+        $(window).resize(function() {
+            fixThead(thisWrapper, THeadDom, tdTheadDom);
+        });
+    }
+})(jQuery);
+/* -----end table thead fixed  */ 

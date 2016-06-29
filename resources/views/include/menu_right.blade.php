@@ -12,7 +12,6 @@ if (Menu::getActive() == 'setting') {
     $userSetting = '';
 }
 ?>
-
 <!-- Navbar Right Menu -->
 @if(Auth::user())
 <div class="navbar-custom-menu">
@@ -42,7 +41,7 @@ if (Menu::getActive() == 'setting') {
             </a>
         </li>
         <li class="logout">
-            <a href="{{ URL::to('logout') }}">
+            <a href="{{ URL::to('logout') }}" title="{{ trans('view.Logout') }}" data-toggle="tooltip" data-placement="bottom">
                 <i class="fa fa-sign-out"></i>
             </a>
         </li>
