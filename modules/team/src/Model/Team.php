@@ -226,10 +226,26 @@ class Team extends CoreModel
         return self::whereIn('id', $arrTeamIds)->get();
     }
     
+    /**
+     * Get Team with deleted_at != null by id
+     * @param int $teamId
+     * @return Team
+     */
     public function getTeamWithTrashedById($teamId){
         return self::where('id',$teamId)
                 ->withTrashed()
                 ->first();
+    }
+    
+    /**
+     * Get Team with deleted_at != null by parent id
+     * @param int $parentId
+     * @return Team list
+     */
+    public function getTeamByParentId($parentId){
+        return self::where('parent_id',$parentId)
+                ->withTrashed()
+                ->get();
     }
     
     /**
