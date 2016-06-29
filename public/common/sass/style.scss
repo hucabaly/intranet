@@ -372,6 +372,11 @@ form{
         height: 34px
     }
 }
+.form-group-select2 {
+    .select2.select2-container {
+        width: 100% !important;
+    }
+}
 .rule-noti {
     b {
         display: inline-block;
@@ -446,6 +451,7 @@ form{
             img {
                 height: 100%;
                 width: 100px;
+                min-height: 50px;
             }
         }
         > .navbar {

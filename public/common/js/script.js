@@ -227,6 +227,7 @@ jQuery(document).ready(function($) {
     menuMobileClone = $('#navbar-collapse .navbar-nav').clone();
     menuMobileClone.find('li:has(ul)',this).each(function() {
         $(this).children('a').append(domOpenChild);
+        $(this).children('a').removeAttr('class').removeAttr('data-toggle').removeAttr('aria-expanded');
         $(this).addClass('treeview');
         $(this).removeClass('dropdown');
         $(this).removeClass('dropdown-submenu');
@@ -246,6 +247,24 @@ jQuery(document).ready(function($) {
             }
         }
     });
+    
+    $('.main-sidebar .sidebar-menu  li.treeview  a').on('click', function(event) {
+        windowHeight = $(window).height();
+        sidebarHeight = $(".sidebar").height();
+        contentHeight = $(".content-wrapper").height();
+        if (! $(this).parent().hasClass('active')) { //menu open
+            if (windowHeight >= sidebarHeight) {
+                setTimeout(function () {
+                    $(".content-wrapper").css('min-height', windowHeight);
+                }, 600);
+            }
+        } else {
+            if (windowHeight < sidebarHeight) {
+                $(".content-wrapper, .right-side").css('min-height', sidebarHeight);
+            }
+        }
+    });
+    
     $(document).mouseup(function (e){
         var container = $("aside.main-sidebar");
         var mMenuToggle = $('.sidebar-toggle');
