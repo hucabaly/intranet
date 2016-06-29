@@ -63,7 +63,7 @@ $actionOptions = Action::toOption();
                         </div>
                     </div>
                     
-                    <div class="form-group form-label-left">
+                    <div class="form-group form-label-left form-group-select2">
                         <label class="col-md-3 control-label">{{ trans('team::view.Parent') }}</label>
                         <div class="input-box col-md-9">
                             <select class="select-search form-control" name="item[parent_id]">
