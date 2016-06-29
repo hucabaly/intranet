@@ -73,7 +73,7 @@ $routeListOption = View::routeListToOption();
                         </div>
                     </div>
                     
-                    <div class="form-group form-label-left">
+                    <div class="form-group form-label-left form-group-select2">
                         <label class="col-md-3 control-label">Menu Parent</label>
                         <div class="input-box col-md-9">
                             <select class="form-control select-search" name="item[parent_id]">
@@ -97,7 +97,7 @@ $routeListOption = View::routeListToOption();
                         </div>
                     </div>
                     
-                    <div class="form-group form-label-left">
+                    <div class="form-group form-label-left form-group-select2">
                         <label class="col-md-3 control-label">Action</label>
                         <div class="input-box col-md-9">
                             <select class="select-search form-control" name="item[action_id]">
@@ -147,7 +147,7 @@ Form::forget();
             rules: rules,
             messages: messages
         });
-        selectSearchReload();
+        selectSearchReload({showSearch: true});
     });
 </script>
 @endsection
