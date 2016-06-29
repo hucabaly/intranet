@@ -37,7 +37,7 @@
     </head>
     <body class="hold-transition skin-blue layout-top-nav">
         <div class="wrapper">
-            <header class="main-header">
+            <header class="main-header" id="main-heaer-top">
                 <!-- Logo -->
                 <a href="{{ URL::to('/') }}" class="logo" id="logo">
                   <span class="logo-lg">

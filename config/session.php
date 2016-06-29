@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'connection' => env('SESSION_DRIVER', 'file') == 'file' ? null : 'default',
+    'connection' => env('SESSION_DRIVER', 'file') == 'file' ? null : 'session_storage',
 
     /*
     |--------------------------------------------------------------------------
