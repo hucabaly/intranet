@@ -87,14 +87,16 @@ function filterAnalyze(token){
         $("div.theotieuchi").html(data);
         $(".tbl-criteria").hide();
         $(".no-result").hide();
-        $("table[data-id="+criteriaType+"]").show();
         $(".no-result-"+criteriaType).show();
         $(document).trigger('icheck');
         $("#startDate_val").val(startDate);
         $("#endDate_val").val(endDate);
         $("#teamIds_val").val(teamIds);
         $("#projectTypeIds_val").val(projectTypeIds);
-        fixWithScroll();
+        
+        var elem = $("table[data-id="+criteriaType+"] tbody");
+        elem.parent().show(); //Show filter table checked
+        fixScroll(elem);
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
@@ -102,28 +104,18 @@ function filterAnalyze(token){
 }
 
 /**
- * Set thead width for tables
+ * Fix if filter table has scroll
  */
-function fixWithScroll(){
-    var arrTable = ['tcProjectType', 'tcTeam', 'tcPm', 'tcBrse', 'tcCustomer', 'tcSale'];
-    var count = arrTable.length;
-    for(var i=0; i<count; i++){
-        var elem = $('table[data-id='+arrTable[i]+'] tbody');
-        if(hasScroll(elem)){
-           elem.parent().find('thead').css('width','98%');
-        }else{
-           elem.parent().find('thead').css('width','100%');
-        }
-    }
-}
-
-/**
- * Detect element has scroll or not
- */
-function hasScroll(elem){
+function fixScroll(elem){
     var height = elem.height();
-    var scrollHeight = elem[0].scrollHeight;
-    return (scrollHeight > height);
+    var scrollHeight = elem.get(0).scrollHeight;
+    console.log(height);
+    console.log(scrollHeight);
+    if(scrollHeight > height){
+        elem.parent().find('thead').css('width','98%');
+    }else{
+        elem.parent().find('thead').css('width','100%');
+    }
 }
 
 /**
@@ -548,6 +540,9 @@ $(document).on('icheck', function(){
         $('table[data-id=tcProjectType]').show();
         $('.no-result').hide();
         $('.no-result-tcProjectType').show();
+        
+        //Fix with table if has scroll
+        fixScroll($('table[data-id=tcProjectType] tbody'));
     });
 
     //show table team
@@ -556,6 +551,9 @@ $(document).on('icheck', function(){
         $('table[data-id=tcTeam]').show();
         $('.no-result').hide();
         $('.no-result-tcTeam').show();
+        
+        //Fix with table if has scroll
+        fixScroll($('table[data-id=tcTeam] tbody'));
     });
 
     //show table pm
@@ -564,6 +562,9 @@ $(document).on('icheck', function(){
         $('table[data-id=tcPm]').show();
         $('.no-result').hide();
         $('.no-result-tcPm').show();
+        
+        //Fix with table if has scroll
+        fixScroll($('table[data-id=tcPm] tbody'));
     });
 
     //show table brse
@@ -572,6 +573,9 @@ $(document).on('icheck', function(){
         $('table[data-id=tcBrse]').show();
         $('.no-result').hide();
         $('.no-result-tcBrse').show();
+        
+        //Fix with table if has scroll
+        fixScroll($('table[data-id=tcBrse] tbody'));
     });
 
     //show table customer
@@ -580,6 +584,9 @@ $(document).on('icheck', function(){
         $('table[data-id=tcCustomer]').show();
         $('.no-result').hide();
         $('.no-result-tcCustomer').show();
+        
+        //Fix with table if has scroll
+        fixScroll($('table[data-id=tcCustomer] tbody'));
     });    
 
     //show table sale
@@ -588,6 +595,9 @@ $(document).on('icheck', function(){
         $('table[data-id=tcSale]').show();
         $('.no-result').hide();
         $('.no-result-tcSale').show();
+        
+        //Fix with table if has scroll
+        fixScroll($('table[data-id=tcSale] tbody'));
     }); 
 
     //show table question
@@ -596,6 +606,7 @@ $(document).on('icheck', function(){
         $('table[data-id=tcQuestion]').show();
         $('.no-result').hide();
         $('.no-result-tcQuestion').show();
+        fixScroll($('table[data-id=tcProjectType] tbody'));
     }); 
 }).trigger('icheck'); // trigger it for page load
 

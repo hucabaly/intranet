@@ -551,11 +551,11 @@ table.dataTable thead th, table.dataTable thead td {
     border-bottom: 1px solid #f4f4f4 !important;
 }
 
-.dataTable {
+.analyze-body .dataTable {
     table-layout: fixed;
 }
 
-.dataTable td {
+.analyze-body .dataTable td {
     word-wrap:break-word;
 }
 
