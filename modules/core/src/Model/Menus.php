@@ -97,6 +97,7 @@ class Menus extends CoreModel
         $pager = Config::getPagerData();
         $collection = self::select('id','name')
             ->orderBy($pager['order'], $pager['dir']);
+        //dd($pager['order'], $pager['dir']);
         $collection = self::filterGrid($collection);
         $collection = self::pagerCollection($collection, $pager['limit'], $pager['page']);
         return $collection;

@@ -3,7 +3,10 @@ use Rikkei\Team\View\Config;
 use Rikkei\Core\View\Form;
 
 ?>
-
+<form class="hidden form-dir-order">
+    <input type="hidden" name="order" value="{{ Form::getFilterPagerData('order') }}" />
+    <input type="hidden" name="dir" value="{{ Form::getFilterPagerData('dir') }}" />
+</form>
 @if (isset($collectionModel) && $collectionModel->total())
     <?php
         $limit = $page = null;
@@ -12,11 +15,7 @@ use Rikkei\Core\View\Form;
         } else {
             $limit = $collectionModel->perPage();
         }
-        if (Form::getFilterPagerData('page')) {
-            $page = Form::getFilterPagerData('page');
-        } else {
-            $page = $collectionModel->currentPage();
-        }
+        $page = $collectionModel->currentPage();
     ?>
     <div class="grid-pager">
         <div class="data-pager-info grid-pager-box" role="status" aria-live="polite">
@@ -27,17 +26,17 @@ use Rikkei\Core\View\Form;
         </div>
         
         <div class="grid-pager-box-right">
-        <div class="dataTables_length grid-pager-box">
-            <label>{{ trans('team::view.Show') }}
-                <select name="limit" class="form-control input-sm">
-                    @foreach(Config::toOptionLimit() as $option)
-                        <option value="{{ Config::urlParams(['limit' => $option['value']]) }}"<?php 
-                            if ($option['value'] == $limit): ?> selected<?php endif; ?>
-                        data-value="{{ $option['value'] }}">{{ $option['label'] }}</option>
-                    @endforeach
-                </select>
-            </label>
-        </div>
+            <div class="dataTables_length grid-pager-box">
+                <label>{{ trans('team::view.Show') }}
+                    <select name="limit" class="form-control input-sm">
+                        @foreach(Config::toOptionLimit() as $option)
+                            <option value="{{ Config::urlParams(['limit' => $option['value']]) }}"<?php 
+                                if ($option['value'] == $limit): ?> selected<?php endif; ?>
+                            data-value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                        @endforeach
+                    </select>
+                </label>
+            </div>
 
             <div class="dataTables_paginate paging_simple_numbers grid-pager-box pagination-wrapper">
                 <ul class="pagination">
