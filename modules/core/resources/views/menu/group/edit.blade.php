@@ -15,6 +15,7 @@ $actionOptions = Menus::toOptionState();
 @endsection
 
 @section('css')
+<link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/select2/select2.min.css') }}" />
 <link rel="stylesheet" href="{{ URL::asset('team/css/style.css') }}" />
 @endsection
 
@@ -42,7 +43,7 @@ $actionOptions = Menus::toOptionState();
                         </div>
                     </div>
                     
-                    <div class="form-group form-label-left">
+                    <div class="form-group form-label-left form-group-select2">
                         <label class="col-md-3 control-label">{{ trans('core::view.State') }}</label>
                         <div class="input-box col-md-9">
                             <select class="select-search form-control" name="item[state]">
@@ -66,7 +67,8 @@ Form::forget();
 @endsection
 
 @section('script')
-<script src="{{ URL::asset('js/jquery.validate.min.js') }}"></script>
+<script src="{{ URL::asset('lib/js/jquery.validate.min.js') }}"></script>
+<script src="{{ URL::asset('adminlte/plugins/select2/select2.full.min.js') }}"></script>
 <script>
     jQuery(document).ready(function ($) {
         var messages = {
@@ -85,6 +87,7 @@ Form::forget();
             rules: rules,
             messages: messages
         });
+        selectSearchReload();
     });
 </script>
 @endsection

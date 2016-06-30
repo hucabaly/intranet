@@ -20,7 +20,7 @@
         <!-- Font Awesome -->
         <link rel="stylesheet" href="{{ URL::asset('lib/font-awesome/css/font-awesome.min.css') }}">
         <!-- Ionicons -->
-        <link rel="stylesheet" href="{{ URL::asset('lib/ionicons-2.0.1/css/ionicons.min.css') }}">
+        <!--<link rel="stylesheet" href="{{ URL::asset('lib/ionicons-2.0.1/css/ionicons.min.css') }}">-->
         <!-- Theme style -->
         <link rel="stylesheet" href="{{ URL::asset('adminlte/dist/css/AdminLTE.min.css') }}" />
         <link rel="stylesheet" href="{{ URL::asset('adminlte/dist/css/skins/_all-skins.min.css') }}" />

@@ -44,10 +44,10 @@ $genderOption = Employees::toOptionGender();
 </div>
 
 <div class="form-horizontal form-label-left">
-    <div class="form-group">
+    <div class="form-group form-group-select2">
         <label class="col-md-3 control-label">{{ trans('team::view.Gender') }}</label>
         <div class="input-box col-md-9">
-            <select name="employee[gender]" class="form-control">
+            <select name="employee[gender]" class="form-control select-search">
                 @foreach ($genderOption as $option)
                     <option value="{{ $option['value'] }}"<?php if ($option['value'] == Form::getData('employee.gender')): ?> selected<?php endif; ?>>{{ $option['label'] }}</option>
                 @endforeach
