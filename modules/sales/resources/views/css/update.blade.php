@@ -129,7 +129,7 @@ use Rikkei\Core\View\Form;
 <!-- Styles -->
 @section('css')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker.min.css" />
-<link href="{{ asset('css/css-screen.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/css-screen.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('adminlte/plugins/iCheck/minimal/_all.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
@@ -137,8 +137,8 @@ use Rikkei\Core\View\Form;
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
 <script src="{{ asset('adminlte/plugins/iCheck/icheck.js') }}"></script>
-<script src="{{ asset('js/jquery.validate.min.js') }}"></script>
-<script src="{{ asset('js/css.js') }}"></script>
+<script src="{{ asset('lib/js/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('sales/js/css.js') }}"></script>
 <script type="text/javascript">
     var teamArray = []; 
     <?php foreach($teamsSet as $team): ?>

@@ -222,29 +222,29 @@
     <input type="hidden" id="teamIds_val" value="" />
     <input type="hidden" id="projectTypeIds_val" value="" />
     <input type="hidden" id="criteriaType_val" value="" />
-    <div class="modal apply-click-modal"><img class="loading-img" src="{{ asset('img/loading.gif') }}" /></div>
+    <div class="modal apply-click-modal"><img class="loading-img" src="{{ asset('sales/images/loading.gif') }}" /></div>
     <input type="hidden" id="cssResultIds" value="" />
 @endsection
 
 <!-- Styles -->
 @section('css')
-<link href="{{ asset('css/css-screen.css') }}" rel="stylesheet" type="text/css" >
-<link href="{{ asset('plugins/rangeSlider/css/iThing.css') }}" rel="stylesheet" type="text/css" >
-<link href="{{ asset('plugins/rangeSlider/demo/rangeSlider.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/css-screen.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('lib/rangeSlider/css/iThing.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('lib/rangeSlider/demo/rangeSlider.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('adminlte/plugins/iCheck/minimal/_all.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
 <!-- Script -->
 @section('script')
-<script src="{{ asset('plugins/rangeSlider/lib/jquery.mousewheel.min.js') }}"></script>
-<script src="{{ asset('plugins/rangeSlider/jQAllRangeSliders-min.js') }}"></script>
-<script src="{{ asset('plugins/rangeSlider/demo/sliderDemo.js') }}"></script>
-<script src="{{ asset('plugins/rangeSlider/demo/dateSliderDemo.js') }}"></script>
+<script src="{{ asset('lib/rangeSlider/lib/jquery.mousewheel.min.js') }}"></script>
+<script src="{{ asset('lib/rangeSlider/jQAllRangeSliders-min.js') }}"></script>
+<script src="{{ asset('lib/rangeSlider/demo/sliderDemo.js') }}"></script>
+<script src="{{ asset('lib/rangeSlider/demo/dateSliderDemo.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/iCheck/icheck.js') }}"></script>
-<script src="{{ asset('plugins/hightcharts/hightcharts.js') }}"></script>
-<script src="{{ asset('plugins/hightcharts/exporting.js') }}"></script>
-<script src="{{ asset('js/jquery.canvasjs.min.js') }}"></script>
-<script src="{{ asset('js/css_analyze.js') }}"></script>
-<script src="{{ asset('js/css_dataTables.js') }}"></script>
+<script src="{{ asset('lib/hightcharts/hightcharts.js') }}"></script>
+<script src="{{ asset('lib/hightcharts/exporting.js') }}"></script>
+<script src="{{ asset('lib/js/jquery.canvasjs.min.js') }}"></script>
+<script src="{{ asset('sales/js/css_analyze.js') }}"></script>
+<script src="{{ asset('sales/js/css_dataTables.js') }}"></script>
 @endsection
