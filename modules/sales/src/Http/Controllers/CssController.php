@@ -1157,12 +1157,8 @@ class CssController extends Controller {
                 $countCss = 0;
                 if(count($css) > 0){
                     foreach($css as $itemCss){
-                        $css_result = DB::table("css_result")
-                        ->where("css_id",$itemCss->id)
-                        ->where("created_at", ">=", $startDate)
-                        ->where("created_at", "<=", $endDate)
-                        ->get();
-
+                        $css_result = Css::getCssResultByCssId($itemCss->id,$startDate,$endDate);
+                        
                         if(count($css_result) > 0){
                             $countCss += count($css_result);
                             foreach($css_result as $itemCssResult){

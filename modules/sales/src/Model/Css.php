@@ -548,9 +548,11 @@ class Css extends Model
      */
     public static function getCssResultByCssId($cssId,$startDate,$endDate){
         return DB::table("css_result")
+                ->join('css', 'css.id', '=', 'css_result.css_id')
                 ->where("css_id",$cssId)
-                ->where("created_at", ">=", $startDate)
-                ->where("created_at", "<=", $endDate)
+                ->where("end_date", ">=", $startDate)
+                ->where("end_date", "<=", $endDate)
+                ->select('css_result.*')
                 ->get();
     }
     
