@@ -33,4 +33,6 @@ return [
     'Please enter a valid number' => 'Vui lòng chỉ nhập số',
     'Remove' => 'Xóa',
     'Permission denied' => 'Bạn không có quyền truy cập trang này',
+    'ID' => 'STT',
+    
 ];

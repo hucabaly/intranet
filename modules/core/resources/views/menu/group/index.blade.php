@@ -31,7 +31,7 @@ use Rikkei\Core\View\Form;
                 <table class="table table-striped dataTable table-bordered table-hover table-grid-data">
                     <thead>
                         <tr>
-                            <th class="sorting {{ Config::getDirClass('id') }} col-id" onclick="window.location.href = '{{Config::getUrlOrder('id')}}';">Id</th>
+                            <th class="sorting {{ Config::getDirClass('id') }} col-id" onclick="window.location.href = '{{Config::getUrlOrder('id')}}';">{{ trans('core::view.ID') }}</th>
                             <th class="sorting {{ Config::getDirClass('name') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('name')}}';">{{ trans('team::view.Name') }}</th>
                             <th class="col-action">&nbsp;</th>
                         </tr>
@@ -40,19 +40,8 @@ use Rikkei\Core\View\Form;
                         <tr class="filter-input-grid">
                             <td>
                                 <div class="row">
-                                    <div class="col-md-5">
-                                        <label>{{ trans('team::view.From') }}</label>
-                                    </div>
-                                    <div class="col-md-7">
+                                    <div class="col-md-12">
                                         <input type="text" name="filter[id][from]" value="{{ Form::getFilterData('id', 'from') }}" placeholder="{{ trans('team::view.From') }}" class="filter-grid" />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <label>{{ trans('team::view.To') }}</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" name="filter[id][to]" value="{{ Form::getFilterData('id', 'to') }}" placeholder="{{ trans('team::view.To') }}" class="filter-grid" />
                                     </div>
                                 </div>
                             </td>
