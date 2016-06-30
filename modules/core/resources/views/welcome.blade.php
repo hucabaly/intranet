@@ -22,7 +22,7 @@ Login
 
 @section('script')
 <script src="{{ URL::asset('adminlte/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
-<script src="{{ URL::asset('js/jquery.backstretch.min.js') }}"></script>
+<script src="{{ URL::asset('lib/js/jquery.backstretch.min.js') }}"></script>
 <script>
     jQuery(document).ready(function($) {
         $.backstretch('{{ URL::asset('common/images/login-background.png') }}');
