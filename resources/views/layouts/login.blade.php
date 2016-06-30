@@ -12,8 +12,8 @@
         </script>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        <link rel="icon" href="{{ URL::asset('img/favicon.ico') }}" type="image/x-icon">
-        <link rel="Shortcut Icon" type="image/x-icon" href="{{ URL::asset('img/favicon.ico') }}">
+        <link rel="icon" href="{{ URL::asset('common/images/favicon.ico') }}" type="image/x-icon">
+        <link rel="Shortcut Icon" type="image/x-icon" href="{{ URL::asset('common/images/favicon.ico') }}">
         <!-- Bootstrap 3.3.6 -->
         <link rel="stylesheet" href="{{ URL::asset('adminlte/bootstrap/css/bootstrap.min.css') }}" />
         <link rel="stylesheet" href="{{ URL::asset('common/css/login.css') }}" />
