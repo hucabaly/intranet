@@ -571,7 +571,7 @@ class CssController extends Controller {
         
         if(count($cssResult)){
             //display chart all result
-            $pointToHighchart = [];
+            $allResultChart = [];
 
             //cssResultIds list
             $cssResultIds = [];
@@ -579,15 +579,17 @@ class CssController extends Controller {
             //Get data chart all result 
             foreach($cssResult as $itemResult){
                 $cssResultIds[] = $itemResult->id;
-                $pointToHighchart[] = (float)self::formatNumber($itemResult->avg_point);
-                $dateToHighchart[] = date('d/m/Y',strtotime($itemResult->end_date));
+                $allResultChart[] = [
+                    'date'  => $itemResult->end_date,
+                    'point' => (float)self::formatNumber($itemResult->avg_point),
+                ];
             }
             $strResultIds = implode(",", $cssResultIds);
             //Get data fill to table project list 
             $cssResultPaginate = self::showAnalyzeListProject($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria,1,'css.end_date','asc');
 
             //Get data fill to compare charts in analyze page
-            $pointCompareChart = self::getCompareCharts($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria);
+            $compareChart = self::getCompareCharts($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria);
 
             //Get data fill to table criteria less 3 star
             $lessThreeStar = self::getListLessThreeStar($strResultIds,1,'result_make','asc');
@@ -610,9 +612,8 @@ class CssController extends Controller {
             $data = [
                 "cssResult" => $cssResult,
                 "cssResultPaginate" => $cssResultPaginate,
-                "pointToHighchart" => $pointToHighchart,
-                "dateToHighchart" => $dateToHighchart,
-                "pointCompareChart" => $pointCompareChart,
+                "allResultChart" => $allResultChart,
+                "compareChart" => $compareChart,
                 "lessThreeStar" =>$lessThreeStar,
                 "proposes" => $proposes,
                 "htmlQuestionList" => $htmlQuestionList,
@@ -896,15 +897,19 @@ class CssController extends Controller {
                 foreach($cssResultByCriteria as $itemCssResult){
                     $css_result_detail = $cssResultDetailModel->getResultDetailRow($itemCssResult->id,$criteriaId);
                     if($css_result_detail->point > 0){
-                        $pointToHighchart["data"][] = $css_result_detail->point;
-                    }else{
-                        $pointToHighchart["data"][] = null;
+                        $pointToHighchart["data"][] = [
+                            'date'  => $itemCssResult->end_date,
+                            'point' => (float)self::formatNumber($css_result_detail->point),
+                        ];
                     }
                 }
             }else{
                 $pointToHighchart["name"] = $name;
                 foreach($cssResultByCriteria as $item){
-                    $pointToHighchart["data"][] = (float)self::formatNumber($item->avg_point);
+                    $pointToHighchart["data"][] = [
+                        'date'  => $item->end_date,
+                        'point' => (float)self::formatNumber($item->avg_point),
+                    ];
                 }
             }
             $pointCompareChart[] = [
