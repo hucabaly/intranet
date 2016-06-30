@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Rikkei\Core\View\Breadcrumb;
 use Rikkei\Core\View\Menu;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CssController extends Controller {
     
@@ -460,6 +461,21 @@ class CssController extends Controller {
                 "resultDetailRowOfOverview" => $resultDetailRow,
             ]
         );
+    }
+    
+    public function exportExcel($id){
+        Excel::create('Filename', function($excel) {
+
+            $excel->sheet('Sheetname', function($sheet) {
+
+                $sheet->fromArray(array(
+                    array('data1', 'data2'),
+                    array('data3', 'data4')
+                ));
+
+            });
+
+        })->export('xls');
     }
     
     /**

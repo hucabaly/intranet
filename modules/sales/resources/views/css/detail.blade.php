@@ -6,6 +6,7 @@
         <div class="make-css ">
             <div class="row">
                 <div class="col-md-12">
+                    <section><a href="{{url('/css/export_excel/'.$cssResult->id)}}" target="_blank">Export excel</a></section>
                     <section id="header-makecss">
                         <div id="chu-trai"><h2>お客様アンケート</h2></div>
                         <div id="logo-rikkei"><img src="{{ URL::asset('img/logo') }}"></div>
