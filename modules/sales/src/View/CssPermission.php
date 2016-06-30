@@ -808,7 +808,6 @@ class CssPermission
             $model = new Team();
             $teamChilds = $model->getTeamByParentId($teamId);
 
-            
             if(count($teamChilds)){
                 foreach($teamChilds as $child){
                     if(self::isTeamChildLowest($child->id)){
