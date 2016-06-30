@@ -14,13 +14,29 @@ class Config
      */
     public static function getDirClass($orderKey)
     {
-        if (! Input::get('order') || Input::get('order') != $orderKey) {
+        if (! Form::getFilterPagerData('order') || Form::getFilterPagerData('order') != $orderKey) {
             return '';
         }
-        if (Input::get('dir') == 'asc') {
+        if (Form::getFilterPagerData('dir') == 'asc') {
             return 'sorting_asc';
         }
         return 'sorting_desc';
+    }
+    
+    /**
+     * get url sort order
+     * 
+     * @param type $orderKey
+     * @return type
+     */
+    public static function getDirOrder($orderKey)
+    {
+        if (! Form::getFilterPagerData('order') || 
+            Form::getFilterPagerData('order') != $orderKey || 
+            Form::getFilterPagerData('dir') == 'asc') {
+            return 'desc';
+        }
+        return 'asc';
     }
     
     /**

@@ -13,6 +13,7 @@ Menu group
 
 use Rikkei\Team\View\Config;
 use Rikkei\Core\View\Form;
+use Rikkei\Core\View\View;
 ?>
 <div class="row">
     <div class="col-sm-12">
@@ -30,20 +31,14 @@ use Rikkei\Core\View\Form;
                 <table class="table table-striped dataTable table-bordered table-hover table-grid-data">
                     <thead>
                         <tr>
-                            <th class="sorting {{ Config::getDirClass('id') }} col-id" onclick="window.location.href = '{{Config::getUrlOrder('id')}}';">{{ trans('core::view.ID') }}</th>
-                            <th class="sorting {{ Config::getDirClass('name') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('name')}}';">{{ trans('team::view.Name') }}</th>
+                            <th class="col-id">{{ trans('core::view.NO.') }}</th>
+                            <th class="sorting {{ Config::getDirClass('name') }} col-name" data-order="name" data-dir="{{ Config::getDirOrder('name') }}">{{ trans('team::view.Name') }}</th>
                             <th class="col-action">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="filter-input-grid">
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input type="text" name="filter[id][from]" value="{{ Form::getFilterData('id', 'from') }}" placeholder="{{ trans('team::view.From') }}" class="filter-grid" />
-                                    </div>
-                                </div>
-                            </td>
+                            <td>&nbsp;</td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -54,9 +49,10 @@ use Rikkei\Core\View\Form;
                             <td>&nbsp;</td>
                         </tr>
                         @if(isset($collectionModel) && count($collectionModel))
+                            <?php $i = View::getNoStartGrid($collectionModel); ?>
                             @foreach($collectionModel as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $i }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>
                                         <a href="{{ route('core::setting.menu.group.edit', ['id' => $item->id ]) }}" class="btn-edit">{{ trans('team::view.Edit') }}</a>
@@ -70,6 +66,7 @@ use Rikkei\Core\View\Form;
                                         </form>
                                     </td>
                                 </tr>
+                                <?php $i++; ?>
                             @endforeach
                         @endif
                     </tbody>

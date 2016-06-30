@@ -145,15 +145,22 @@ jQuery(document).ready(function($) {
         });
     }
     //filter pager with param filter
-    function filterPager(pagerValue)
+    function filterPager(dataSubmit)
     {
-        if (pagerValue == undefined) {
-            pagerValue = $('.grid-pager form.form-pager input[name=page]').val();
+        if (dataSubmit == undefined) {
+            dataSubmit = {};
         }
-        data = {};
-        data['limit'] = $('.grid-pager select[name=limit] option:selected').data('value');
-        data['page'] = pagerValue;
-        dataSubmit = {'filter_pager': data, 'current_url': currentUrl};
+        if (dataSubmit.page == undefined || ! dataSubmit.page) {
+            dataSubmit.page = $('.grid-pager form.form-pager input[name=page]').val();
+        }
+        if (dataSubmit.dir == undefined || ! dataSubmit.dir) {
+            dataSubmit.dir = $('.form-dir-order input[name=dir]').val();
+        }
+        if (dataSubmit.order == undefined || ! dataSubmit.order) {
+            dataSubmit.order = $('.form-dir-order input[name=order]').val();
+        }
+        dataSubmit.limit = $('.grid-pager select[name=limit] option:selected').data('value');
+        dataSubmit = {'filter_pager': dataSubmit, 'current_url': currentUrl};
         $('.btn-search-filter .fa').removeClass('hidden');
         $.ajax({
             url: baseUrl + 'grid/filter/pager',
@@ -195,7 +202,9 @@ jQuery(document).ready(function($) {
     //pager 
     $('.grid-pager select[name=limit]').on('change', function(event) {
         event.preventDefault();
-        filterPager(1);
+        filterPager({
+            page: 1
+        });
     });
     $('.grid-pager .pagination a').on('click', function(event) {
         if ($(this).hasClass('disabled') || $(this).parent().hasClass('disabled')) {
@@ -204,13 +213,30 @@ jQuery(document).ready(function($) {
         page = $(this).data('page');
         if (page) {
             event.preventDefault();
-            filterPager(page);
+            filterPager({
+                page: page
+            });
         }
     });
     $('.grid-pager .pagination form.form-pager').on('submit', function(event) {
         event.preventDefault();
         page = $(this).find('input[name=page]').val();
-        filterPager(page);
+        filterPager({
+            page: page
+        });
+    });
+    
+    //sort order
+    $('.sorting').on('click', function(event) {
+        order = $(this).data('order');
+        dir = $(this).data('dir');
+        if (! order || ! dir) {
+            return;
+        }
+        filterPager({
+            order: order,
+            dir: dir
+        });
     });
     
     /* ---- endfilter-grid action */
