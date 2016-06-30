@@ -16,7 +16,7 @@ class GridFilterController extends Controller
         }
         $urlEncode = md5(Input::get('current_url'));
         Session::forget('filter.' . $urlEncode);
-        Session::forget('filter_pager');
+        Session::forget('filter_pager.' . $urlEncode . '.page');
         Session::push('filter.' . $urlEncode, Input::get('filter'));
         return redirect('/');
     }
@@ -31,7 +31,7 @@ class GridFilterController extends Controller
         }
         $urlEncode = md5(Input::get('current_url'));
         Session::forget('filter_pager.' . $urlEncode);
-        Session::push('filter_pager.' . $urlEncode, Input::get('filter_pager'));
+        Session::put('filter_pager.' . $urlEncode, Input::get('filter_pager'));
         return redirect('/');
     }
     
