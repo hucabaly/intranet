@@ -14,7 +14,7 @@ class Css extends Model
      * Get Css by css_id and token
      * @param int $cssId
      * @param string $token
-     * @return object
+     * @return Css
      */
     public function getCssByIdAndToken($cssId,$token){
         return self::where('id', $cssId)
@@ -26,26 +26,101 @@ class Css extends Model
      * get css by project_type_id and list team ids
      * @param ing $project_type_id
      * @param string $team_ids
-     * return list object
+     * return Css list
      */
-    public static function getCssByProjectTypeAndTeam($project_type_id,$team_ids){
+    public function getCssByProjectTypeAndTeam($projectTypeId,$teamIds){
+        $arrFilterTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrFilterTeam)
+                ->where('project_type_id',$projectTypeId)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
+    }
+    
+    /**
+     * get css by project_type_id and list team ids and employee
+     * @param ing $project_type_id
+     * @param string $team_ids
+     * return Css list
+     */
+    public function getCssByProjectTypeAndTeamAndEmployee($project_type_id,$team_ids,$employeeId){
         $result = DB::select('select * from css '
-                . 'where project_type_id = '.$project_type_id.' and id In (SELECT css_id from css_team where team_id In ('.$team_ids.'))'
-                . 'order by created_at asc');
+                . 'where project_type_id = '.$project_type_id.' '
+                . ' and id In (SELECT css_id from css_team where team_id In ('.$team_ids.')) '
+                . ' and employee_id = ' . $employeeId 
+                . ' order by created_at asc');
         return $result;
+    }
+    
+    /**
+     * get css by project_type_id and list team ids and employee's team
+     * @param int $projectTypeId
+     * @param string $teamIds
+     * @param array $arrEmployeeTeam
+     * return Css list
+     */
+    public function getCssByProjectTypeAndTeamAndEmployeeTeam($projectTypeId,$teamIds,$arrEmployeeTeam){
+        $arrFilterTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrEmployeeTeam)
+                ->whereIn('css_team.team_id',$arrFilterTeam)
+                ->where('project_type_id',$projectTypeId)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
     }
     
     /**
      * get css by team_id and list project type ids
      * @param int $teamId
      * @param string $projectTypeIds
-     * return list object
+     * return Css list
      */
     public static function getCssByTeamIdAndListProjectType($teamId,$projectTypeIds){
-        $result = DB::select('select * from css '
-                . 'where project_type_id IN ('.$projectTypeIds.') and id In (SELECT css_id from css_team where team_id = '.$teamId.')'
-                . 'order by created_at asc');
-        return $result;
+        $arrProjectType = explode(',', $projectTypeIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->where('css_team.team_id',$teamId)
+                ->whereIn('project_type_id',$arrProjectType)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
+    }
+    
+    /**
+     * get css by teamId and project type list and employee
+     * @param ing $teamId
+     * @param string $projectTypeIds
+     * @param int $employeeId
+     * return Css list
+     */
+    public function getCssByTeamIdAndListProjectTypeAndEmployee($teamId,$projectTypeIds,$employeeId){
+        $arrProjectType = explode(',', $projectTypeIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->where('css_team.team_id',$teamId)
+                ->whereIn('project_type_id',$arrProjectType)
+                ->where('css.employee_id',$employeeId)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
+    }
+    
+    /**
+     * get css by project_type_id and list team ids and employee's team
+     * @param int $teamId
+     * @param string $projectTypeIds
+     * @param array $arrEmployeeTeam
+     * return Css list
+     */
+    public function getCssByTeamIdAndListProjectTypeAndEmployeeTeam($teamId,$projectTypeIds,$arrEmployeeTeam){
+        $arrProjectType = explode(',', $projectTypeIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrEmployeeTeam)
+                ->where('css_team.team_id',$teamId)
+                ->whereIn('project_type_id',$arrProjectType)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
     }
     
     /**
@@ -53,55 +128,244 @@ class Css extends Model
      * @param string $pmName
      * @param string $teamIds
      * @param string $projectTypeIds
-     * return list object
+     * return Css list
      */
     public static function getCssByPmAndTeamIdsAndListProjectType($pmName, $teamIds,$projectTypeIds){
-        $result = DB::select('select * from css '
-                . 'where pm_name = "'.$pmName.'" AND project_type_id IN ('.$projectTypeIds.') and id In (SELECT css_id from css_team where team_id IN ('.$teamIds.'))'
-                . 'order by created_at asc');
-        return $result;
+        $arrProjectType = explode(',', $projectTypeIds);
+        $arrTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeam)
+                ->whereIn('css.project_type_id',$arrProjectType)
+                ->where('css.pm_name',$pmName)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
     }
     
     /**
-     * get css by brse_name, team_id and list project type ids
+     * get css by PM, team list, project type list and employee
+     * @param string $pmName
+     * @param string $teamIds
+     * @param string $projectTypeIds
+     * @param array $employeeId
+     * return Css list
+     */
+    public function getCssByPmAndTeamIdsAndListProjectTypeAndEmployee($pmName, $teamIds,$projectTypeIds,$employeeId){
+        $arrProjectType = explode(',', $projectTypeIds);
+        $arrTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeam)
+                ->whereIn('css.project_type_id',$arrProjectType)
+                ->where('css.pm_name',$pmName)
+                ->where('css.employee_id',$employeeId)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
+    }
+    
+    /**
+     * get css by PM, team list, project type list and employee's team
+     * @param string $pmName
+     * @param string $teamIds
+     * @param string $projectTypeIds
+     * @param array $arrEmployeeTeam
+     * return Css list
+     */
+    public function getCssByPmAndTeamIdsAndListProjectTypeAndEmployeeTeam($pmName, $teamIds,$projectTypeIds,$arrEmployeeTeam){
+        $arrFilterTeam = explode(',', $teamIds);
+        $arrFilterProjectType = explode(',', $projectTypeIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrEmployeeTeam)
+                ->whereIn('css_team.team_id',$arrFilterTeam)
+                ->whereIn('css.project_type_id',$arrFilterProjectType)
+                ->where('css.pm_name',$pmName)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
+    }
+    
+    /**
+     * get css by brse_name, team list and project type list
      * @param string $brseName
      * @param string $teamIds
      * @param string $projectTypeIds
-     * return list object
+     * return Css list
      */
     public static function getCssByBrseAndTeamIdsAndListProjectType($brseName, $teamIds,$projectTypeIds){
-        $result = DB::select('select * from css '
-                . 'where brse_name = "'.$brseName.'" AND project_type_id IN ('.$projectTypeIds.') and id In (SELECT css_id from css_team where team_id IN ('.$teamIds.'))'
-                . 'order by created_at asc');
-        return $result;
+        $arrProjectType = explode(',', $projectTypeIds);
+        $arrTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeam)
+                ->whereIn('css.project_type_id',$arrProjectType)
+                ->where('css.brse_name',$brseName)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
     }
     
     /**
-     * get css by customer_name, team_id and list project type ids
+     * get css by brse_name, team list, project type list and employee
      * @param string $brseName
      * @param string $teamIds
      * @param string $projectTypeIds
-     * return list object
+     * @param int $employeeId
+     * return Css list
+     */
+    public static function getCssByBrseAndTeamIdsAndListProjectTypeAndEmployee($brseName, $teamIds,$projectTypeIds,$employeeId){
+        $arrProjectType = explode(',', $projectTypeIds);
+        $arrTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeam)
+                ->whereIn('css.project_type_id',$arrProjectType)
+                ->where('css.brse_name',$brseName)
+                ->where('css.employee_id',$employeeId)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
+    }
+    
+    /**
+     * get css by brse_name, team list, project type list and employee's team
+     * @param string $brseName
+     * @param string $teamIds
+     * @param string $projectTypeIds
+     * @param array $arrEmployeeTeam
+     * return Css list
+     */
+    public static function getCssByBrseAndTeamIdsAndListProjectTypeAndEmployeeTeam($brseName, $teamIds,$projectTypeIds,$arrEmployeeTeam){
+        $arrProjectType = explode(',', $projectTypeIds);
+        $arrTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeam)
+                ->whereIn('css.project_type_id',$arrProjectType)
+                ->where('css.brse_name',$brseName)
+                ->whereIn('css_team.team_id',$arrEmployeeTeam)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
+    }
+    
+    /**
+     * get css by customer_name, team list and project type list
+     * @param string $customerName
+     * @param string $teamIds
+     * @param string $projectTypeIds
+     * return Css list
      */
     public static function getCssByCustomerAndTeamIdsAndListProjectType($customerName, $teamIds,$projectTypeIds){
-        $result = DB::select('select * from css '
-                . 'where customer_name = "'.$customerName.'" AND project_type_id IN ('.$projectTypeIds.') and id In (SELECT css_id from css_team where team_id IN ('.$teamIds.')) '
-                . 'order by created_at asc');
-        return $result;
+        $arrProjectType = explode(',', $projectTypeIds);
+        $arrTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeam)
+                ->whereIn('css.project_type_id',$arrProjectType)
+                ->where('css.customer_name',$customerName)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
     }
     
     /**
-     * get css by customer_name, team_id and list project type ids
-     * @param string $brseName
+     * get css by customer_name, team list, project type list and employee
+     * @param string $customerName
      * @param string $teamIds
      * @param string $projectTypeIds
-     * return list object
+     * @param int $employeeId
+     * return Css list
      */
-    public static function getCssBySaleAndTeamIdsAndListProjectType($employee_id, $teamIds,$projectTypeIds){
-        $result = DB::select('select * from css '
-                . 'where employee_id = "'.$employee_id.'" AND project_type_id IN ('.$projectTypeIds.') and id In (SELECT css_id from css_team where team_id IN ('.$teamIds.')) '
-                . 'order by created_at asc');
-        return $result;
+    public static function getCssByCustomerAndTeamIdsAndListProjectTypeAndEmployee($customerName, $teamIds,$projectTypeIds,$employeeId){
+        $arrProjectType = explode(',', $projectTypeIds);
+        $arrTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeam)
+                ->whereIn('css.project_type_id',$arrProjectType)
+                ->where('css.customer_name',$customerName)
+                ->where('css.employee_id',$employeeId)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
+    }
+    
+    
+    /**
+     * get css by customer_name, team list, project type list and employee
+     * @param string $customerName
+     * @param string $teamIds
+     * @param string $projectTypeIds
+     * @param array $arrEmployeeTeam
+     * return Css list
+     */
+    public static function getCssByCustomerAndTeamIdsAndListProjectTypeAndEmployeeTeam($customerName, $teamIds,$projectTypeIds,$arrEmployeeTeam){
+        $arrProjectType = explode(',', $projectTypeIds);
+        $arrTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeam)
+                ->whereIn('css.project_type_id',$arrProjectType)
+                ->where('css.customer_name',$customerName)
+                ->whereIn('css_team.team_id',$arrEmployeeTeam)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
+    }
+    
+    /**
+     * Get CSS by sale, team list and project type list and employee's team
+     * @param int $saleId
+     * @param string $teamIds
+     * @param string $projectTypeIds
+     * @param array $arrEmployeeTeam
+     * return Css list
+     */
+    public static function getCssBySaleAndTeamIdsAndListProjectTypeAndEmployeeTeam($saleId, $teamIds,$projectTypeIds,$arrEmployeeTeam){
+        $arrProjectType = explode(',', $projectTypeIds);
+        $arrTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeam)
+                ->whereIn('css.project_type_id',$arrProjectType)
+                ->whereIn('css_team.team_id',$arrEmployeeTeam)
+                ->where('css.employee_id',$saleId)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
+    }
+    
+    /**
+     * Get CSS by sale, team list and project type list and employee's team
+     * @param int $saleId
+     * @param string $teamIds
+     * @param string $projectTypeIds
+     * @param int $employeeId
+     * return Css list
+     */
+    public static function getCssBySaleAndTeamIdsAndListProjectTypeAndEmployee($saleId, $teamIds,$projectTypeIds,$employeeId){
+        $arrProjectType = explode(',', $projectTypeIds);
+        $arrTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeam)
+                ->whereIn('css.project_type_id',$arrProjectType)
+                ->where('css.employee_id',$employeeId)
+                ->where('css.employee_id',$saleId)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
+    }
+    
+    /**
+     * Get CSS by sale, team list, project type list
+     * @param int $saleId
+     * @param string $teamIds
+     * @param string $projectTypeIds
+     * return Css list
+     */
+    public static function getCssBySaleAndTeamIdsAndListProjectType($saleId, $teamIds,$projectTypeIds){
+        $arrProjectType = explode(',', $projectTypeIds);
+        $arrTeam = explode(',', $teamIds);
+        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->whereIn('css_team.team_id',$arrTeam)
+                ->whereIn('css.project_type_id',$arrProjectType)
+                ->where('css.employee_id',$saleId)
+                ->groupBy('css.id')
+                ->select('css.*')
+                ->get();
     }
     
     /**

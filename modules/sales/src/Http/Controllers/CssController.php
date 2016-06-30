@@ -292,7 +292,7 @@ class CssController extends Controller {
      * @return void
      */
     public function grid(){
-        $css = CssPermission::GetCssListByPermission(self::$perPageCss);
+        $css = CssPermission::getCssListByPermission(self::$perPageCss);
         
         if(count($css) > 0){
             $cssResultModel = new CssResult();
@@ -554,19 +554,19 @@ class CssController extends Controller {
     protected function applyByFilter($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria){
         $cssResultModel = new CssResult();
         if($criteria == 'projectType'){
-            $cssResult = $cssResultModel->getCssResultByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds);
+            $cssResult = CssPermission::getAnalyzeByProjectType($criteriaIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'team'){
-            $cssResult = $cssResultModel->getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds);
+            $cssResult = CssPermission::getAnalyzeByProjectType($projectTypeIds, $startDate, $endDate,$criteriaIds);
         }else if($criteria == 'pm'){
-            $cssResult = $cssResultModel->getCssResultByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResult = CssPermission::getAnalyzeByPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'brse'){
-            $cssResult = $cssResultModel->getCssResultByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResult = CssPermission::getAnalyzeByBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'customer'){
-            $cssResult = $cssResultModel->getCssResultByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResult = CssPermission::getAnalyzeByCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'sale'){
-            $cssResult = $cssResultModel->getCssResultByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResult = CssPermission::getAnalyzeBySale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }else if($criteria == 'question'){
-            $cssResult = $cssResultModel->getCssResultByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResult = CssPermission::getAnalyzeByQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
         }
         
         if(count($cssResult)){
@@ -645,27 +645,27 @@ class CssController extends Controller {
         });
         if($criteria == 'projectType'){
             //all result to show charts
-            $cssResult = $cssResultModel->getCssResultByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds);
+            $cssResult = CssPermission::getAnalyzeByProjectType($criteriaIds, $startDate, $endDate,$teamIds);
             //result by pagination
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByProjectTypeIds($criteriaIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
+            $cssResultPaginate = CssPermission::getAnalyzePaginateByProjectType($criteriaIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'team'){
-            $cssResult = $cssResultModel->getCssResultByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByProjectTypeIds($projectTypeIds, $startDate, $endDate,$criteriaIds,self::$perPage,$orderBy,$ariaType);
+            $cssResult = CssPermission::getAnalyzeByProjectType($projectTypeIds, $startDate, $endDate,$criteriaIds);
+            $cssResultPaginate = CssPermission::getAnalyzePaginateByProjectType($projectTypeIds, $startDate, $endDate,$criteriaIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'pm'){
-            $cssResult = $cssResultModel->getCssResultByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
+            $cssResult = CssPermission::getAnalyzeByPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = CssPermission::getAnalyzePaginateByPm($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'brse'){
-            $cssResult = $cssResultModel->getCssResultByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
+            $cssResult = CssPermission::getAnalyzeByBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = CssPermission::getAnalyzePaginateByBrse($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'customer'){
-            $cssResult = $cssResultModel->getCssResultByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
+            $cssResult = CssPermission::getAnalyzeByCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = CssPermission::getAnalyzePaginateByCustomer($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'sale'){
-            $cssResult = $cssResultModel->getCssResultByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListSale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
+            $cssResult = CssPermission::getAnalyzeBySale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = CssPermission::getAnalyzePaginateBySale($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }else if($criteria == 'question'){
-            $cssResult = $cssResultModel->getCssResultByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
-            $cssResultPaginate = $cssResultModel->getCssResultPaginateByListQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
+            $cssResult = CssPermission::getAnalyzeByQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds);
+            $cssResultPaginate = CssPermission::getAnalyzePaginateByQuestion($criteriaIds,$projectTypeIds, $startDate, $endDate,$teamIds,self::$perPage,$orderBy,$ariaType);
         }
         
         $offset = ($cssResultPaginate->currentPage()-1) * $cssResultPaginate->perPage() + 1;
@@ -843,32 +843,34 @@ class CssController extends Controller {
         $cssResultDetailModel = new CssResultDetail();
         $criteriaIds = explode(",", $criteriaIds);
         $teamModel = new Team();
+        $employeeModel = new Employees();
         
         $pointCompareChart = array();
         foreach($criteriaIds as $key => $criteriaId){
             if($criteria == 'projectType'){
                 $name = self::getProjectTypeNameById($criteriaId);
-                $cssResultByCriteria = $cssResultModel->getCssResultByProjectTypeId($criteriaId,$startDate,$endDate,$teamIds);
+                $cssResultByCriteria = CssPermission::getCompareChartByProjectType($criteriaId,$startDate,$endDate,$teamIds);
             }else if($criteria == 'team'){
                 $team = $teamModel->getTeamWithTrashedById($criteriaId);
                 $name = $team->name;
-                $cssResultByCriteria = $cssResultModel->getCssResultByTeamId($criteriaId,$startDate,$endDate,$projectTypeIds);
+                $cssResultByCriteria = CssPermission::getCompareChartByTeam($criteriaId,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'pm'){
                 $name = $criteriaId;
-                $cssResultByCriteria = $cssResultModel->getCssResultByPmName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+                $cssResultByCriteria = CssPermission::getCompareChartByPm($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'brse'){
                 $name = $criteriaId;
-                $cssResultByCriteria = $cssResultModel->getCssResultByBrseName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+                $cssResultByCriteria = CssPermission::getCompareChartByBrse($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'customer'){
                 $name = $criteriaId;
-                $cssResultByCriteria = $cssResultModel->getCssResultByCustomerName($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+                $cssResultByCriteria = CssPermission::getCompareChartByCustomer($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'sale'){
-                $name = $criteriaId;
-                $cssResultByCriteria = $cssResultModel->getCssResultBySale($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+                $employee = $employeeModel::find($criteriaId);
+                $name = $employee->name;
+                $cssResultByCriteria = CssPermission::getCompareChartBySale($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }else if($criteria == 'question'){
                 $question = CssQuestion::find($criteriaId);
                 $name = $question->content;
-                $cssResultByCriteria = $cssResultModel->getCssResultByQuestionToChart($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
+                $cssResultByCriteria = CssPermission::getCompareChartByQuestion($criteriaId,$teamIds,$startDate,$endDate,$projectTypeIds);
             }
             
             $pointToHighchart = [];
@@ -954,7 +956,7 @@ class CssController extends Controller {
         foreach($arrProjectTypeId as $k => $projectTypeId){
             $projectTypeName = self::getProjectTypeNameById($projectTypeId);
             $points = array();
-            $css = Css::getCssByProjectTypeAndTeam($projectTypeId,$teamIds);
+            $css = CssPermission::getFilterAnalyzeByProjectType($projectTypeId,$teamIds);
             if(count($css) > 0){
                 $countCss = 0;
                 foreach($css as $itemCss){
@@ -1052,7 +1054,7 @@ class CssController extends Controller {
         $teamModel = new Team();
         foreach($arrTeamId as $k => $teamId){
             $points = array();
-            $css = Css::getCssByTeamIdAndListProjectType($teamId,$projectTypeIds);
+            $css = CssPermission::getFilterAnalyzeByTeam($teamId,$projectTypeIds);
             $team = $teamModel->getTeamWithTrashedById($teamId);
             $teamId = $team->id;
             $teamName = $team->name;
@@ -1137,13 +1139,13 @@ class CssController extends Controller {
             foreach($listResult as $itemList){
                 $points = array();
                 if($criteria == "pm"){
-                    $css = Css::getCssByPmAndTeamIdsAndListProjectType($itemList->pm_name, $teamIds,$projectTypeIds);
+                    $css = CssPermission::getFilterAnalyzeByPm($itemList->pm_name, $teamIds,$projectTypeIds);
                 }else if($criteria == "brse"){
-                    $css = Css::getCssByBrseAndTeamIdsAndListProjectType($itemList->brse_name, $teamIds,$projectTypeIds);
+                    $css = CssPermission::getFilterAnalyzeByBrse($itemList->brse_name, $teamIds,$projectTypeIds);
                 }else if($criteria == "customer"){
-                    $css = Css::getCssByCustomerAndTeamIdsAndListProjectType($itemList->customer_name, $teamIds,$projectTypeIds);
+                    $css = CssPermission::getFilterAnalyzeByCustomer($itemList->customer_name, $teamIds,$projectTypeIds);
                 }else if($criteria == "sale"){
-                    $css = Css::getCssBySaleAndTeamIdsAndListProjectType($itemList->employee_id, $teamIds,$projectTypeIds);
+                    $css = CssPermission::getFilterAnalyzeBySale($itemList->employee_id, $teamIds,$projectTypeIds);
                 }
 
                 $countCss = 0;
@@ -1334,8 +1336,7 @@ class CssController extends Controller {
      * @return type
      */
     protected function getQuestionInfoAnalyze($questionId,$startDate, $endDate,$teamIds){
-        $cssResultModel = new CssResult();
-        $cssResult = $cssResultModel->getCssResultByQuestion($questionId,$startDate, $endDate,$teamIds);
+        $cssResult = CssPermission::getFilterAnalyzeByQuestion($questionId,$startDate, $endDate,$teamIds);
         if(count($cssResult) > 0){
             $cssResultDetailModel = new CssResultDetail();
             $countCss = 0;
