@@ -175,10 +175,6 @@ class Form
         $url = app('request')->url() . '/';
         $url = md5($url);
         $data = Session::get('filter_pager.' . $url);
-        if (! isset($data[0])) {
-            return null;
-        }
-        $data = $data[0];
         if (! $key) {
             return $data;
         }
