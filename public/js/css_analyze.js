@@ -109,8 +109,6 @@ function filterAnalyze(token){
 function fixScroll(elem){
     var height = elem.height();
     var scrollHeight = elem.get(0).scrollHeight;
-    console.log(height);
-    console.log(scrollHeight);
     if(scrollHeight > height){
         elem.parent().find('thead').css('width','98%');
     }else{
@@ -189,6 +187,8 @@ function apply(token){
         $('html, body').animate({
             scrollTop: $(".ketquaapply").offset().top
         }, 100);
+        
+        //Fill data result list table
         var countResult = data["cssResultPaginate"]["cssResultdata"]["data"].length; 
         var html = "";
         for(var i=0; i<countResult; i++){
@@ -204,72 +204,84 @@ function apply(token){
         } 
         $("#danhsachduan tbody").html(html);
         $("#danhsachduan").parent().find(".pagination").html(data["cssResultPaginate"]["paginationRender"]);
+        //End fill data result list table
         
-        $('#chartAll').highcharts({
-            title: {
-                text: 'Điểm CSS',
+        //Get data to all result chart
+        var dataResult = [];
+        $.each(data['allResultChart'], function(key, value){
+            dataResult.push({
+                x: new Date(value.date),
+                y: value.point,
+            });
+        });
+        console.log(dataResult);
+        //Set data to all result chart
+        var chart = new CanvasJS.Chart("chartAll",
+        {
+            animationEnabled: true,
+            theme: "theme1",
+            //exportEnabled: true,
+            axisX:{
+                valueFormatString: "DD/MM/YYYY",
+                interval: 30,
+                intervalType: "day"
             },
-
-            xAxis: {
-                categories: data["dateToHighchart"]
+            axisY: {
+                
             },
-            yAxis: {
-                title: {
-                    text: ''
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            tooltip: {
-                valueSuffix: '',
-                valueDecimals: 2
-            },
-            legend: {
-                layout: 'horizontal',
-                align: 'right',
-                borderWidth: 0
-            },
-            series: [{
+            data: [{
+                type: 'line',
                 name: 'Điểm CSS',
-                data: data["pointToHighchart"]
+                showInLegend: true, 
+                dataPoints: dataResult,
             }]
         });
+
+        chart.render();
+        //End all result chart
         
-        $('#chartFilter').highcharts({
-            title: {
-                text: 'Điểm CSS',
-
-            },
-
-            xAxis: {
-                categories: []
-            },
-            yAxis: {
-                title: {
-                    text: ''
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            tooltip: {
-                valueSuffix: ''
-            },
-            legend: {
-                layout: 'horizontal',
-                align: 'right',
-                borderWidth: 0
-            },
-            series: data["pointCompareChart"]
+        //Get data compare chart
+        var dataCompare = [];
+        $.each(data["compareChart"], function(key, value) {
+            var points = [];
+            $.each(value.data,function(k, v){
+                points.push({
+                    x: new Date(v.date),
+                    y: v.point,
+                });
+            });
+            dataCompare.push({
+                type: 'line', 
+                name: value.name,
+                showInLegend: true, 
+                dataPoints: points,
+            }); 
         });
         
+        //Set data to compare chart
+        var chartCompare = new CanvasJS.Chart("chartFilter",
+        {
+            animationEnabled: true,
+            theme: "theme1",
+            //exportEnabled: true,
+            axisX:{
+                valueFormatString: "DD/MM/YYYY",
+                interval: 30,
+                intervalType: "day"
+            },
+            axisY: {
+                
+            },
+            data: dataCompare,
+        });
+
+        chartCompare.render();
+
+        //end compare chart  
+        
+        //Fill data to Less 3* table and Proposed table
         if(criteriaType != "tcQuestion"){
-            //danh sach cau hoi duoi 3 sao
+            //Less 3* table
             var countResult = data["lessThreeStar"]["cssResultdata"].length; 
             html = "";
             if(countResult > 0){
@@ -291,7 +303,7 @@ function apply(token){
                 $("#duoi3sao").parent().find(".pagination").html('');
             }
             
-            //danh sach de xuat
+            //Proposed table
             countResult = data["proposes"]["cssResultdata"].length; 
             html = "";
             if(countResult > 0){

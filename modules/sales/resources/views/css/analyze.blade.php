@@ -244,6 +244,7 @@
 <script src="{{ asset('adminlte/plugins/iCheck/icheck.js') }}"></script>
 <script src="{{ asset('plugins/hightcharts/hightcharts.js') }}"></script>
 <script src="{{ asset('plugins/hightcharts/exporting.js') }}"></script>
+<script src="{{ asset('js/jquery.canvasjs.min.js') }}"></script>
 <script src="{{ asset('js/css_analyze.js') }}"></script>
 <script src="{{ asset('js/css_dataTables.js') }}"></script>
 @endsection
