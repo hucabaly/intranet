@@ -108,10 +108,10 @@
 @endsection
 <!-- Styles -->
 @section('css')
-<link href="{{ asset('css/css-screen.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/css-screen.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
 <!-- Script -->
 @section('script')
-<script src="{{ asset('js/css.js') }}"></script>
+<script src="{{ asset('sales/js/css.js') }}"></script>
 @endsection
