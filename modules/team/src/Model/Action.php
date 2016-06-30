@@ -97,8 +97,16 @@ class Action extends CoreModel
      */
     public static function getGridData()
     {
+        $actionTable = self::getTableName();
         $pager = Config::getPagerData();
-        $collection = self::select('id','parent_id','route', 'name', 'description', 'sort_order')
+        $collection = self::select(
+                "{$actionTable}.id as id",
+                "{$actionTable}.route as route", 
+                "{$actionTable}.name as name", 
+                "{$actionTable}.description as description", 
+                "{$actionTable}.sort_order",
+                'action_parent.name as name_parent'
+            )->leftJoin("{$actionTable} as action_parent", 'action_parent.id', '=', "{$actionTable}.parent_id")   
             ->orderBy($pager['order'], $pager['dir']);
         $collection = self::filterGrid($collection);
         $collection = self::pagerCollection($collection, $pager['limit'], $pager['page']);

@@ -14,6 +14,9 @@
 
 use Rikkei\Team\View\Config;
 use Rikkei\Core\View\Form;
+use Rikkei\Team\Model\Action;
+
+$actionTable = Action::getTableName();
 ?>
 <div class="row">
     <div class="col-sm-12">
@@ -31,11 +34,11 @@ use Rikkei\Core\View\Form;
                 <table class="table table-striped dataTable table-bordered table-hover table-grid-data">
                     <thead>
                         <tr>
-                            <th class="sorting {{ Config::getDirClass('id') }} col-id" onclick="window.location.href = '{{Config::getUrlOrder('id')}}';">Id</th>
-                            <th class="sorting {{ Config::getDirClass('name') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('name')}}';">Code</th>
-                            <th class="sorting {{ Config::getDirClass('description') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('description')}}';">{{ trans('team::view.Description') }}</th>
+                            <th class="sorting {{ Config::getDirClass('id') }} col-id" width="30px" onclick="window.location.href = '{{Config::getUrlOrder('id')}}';">{{ trans('core::view.ID') }}</th>
+                            <th class="sorting {{ Config::getDirClass('name') }} col-name" width="20px" onclick="window.location.href = '{{Config::getUrlOrder('name')}}';">Code</th>
+                            <th class="sorting {{ Config::getDirClass('description') }} col-name" width="150px" onclick="window.location.href = '{{Config::getUrlOrder('description')}}';">{{ trans('team::view.Description') }}</th>
                             <th class="sorting {{ Config::getDirClass('route') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('route')}}';">Route</th>
-                            <th class="sorting {{ Config::getDirClass('parent_id') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('parent_id')}}';">{{ trans('team::view.Parent id') }}</th>
+                            <th class="sorting {{ Config::getDirClass('name_parent') }} col-name" width="150px" onclick="window.location.href = '{{Config::getUrlOrder('name_parent')}}';">{{ trans('team::view.Parent') }}</th>
                             <th class="sorting {{ Config::getDirClass('sort_order') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('sort_order')}}';">{{ trans('team::view.Sort order') }}</th>
                             <th class="col-action col-a2">&nbsp;</th>
                         </tr>
@@ -45,35 +48,35 @@ use Rikkei\Core\View\Form;
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="text" name="filter[id]" value="{{ Form::getFilterData('id') }}" placeholder="Id" class="filter-grid" />
+                                        <input type="text" name="filter[{{ $actionTable }}.id][from]" value="{{ Form::getFilterData("{$actionTable}.id", 'from') }}" placeholder="{{ trans('team::view.From') }}" class="filter-grid" />
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="text" name="filter[name]" value="{{ Form::getFilterData('name') }}" placeholder="{{ trans('team::view.Name') }}" class="filter-grid" />
+                                        <input type="text" name="filter[{{ $actionTable }}.name]" value="{{ Form::getFilterData("{$actionTable}.name") }}" placeholder="{{ trans('team::view.Name') }}" class="filter-grid" />
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="text" name="filter[description]" value="{{ Form::getFilterData('description') }}" placeholder="{{ trans('team::view.Description') }}" class="filter-grid" />
+                                        <input type="text" name="filter[{{ $actionTable }}.description]" value="{{ Form::getFilterData("{$actionTable}.description") }}" placeholder="{{ trans('team::view.Description') }}" class="filter-grid" />
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="text" name="filter[route]" value="{{ Form::getFilterData('route') }}" placeholder="Route" class="filter-grid" />
+                                        <input type="text" name="filter[{{ $actionTable }}.route]" value="{{ Form::getFilterData("{$actionTable}.route") }}" placeholder="Route" class="filter-grid" />
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="text" name="filter[parent_id]" value="{{ Form::getFilterData('parent_id') }}" placeholder="{{ trans('team::view.Parent id') }}" class="filter-grid" />
+                                        <input type="text" name="filter[action_parent.name]" value="{{ Form::getFilterData('action_parent.name') }}" placeholder="{{ trans('team::view.Parent id') }}" class="filter-grid" />
                                     </div>
                                 </div>
                             </td>
@@ -87,7 +90,7 @@ use Rikkei\Core\View\Form;
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->description }}</td>
                                     <td>{{ $item->route }}</td>
-                                    <td>{{ $item->parent_id }}</td>
+                                    <td>{{ $item->name_parent }}</td>
                                     <td>{{ $item->sort_order }}</td>
                                     <td>
                                         <a href="{{ route('team::setting.acl.edit', ['id' => $item->id ]) }}" class="btn-edit">{{ trans('team::view.Edit') }}</a>
