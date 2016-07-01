@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Rikkei\Recruitment\Model\RecruitmentApplies;
 use Rikkei\Core\View\CacheHelper;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Pagination\Paginator;
 
 class Employees extends CoreModel
 {
@@ -90,11 +89,11 @@ class Employees extends CoreModel
         try {
             $this->saveCode();
             $this->saveRecruitmentAppyId();
-            CacheHelper::forget(self::KEY_CACHE, $this->id);
             $result = parent::save($options);
             $this->saveTeamPosition();
             $this->saveRoles();
             DB::commit();
+            CacheHelper::forget(self::KEY_CACHE);
             return $result;
         } catch (Exception $ex) {
             DB::rollback();
@@ -137,7 +136,6 @@ class Employees extends CoreModel
                 unset($teamPostions[0]);
             }
         }
-        
         if (! $teamPostions) {
             return;
         }
@@ -608,5 +606,128 @@ class Employees extends CoreModel
             return false;
         }
         return true;
+    }
+    
+    /**
+     * check is leader of a team
+     * 
+     * @return boolean
+     */
+    public function isLeader()
+    {
+        if ($employeeLeader = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return self::flagToBoolean($employeeLeader);
+        }
+        $positions = $this->getTeamPositons();
+        foreach ($positions as $position) {
+            $employeeLeader = Roles::isPositionLeader($position->role_id);
+            if ($employeeLeader) {
+                break;
+            }
+        }
+        CacheHelper::put(
+            self::KEY_CACHE, 
+            self::booleanToFlag($employeeLeader), 
+            $this->id);
+        return $employeeLeader;
+    }
+    
+    /**
+     * check permission greater with another employee
+     * 
+     * @param model $employee
+     * @param boolean $checkIsLeader
+     * @return boolean
+     */
+    public function isGreater($employee, $checkIsLeader = false)
+    {
+        if ($employeeGreater = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return self::flagToBoolean($employeeGreater);
+        }
+        if (is_numeric($employee)) {
+            $employee = Employees::find($employee);
+        }
+        $employeeGreater = null;
+        if (! $employee) {
+            $employeeGreater = false;
+        } elseif ($this->id == $employee->id) {
+            if ($checkIsLeader) {
+                if ($this->isLeader()) {
+                    $employeeGreater = true;
+                } else {
+                    $employeeGreater = false;
+                }
+            } else {
+                $employeeGreater = false;
+            }
+        } else {
+            $thisTeam = $this->getTeamPositons();
+            $anotherTeam = $employee->getTeamPositons();
+            $teamPaths = Team::getTeamPath();
+            if (! count($thisTeam) || ! count($anotherTeam) || ! count($teamPaths)) {
+                $employeeGreater = false;
+            }
+        }
+        if ($employeeGreater === null) {
+            $employeeGreater = $this->isTeamPositionGreater(
+                $thisTeam, 
+                $anotherTeam, 
+                $teamPaths,
+                $checkIsLeader
+            );
+        }
+        CacheHelper::put(self::KEY_CACHE, self::booleanToFlag($employeeGreater), $this->id);
+        return $employeeGreater;
+    }
+    
+    /**
+     * check team greater, position greater of 2 employee
+     * 
+     * @param model $thisTeam
+     * @param model $anotherTeam
+     * @param array $teamPaths
+     * @return boolean
+     */
+    protected function isTeamPositionGreater(
+        $thisTeam, 
+        $anotherTeam, 
+        $teamPaths, 
+        $checkIsLeader = false
+    ) {
+        foreach ($anotherTeam as $anotherTeamItem) {
+            foreach ($thisTeam as $thisTeamItem) {
+                // this team is team root
+                if (! $teamPaths[$anotherTeamItem->team_id]) {
+                    continue;
+                }
+                // team greater
+                if (in_array($thisTeamItem->team_id, $teamPaths[$anotherTeamItem->team_id])) {
+                    return true;
+                }
+                // 2 team diffirent branch
+                if ($thisTeamItem->team_id != $anotherTeamItem->team_id) {
+                    continue;
+                }
+                // same team, compare position
+                $thisPosition = Roles::find($thisTeamItem->role_id);
+                $anotherPosition = Roles::find($anotherTeamItem->role_id);
+                if (! $thisPosition || 
+                    ! $anotherPosition || 
+                    ! $thisPosition->isPosition() || 
+                    ! $anotherPosition->isPosition()) {
+                    continue;
+                }
+                if ($checkIsLeader) {
+                    if ($thisPosition->isLeader()) {
+                        return true;
+                    }
+                    return false;
+                }
+                if ($thisPosition->sort_order < $anotherPosition->sort_order) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -80,3 +80,5 @@ Route::group([
         Route::delete('leave','MemberController@leave')->name('leave');
     });
 });
+
+Route::get('profile','ProfileController@profile')->name('member.profile');
