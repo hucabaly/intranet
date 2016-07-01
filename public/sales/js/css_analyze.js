@@ -235,6 +235,7 @@ function apply(token){
                 type: 'line',
                 name: 'Điểm CSS',
                 showInLegend: true, 
+                xValueFormatString:"DD/MM/YYYY",
                 dataPoints: dataResult,
             }]
         });
@@ -256,6 +257,7 @@ function apply(token){
                 type: 'line', 
                 name: value.name,
                 showInLegend: true, 
+                xValueFormatString:"DD/MM/YYYY",
                 dataPoints: points,
             }); 
         });
