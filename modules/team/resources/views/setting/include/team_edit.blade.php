@@ -31,11 +31,11 @@ if (Form::getData('id')) {
                     <label for="permission-type-new{{ $suffixId }}">{{ trans('team::view.New') }}</label>
                 </p>
                 <div class="row">
-                    <p class="col-md-5">
+                    <p class="col-md-6">
                         <input type="radio" name="permission_same" id="permission-type-same{{ $suffixId }}" value="1"<?php if (isset($permissionAs) && $permissionAs): ?> checked<?php endif; ?> />
                         <label for="permission-type-same{{ $suffixId }}">{{ trans('team::view.Permission following function unit') }}</label>&nbsp;&nbsp;&nbsp;
                     </p>
-                    <p class="col-md-7">
+                    <p class="col-md-6">
                         <select class="input-select select-search" name="item[follow_team_id]">
                             @foreach(Rikkei\Team\View\TeamList::toOption(Form::getData('id'), true) as $option)
                             <option value="{{ $option['value'] }}"

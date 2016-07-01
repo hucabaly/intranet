@@ -6,7 +6,6 @@ Menu group
 
 @section('css')
 <link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/datatables/dataTables.bootstrap.css') }}" />
-<link rel="stylesheet" href="{{ URL::asset('team/css/style.css') }}" />
 @endsection
 
 @section('content')

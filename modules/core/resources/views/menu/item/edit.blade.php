@@ -42,7 +42,7 @@ $routeListOption = View::routeListToOption();
         </div>
         <div class="col-md-12">
             <div class="box box-info">
-                <div class="box-body">
+                <div class="box-body form-group-select2">
                     
                     <div class="form-group form-label-left">
                         <label class="col-md-3 control-label required">{{ trans('team::view.Name') }}<em>*</em></label>
@@ -54,7 +54,7 @@ $routeListOption = View::routeListToOption();
                     <div class="form-group form-label-left">
                         <label class="col-md-3 control-label">{{ trans('core::view.State') }}</label>
                         <div class="input-box col-md-9">
-                            <select class="form-control" name="item[state]">
+                            <select class="form-control select-search2" name="item[state]">
                                 @foreach ($activeOptions as $option)
                                     <option value="{{ $option['value'] }}"<?php if ($option['value'] == Form::getData('menuitem.state')): ?> selected<?php endif; ?>>{{ $option['label'] }}</option>
                                 @endforeach
@@ -65,7 +65,7 @@ $routeListOption = View::routeListToOption();
                     <div class="form-group form-label-left">
                         <label class="col-md-3 control-label">Menu Group</label>
                         <div class="input-box col-md-9">
-                            <select class="form-control" name="item[menu_id]">
+                            <select class="form-control select-search2" name="item[menu_id]">
                                 @foreach ($menusOptions as $option)
                                     <option value="{{ $option['value'] }}"<?php if ($option['value'] == Form::getData('menuitem.menu_id')): ?> selected<?php endif; ?>>{{ $option['label'] }}</option>
                                 @endforeach
@@ -87,7 +87,7 @@ $routeListOption = View::routeListToOption();
                     <div class="form-group form-label-left">
                         <label class="col-md-3 control-label">Url</label>
                         <div class="input-box col-md-9">
-                            <select name="item[url]" class="form-control">
+                            <select name="item[url]" class="form-control select-search2">
                                 @if ($routeListOption)
                                     @foreach ($routeListOption as $option)
                                         <option value="{{ $option['value'] }}"<?php if ($option['value'] == Form::getData('menuitem.url')): ?> selected<?php endif; ?>>{{ $option['label'] }}</option>
@@ -127,7 +127,7 @@ Form::forget();
 @endsection
 
 @section('script')
-<script src="{{ URL::asset('js/jquery.validate.min.js') }}"></script>
+<script src="{{ URL::asset('lib/js/jquery.validate.min.js') }}"></script>
 <script src="{{ URL::asset('adminlte/plugins/select2/select2.full.min.js') }}"></script>
 <script>
     jQuery(document).ready(function ($) {
@@ -148,6 +148,9 @@ Form::forget();
             messages: messages
         });
         selectSearchReload({showSearch: true});
+        $('.select-search2').select2({
+            minimumResultsForSearch: Infinity
+        });
     });
 </script>
 @endsection

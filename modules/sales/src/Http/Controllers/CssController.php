@@ -397,12 +397,212 @@ class CssController extends Controller {
         $cssQuestionModel = new CssQuestion();
         $cssResultDetailModel = new CssResultDetail();
         
+        $cssCate = self::getCssDetailPoint($css->project_type_id,$resultId);
         $rootCategory = $cssCategoryModel->getRootCategory($css->project_type_id);
+        $overviewQuestion = $cssQuestionModel->getOverviewQuestionByCategory($rootCategory->id,1);
+        $resultDetailRow = $cssResultDetailModel->getResultDetailRowOfOverview($resultId, $rootCategory->id);
+        return view(
+            'sales::css.detail', [
+                'css' => $css,
+                "employee" => $employee,
+                "cssCate" => $cssCate,
+                "cssResult" => $cssResult,
+                "noOverView" => self::romanic_number(count($cssCate)+1,true),
+                "overviewQuestionContent" => $overviewQuestion->content,
+                "resultDetailRowOfOverview" => $resultDetailRow,
+            ]
+        );
+    }
+    
+    public function exportExcel($resultId){
+        $model = new Css();
+        $cssCategoryModel = new CssCategory();
+        $cssQuestionModel = new CssQuestion();
+        $cssResultDetailModel = new CssResultDetail();
+        
+        $projectInfo = $model->projectMakeInfo($resultId);
+        $cssCate = self::getCssDetailPoint($projectInfo->project_type_id,$resultId);
+        $rootCategory = $cssCategoryModel->getRootCategory($projectInfo->project_type_id);
+        $overviewQuestion = $cssQuestionModel->getOverviewQuestionByCategory($rootCategory->id,1);
+        $resultDetailRow = $cssResultDetailModel->getResultDetailRowOfOverview($resultId, $rootCategory->id);
+        
+        $dataInfo = [];
+        $dataInfo[] = array(self::formatNumber($projectInfo->point));
+        //Project Info data
+        $rowsInfoHead = count($dataInfo) + 2; //Get Row header of Project Info table
+        $dataInfo[] = array(Lang::get('sales::view.Project information'));
+        $dataInfo[] = array(Lang::get('sales::view.Project name jp'), $projectInfo->project_name, Lang::get('sales::view.Project date jp'),'', date("d/m/Y",strtotime($projectInfo->start_date)) . ' - ' . date("d/m/Y",strtotime($projectInfo->end_date)));
+        $dataInfo[] = array(Lang::get('sales::view.Sale name jp'), $projectInfo->japanese_name, Lang::get('sales::view.Customer company name jp'),'', $projectInfo->company_name);
+        $dataInfo[] = array(Lang::get('sales::view.PM name jp'), $projectInfo->pm_name, Lang::get('sales::view.Customer name jp'),'', $projectInfo->customer_name);
+        $dataInfo[] = array(Lang::get('sales::view.BrSE name jp'), $projectInfo->brse_name, Lang::get('sales::view.Make name jp'),'', $projectInfo->make_name);
+        
+        
+        //Point Detail data
+        if(count($cssCate)){
+            $rowSpace = count($dataInfo) + 2; //Get Row space
+            $dataInfo[] = array('','','',''); 
+            $rowsDetailHead = count($dataInfo) + 2; //Get Row header of Point Detail table
+            $dataInfo[] = array(Lang::get('sales::view.Question'),'',Lang::get('sales::view.Rating'),Lang::get('sales::view.Comment'),'');
+            foreach($cssCate as $item){
+                $rowsCateLv1[] = count($dataInfo) + 2; //Get rows Categories lv 1
+                $dataInfo[] = array($item["sort_order"] . ". " .$item['name'],''); //Category lv1 with I, II, ... 
+                if($item['cssCateChild']){
+                    foreach($item['cssCateChild'] as $itemChild){
+                        $rowsCateLv2[] = count($dataInfo) + 2; //Get rows Categories lv 2
+                        $dataInfo[] = array($itemChild["sort_order"] . ". " .$itemChild['name'],''); //Category lv2 with 1, 2, ... 
+                        if($itemChild['questionsChild']){
+                            foreach($itemChild['questionsChild'] as $questionChild){
+                                $rowsQuestion[] = count($dataInfo) + 2; //Get rows questions
+                                $dataInfo[] = array($questionChild->sort_order . ". " .$questionChild->content,'',$questionChild->point,$questionChild->comment,'');
+                            }
+                        }
+                    }
+                }elseif($item['questions']){
+                    foreach($item['questions'] as $question){
+                        $rowsQuestion[] = count($dataInfo) + 2; //Get rows questions
+                        $dataInfo[] = array($question->sort_order . ". " .$question->content,'',$question->point,$question->comment,'');
+                    }
+                }
+            }
+        }
+        
+        $rowsCateLv1[] = count($dataInfo) + 2;
+        $dataInfo[] = array(self::romanic_number(count($cssCate)+1) . ". " .Lang::get('sales::view.Overview'),'','','','');
+        $rowsQuestion[] = count($dataInfo) + 2;
+        $dataInfo[] = array($overviewQuestion->content,'',$resultDetailRow->point,$resultDetailRow->comment,'');
+        //Proposed
+        $rowProposed = count($dataInfo) + 2;
+        $dataInfo[] = array(Lang::get('sales::view.Proposed'),$projectInfo->proposed);
+        $rows = [
+            'rowsInfoHead'      => $rowsInfoHead, 
+            'rowsDetailHead'    => $rowsDetailHead,
+            'rowsCateLv1'       => $rowsCateLv1,
+            'rowsCateLv2'       => $rowsCateLv2,
+            'rowsQuestion'      => $rowsQuestion,
+            'rowSpace'          => $rowSpace,
+            'rowProposed'      => $rowProposed
+        ];
+        
+        //Export excel
+        Excel::create('Filename', function($excel)  use($dataInfo,$rows){
+            $excel->sheet('ProjectInfo', function($sheet)  use($dataInfo,$rows){
+                $sheet->setVerticalCentered(true);
+                $sheet->fromArray($dataInfo);
+                $sheet->setPageMargin(25);
+                // Set width for multiple cells
+                $sheet->setWidth(array(
+                    'A'     =>  30,
+                    'B'     =>  30,
+                    'C'     =>  10,
+                    'D'     =>  20,
+                    'E'     =>  30,
+                ));
+                
+                //Set valign and height all rows
+                $countData = count($dataInfo);
+                for($i=1; $i<=$countData+1;$i++){
+                    $sheet->row($i, function($row) {
+                        $row->setValignment('center');
+                    });
+                    $sheet->setHeight($i,30);
+                }
+                
+                $sheet->mergeCells('A2:E2');
+                $sheet->setHeight(2,60);
+                $sheet->row(2, function($row) {
+                    $row->setAlignment('right');
+                    $row->setFontSize(30);
+                });
+                
+                /**
+                 * Project Info table
+                 */
+                
+                //Merge column C and D Project Info table
+                for($i=$rows['rowsInfoHead']+1;$i<=$rows['rowsInfoHead']+4;$i++){
+                    $sheet->mergeCells('C'.$i.':D'.$i);
+                }
+                
+                //Set style row Project Information header
+                $sheet->row($rows['rowsInfoHead'], function($row) {
+                    $row->setBackground('#3dd900');
+                    $row->setFontColor('#ffffff');
+                    $row->setFontWeight('bold');
+                });
+                
+                /**
+                 * End Project Info table
+                 */
+                
+                //Merge A to E row space
+                $sheet->mergeCells('A'.$rows['rowSpace'].':E'.$rows['rowSpace']);
+                
+                /**
+                 * Point Detail table
+                 */
+                
+                //Merge A and B, D and E Point Detail header
+                $sheet->mergeCells('A'.$rows['rowsDetailHead'].':B'.$rows['rowsDetailHead']);
+                $sheet->mergeCells('D'.$rows['rowsDetailHead'].':E'.$rows['rowsDetailHead']);
+                
+                //Set style row Point Detail header
+                $sheet->row($rows['rowsDetailHead'], function($row) {
+                    $row->setBackground('#3dd900');
+                    $row->setFontColor('#ffffff');
+                    $row->setFontWeight('bold');
+                    $row->setAlignment('center');
+                });
+                
+                //Category lv1 style
+                foreach($rows['rowsCateLv1'] as $k => $rowNum){
+                    $sheet->row($rowNum, function($row) {
+                        $row->setBackground('#7eff5e');
+                        $row->setFontColor('#ffffff');
+                        $row->setFontWeight('bold');
+                    });
+                }
+                
+                //Category lv2 style
+                foreach($rows['rowsCateLv2'] as $k => $rowNum){
+                    $sheet->row($rowNum, function($row) {
+                        $row->setFontWeight('bold');
+                    });
+                    
+                    $sheet->mergeCells('A'.$rowNum.':E'.$rowNum);
+                }
+                
+                //Merge column A and B, D and E of questions rows in Point Detail table
+                foreach($rows['rowsQuestion'] as $k => $rowNum){
+                    $sheet->mergeCells('A'.$rowNum.':B'.$rowNum);
+                    $sheet->mergeCells('D'.$rowNum.':E'.$rowNum);
+                    
+                    //Set text align for rating column
+                    $sheet->cells('C'.$rowNum, function($cells) {
+                        $cells->setAlignment('center');
+                    });
+                }
+                
+                //Merge column D and C, D and E proposed row
+                $sheet->mergeCells('B'.$rows['rowProposed'].':C'.$rows['rowProposed']);
+                $sheet->mergeCells('D'.$rows['rowProposed'].':E'.$rows['rowProposed']);
+                
+                //Set height proposed row
+                $sheet->setHeight($rows['rowProposed'],100);
+            });
+        })->export('xls');
+    }
+    
+    public function getCssDetailPoint($projectTypeId,$resultId){
+        $cssCategoryModel = new CssCategory();
+        $cssQuestionModel = new CssQuestion();
+        $cssResultDetailModel = new CssResultDetail();
+        
+        $rootCategory = $cssCategoryModel->getRootCategory($projectTypeId);
         $cssCategory = $cssCategoryModel->getCategoryByParent($rootCategory->id);
-        $NoOverView = 0;
+        
+        $cssCate = [];
         if($cssCategory){
             foreach($cssCategory as $item){
-                $NoOverView++;
                 $cssCategoryChild = $cssCategoryModel->getCategoryByParent($item->id);
                 $cssCateChild = array();
                 if ($cssCategoryChild) {
@@ -448,38 +648,11 @@ class CssController extends Controller {
             }
         }
         
-        $overviewQuestion = $cssQuestionModel->getOverviewQuestionByCategory($rootCategory->id,1);
-        $resultDetailRow = $cssResultDetailModel->getResultDetailRowOfOverview($resultId, $rootCategory->id);
-        return view(
-            'sales::css.detail', [
-                'css' => $css,
-                "employee" => $employee,
-                "cssCate" => $cssCate,
-                "cssResult" => $cssResult,
-                "noOverView" => self::romanic_number(++$NoOverView,true),
-                "overviewQuestionContent" => $overviewQuestion->content,
-                "resultDetailRowOfOverview" => $resultDetailRow,
-            ]
-        );
-    }
-    
-    public function exportExcel($id){
-        Excel::create('Filename', function($excel) {
-
-            $excel->sheet('Sheetname', function($sheet) {
-
-                $sheet->fromArray(array(
-                    array('data1', 'data2'),
-                    array('data3', 'data4')
-                ));
-
-            });
-
-        })->export('xls');
+        return $cssCate;
     }
     
     /**
-     * 
+     * Make CSS success to this page
      * @param int $cssId
      * @return void
      */
@@ -493,7 +666,7 @@ class CssController extends Controller {
     }
     
     /**
-     * Trang huy yeu cau lam css
+     * Cancel make CSS
      * @return void
      */
     public function cancelMake(){
@@ -503,7 +676,7 @@ class CssController extends Controller {
     }
     
     /**
-     * Trang phan tich css
+     * CSS analyze page
      * @return void
      */
     public function analyze(){
@@ -516,7 +689,7 @@ class CssController extends Controller {
     }
     
     /**
-     * trang phan tich css, thuc hien apply sau khi filter
+     * Apply event in CSS analyze page
      * @param string projectTypeIds
      * @param datetime $startDate
      * @param datetime $endDate
@@ -1172,12 +1345,8 @@ class CssController extends Controller {
                 $countCss = 0;
                 if(count($css) > 0){
                     foreach($css as $itemCss){
-                        $css_result = DB::table("css_result")
-                        ->where("css_id",$itemCss->id)
-                        ->where("created_at", ">=", $startDate)
-                        ->where("created_at", "<=", $endDate)
-                        ->get();
-
+                        $css_result = Css::getCssResultByCssId($itemCss->id,$startDate,$endDate);
+                        
                         if(count($css_result) > 0){
                             $countCss += count($css_result);
                             foreach($css_result as $itemCssResult){

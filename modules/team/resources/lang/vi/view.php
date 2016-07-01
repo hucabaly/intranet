@@ -103,7 +103,7 @@ return [
     'Email another' => 'Email khác',
     'Address' => 'Địa chỉ',
     'Presenter' => 'Người giới thiệu',
-    'Join date' => 'Ngày vào công ty',
+    'Join date' => 'Ngày gia nhập',
     'Register new member' => 'Đăng ký thành viên mới',
     'Employee card id' => 'Mã thẻ',
     'Sum :itemTotal entries / :pagerTotal pager' => 'Tổng :itemTotal đối tượng / :pagerTotal trang',

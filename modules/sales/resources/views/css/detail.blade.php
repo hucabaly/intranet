@@ -9,7 +9,7 @@
                     <section><a href="{{url('/css/export_excel/'.$cssResult->id)}}" target="_blank">Export excel</a></section>
                     <section id="header-makecss">
                         <div id="chu-trai"><h2>お客様アンケート</h2></div>
-                        <div id="logo-rikkei"><img src="{{ URL::asset('img/logo') }}"></div>
+                        <div id="logo-rikkei"></div>
                     </section>
                     <section>
                         @include('sales::css.include.project_detail')
@@ -23,16 +23,15 @@
 
 <!-- Styles -->
 @section('css')
-<link href="{{ asset('css/css-screen.css') }}" rel="stylesheet" type="text/css" >
-<link href="{{ asset('css/rateit.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/css-screen.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/rateit.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
 <!-- Script -->
 @section('script')
-<script src="{{ asset('js/jquery.rateit.js') }}"></script>
-<script src="{{ asset('js/jquery.visible.js') }}"></script>
-<script src="{{ asset('js/jquery.table2excel.js') }}"></script>
-<script src="{{ asset('js/css.js') }}"></script>
+<script src="{{ asset('lib/js/jquery.rateit.js') }}"></script>
+<script src="{{ asset('lib/js/jquery.visible.js') }}"></script>
+<script src="{{ asset('sales/js/css.js') }}"></script>
 <script type="text/javascript">
     function goto_make() {
         $(".welcome").hide();

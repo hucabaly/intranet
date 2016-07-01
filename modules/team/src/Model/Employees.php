@@ -155,7 +155,13 @@ class Employees extends CoreModel
         //check data team not same
         $lengthTeamPostionsSubmit = count($teamPostions);
         for ($i = 1 ; $i < $lengthTeamPostionsSubmit ;  $i++) {
+            if (! isset($teamPostions[$i])) {
+                continue;
+            }
             for ($j = $i + 1 ; $j <= $lengthTeamPostionsSubmit ; $j ++) {
+                if (! isset($teamPostions[$j])) {
+                    continue;
+                }
                 if ($teamPostions[$i]['team'] == $teamPostions[$j]['team']) {
                     throw new Exception(Lang::get('team::view.Team same data'));
                 }

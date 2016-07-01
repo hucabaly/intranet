@@ -44,15 +44,15 @@
 
 <!-- Styles -->
 @section('css')
-<link href="{{ asset('css/css-screen.css') }}" rel="stylesheet" type="text/css" >
-<link href="{{ asset('css/rateit.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/css-screen.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/rateit.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
 <!-- Script -->
 @section('script')
-<script src="{{ asset('js/jquery.rateit.js') }}"></script>
-<script src="{{ asset('js/jquery.visible.js') }}"></script>
-<script src="{{ asset('js/css.js') }}"></script>
+<script src="{{ asset('lib/js/jquery.rateit.js') }}"></script>
+<script src="{{ asset('lib/js/jquery.visible.js') }}"></script>
+<script src="{{ asset('sales/js/css.js') }}"></script>
 <script type="text/javascript">
     function goto_make() {
         $(".welcome").hide();

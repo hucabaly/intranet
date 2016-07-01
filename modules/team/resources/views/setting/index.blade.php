@@ -335,8 +335,8 @@ Team Setting
 
 
 @section('script')
-<script src="{{ URL::asset('js/jquery.validate.min.js') }}"></script>
-<script src="{{ URL::asset('js/jquery.match.height.addtional.js') }}"></script>
+<script src="{{ URL::asset('lib/js/jquery.validate.min.js') }}"></script>
+<script src="{{ URL::asset('lib/js/jquery.match.height.addtional.js') }}"></script>
 <script src="{{ URL::asset('adminlte/plugins/select2/select2.full.min.js') }}"></script>
 <script src="{{ URL::asset('team/js/script.js') }}"></script>
 <script>

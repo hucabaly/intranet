@@ -442,14 +442,11 @@ class Css extends Model
         $arrResultId = explode(',', $cssResultIds);
         return DB::table('css_result')
                 ->join('css', 'css.id', '=', 'css_result.css_id')
-                ->join('css_result_detail', 'css_result_detail.css_result_id', '=', 'css_result.id')
                 ->whereIn('css_result.id',$arrResultId)
                 ->where('css_result.proposed','<>','')
-                ->where('css_result_detail.point','>=',1)
-                ->where('css_result_detail.point','<=',2)
                 ->orderBy($orderBy,$ariaType)
                 ->orderBy('proposed', 'desc')
-                ->groupBy('css_result_id')
+                ->groupBy('css_result.id')
                 ->select('css_result.*','css_result.proposed as proposed','css.project_name','css_result.avg_point as result_point','css_result.created_at as result_make')
                 ->paginate($perPage);
     }
@@ -551,9 +548,11 @@ class Css extends Model
      */
     public static function getCssResultByCssId($cssId,$startDate,$endDate){
         return DB::table("css_result")
+                ->join('css', 'css.id', '=', 'css_result.css_id')
                 ->where("css_id",$cssId)
-                ->where("created_at", ">=", $startDate)
-                ->where("created_at", "<=", $endDate)
+                ->where("end_date", ">=", $startDate)
+                ->where("end_date", "<=", $endDate)
+                ->select('css_result.*')
                 ->get();
     }
     
@@ -592,5 +591,18 @@ class Css extends Model
                 ->groupBy('css.id')
                 ->select('css.*')
                 ->paginate($perPage);
+    }
+    
+    /**
+     * Get project make information
+     * @param int $resultId
+     */
+    public function projectMakeInfo($resultId){
+        return self::join('css_result', 'css.id', '=', 'css_result.css_id')
+                ->join('employees', 'employees.id', '=', 'css.employee_id')
+                ->where('css_result.id',$resultId)
+                ->groupBy('css_result.id')
+                ->select('css.*', 'employees.japanese_name', 'css_result.created_at as make_date', 'css_result.name as make_name', 'css_result.email as make_email', 'css_result.avg_point as point','css_result.proposed')
+                ->first();
     }
 }

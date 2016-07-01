@@ -6,7 +6,7 @@ Login
 @section('content')
 <div class="login-wrapper">
     <h1 class="login-title">
-        <img src="{{ URL::asset('img/logo_login.png') }}" />
+        <img src="{{ URL::asset('common/images/logo_login.png') }}" />
     </h1><!-- /.login-logo -->
     <div class="login-action">
         <p>
@@ -22,10 +22,10 @@ Login
 
 @section('script')
 <script src="{{ URL::asset('adminlte/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
-<script src="{{ URL::asset('js/jquery.backstretch.min.js') }}"></script>
+<script src="{{ URL::asset('lib/js/jquery.backstretch.min.js') }}"></script>
 <script>
     jQuery(document).ready(function($) {
-        $.backstretch('{{ URL::asset('img/login-background.png') }}');
+        $.backstretch('{{ URL::asset('common/images/login-background.png') }}');
         
         /**
          * fix position for login block - margin height

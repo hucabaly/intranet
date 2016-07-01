@@ -14,7 +14,7 @@ use Rikkei\Core\View\Form;
 if (! function_exists('teamHtmladdTeamPostion')) {
     function teamHtmladdTeamPostion($teamsOption, $postionsOption, $index = 0, $teamId = 0, $positionId = 0)
     { ?>
-        <div class="form-inline group-team-position form-inline-block">
+        <div class="form-inline group-team-position form-inline-block form-group-sm-select2">
             <div class="input-team-position input-team form-group">
                 <label class="control-label">Team</label>
                 <select name="team[{{ $index }}][team]" class="form-control select-search">
@@ -27,7 +27,7 @@ if (! function_exists('teamHtmladdTeamPostion')) {
             </div>
             <div class="input-team-position input-position form-group">
                 <label class=" control-label">{{ trans('team::view.Position') }}</label>
-                <select name="team[{{ $index }}][position]" class="form-control">
+                <select name="team[{{ $index }}][position]" class="form-control select-search">
                     @foreach($postionsOption as $option)
                         <option value="{{ $option['value'] }}"<?php
                             if ($option['value'] == $positionId): ?> selected<?php endif; 

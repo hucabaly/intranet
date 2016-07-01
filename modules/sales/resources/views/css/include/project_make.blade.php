@@ -159,4 +159,4 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-<div class="modal apply-click-modal"><img class="loading-img" src="{{ asset('img/loading.gif') }}" /></div>
+<div class="modal apply-click-modal"><img class="loading-img" src="{{ asset('sales/images/loading.gif') }}" /></div>
