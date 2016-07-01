@@ -775,7 +775,7 @@ class CssPermission
      * @param int $employeeId
      * @return array teamId
      */
-    protected static function getArrTeamIdByEmployee($employeeId){
+    public static function getArrTeamIdByEmployee($employeeId){
         $teamMembersModel = new TeamMembers();
         $teamMembers = $teamMembersModel->getTeamMembersByEmployee($employeeId);
         
