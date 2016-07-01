@@ -30,6 +30,9 @@ $teamsOption = TeamList::toOption(null, true, false);
         @if (Form::getData('employee.id'))
             <input type="hidden" name="id" value="{{ Form::getData('employee.id') }}" />
         @endif
+        @if (isset($isProfile) && $isProfile)
+            <input type="hidden" name="is_profile" value="1" />
+        @endif
         <div class=" col-md-12 box-action">
             @if (Form::getData('employee.id'))
                 <input type="submit" class="btn-edit" name="submit" value="{{ trans('team::view.Update information') }}" />

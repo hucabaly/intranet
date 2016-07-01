@@ -608,7 +608,11 @@ class Employees extends CoreModel
         return true;
     }
     
-    
+    /**
+     * check is leader of a team
+     * 
+     * @return boolean
+     */
     public function isLeader()
     {
         if ($employeeLeader = CacheHelper::get(self::KEY_CACHE, $this->id)) {

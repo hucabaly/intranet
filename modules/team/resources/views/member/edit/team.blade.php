@@ -3,6 +3,7 @@
 use Rikkei\Core\View\Form;
 use Rikkei\Team\View\Permission;
 
+
 $employeePermissionTeam = Permission::getInstance()->isScopeCompany(null, 'team::team.member.edit.team.position');
 if ($employeePermissionTeam || $employeeGreaterLeader) {
     $employeePermission = true;

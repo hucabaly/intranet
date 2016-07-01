@@ -85,27 +85,37 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
      */
     public function save()
     {
-        $id = Input::get('id');
-        if ($id) {
-            $model = Employees::find($id);
-            if (! $model) {
-                return redirect()->route('team::team.member.index')->withErrors(Lang::get('team::messages.Not found item.'));
-            }
-            //check permission save edit
-            $employeeScopeCompany = 
-                Permission::getInstance()->isScopeCompany(null, 'team::team.member.edit') ||
-                Permission::getInstance()->isScopeCompany(null, 'team::team.member.edit.team.position') ||
-                Permission::getInstance()->isScopeCompany(null, 'team::team.member.edit.role');
-            $employeeGreater = Permission::getInstance()->getEmployee()->isGreater($model, true);
-            if (! $employeeScopeCompany && ! $employeeGreater) {
-                View::viewErrorPermission();
-            }            
+        Menu::removeActive();
+        if (Input::get('is_profile')) {
+            $model = Permission::getInstance()->getEmployee();
+            $id = $model->id;
+            $employeeGreater = $model->isLeader();
         } else {
-            //check permission creation
-            if (! Permission::getInstance()->isAllow('team::team.member.create')) {
-                View::viewErrorPermission();
+            $id = Input::get('id');
+            if ($id) {
+                $model = Employees::find($id);
+                if (! $model) {
+                    if (Input::get('is_profile')) {
+                        return redirect()->route('team::member.profile')->withErrors(Lang::get('team::messages.Not found item.'));
+                    }
+                    return redirect()->route('team::team.member.index')->withErrors(Lang::get('team::messages.Not found item.'));
+                }
+                //check permission save edit
+                $employeeScopeCompany = 
+                    Permission::getInstance()->isScopeCompany(null, 'team::team.member.edit') ||
+                    Permission::getInstance()->isScopeCompany(null, 'team::team.member.edit.team.position') ||
+                    Permission::getInstance()->isScopeCompany(null, 'team::team.member.edit.role');
+                $employeeGreater = Permission::getInstance()->getEmployee()->isGreater($model, true);
+                if (! $employeeScopeCompany && ! $employeeGreater) {
+                    View::viewErrorPermission();
+                }            
+            } else {
+                //check permission creation
+                if (! Permission::getInstance()->isAllow('team::team.member.create')) {
+                    View::viewErrorPermission();
+                }
+                $model = new Employees();
             }
-            $model = new Employees();
         }
         $dataEmployee = (array) Input::get('employee');
         $teamPostions = (array) Input::get('team');
@@ -138,6 +148,9 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
                 'join_date' => 'required|max:255',
             ]);
             if ($validator->fails()) {
+                if (Input::get('is_profile')) {
+                    return redirect()->route('team::member.profile')->withErrors($validator);
+                }
                 if ($id) {
                     return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors($validator);
                 }
@@ -147,6 +160,9 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
             //check email of rikkei
             if (! View::isEmailAllow($dataEmployee['email'])) {
                 $message = Lang::get('team::messages.Please enter email of Rikkeisoft');
+                if (Input::get('is_profile')) {
+                    return redirect()->route('team::member.profile')->withErrors($message);
+                }
                 if ($id) {
                     return redirect()->route('team::team.member.edit', ['id' => $id])->withErrors($message);
                 }
@@ -160,6 +176,10 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
                 ->where('leave_date', null)
                 ->first();
             if ($employeeSameCard) {
+                if (Input::get('is_profile')) {
+                    return redirect()->route('team::member.profile')
+                        ->withErrors(Lang::get('team::messages.Coinciding employee card code'));
+                }
                 if ($id) {
                     return redirect()->route('team::team.member.edit', ['id' => $id])
                         ->withErrors(Lang::get('team::messages.Coinciding employee card code'));
@@ -170,13 +190,21 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
         }
         
         //process team
-        if (! $teamPostions || ! count($teamPostions)) {
-            if ($id) {
-                return redirect()->route('team::team.member.edit', ['id' => $id])
+        $employeePermissionTeam = Permission::getInstance()->isScopeCompany(null, 'team::team.member.edit.team.position');
+        
+        if ($employeePermissionTeam || $employeeGreater) {
+            if (! $teamPostions || ! count($teamPostions)) {
+                if (Input::get('is_profile')) {
+                    return redirect()->route('team::member.profile')
                         ->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
+                }
+                if ($id) {
+                    return redirect()->route('team::team.member.edit', ['id' => $id])
+                            ->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
+                }
+                return redirect()->route('team::team.member.create')
+                    ->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
             }
-            return redirect()->route('team::team.member.create')
-                ->withErrors(Lang::get('team::view.Employees must belong to at least one team'));
         }
         
         //save model
@@ -208,6 +236,10 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
                     Lang::get('team::messages.Save data success!'),
                 ]
         ];
+        if (Input::get('is_profile')) {
+            return redirect()->route('team::member.profile')
+                ->with('messages', $messages);
+        }
         return redirect()->route('team::team.member.edit', ['id' => $model->id])->with('messages', $messages);
     }
     

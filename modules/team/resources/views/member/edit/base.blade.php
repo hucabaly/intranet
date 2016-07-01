@@ -6,7 +6,11 @@ use Rikkei\Core\View\View;
 use Rikkei\Team\View\Permission;
 
 $genderOption = Employees::toOptionGender();
-$employeePermission = Permission::getInstance()->isScopeCompany();
+if (isset($isProfile) && $isProfile) {
+    $employeePermission = Permission::getInstance()->isScopeCompany(null, 'team::team.member.edit');
+} else {
+    $employeePermission = Permission::getInstance()->isScopeCompany();
+}
 ?>
 
 <div class="form-horizontal form-label-left">
