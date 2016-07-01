@@ -592,4 +592,17 @@ class Css extends Model
                 ->select('css.*')
                 ->paginate($perPage);
     }
+    
+    /**
+     * Get project make information
+     * @param int $resultId
+     */
+    public function projectMakeInfo($resultId){
+        return self::join('css_result', 'css.id', '=', 'css_result.css_id')
+                ->join('employees', 'employees.id', '=', 'css.employee_id')
+                ->where('css_result.id',$resultId)
+                ->groupBy('css_result.id')
+                ->select('css.*', 'employees.japanese_name', 'css_result.created_at as make_date', 'css_result.name as make_name', 'css_result.email as make_email', 'css_result.avg_point as point','css_result.proposed')
+                ->first();
+    }
 }

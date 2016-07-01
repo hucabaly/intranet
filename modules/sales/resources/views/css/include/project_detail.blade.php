@@ -39,8 +39,7 @@
 <table class="table table-bordered bang2 <?php echo ($css->project_type_id == 1) ? 'table-osdc' : 'table-base' ?>">
   <!-- header -->
   <tr class="header">
-      <td><label>{{ trans('sales::view.No.') }}</label></td>
-    <td><label>{{ trans('sales::view.Question') }}</label></td>
+    <td colspan="2"><label>{{ trans('sales::view.Question') }}</label></td>
     <td class="reply"><label>{{ trans('sales::view.Rating') }}</label></td>
     <td class="comment"><label>{{ trans('sales::view.Comment') }}</label></td>
 </tr>

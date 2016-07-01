@@ -332,18 +332,6 @@ function isValidEmailAddress(emailAddress) {
     return pattern.test(emailAddress);
 }
 
-function exportExcel(projectName){
-    $(".make-css").table2excel({
-        exclude: ".noExl",
-        name: "Excel Document Name",
-        filename: "myFileName",
-        fileext: ".xls",
-        exclude_img: true,
-        exclude_links: true,
-        exclude_inputs: true
-    });
-}
-
 function copyToClipboard(element) {
   var $temp = $("<input>");
   $("body").append($temp);
