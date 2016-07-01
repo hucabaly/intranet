@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Cache;
 
 class CoreModel extends \Illuminate\Database\Eloquent\Model
 {
-    
+    const FLAG_TRUE = 1;
+    const FLAG_FALSE = 2;
+
     protected static $timeStoreCache = 10080; //time store cache is 1 week
     /**
      * set data for a model
@@ -120,5 +122,33 @@ class CoreModel extends \Illuminate\Database\Eloquent\Model
             $key .= $i . '-p-';
         }
         return $key;
+    }
+    
+    /**
+     * flag value to boolean
+     * 
+     * @param int $value
+     * @return boolean
+     */
+    public static function flagToBoolean($value)
+    {
+        if ($value == self::FLAG_TRUE) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * boolean to flag
+     * 
+     * @param boolean $boolean
+     * @return int
+     */
+    public static function booleanToFlag($boolean)
+    {
+        if ($boolean) {
+            return self::FLAG_TRUE;
+        }
+        return self::FLAG_FALSE;
     }
 }

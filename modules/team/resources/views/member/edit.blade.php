@@ -30,6 +30,9 @@ $teamsOption = TeamList::toOption(null, true, false);
         @if (Form::getData('employee.id'))
             <input type="hidden" name="id" value="{{ Form::getData('employee.id') }}" />
         @endif
+        @if (isset($isProfile) && $isProfile)
+            <input type="hidden" name="is_profile" value="1" />
+        @endif
         <div class=" col-md-12 box-action">
             @if (Form::getData('employee.id'))
                 <input type="submit" class="btn-edit" name="submit" value="{{ trans('team::view.Update information') }}" />
@@ -104,6 +107,10 @@ Form::forget();
                 rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
                 email: '<?php echo trans('core::view.Please enter a valid email address'); ?>'
             },
+            'employee[personal_email]': {
+                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
+                email: '<?php echo trans('core::view.Please enter a valid email address'); ?>'
+            },
             'employee[id_card_number]': {
                 required: '<?php echo trans('core::view.This field is required'); ?>',
                 rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
@@ -125,6 +132,10 @@ Form::forget();
             },
             'employee[email]': {
                 required: true,
+                email: true,
+                rangelength: [1, 100]
+            },
+            'employee[personal_email]': {
                 email: true,
                 rangelength: [1, 100]
             },

@@ -7,7 +7,7 @@ return [
             'view.profile' => [
                 'label' => 'View profile',
                 'routes' => [
-                    'profile::view'
+                    'team::member.profile'
                 ]
             ],
             'view.team.member' => [
