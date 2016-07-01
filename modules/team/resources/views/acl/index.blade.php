@@ -15,6 +15,7 @@
 use Rikkei\Team\View\Config;
 use Rikkei\Core\View\Form;
 use Rikkei\Team\Model\Action;
+use Rikkei\Core\View\View;
 
 $actionTable = Action::getTableName();
 ?>
@@ -34,24 +35,18 @@ $actionTable = Action::getTableName();
                 <table class="table table-striped dataTable table-bordered table-hover table-grid-data">
                     <thead>
                         <tr>
-                            <th class="sorting {{ Config::getDirClass('id') }} col-id" style="width:30px" onclick="window.location.href = '{{Config::getUrlOrder('id')}}';">{{ trans('core::view.ID') }}</th>
-                            <th class="sorting {{ Config::getDirClass('name') }} col-name" style="width:100px" onclick="window.location.href = '{{Config::getUrlOrder('name')}}';">Code</th>
-                            <th class="sorting {{ Config::getDirClass('description') }} col-name" style="width:140px" onclick="window.location.href = '{{Config::getUrlOrder('description')}}';">{{ trans('team::view.Description') }}</th>
-                            <th class="sorting {{ Config::getDirClass('route') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('route')}}';">Route</th>
-                            <th class="sorting {{ Config::getDirClass('name_parent') }} col-name" style="width:100px" onclick="window.location.href = '{{Config::getUrlOrder('name_parent')}}';">{{ trans('team::view.Parent') }}</th>
-                            <th class="sorting {{ Config::getDirClass('sort_order') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('sort_order')}}';">{{ trans('team::view.Sort order') }}</th>
+                            <th class="col-id" style="width:30px">{{ trans('core::view.NO.') }}</th>
+                            <th class="sorting {{ Config::getDirClass('name') }} col-name" style="width:100px" data-order="name" data-dir="{{ Config::getDirOrder('name') }}">Code</th>
+                            <th class="sorting {{ Config::getDirClass('description') }} col-name" style="width:140px" data-order="description" data-dir="{{ Config::getDirOrder('description') }}">{{ trans('team::view.Description') }}</th>
+                            <th class="sorting {{ Config::getDirClass('route') }} col-name" data-order="route" data-dir="{{ Config::getDirOrder('route') }}">Route</th>
+                            <th class="sorting {{ Config::getDirClass('name_parent') }} col-name" style="width:100px" data-order="name_parent" data-dir="{{ Config::getDirOrder('name_parent') }}">{{ trans('team::view.Parent') }}</th>
+                            <th class="sorting {{ Config::getDirClass('sort_order') }} col-name" data-order="sort_order" data-dir="{{ Config::getDirOrder('sort_order') }}">{{ trans('team::view.Sort order') }}</th>
                             <th class="col-action col-a2">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="filter-input-grid">
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input type="text" name="filter[{{ $actionTable }}.id][from]" value="{{ Form::getFilterData("{$actionTable}.id", 'from') }}" placeholder="{{ trans('team::view.From') }}" class="filter-grid" />
-                                    </div>
-                                </div>
-                            </td>
+                            <td>&nbsp;</td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -84,9 +79,10 @@ $actionTable = Action::getTableName();
                             <td>&nbsp;</td>
                         </tr>
                         @if(isset($collectionModel) && count($collectionModel))
+                            <?php $i = View::getNoStartGrid($collectionModel); ?>
                             @foreach($collectionModel as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $i }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->description }}</td>
                                     <td>{{ $item->route }}</td>
@@ -104,6 +100,7 @@ $actionTable = Action::getTableName();
                                         </form>
                                     </td>
                                 </tr>
+                                <?php $i++; ?>
                             @endforeach
                         @endif
                     </tbody>

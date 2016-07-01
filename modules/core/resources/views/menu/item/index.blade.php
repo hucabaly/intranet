@@ -13,6 +13,7 @@ Menu item
 
 use Rikkei\Team\View\Config;
 use Rikkei\Core\View\Form;
+use Rikkei\Core\View\View;
 
 $menuItemsTable = Rikkei\Core\Model\MenuItems::getTableName();
 $menuGroupTable = \Rikkei\Core\Model\Menus::getTableName();
@@ -34,23 +35,17 @@ $menuGroupTable = \Rikkei\Core\Model\Menus::getTableName();
                 <table class="table table-striped dataTable table-bordered table-hover table-grid-data">
                     <thead>
                         <tr>
-                            <th class="sorting {{ Config::getDirClass('id') }} col-id" onclick="window.location.href = '{{Config::getUrlOrder('id')}}';">{{ trans('core::view.ID') }}</th>
-                            <th class="sorting {{ Config::getDirClass('name') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('name')}}';">{{ trans('team::view.Name') }}</th>
-                            <th class="sorting {{ Config::getDirClass('nane_group') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('nane_group')}}';">Menu group</th>
-                            <th class="sorting {{ Config::getDirClass('name_parent') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('name_parent')}}';">Menu Parent</th>
-                            <th class="sorting {{ Config::getDirClass('url') }} col-name" onclick="window.location.href = '{{Config::getUrlOrder('url')}}';">Url</th>
+                            <th class="col-id">{{ trans('core::view.NO.') }}</th>
+                            <th class="sorting {{ Config::getDirClass('name') }} col-name" data-order="name" data-dir="{{ Config::getDirOrder('name') }}">{{ trans('team::view.Name') }}</th>
+                            <th class="sorting {{ Config::getDirClass('nane_group') }} col-name" data-order="nane_group" data-dir="{{ Config::getDirOrder('nane_group') }}">Menu group</th>
+                            <th class="sorting {{ Config::getDirClass('name_parent') }} col-name" data-order="name_parent" data-dir="{{ Config::getDirOrder('name_parent') }}">Menu Parent</th>
+                            <th class="sorting {{ Config::getDirClass('url') }} col-name" data-order="url" data-dir="{{ Config::getDirOrder('url') }}">Url</th>
                             <th class="col-action">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="filter-input-grid">
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input type="text" name="filter[{{ $menuItemsTable }}.id][from]" value="{{ Form::getFilterData("{$menuItemsTable}.id", 'from') }}" placeholder="{{ trans('team::view.From') }}" class="filter-grid" />
-                                    </div>
-                                </div>
-                            </td>
+                            <td>&nbsp;</td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -82,9 +77,10 @@ $menuGroupTable = \Rikkei\Core\Model\Menus::getTableName();
                             <td>&nbsp;</td>
                         </tr>
                         @if(isset($collectionModel) && count($collectionModel))
+                            <?php $i = View::getNoStartGrid($collectionModel); ?>
                             @foreach($collectionModel as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $i }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->nane_group }}</td>
                                     <td>{{ $item->name_parent }}</td>
@@ -101,6 +97,7 @@ $menuGroupTable = \Rikkei\Core\Model\Menus::getTableName();
                                         </form>
                                     </td>
                                 </tr>
+                                <?php $i++; ?>
                             @endforeach
                         @endif
                     </tbody>

@@ -86,6 +86,11 @@ class View
         exit;
     }
     
+    /**
+     * route to option
+     * 
+     * @return array
+     */
     public static function routeListToOption()
     {
         $routeCollection = Route::getRoutes();
@@ -100,5 +105,18 @@ class View
             ];
         }
         return $option;
+    }
+    
+    /**
+     * get no. starter from grid data
+     */
+    public static function getNoStartGrid($collectionModel)
+    {
+        if (! $collectionModel->total()) {
+            return 1;
+        }
+        $currentPage = $collectionModel->currentPage();
+        $perPage = $collectionModel->perPage();
+        return ($currentPage - 1) * $perPage + 1;
     }
 }
