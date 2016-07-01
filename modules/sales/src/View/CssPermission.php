@@ -314,7 +314,7 @@ class CssPermission
      * @param string $teamIds
      * @return CssResult list
      */
-    public static function getAnalyzeByBrse($listCustomerName,$projectTypeIds,$startDate, $endDate, $teamIds){
+    public static function getAnalyzeByBrse($listBrseName,$projectTypeIds,$startDate, $endDate, $teamIds){
         $userAccount = Auth::user(); 
         $permission = new Permission();
         $model = new CssResult();
