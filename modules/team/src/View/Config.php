@@ -78,8 +78,10 @@ class Config
             'dir' => 'asc',
             'page' => 1
         ];
-        if ($pagerFilter = Form::getFilterPagerData()) {
-            $pager = array_merge($pager, (array) Form::getFilterPagerData());
+        $pagerFilter = (array) Form::getFilterPagerData();
+        $pagerFilter = array_filter($pagerFilter);
+        if ($pagerFilter) {
+            $pager = array_merge($pager, $pagerFilter);
         }
         return $pager;
     }
