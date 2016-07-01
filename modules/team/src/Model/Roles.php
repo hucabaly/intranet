@@ -283,6 +283,28 @@ class Roles extends CoreModel
     }
     
     /**
+     * check role position is leader
+     * 
+     * @return boolean
+     */
+    public function isLeader()
+    {
+        if (! $this->isPosition()) {
+            return null;
+        }
+        //get sort order max
+        $positionMax = self::select('sort_order')
+            ->where('special_flg', self::FLAG_POSITION)
+            ->orderBy('sort_order')
+            ->take(1)
+            ->first();
+        if ($this->sort_order == $positionMax->sort_order) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
      * rewrite save model
      * 
      * @param array $options

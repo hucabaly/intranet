@@ -1,11 +1,19 @@
 <?php
 
 use Rikkei\Core\View\Form;
+use Rikkei\Team\View\Permission;
 
 $rolesData = Rikkei\Team\Model\Roles::getAllRole();
 $employeeRoleIds = [];
 if (! Form::getData('employee.id') && Form::getData('employee_role')) {
     $employeeRoles = Form::getData('employee_role');
+}
+
+$employeePermissionRole = Permission::getInstance()->isScopeCompany(null, 'team::team.member.edit.role');
+if ($employeePermissionRole || $employeeGreaterLeader) {
+    $employeePermission = true;
+} else {
+    $employeePermission = false;
 }
 ?>
 
@@ -34,34 +42,38 @@ if (! Form::getData('employee.id') && Form::getData('employee_role')) {
                     @endforeach
                 @endif
             </ul>
-            <p>
-                <button type="button" class="btn-add" data-target="#employee-role-form" data-toggle="modal">
-                    <span>{{ trans('team::view.Change') }}</span>
-                </button>
-            </p>
+            @if ($employeePermission)
+                <p>
+                    <button type="button" class="btn-add" data-target="#employee-role-form" data-toggle="modal">
+                        <span>{{ trans('team::view.Change') }}</span>
+                    </button>
+                </p>
+            @endif
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="employee-role-form" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-role-employee" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{{ trans('team::view.Change Role of employee') }}</h4>
-            </div>
-            <div class="modal-body">
-                @if (isset($rolesData) && count($rolesData))
-                    @foreach ($rolesData as $roleItem)
-                        <div class="checkbox">
-                            <label>
-                                <input name="role[]" type="checkbox" value="{{ $roleItem->id }}"<?php
-                                    if (in_array($roleItem->id, $employeeRoleIds)): ?> checked<?php endif; ?>>{{ $roleItem->role }}
-                            </label>
-                        </div>
-                    @endforeach
-                @endif
+@if ($employeePermission)
+    <div class="modal fade" id="employee-role-form" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-role-employee" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ trans('team::view.Change Role of employee') }}</h4>
+                </div>
+                <div class="modal-body">
+                    @if (isset($rolesData) && count($rolesData))
+                        @foreach ($rolesData as $roleItem)
+                            <div class="checkbox">
+                                <label>
+                                    <input name="role[]" type="checkbox" value="{{ $roleItem->id }}"<?php
+                                        if (in_array($roleItem->id, $employeeRoleIds)): ?> checked<?php endif; ?>>{{ $roleItem->role }}
+                                </label>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
             </div>
         </div>
     </div>
-</div>
+@endif

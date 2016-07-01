@@ -39,6 +39,15 @@ class Menu
     }
     
     /**
+     * remove active menu
+     */
+    public static function removeActive()
+    {
+        self::$active = null;
+    }
+
+
+    /**
      * get active menu
      * 
      * @return string

@@ -104,6 +104,10 @@ Form::forget();
                 rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
                 email: '<?php echo trans('core::view.Please enter a valid email address'); ?>'
             },
+            'employee[personal_email]': {
+                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
+                email: '<?php echo trans('core::view.Please enter a valid email address'); ?>'
+            },
             'employee[id_card_number]': {
                 required: '<?php echo trans('core::view.This field is required'); ?>',
                 rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
@@ -125,6 +129,10 @@ Form::forget();
             },
             'employee[email]': {
                 required: true,
+                email: true,
+                rangelength: [1, 100]
+            },
+            'employee[personal_email]': {
                 email: true,
                 rangelength: [1, 100]
             },

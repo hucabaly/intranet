@@ -128,6 +128,7 @@ class Team extends CoreModel
                 'follow_team_id' => null
             ]);
             parent::delete();
+            CacheHelper::forget(self::KEY_CACHE);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
@@ -167,6 +168,7 @@ class Team extends CoreModel
                 }
             }
         }
+        CacheHelper::forget(self::KEY_CACHE);
         return parent::save($options);
     }
     
@@ -276,5 +278,68 @@ class Team extends CoreModel
             return true;
         }
         return false;
+    }
+    
+    /**
+     * get children of team
+     * 
+     * @param int|null $teamParentId
+     * @return model
+     */
+    public static function getTeamChildren($teamParentId = null)
+    {
+        if ($teams = CacheHelper::get(self::KEY_CACHE)) {
+            return $teams;
+        }
+        $teams = Team::select('id', 'name', 'parent_id')
+                ->where('parent_id', $teamParentId)
+                ->orderBy('sort_order', 'asc')
+                ->get();
+        CacheHelper::put(self::KEY_CACHE, $teams);
+        return $teams;
+    }
+    
+    /**
+     * get team path
+     * 
+     * @return array|null
+     */
+    public static function getTeamPath()
+    {
+        if ($teamPath = CacheHelper::get(self::KEY_CACHE)) {
+            return $teamPath;
+        }
+        $teamAll = Team::select('id', 'parent_id')->get();
+        if (! count($teamAll)) {
+            return null;
+        }
+        $teamPaths = [];
+        foreach ($teamAll as $team) {
+            self::getTeamPathRecursive($teamPaths[$team->id], $team->parent_id);
+            if (! isset($teamPaths[$team->id])) {
+                $teamPaths[$team->id] = null;
+            }
+        }
+        CacheHelper::put(self::KEY_CACHE, $teamPath);
+        return $teamPaths;
+    }
+    
+    /**
+     * get team path recursive
+     * 
+     * @param array $teamPaths
+     * @param null:int $parentId
+     */
+    protected static function getTeamPathRecursive(&$teamPaths = [], $parentId = null)
+    {
+        if (! $parentId) {
+            return;
+        }
+        $teamParent = Team::find($parentId);
+        if (! $teamParent) {
+            return;
+        }
+        $teamPaths[] = (int) $teamParent->id;
+        self::getTeamPathRecursive($teamPaths, $teamParent->parent_id);
     }
 }
