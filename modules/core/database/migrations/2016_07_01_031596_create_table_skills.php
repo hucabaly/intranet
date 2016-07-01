@@ -17,7 +17,7 @@ class CreateTableSkills extends Migration
         }
         Schema::create('skills', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('type');
+            $table->smallInteger('type');
             $table->string('name');
             $table->string('image')->nullable();
             $table->dateTime('created_at');

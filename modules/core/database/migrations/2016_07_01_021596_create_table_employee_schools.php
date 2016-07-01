@@ -15,7 +15,7 @@ class CreateTableEmployeeSchools extends Migration
         if (Schema::hasTable('employee_schools')) {
             return;
         }
-        Schema::create('employee_id', function (Blueprint $table) {
+        Schema::create('employee_schools', function (Blueprint $table) {
             $table->unsignedInteger('employee_id');
             $table->unsignedInteger('school_id');
             $table->dateTime('start_at')->nullable();
