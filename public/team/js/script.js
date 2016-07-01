@@ -1,1 +1,88 @@
-jQuery(document).ready(function(t){function o(o){var e=o.data("id");o.is(":checked")?t(".team-group-function[data-id="+e+"]").show():t(".team-group-function[data-id="+e+"]").hide()}t("input.input-is-function").each(function(e,i){o(t(this))}),t("input.input-is-function").on("change",function(e){o(t(this))}),htmlAddTeamPositonOrigin=t(".group-team-position-orgin").html(),t(".group-team-position-orgin").remove(),dataIdLast=jQuery(".box-form-team-position").children(".group-team-position").length,dataIdLast?dataIdLast=parseInt(dataIdLast):dataIdLast=0,1==dataIdLast&&t(".box-form-team-position .group-team-position .input-remove").addClass("warning-action"),t(document).on("click",".input-team-position.input-add-new button",function(o){dataIdLast++,htmlAddTeamPositon=t(htmlAddTeamPositonOrigin),htmlAddTeamPositon.find(".input-team-position.input-team select").attr("name","team["+dataIdLast+"][team]"),htmlAddTeamPositon.find(".input-team-position.input-position select").attr("name","team["+dataIdLast+"][position]"),t(".box-form-team-position").append(htmlAddTeamPositon),t(".box-form-team-position .group-team-position .input-remove").removeClass("warning-action"),1==t(".box-form-team-position").children(".group-team-position").length&&t(".box-form-team-position .group-team-position .input-remove").addClass("warning-action")}),t(document).on("click",".input-team-position.input-remove",function(o){teamLength=t(".box-form-team-position").children(".group-team-position").length,teamLength>1&&t(this).parents(".group-team-position").remove(),2==teamLength&&t(".box-form-team-position .group-team-position .input-remove").addClass("warning-action")}),t("#employee-role-form").on("hide.bs.modal",function(o){htmlRoleList="",t(this).find(".checkbox input:checked").each(function(o,e){htmlRoleList+="<li><span>",htmlRoleList+=t(this).parent().text().trim(),htmlRoleList+="</li></span>"}),t("ul.employee-roles").html(htmlRoleList)}),lengthTrTableRule=t(".team-rule-wrapper table.table-team-rule tbody tr").length,t(".team-rule-wrapper table.table-team-rule tbody tr:last-child .form-input-dropdown").addClass("input-rule-last"),t(".team-rule-wrapper table.table-team-rule tbody tr:nth-child("+(lengthTrTableRule-1)+") .form-input-dropdown").addClass("input-rule-last");var e=t(".team-rule-wrapper .table-responsive").css("padding-bottom");t(".input-rule-last").on("show.bs.dropdown",function(){t(".team-rule-wrapper .table-responsive").css("padding-bottom","90px")}),t(".input-rule-last").on("hide.bs.dropdown",function(){t(".team-rule-wrapper .table-responsive").css("padding-bottom",e)})});
+jQuery(document).ready(function ($) {
+    /**
+     * update check/uncheck function unit
+     * @param {type} dom
+     * @returns {undefined}
+     */
+    function updateCheckFunction(dom)
+    {
+        var dataId = dom.data('id');
+        if (dom.is(':checked')) {
+            $('.team-group-function[data-id=' + dataId + ']').show();
+        } else {
+            $('.team-group-function[data-id=' + dataId + ']').hide();
+        }
+    }
+    //update checkbox is-function
+    $('input.input-is-function').each( function( i, v ) {
+        updateCheckFunction($(this));
+    });
+    $('input.input-is-function').on('change', function (event) {
+        updateCheckFunction($(this));
+    });
+    
+    /**
+     * add / remove team action
+     */
+    htmlAddTeamPositonOrigin = $('.group-team-position-orgin').html();
+    $('.group-team-position-orgin').remove();
+    dataIdLast = jQuery('.box-form-team-position').children('.group-team-position').length;
+    if (!dataIdLast) {
+        dataIdLast = 0;
+    } else {
+        dataIdLast = parseInt(dataIdLast);
+    }
+    if (dataIdLast == 1) {
+        $('.box-form-team-position .group-team-position .input-remove').addClass('warning-action');
+    }
+    $(document).on('click', '.input-team-position.input-add-new button', function(event) {
+        dataIdLast++;
+        htmlAddTeamPositon = $(htmlAddTeamPositonOrigin);
+        htmlAddTeamPositon.find('.input-team-position.input-team select').attr('name', 'team[' + dataIdLast + '][team]');
+        htmlAddTeamPositon.find('.input-team-position.input-position select').attr('name', 'team[' + dataIdLast + '][position]');
+        $('.box-form-team-position').append(htmlAddTeamPositon);
+        $('.box-form-team-position .group-team-position .input-remove').removeClass('warning-action');
+        
+        if ($('.box-form-team-position').children('.group-team-position').length == 1) {
+            $('.box-form-team-position .group-team-position .input-remove').addClass('warning-action');
+        }
+    });
+    $(document).on('click', '.input-team-position.input-remove', function(event) {
+        teamLength = $('.box-form-team-position').children('.group-team-position').length;
+        if (teamLength > 1) {
+            $(this).parents('.group-team-position').remove();
+        }
+        if (teamLength == 2) {
+            $('.box-form-team-position .group-team-position .input-remove').addClass('warning-action');
+        }
+    });
+    
+    /**
+     * update role label current
+     */
+    $('#employee-role-form').on('hide.bs.modal', function (e) {
+        htmlRoleList = '';
+        $(this).find('.checkbox input:checked').each(function (i,k) {
+            htmlRoleList += '<li><span>';
+            htmlRoleList += $(this).parent().text().trim();
+            htmlRoleList += '</li></span>';
+        });
+        $('ul.employee-roles').html(htmlRoleList);
+    });
+    
+    /**
+     * padding table rule
+     */
+    lengthTrTableRule = $('.team-rule-wrapper table.table-team-rule tbody tr').length;
+    $('.team-rule-wrapper table.table-team-rule tbody tr:last-child .form-input-dropdown').addClass('input-rule-last');
+    $('.team-rule-wrapper table.table-team-rule tbody tr:nth-child(' + (lengthTrTableRule - 1) + ') .form-input-dropdown').addClass('input-rule-last');
+    var paddingTableRule = $('.team-rule-wrapper .table-responsive').css('padding-bottom');
+    $('.input-rule-last').on('show.bs.dropdown', function () {
+        $('.team-rule-wrapper .table-responsive').css('padding-bottom', '90px');
+    });
+    $('.input-rule-last').on('hide.bs.dropdown', function () {
+        $('.team-rule-wrapper .table-responsive').css('padding-bottom', paddingTableRule);
+    });
+});
+
+//# sourceMappingURL=script.js.map

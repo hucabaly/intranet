@@ -106,13 +106,15 @@ function filterAnalyze(token){
 /**
  * Fix if filter table has scroll
  */
-function fixScroll(elem){
-    var height = elem.height();
-    var scrollHeight = elem.get(0).scrollHeight;
-    if(scrollHeight > height){
-        elem.parent().find('thead').css('width','98%');
-    }else{
-        elem.parent().find('thead').css('width','100%');
+function fixScroll(elem){  
+    if (typeof elem.get(0) !== 'undefined') {
+        var height = elem.height(); 
+        var scrollHeight = elem.get(0).scrollHeight;
+        if(scrollHeight > height){
+            elem.parent().find('thead').css('width','98%');
+        }else{
+            elem.parent().find('thead').css('width','100%');
+        }
     }
 }
 
