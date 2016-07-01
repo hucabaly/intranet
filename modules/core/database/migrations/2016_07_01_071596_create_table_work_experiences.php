@@ -19,19 +19,19 @@ class CreateTableWorkExperiences extends Migration
             $table->increments('id');
             $table->unsignedInteger('employee_id');
             $table->string('company');
-            
-            
-            
-            
-            $table->string('name');
-            $table->string('country')->nullable();
-            $table->string('province')->nullable();
+            $table->dateTime('start_at')->nullable();
+            $table->dateTime('end_at')->nullable();
+            $table->string('position')->nullable();
             $table->string('image')->nullable();
-            
             $table->dateTime('created_at');
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
             $table->unsignedInteger('created_by')->nullable();
+            
+            $table->index('employee_id');
+            $table->foreign('employee_id')
+                ->references('id')
+                ->on('employees');
         });
     }
 

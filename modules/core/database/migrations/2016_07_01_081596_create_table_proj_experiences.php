@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableSchools extends Migration
+class CreateTableProjExperiences extends Migration
 {
     /**
      * Run the migrations.
@@ -12,20 +12,28 @@ class CreateTableSchools extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('schools')) {
+        if (Schema::hasTable('proj_experiences')) {
             return;
         }
-        Schema::create('schools', function (Blueprint $table) {
+        Schema::create('proj_experiences', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('employee_id');
+            $table->integer('work_experience_id')->nullable();
             $table->string('name');
-            $table->string('country')->nullable();
-            $table->string('province')->nullable();
+            $table->dateTime('start_at');
+            $table->dateTime('end_at');
+            $table->text('enviroment');
+            $table->text('responsible');
             $table->string('image')->nullable();
-            
             $table->dateTime('created_at');
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
             $table->unsignedInteger('created_by')->nullable();
+            
+            $table->index('employee_id');
+            $table->foreign('employee_id')
+                ->references('id')
+                ->on('employees');
         });
     }
 
@@ -36,6 +44,6 @@ class CreateTableSchools extends Migration
      */
     public function down()
     {
-        Schema::drop('schools');
+        Schema::drop('proj_experiences');
     }
 }
