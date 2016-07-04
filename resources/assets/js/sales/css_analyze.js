@@ -210,13 +210,13 @@ function apply(token){
         
         //Get data to all result chart
         var dataResult = [];
-        $.each(data['allResultChart'], function(key, value){
+        $.each(data['allResultChart'], function(key, value){ 
             dataResult.push({
                 x: new Date(value.date),
                 y: value.point,
             });
         });
-        console.log(dataResult);
+        
         //Set data to all result chart
         var chart = new CanvasJS.Chart("chartAll",
         {
@@ -224,9 +224,7 @@ function apply(token){
             theme: "theme1",
             //exportEnabled: true,
             axisX:{
-                valueFormatString: "DD/MM/YYYY",
-                interval: 30,
-                intervalType: "day"
+                valueFormatString: "D/M/YY",
             },
             axisY: {
                 
@@ -269,9 +267,9 @@ function apply(token){
             theme: "theme1",
             //exportEnabled: true,
             axisX:{
-                valueFormatString: "DD/MM/YYYY",
-                interval: 30,
-                intervalType: "day"
+                valueFormatString: "D/M/YY",
+//                interval: 1,
+//                intervalType: "month"
             },
             axisY: {
                 
@@ -800,4 +798,10 @@ function getCriteriaType(type){
     return criteriaType;
 }
 
-
+function getDateDiff(date1,date2){
+    var date1 = new Date(date1);
+    var date2 = new Date(date2);
+    var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+    return diffDays;
+}
