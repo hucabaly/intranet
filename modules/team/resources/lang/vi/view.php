@@ -117,4 +117,7 @@ return [
     'Majors' => 'Chuyên ngành',
     'Start at' => 'Bắt đầu lúc',
     'End at' => 'Kết thúc lúc',
+    'Class of' => 'Lớp của',
+    'Infomation of College' =>  'Thông tin của trường đại học',
+    
 ];

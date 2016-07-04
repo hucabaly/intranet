@@ -42,4 +42,21 @@ class EmployeeSchool extends CoreModel
             $employeeSchoolItem->save();
         }
     }
+    
+    /**
+     * 
+     * @param type $employeeId
+     * @return object model
+     */
+    public static function getItemsFollowEmployee($employeeId)
+    {
+        $thisTable = self::getTableName();
+        $schoolTable = School::getTableName();
+        
+        return self::select('school_id', 'start_at', 'end_at', 'majors', 
+                'name', 'country', 'province', 'image')
+            ->join($schoolTable, "{$schoolTable}.id", '=', "{$thisTable}.school_id")
+            ->where('employee_id', $employeeId)
+            ->get();
+    }
 }

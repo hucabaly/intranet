@@ -249,6 +249,16 @@ Form::forget();
                 thisParent.find('.image-preview img').attr('src', imagePreviewImageDefault);
             }
         });
+        
+        @if (isset($employeeSchools) && $employeeSchools)
+            employeeSchoolNo = {{ count($employeeSchools) }}
+        @else
+            employeeSchoolNo = 0;
+        @endif
+        employeeSchoolNo++;
+        $('.college-delete').on('click', function(event) {
+            
+        });
     });
 </script>
 @endsection

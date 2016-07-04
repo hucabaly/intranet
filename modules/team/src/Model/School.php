@@ -39,13 +39,15 @@ class School extends CoreModel
                     continue;
                 }
                 if (isset($collegeData['id']) && $collegeData['id']) {
-                    if (School::find($collegeData['id'])) {
+                    if ( $school = School::find($collegeData['id'])) {
                         $schoolIds[$key] = $collegeData['id'];
+                    } else {
                         continue;
                     }
                     unset($collegeData['id']);
+                } else {
+                    $school = new self();
                 }
-                $school = new self();
                 if (isset($collegeData['image']) && $collegeData['image']) {
                     $image = $collegeData['image'];
                     $image = View::uploadFile(

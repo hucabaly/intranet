@@ -344,6 +344,17 @@ class Employees extends CoreModel
         return $employeeTeam;
     }
     
+    
+    public function getSchools()
+    {
+        if ($employeeSchools = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return $employeeSchools;
+        }
+        $employeeSchools = EmployeeSchool::getItemsFollowEmployee($this->id);
+        CacheHelper::put(self::KEY_CACHE, $employeeSchools, $this->id);
+        return $employeeSchools;
+    }
+    
     /**
      * get roles of employee
      * 
