@@ -92,6 +92,7 @@ class Employees extends CoreModel
             $result = parent::save($options);
             $this->saveTeamPosition();
             $this->saveRoles();
+            $this->saveCollege();
             DB::commit();
             CacheHelper::forget(self::KEY_CACHE);
             return $result;
@@ -286,6 +287,21 @@ class Employees extends CoreModel
         }
         $this->employee_code = $codeEmployee;
         return $this;
+    }
+    
+    public function saveCollege(array $college = [])
+    {
+        if (! $this->id) {
+            return;
+        }
+        if (! $college) {
+            $college = Input::all();
+            $college = array_get($college,'college');
+        }
+        if (! $college) {
+            return;
+        }
+        School::saveItems($college);
     }
     
     /**

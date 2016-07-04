@@ -389,3 +389,66 @@ jQuery(document).ready(function($) {
     }
 })(jQuery);
 /* -----end table thead fixed  */ 
+
+(function($){
+    //dom vertical center
+    $.fn.verticalCenter = function(option) {
+        var thisWrapper = $(this);
+        optionDefault = {
+            parent: true
+        };
+        option = $.extend(optionDefault, option);
+        if (option.parent === true) {
+            parentDom = thisWrapper.parent();
+        } else {
+            parentDom = $(option.parent);
+            if (! parentDom.length) {
+                return;
+            }
+        }
+        heightParent = parentDom.outerHeight();
+        heightThis = thisWrapper.outerHeight();
+        placeHeight = heightParent / 2 - heightThis / 2;
+        if (placeHeight < 0) {
+            placeHeight = 0;
+        }
+        thisWrapper.css('margin-top', placeHeight + 'px');
+        $(window).resize(function() {
+            heightParent = parentDom.outerHeight();
+            heightThis = thisWrapper.outerHeight();
+            placeHeight = heightParent / 2 - heightThis / 2;
+            if (placeHeight < 0) {
+                placeHeight = 0;
+            }
+            thisWrapper.css('margin-top', placeHeight + 'px');
+        });
+    }; //end dom vertical center
+    
+    // preview image
+    $.fn.previewImage = function() {
+        var thisWrapper = $(this);
+        //exec src image preview
+        var srcDemo = thisWrapper.find('.image-preview > img').attr('src');
+        var allowType = ['image/jpeg','image/png','image/gif'];
+        var domInputFile = thisWrapper.find(".img-input input[type=file]");
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var fileUpload = input.files[0];
+                if($.inArray(fileUpload.type, allowType) < 0) {
+                    thisWrapper.find('.image-preview > img').attr('src', srcDemo);
+                    domInputFile.val('');
+                }
+                else {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        thisWrapper.find('.image-preview > img').attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(fileUpload);
+                }
+            }
+        }
+        domInputFile.change(function(){
+            readURL(this);
+        });
+    };
+})(jQuery);

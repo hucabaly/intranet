@@ -25,7 +25,7 @@ $teamsOption = TeamList::toOption(null, true, false);
 
 @section('content')
 <div class="row member-profile">
-    <form action="{{ route('team::team.member.save') }}" method="post" id="form-employee-info">
+    <form action="{{ route('team::team.member.save') }}" method="post" id="form-employee-info" enctype="multipart/form-data">
         {!! csrf_field() !!}
         @if (Form::getData('employee.id'))
             <input type="hidden" name="id" value="{{ Form::getData('employee.id') }}" />
@@ -71,7 +71,14 @@ $teamsOption = TeamList::toOption(null, true, false);
         </div> <!-- end edit memeber left col -->
 
         <div class="col-md-7">
-
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h2 class="box-title">{{ trans('team::view.Qualifications and Skills') }}</h2>
+                </div>
+                <div class="box-body">
+                    @include('team::member.edit.qualifications')
+                </div>
+            </div>
         </div> <!-- end edit memeber right col -->
     </form>
 </div>
@@ -161,8 +168,16 @@ Form::forget();
             autoclose: true,
             format: 'yyyy-mm-dd',
         }
+        optionDatePickerYD = {
+            autoclose: true,
+            format: 'yyyy-mm',
+        }
         $('#employee-birthday').datepicker(optionDatePicker);
         $('#employee-joindate').datepicker(optionDatePicker);
+        
+        $('#college-start').datepicker(optionDatePicker);
+        $('#college-end').datepicker(optionDatePicker);
+        
         
         @if (! isset($recruitmentPresent) || ! $recruitmentPresent)
             $('#employee-phone').on('blur', function(event) {
@@ -183,6 +198,16 @@ Form::forget();
                 }
             });
         @endif
+        
+        $('[data-tooltip="true"]').tooltip();
+        
+        $('.employee-college-modal').on('shown.bs.modal', function (e) {
+            $('.college-image-box #college-image').verticalCenter({
+                parent: '.college-image-box .image-preview'
+            });
+        });
+        
+        $('.college-image-box').previewImage();
     });
 </script>
 @endsection

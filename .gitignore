@@ -9,6 +9,7 @@
 /database/migrations
 /.env
 /resources/lang/*/acl.php
+/public/media
 
 # IDE and editor specific files #
 #################################

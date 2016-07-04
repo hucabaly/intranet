@@ -5,6 +5,8 @@ namespace Rikkei\Core\View;
 use DateTime;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
+use Exception;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * View ouput gender
@@ -118,5 +120,41 @@ class View
         $currentPage = $collectionModel->currentPage();
         $perPage = $collectionModel->perPage();
         return ($currentPage - 1) * $perPage + 1;
+    }
+    
+    /**
+     * upload file
+     * 
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param srting $path
+     * @param array $allowType
+     * @param boolean $rename
+     * @return string|null
+     * @throws Exception
+     */
+    public static function uploadFile($file, $path, $allowType = [], $rename = true)
+    {
+        if ($file->isValid()) {
+            if ($allowType) {
+                $extension = $file->getClientMimeType();
+                if (! in_array($extension, $allowType)) {
+                    throw new Exception(Lang::get('core::message.File type dont allow'));
+                }
+            }
+            if ($rename) {
+                $extension = $file->getClientOriginalExtension();
+                $fileNameWithoutExtension = preg_replace(
+                    "/.{$extension}$/",
+                    '',
+                    $file->getClientOriginalName()
+                );
+                $fileName = $fileNameWithoutExtension . '_' . time() . '.' . $extension;
+            } else {
+                $fileName = $file->getClientOriginalName();
+            }
+            $file->move($path, $fileName);
+            return $fileName;
+        }
+        return null;
     }
 }
