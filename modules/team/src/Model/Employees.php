@@ -92,7 +92,10 @@ class Employees extends CoreModel
             $result = parent::save($options);
             $this->saveTeamPosition();
             $this->saveRoles();
-            $this->saveCollege();
+            $schoolIds = $this->saveSchools();
+            if ($schoolIds) {
+                $this->saveEmployeeSchools($schoolIds);
+            }
             DB::commit();
             CacheHelper::forget(self::KEY_CACHE);
             return $result;
@@ -289,19 +292,39 @@ class Employees extends CoreModel
         return $this;
     }
     
-    public function saveCollege(array $college = [])
+    /**
+     * save schools item
+     * 
+     * @param array $college
+     * @return array
+     */
+    public function saveSchools(array $schools = [])
     {
         if (! $this->id) {
             return;
         }
-        if (! $college) {
-            $college = Input::all();
-            $college = array_get($college,'college');
+        if (! $schools) {
+            $schools = Input::all();
+            $schools = array_get($schools,'college');
         }
-        if (! $college) {
+        if (! $schools) {
             return;
         }
-        School::saveItems($college);
+        return School::saveItems($schools);
+    }
+    
+    public function saveEmployeeSchools($schoolIds = [], $employeeSchools = [])
+    {
+        if (! $this->id || ! $schoolIds) {
+            return;
+        }
+        if (! $employeeSchools) {
+            $employeeSchools = Input::get('employee_school');
+        }
+        if (! $employeeSchools) {
+            return;
+        }
+        return EmployeeSchool::saveItems($this->id, $schoolIds, $employeeSchools);
     }
     
     /**

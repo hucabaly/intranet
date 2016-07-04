@@ -3,6 +3,7 @@
 use Rikkei\Core\View\Form;
 use Rikkei\Team\View\TeamList;
 use Rikkei\Team\Model\Roles;
+use Rikkei\Team\Model\School;
 
 $postionsOption = Roles::toOptionPosition();
 $teamsOption = TeamList::toOption(null, true, false);
@@ -20,6 +21,7 @@ $teamsOption = TeamList::toOption(null, true, false);
 @section('css')
 <link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/select2/select2.min.css') }}" />
 <link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/datepicker/datepicker3.css') }}">    
+<link rel="stylesheet" href="{{ URL::asset('lib/css/jquery-ui.min.css') }}" />
 <link rel="stylesheet" href="{{ URL::asset('team/css/style.css') }}" />
 @endsection
 
@@ -199,8 +201,6 @@ Form::forget();
             });
         @endif
         
-        $('[data-tooltip="true"]').tooltip();
-        
         $('.employee-college-modal').on('shown.bs.modal', function (e) {
             $('.college-image-box #college-image').verticalCenter({
                 parent: '.college-image-box .image-preview'
@@ -208,6 +208,47 @@ Form::forget();
         });
         
         $('.college-image-box').previewImage();
+        
+        var schools = {!! School::getAllFormatJson() !!};
+        collegeAutoComplete = $( "input.college-name").autocomplete({
+            minLength: 0,
+            source: schools,
+            select: function( event, ui ) {
+                thisParent = $(this).parents('.employee-college-modal');
+                thisParent.find('input.college-id[type=hidden]').val(ui.item.id);
+                thisParent.find('input.college-image')
+                    .attr('disabled', true);
+                thisParent.find('input.college-country')
+                    .val(ui.item.country)
+                    .attr('disabled', true);
+                thisParent.find('input.college-province')
+                    .val(ui.item.province)
+                    .attr('disabled', true);
+                if (ui.item.image) {
+                    thisParent.find('.image-preview img').attr('src', ui.item.image);
+                }
+            }
+        }).focus(function(){
+            $(this).autocomplete("search");
+        });
+        var imagePreviewImageDefault = $('.employee-college-modal').find('.image-preview img').attr('src');
+        $( "input.college-name").on('keypress', function(e) {
+            if (e.keyCode == 13) {
+            } else {
+                thisParent = $(this).parents('.employee-college-modal');
+                thisParent.find('input.college-id[type=hidden]').val('');
+                thisParent.find('input.college-image')
+                    .val('')
+                    .removeAttr('disabled');
+                thisParent.find('input.college-country')
+                    .val('')
+                    .removeAttr('disabled');
+                thisParent.find('input.college-province')
+                    .val('')
+                    .removeAttr('disabled');
+                thisParent.find('.image-preview img').attr('src', imagePreviewImageDefault);
+            }
+        });
     });
 </script>
 @endsection

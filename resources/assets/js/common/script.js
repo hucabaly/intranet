@@ -451,4 +451,7 @@ jQuery(document).ready(function($) {
             readURL(this);
         });
     };
+    
+    //tooltip dom
+    $('[data-tooltip="true"]').tooltip();
 })(jQuery);
