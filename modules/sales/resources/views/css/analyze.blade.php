@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="row">
                                 <!----------- Bảng danh sách du an ------------------->
-                                    <div class="col-md-5">
+                                    <div class="col-md-12">
                                         <h4 class="small-title">{{trans('sales::view.Project list')}}</h4>
                                         <table class="table  table-hover dataTable ketqua" id='danhsachduan'>
                                             <thead>
@@ -115,9 +115,11 @@
                                             <ul class="pagination"></ul>
                                         </div>
                                     </div>
-                                <!----------- Phan hien 2 bieu do ------------------->    
-                                    <div class="col-md-7">
-                                        <div class="row">
+                                <!----------- Phan hien 2 bieu do ------------------->  
+                                </div>
+                                  <div class="row">
+                                    
+                                        
                                             <div class="col-md-6">
                                                 <h4 class="small-title">{{trans('sales::view.Chart title by all')}}</h4>
                                                 <div id="chartAll" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
@@ -126,8 +128,8 @@
                                                 <h4 class="small-title">{{trans('sales::view.Chart title by filter')}}</h4>
                                                 <div id="chartFilter" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                             </div>
-                                        </div>
-                                    </div>
+                                        
+                                    
                                 </div>
                             </div>
                           </div>
