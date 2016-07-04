@@ -268,8 +268,6 @@ function apply(token){
             //exportEnabled: true,
             axisX:{
                 valueFormatString: "D/M/YY",
-//                interval: 1,
-//                intervalType: "month"
             },
             axisY: {
                 
@@ -368,7 +366,7 @@ function getCriteriaChecked(){
     }
 }
 
-strLoading = '<tr class="loading"><td colspan="7"><img class="loading-img" src="'+baseUrl+'img/loading.gif" /></td></tr>';
+strLoading = '<tr class="loading"><td colspan="7"><img class="loading-img" src="'+baseUrl+'sales/images/loading.gif" /></td></tr>';
 noResult = '<tr><td colspan="7" style="text-align:center;">Không có kết quả nào được tìm thấy</td></tr>';
 
 /**
