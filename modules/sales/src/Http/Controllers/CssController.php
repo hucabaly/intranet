@@ -22,6 +22,8 @@ use Illuminate\Pagination\Paginator;
 use Rikkei\Core\View\Breadcrumb;
 use Rikkei\Core\View\Menu;
 use Maatwebsite\Excel\Facades\Excel;
+use Rikkei\Team\View\Permission;
+use Route;
 
 class CssController extends Controller {
     
@@ -1400,13 +1402,18 @@ class CssController extends Controller {
     }
 
     /**
-     * get team tree option recursive
+     * get team tree option recursive 
      * 
      * @param int $id
      * @param int $level
      */
     protected static function getTreeDataRecursive($parentId = 0, $level = 0, $idActive = null) 
     {
+        $userAccount = Auth::user(); 
+        $arrTeam = CssPermission::getArrTeamIdByEmployee($userAccount->employee_id);
+        $permission = new Permission();
+        $currentRoute = Route::getCurrentRoute()->getName();
+        
         $teamList = Team::select('id', 'name', 'parent_id')
                 ->where('parent_id', $parentId)
                 ->orderBy('sort_order', 'asc')
@@ -1438,7 +1445,20 @@ class CssController extends Controller {
             $html .= "<label{$classLabel}>";
             $html .= "<div class=\"icheckbox\">";
             if($htmlChild == ""){
-                $html .= '<input type="checkbox" class="team-tree-checkbox" data-id="'.$team->id.'" parent-id="'.$parentId.'" name="team['.$team->id.']">&nbsp;&nbsp;<span>' .$team->name. '</span>';
+                if($currentRoute == 'sales::css.analyze'){
+                    if($permission->isScopeTeam()){
+                        // If is scrope team -> checked only self team
+                        if(in_array($team->id, $arrTeam)){ 
+                            $html .= '<input type="checkbox" class="team-tree-checkbox" data-id="'.$team->id.'" parent-id="'.$parentId.'" name="team['.$team->id.']">&nbsp;&nbsp;<span>' .$team->name. '</span>';
+                        }else{
+                            $html .= '<input disabled="disabled" type="checkbox" class="team-tree-checkbox" data-id="'.$team->id.'" parent-id="'.$parentId.'" name="team['.$team->id.']">&nbsp;&nbsp;<span>' .$team->name. '</span>';
+                        }
+                    }else{
+                        $html .= '<input type="checkbox" class="team-tree-checkbox" data-id="'.$team->id.'" parent-id="'.$parentId.'" name="team['.$team->id.']">&nbsp;&nbsp;<span>' .$team->name. '</span>';
+                    }
+                }else{
+                    $html .= '<input type="checkbox" class="team-tree-checkbox" data-id="'.$team->id.'" parent-id="'.$parentId.'" name="team['.$team->id.']">&nbsp;&nbsp;<span>' .$team->name. '</span>';
+                }
             }else{
                 $html .= '<span>&nbsp;&nbsp;' .$team->name. '</span>';
             }
