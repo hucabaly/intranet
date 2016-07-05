@@ -54,7 +54,7 @@ class EmployeeSchool extends CoreModel
         $schoolTable = School::getTableName();
         
         return self::select('school_id', 'start_at', 'end_at', 'majors', 
-                'name', 'country', 'province', 'image')
+                'name', 'country', 'province', 'image', 'id')
             ->join($schoolTable, "{$schoolTable}.id", '=', "{$thisTable}.school_id")
             ->where('employee_id', $employeeId)
             ->get();

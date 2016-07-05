@@ -7,14 +7,13 @@ use Illuminate\Support\Facades\Config;
 use Exception;
 use Rikkei\Core\View\View;
 use Rikkei\Core\View\CacheHelper;
-use Illuminate\Support\Facades\URL;
 
 class School extends CoreModel
 {
     
     use SoftDeletes;
     
-    const PATH_MEDIA_COLLEGE = 'media/college';
+    const PATH_MEDIA_COLLEGE = 'media/school';
     const KEY_CACHE = 'school_college';
 
     protected $table = 'schools';
@@ -84,7 +83,7 @@ class School extends CoreModel
         $schools = self::select('id', 'name', 'country', 'province', 'image')
             ->orderBy('name')->get();
         if (! count($schools)) {
-            return null;
+            return '[]';
         }
         $result = '[';
         foreach ($schools as $school) {
@@ -93,11 +92,7 @@ class School extends CoreModel
             $result .= 'label: "' . $school->name . '",';
             $result .= 'country: "' . $school->country . '",';
             $result .= 'province: "' . $school->province . '",';
-            if ($school->image) {
-                $result .= 'image: "' . URL::asset($school->image) . '",';
-            } else {
-                $result .= 'image: "",';
-            }
+            $result .= 'image: "' . View::getLinkImage($school->image) . '",';
             $result .= '},';
         }
         $result .= ']';

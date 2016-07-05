@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Exception;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\URL;
 
 /**
  * View ouput gender
@@ -154,6 +155,33 @@ class View
             }
             $file->move($path, $fileName);
             return $fileName;
+        }
+        return null;
+    }
+    
+    /**
+     * get link image file
+     * 
+     * @param string|null $path
+     * @param boolean $useDefault
+     * @return string|null
+     */
+    public static function getLinkImage($path = null, $useDefault = true)
+    {
+        if (! $path) {
+            if ($useDefault) {
+                return URL::asset('common/images/noimage.png');
+            }
+            return null;
+        }
+        if (preg_match('/^http(s)?:\/\//', $path)) {
+            return $path;
+        }
+        if (file_exists(public_path($path))) {
+            return URL::asset($path);
+        }
+        if ($useDefault) {
+            return URL::asset('common/images/noimage.png');
         }
         return null;
     }

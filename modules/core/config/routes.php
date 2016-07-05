@@ -19,6 +19,9 @@ Route::get('/grid/filter/remove', 'GridFilterController@remove')->name('grid.fil
 Route::get('/grid/filter/flush', 'GridFilterController@flush')->name('grid.filter.flush');
 Route::get('/grid/filter/pager', 'GridFilterController@pager')->name('grid.filter.pager');
 
+//upload file ajax
+Route::post('upload/skill', 'UploadController@imageSkill')->name('upload.skill');
+
 //manage setting
 Route::group([
     'prefix' => 'setting',
