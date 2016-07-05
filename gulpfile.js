@@ -18,8 +18,7 @@ elixir(function(mix) {
     
     mix.sass('team/style.scss', 'public/team/css');
     
-    mix.sass('sales/css-screen.scss', 'public/sales/css');
-    mix.sass('sales/rateit.scss', 'public/sales/css');
+    mix.sass('sales/sales.scss', 'public/sales/css');
 
     // gulp js
     mix.scripts('common/script.js', 'public/common/js');

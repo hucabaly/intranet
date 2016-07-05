@@ -1,0 +1,23 @@
+$smallScreen: 550px;
+
+/** 
+* Font color welcome page
+*/
+$colorRed: #c20017;
+$colorGreen: #3dd900;
+$colorGray: #8c9a9c;
+
+/** 
+* Font size welcome page
+* Medium: welcome line text
+* Normal: make information text
+* Small: footer text
+* Smallest: policy in footer text
+*/
+$welcomeFontSizeMedium: 15.82pt;
+$welcomeFontSizeNormal: 13pt;
+$welcomeFontSizeSmall: 9pt;
+$welcomeFontSizeSmallest: 8pt;
+
+//Fix font height slogan in Welcome page
+$fontHeightSloganScale: 0.7;
