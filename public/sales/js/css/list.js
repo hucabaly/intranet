@@ -1,0 +1,1 @@
+function copyToClipboard(o){var a=$("<input>");$("body").append(a),a.val($(o).attr("data-href")).select(),document.execCommand("copy"),a.remove(),$("#modal-clipboard").modal("show")}

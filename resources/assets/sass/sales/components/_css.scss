@@ -164,7 +164,7 @@
 
 /* ------------- trang preview -------------------------*/
 
-.make-css{
+.make-css-page{
     padding: 20px;
     margin-left: -16px;
 }
@@ -188,55 +188,55 @@
     margin-top: -20px;
 }
 
-.make-css .bang1 tr:first-child td,.bang2 tr:first-child {
+.make-css-page .bang1 tr:first-child td,.bang2 tr:first-child {
     color:#fff;  
     background-color: rgb(24, 52, 93);
 }
 
-.make-css .bang1 input[type=text],.bang2 input[type=text] {
+.make-css-page .bang1 input[type=text],.bang2 input[type=text] {
     outline: none;
     border: 1px solid #5276DC;
     width: 100%;
     padding: 0 3px;
     color: #074ED8;
 }
-.make-css .bang1 .tongdiem{
+.make-css-page .bang1 .tongdiem{
     text-align: center; 
     width: 25%;
 }
-.make-css .table td{
+.make-css-page .table td{
     border: 1px solid #2A4577;
 }
-.make-css .bang2 .header{
+.make-css-page .bang2 .header{
     text-align: center;
 }
-.make-css .bang2 td:first-child{
+.make-css-page .bang2 td:first-child{
     width:25%;
 }
-.make-css .bang2 .comment {
+.make-css-page .bang2 .comment {
     width:30%;
 }
-.make-css .bang2 .reply {
+.make-css-page .bang2 .reply {
     width:15%;
 }
-.make-css .bang2 .mucto {
+.make-css-page .bang2 .mucto {
     font-weight: bold;
     background-color: #d99796;
 }
-.make-css .bang2.table-osdc .mucto {
+.make-css-page .bang2.table-osdc .mucto {
     background-color: #96b4d6;
 }
-.make-css .bang2 .mucbe {
+.make-css-page .bang2 .mucbe {
     font-weight: bold;
 
 }
-.make-css .diemso-osdc{
+.make-css-page .diemso-osdc{
     color: #0070bf;
 }
-.make-css .diemso-base{
+.make-css-page .diemso-base{
     color: #ff0000;
 }
-.make-css .diem {
+.make-css-page .diem {
 
     font-size: 40px;
     text-align: center;
@@ -336,13 +336,13 @@ label{
     height:38px;
 }
 
-.make-css .bang2 td{
+.make-css-page .bang2 td{
     padding:3px;
     vertical-align: middle;
     height: 38px;
 }
 
-.make-css .bang2 td:first-child{
+.make-css-page .bang2 td:first-child{
     padding: 0 5px;
 }
 

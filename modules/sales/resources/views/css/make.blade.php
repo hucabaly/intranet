@@ -44,13 +44,17 @@
         </div>
     </div>
     
-    <div class="make-css " style="display:none;">
+    <div class="make-css-page" style="display:none;">
         <div class="row">
             <div class="col-md-12">
-                <section id="header-makecss">
-                    <div id="chu-trai"><h2>お客様アンケート</h2></div>
-                    <div id="logo-rikkei"><img src="{{ URL::asset('img/logo') }}"></div>
-                </section>
+                <!--<section id="make-header">
+                    <div class="logo-rikkei"><img src="{{ URL::asset('common/images/logo-rikkei.png') }}"></div>
+                    <h2 class="title">お客様アンケート</h2>
+                    <div class="total-point-container">
+                        <div>{{ trans('sales::view.Total point')}}</div>
+                        <div id="total-point">00.00</div>
+                    </div>
+                </section>-->
                 <section>
 
                     @include('sales::css.include.project_make')
@@ -90,6 +94,7 @@
 
 <!-- Styles -->
 @section('css')
+<link href="{{ asset('sales/css/sales.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('sales/css/css_customer.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('lib/rateit/rateit.css') }}" rel="stylesheet" type="text/css" >
 @endsection
@@ -98,7 +103,7 @@
 @section('script')
 <script src="{{ asset('lib/rateit/jquery.rateit.js') }}"></script>
 <script src="{{ asset('lib/js/jquery.visible.js') }}"></script>
-<script src="{{ asset('sales/js/css_customer.js') }}"></script>
+<script src="{{ asset('sales/js/css/customer.js') }}"></script>
 <script type="text/javascript">
     <?php if(Auth::check()): ?>
         $('#modal-confirm-make').show();

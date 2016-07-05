@@ -26,9 +26,11 @@ elixir(function(mix) {
     
     mix.scripts('team/script.js', 'public/team/js');
     
-    mix.scripts('sales/css.js', 'public/sales/js');
-    mix.scripts('sales/css_customer.js', 'public/sales/js');
-    mix.scripts('sales/css_analyze.js', 'public/sales/js');
-    mix.scripts('sales/css_dataTables.js', 'public/sales/js');
+    mix.scripts('sales/css/analyze.js', 'public/sales/js/css');
+    mix.scripts('sales/css/create.js', 'public/sales/js/css');
+    mix.scripts('sales/css/dataTables.js', 'public/sales/js/css');
+    mix.scripts('sales/css/customer.js', 'public/sales/js/css');
+    mix.scripts('sales/css/list.js', 'public/sales/js/css');
+    mix.scripts('sales/css/preview.js', 'public/sales/js/css');
 //    mix.sass('app.scss');
 });

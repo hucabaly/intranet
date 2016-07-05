@@ -3,7 +3,7 @@
 @section('content')
 <div class="container box box-primary" style="background-color: #fff;min-height: 400px;">
     <div class="row">
-        <div class="make-css ">
+        <div class="make-css-page">
             <div class="row">
                 <div class="col-md-12">
                     <section><a href="{{url('/css/export_excel/'.$cssResult->id)}}" target="_blank">Export excel</a></section>
@@ -24,6 +24,7 @@
 <!-- Styles -->
 @section('css')
 <link href="{{ asset('sales/css/sales.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/css_customer.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('lib/rateit/rateit.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
@@ -31,12 +32,4 @@
 @section('script')
 <script src="{{ asset('lib/rateit/jquery.rateit.js') }}"></script>
 <script src="{{ asset('lib/js/jquery.visible.js') }}"></script>
-<script src="{{ asset('sales/js/css.js') }}"></script>
-<script type="text/javascript">
-    function goto_make() {
-        $(".welcome").hide();
-        $(".make-css").show();
-    }
-    
-</script>
 @endsection

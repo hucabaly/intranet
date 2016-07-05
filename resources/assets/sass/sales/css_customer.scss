@@ -1,18 +1,24 @@
 @import "css_customer/variables";
 @import "css_customer/elements";
 
-/** Start with sass */
+/** Welcome */
 .jumbotron {
     padding-bottom: 0;
     margin-bottom: 0;
 }
 
 .container{
-    width: 100%;
+    @media screen and (max-width: $smallScreen){
+        width: 100%;
+    }
 }
 
 .content {
-    padding-bottom: 0;
+    @media screen and (max-width: $smallScreen){
+        padding-bottom: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
 
 .welcome-body {
@@ -25,6 +31,9 @@
     margin-bottom: 5px;
     .welcome-title {
         font-size: 38px;
+        @media screen and (max-width: $smallScreen){
+            font-size: 33px;
+        }
     }
 }
 
@@ -129,3 +138,67 @@
     }
 }
 
+/** Make CSS */
+.make-css-page {
+    @media screen and (min-width: 320px){
+        padding: 0 15px;
+        #make-header {
+            text-align: center;
+            .logo-rikkei {
+                float: left;
+                img {
+                    width: 50px;
+                }
+            }
+
+            .title {
+                font-size: 19px;
+                margin: 0;
+                color: $colorBlue;
+                display: inline;
+            }
+
+            .total-point-container {
+                float: right;
+                font-size: 7px;
+                padding: 5px 10px 0;
+                text-align: center;
+                background-color: #e2f4fd;
+                border: 1px solid #409dd7;
+                #total-point {
+                    font-size: 19px;
+                    margin-left: -2px;
+                    color: $colorBlue;
+                }
+            }
+        }
+        
+        .project-info {
+            .header {
+                background-color: $colorBlue;
+                color: #fff;
+            }
+        }
+    }
+    
+    @media screen and (min-width: 450px){
+        #make-header {
+            .logo-rikkei {
+                img {
+                    width: 65px;
+                }
+            }
+
+            .title {
+                font-size: 26px;
+            }
+
+            .total-point-container {
+                font-size: 8px;
+                #total-point {
+                    font-size: 22px;
+                }
+            }
+        }
+    }
+}

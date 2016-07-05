@@ -113,5 +113,5 @@
 
 <!-- Script -->
 @section('script')
-<script src="{{ asset('sales/js/css.js') }}"></script>
+<script src="{{ asset('sales/js/css/list.js') }}"></script>
 @endsection

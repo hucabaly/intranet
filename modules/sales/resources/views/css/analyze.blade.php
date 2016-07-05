@@ -249,6 +249,6 @@
 <script src="{{ asset('lib/hightcharts/hightcharts.js') }}"></script>
 <script src="{{ asset('lib/hightcharts/exporting.js') }}"></script>
 <script src="{{ asset('lib/js/jquery.canvasjs.min.js') }}"></script>
-<script src="{{ asset('sales/js/css_analyze.js') }}"></script>
-<script src="{{ asset('sales/js/css_dataTables.js') }}"></script>
+<script src="{{ asset('sales/js/css/analyze.js') }}"></script>
+<script src="{{ asset('sales/js/css/dataTables.js') }}"></script>
 @endsection
