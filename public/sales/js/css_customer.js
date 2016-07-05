@@ -1,0 +1,1 @@
+function goto_make(){var o=$("#make_name").val();""==o?$("#modal-confirm-name").modal("show"):($(".welcome-body").hide(),$(".make-css").show())}function hideModalConfirmMake(){$("#modal-confirm-make").hide()}function goToFinish(){location.href="/css/cancel"}

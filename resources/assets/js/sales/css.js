@@ -26,24 +26,6 @@ function showCalendar(x) {
     $("#" + target).focus();
 }
 
-function goto_make() {
-    var makeName = $('#make_name').val(); 
-    if(makeName == ''){
-        $('#modal-confirm-name').modal('show');
-    }else{
-        $(".welcome-body").hide();
-        $(".make-css").show();
-    }
-}
-
-function hideModalConfirmMake(){
-    $('#modal-confirm-make').hide();
-}
-
-function goToFinish(){
-    location.href = "/css/cancel";
-}
-
 /**
  * Sự kiện khi click OK trên popup team
  * Thêm các team được chọn vào form tạo CSS

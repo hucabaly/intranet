@@ -5,10 +5,9 @@
 <div class="row">
     <div class="col-md-12 welcome-body" style="display:block;" >
         <div class="logo-rikkei">
-            <img src="{{ URL::asset('common/images/logo_login.png') }}">
-            <span class="slogan">{{ trans('sales::message.Rikkei slogan')}}</span>
+            <img src="{{ URL::asset('common/images/logo-rikkei.png') }}">
         </div>
-        <div class="box-header">
+        <div class="box-header welcome-header">
             <h2 class="welcome-title">{{ trans('sales::view.Welcome title') }}</h2>
         </div>
         <div class="container-fluid">
@@ -60,10 +59,10 @@
             </div>
         </div>
     </div>
-    <div class="footer col-md-12">
+    <div class="welcome-footer col-md-12">
         <div class="row">
-            <div class="col-md-6"><p class="float-left copyright">Copyright © 2016 <span class="with-color-red">Rikkeisoft</span>. All rights reserved.</p></div>
-            <div class="col-md-6"><p class="float-right policy"><a href="http://rikkeisoft.com/privacypolicy/" target="_blank"><span class="with-color-red policy-link">プライバシーポリシー</span></a> &nbsp; | &nbsp; Version 1.0.0</p></div>
+            <div class="col-md-6"><p class="float-left copyright">Copyright © 2016 <span>Rikkeisoft</span>. All rights reserved.</p></div>
+            <div class="col-md-6"><p class="float-right policy"><a href="http://rikkeisoft.com/privacypolicy/" target="_blank"><span class="policy-link">プライバシーポリシー</span></a> &nbsp; | &nbsp; Version 1.0.0</p></div>
         </div>
         
     </div>
@@ -91,7 +90,7 @@
 
 <!-- Styles -->
 @section('css')
-<link href="{{ asset('sales/css/sales.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/css_customer.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('lib/rateit/rateit.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
@@ -99,7 +98,7 @@
 @section('script')
 <script src="{{ asset('lib/rateit/jquery.rateit.js') }}"></script>
 <script src="{{ asset('lib/js/jquery.visible.js') }}"></script>
-<script src="{{ asset('sales/js/css.js') }}"></script>
+<script src="{{ asset('sales/js/css_customer.js') }}"></script>
 <script type="text/javascript">
     <?php if(Auth::check()): ?>
         $('#modal-confirm-make').show();

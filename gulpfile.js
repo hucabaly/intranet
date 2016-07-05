@@ -19,6 +19,7 @@ elixir(function(mix) {
     mix.sass('team/style.scss', 'public/team/css');
     
     mix.sass('sales/sales.scss', 'public/sales/css');
+    mix.sass('sales/css_customer.scss', 'public/sales/css');
 
     // gulp js
     mix.scripts('common/script.js', 'public/common/js');
@@ -26,6 +27,7 @@ elixir(function(mix) {
     mix.scripts('team/script.js', 'public/team/js');
     
     mix.scripts('sales/css.js', 'public/sales/js');
+    mix.scripts('sales/css_customer.js', 'public/sales/js');
     mix.scripts('sales/css_analyze.js', 'public/sales/js');
     mix.scripts('sales/css_dataTables.js', 'public/sales/js');
 //    mix.sass('app.scss');

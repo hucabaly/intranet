@@ -1,0 +1,131 @@
+@import "css_customer/variables";
+@import "css_customer/elements";
+
+/** Start with sass */
+.jumbotron {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.container{
+    width: 100%;
+}
+
+.content {
+    padding-bottom: 0;
+}
+
+.welcome-body {
+    min-height: 550px;
+}
+
+.welcome-header {
+    text-align: center;
+    color: $colorGreen;
+    margin-bottom: 5px;
+    .welcome-title {
+        font-size: 38px;
+    }
+}
+
+.logo-rikkei {
+    text-align: center;
+    margin-bottom: 10px;
+    img{
+        width: 180px;
+    }
+    .slogan{
+        display: block;
+        font-size: 18px;
+        font-style: italic;
+        color: $colorGray;
+        transform : scale(1,$fontHeightSloganScale);
+        -webkit-transform:scale(1,$fontHeightSloganScale); /* Safari and Chrome */
+        -moz-transform:scale(1,$fontHeightSloganScale); /* Firefox */
+        -ms-transform:scale(1,$fontHeightSloganScale); /* IE 9+ */
+        -o-transform:scale(1,$fontHeightSloganScale); /* Opera */
+    }
+}
+
+.welcome-line{
+    text-align: center;
+    margin-bottom: 0 !important;
+    color: #58595b;
+    font-size: $welcomeFontSizeMedium !important;
+    font-family: 'KozGoPro-Light';
+}
+
+.css-make-info{
+    font-family: 'KozGoPro-Medium';
+    margin: 30px auto;
+    color: #58595b;
+    width: 470px;
+    line-height: 28px;
+    font-size: $welcomeFontSizeNormal;
+    @media screen and (max-width: $smallScreen){
+        width: 100%;
+        margin: 30px 0;
+    }
+    .company-name-title {
+        width: 155px;
+        display: inline-block;
+    }
+    .project-name-title {
+        @extend .company-name-title;
+    }
+    .customer-name-title {
+        @extend .company-name-title;
+    }
+    .company-name {
+        color: $colorGreen;
+    }
+    .project-name {
+        @extend .company-name;
+    }
+    .goto-make-parent{
+        position: relative;
+        input[type=text]{
+            width: 285px;
+            height: 32px;
+            outline: none;
+            margin-top: 7px;
+            border-radius: 0;
+            border: 1px solid #1a1a1a;
+        }
+        img{
+            width: 37px;
+            position: absolute;
+            top: 7px;
+            right: 0;
+            cursor: pointer;
+        }
+    }
+}
+
+.welcome-footer{
+    font-size: 10pt;
+    margin-bottom: 10px;
+    color: #939598;
+    .copyright {
+        font-size: $welcomeFontSizeSmall;
+        margin-bottom: 0;
+        @media screen and (max-width: $smallScreen){
+            width: 100%;
+        }
+        span {
+            color: $colorRed;
+        }
+    } 
+    .policy {
+        @extend .copyright;
+        @media screen and (max-width: $smallScreen){
+            float: left;
+            margin-top: 10px;
+        }
+        .policy-link{
+            font-size: $welcomeFontSizeSmallest;
+            text-decoration: underline;
+        }
+    }
+}
+
