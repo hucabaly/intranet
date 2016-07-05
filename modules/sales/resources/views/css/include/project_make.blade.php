@@ -20,15 +20,15 @@
     <tr>
         <td class="title"><label>{{ trans('sales::view.PM name') }}</label></td>
         <td class="infomation">{{$css->pm_name}}</td>
-        <td class="title2"><label>{{ trans('sales::view.Make name') }}</label></td>
-        <td><input type="text" id="make_name" name="make_name" ></td>
+        <td class="title2"></td>
+        <td></td>
 
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.BrSE name') }}</label></td>
         <td class="infomation">{{$css->brse_name}}</td>
-        <td class="title2"><label>{{ trans('sales::view.Make email') }}</label></td>
-        <td><input type="text" id="make_email" name="make_email" ></td>
+        <td class="title2"></td>
+        <td></td>
 
     </tr>
 </table>

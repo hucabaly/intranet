@@ -232,7 +232,7 @@
 
 <!-- Styles -->
 @section('css')
-<link href="{{ asset('sales/css/css-screen.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/sales.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('lib/rangeSlider/css/iThing.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('lib/rangeSlider/demo/rangeSlider.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('adminlte/plugins/iCheck/minimal/_all.css') }}" rel="stylesheet" type="text/css" >

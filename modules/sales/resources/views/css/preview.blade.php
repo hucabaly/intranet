@@ -83,13 +83,13 @@
 @endsection
 <!-- Styles -->
 @section('css')
-<link href="{{ asset('sales/css/css-screen.css') }}" rel="stylesheet" type="text/css" >
-<link href="{{ asset('sales/css/rateit.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/sales.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('lib/rateit/rateit.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 
 <!-- Script -->
 @section('script')
-<script src="{{ asset('lib/js/jquery.rateit.js') }}"></script>
+<script src="{{ asset('lib/rateit/jquery.rateit.js') }}"></script>
 <script type="text/javascript">
     $(function () { $('#rateit_star').rateit({min: 1, max: 10, step: 2}); });
     $("#link-make").click(function(){

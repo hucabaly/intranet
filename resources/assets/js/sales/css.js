@@ -26,9 +26,23 @@ function showCalendar(x) {
     $("#" + target).focus();
 }
 
+function goto_make() {
+    var makeName = $('#make_name').val(); 
+    if(makeName == ''){
+        $('#modal-confirm-name').modal('show');
+    }else{
+        $(".welcome-body").hide();
+        $(".make-css").show();
+    }
+}
 
+function hideModalConfirmMake(){
+    $('#modal-confirm-make').hide();
+}
 
-
+function goToFinish(){
+    location.href = "/css/cancel";
+}
 
 /**
  * Sự kiện khi click OK trên popup team
@@ -218,29 +232,6 @@ function confirm(arrayValidate){
     
     var arrayValidate = $.parseJSON(arrayValidate);
     var makeName = $.trim($("#make_name").val());
-    var makeEmail = $.trim($("#make_email").val());
-    if(makeName == ""){
-        $("#make_name").css("border","1px solid red");
-        strInvalid += '<div>'+arrayValidate['nameRequired']+'</div>';
-        invalid = true;
-        $("#make_name").focus();
-    }
-    
-    if(makeEmail == ""){
-        $("#make_email").css("border","1px solid red");
-        strInvalid += '<div>'+arrayValidate['emailRequired']+'</div>';
-        invalid = true;
-        if(makeName != ""){
-            $("#make_email").focus();
-        }
-    }else if( !isValidEmailAddress( makeEmail ) ){
-        $("#make_email").css("border","1px solid red");
-        strInvalid += '<div>'+arrayValidate['emailAddress']+'</div>';
-        invalid = true;
-        if(makeName != ""){
-            $("#make_email").focus();
-        }
-    }
     
     var diemTongQuat = parseInt($("#tongquat").rateit('value'));
     if(diemTongQuat == 0){
@@ -288,7 +279,7 @@ function confirm(arrayValidate){
  */
 function submit(token, cssId){ 
     var make_name = $("#make_name").val();
-    var make_email = $("#make_email").val();
+    var make_email = 'test';
     var totalMark = getTotalPoint();
     var proposed = $("#proposed").val();
     var arrayQuestion = [];
@@ -315,7 +306,7 @@ function submit(token, cssId){
         },
     })
     .done(function (data) { 
-        location.href = baseUrl + "/css/success/"+cssId;
+        location.href = baseUrl + "css/success/"+cssId;
     })
     .fail(function () {
         alert("Ajax failed to fetch data");
