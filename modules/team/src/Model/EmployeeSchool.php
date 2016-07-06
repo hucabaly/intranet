@@ -2,7 +2,7 @@
 namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\CoreModel;
-use Rikkei\Core\View\View;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeSchool extends CoreModel
 {
@@ -16,30 +16,37 @@ class EmployeeSchool extends CoreModel
      * 
      * @param int $employeeId
      * @param array $schoolIds
-     * @param array $employeeSchools
+     * @param array $schools
      */
-    public static function saveItems($employeeId, $schoolIds= [], $employeeSchools = [])
+    public static function saveItems($employeeId, $schoolIds= [], $schools = [])
     {
-        if (! $schoolIds || ! $employeeSchools || ! $employeeId) {
+        if (! $schoolIds || ! $schools || ! $employeeId) {
             return;
         }
         self::where('employee_id', $employeeId)->delete();
+        $schoolIdsAdded = [];
         foreach ($schoolIds as $key => $schoolId) {
-            if (! isset($employeeSchools[$key])) {
+            if (! isset($schools[$key]) || ! $schools[$key]['employee_school'] || in_array($schoolId, $schoolIdsAdded)) {
                 continue;
             }
+            $employeeSchoolData = $schools[$key]['employee_school'];
+            $validator = Validator::make($employeeSchoolData, [
+                'majors' => 'required|max:255',
+                'start_at' => 'required|max:255',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->send();
+            }
+            if (! $employeeSchoolData['end_at']) {
+                unset($employeeSchoolData['end_at']);
+            }
             $employeeSchoolItem = new self();
-            $employeeSchoolItem->setData($employeeSchools[$key]);
+            $employeeSchoolItem->setData($employeeSchoolData);
             $employeeSchoolItem->school_id = $schoolId;
             $employeeSchoolItem->employee_id = $employeeId;
             $employeeSchoolItem->updated_at = date('Y-m-d H:i:s');
-            if (! $employeeSchoolItem->start_at) {
-                $employeeSchoolItem->start_at = null;
-            }
-            if (! $employeeSchoolItem->end_at) {
-                $employeeSchoolItem->end_at = null;
-            }
             $employeeSchoolItem->save();
+            $schoolIdsAdded[] = $schoolId;
         }
     }
     

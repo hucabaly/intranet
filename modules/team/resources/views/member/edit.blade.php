@@ -88,6 +88,7 @@ $teamsOption = TeamList::toOption(null, true, false);
                     <h2 class="box-title">{{ trans('team::view.Qualifications and Skills') }}</h2>
                 </div>
                 <div class="box-body">
+                    <input type="hidden" name="employee_skill" value="" />
                     @include('team::member.edit.qualifications')
                 </div>
             </div>
@@ -111,13 +112,6 @@ Form::forget();
 <script src="{{ URL::asset('team/js/script.js') }}"></script>
 <script>
     jQuery(document).ready(function($) {
-        function getDateFormat(date, format) {
-            if (format == 'Y') {
-                return date.getFullYear();
-            }
-            return '';
-        }
-        
         selectSearchReload();
         $(document).on('click', '.input-team-position.input-add-new button', function(event) {
             selectSearchReload();
@@ -261,27 +255,13 @@ Form::forget();
             });
         @endif
         
-        $('.employee-college-modal').on('shown.bs.modal', function (e) {
-            $('.college-image-box .college-image').verticalCenter({
-                parent: '.college-image-box .image-preview'
-            });
-        });
-        
-        $('.college-image-box').previewImage();
-        
         /*
         * modal employee skill process
          */
         var autoComplete = {},
-            groupChange = {},
-            dataGroup,
-            dataHrefModal,
-            dataItemId,
             imagePreviewImageDefault,
-            employeeSkillNo = {},
-            tokenValue;
-        autoComplete.school = {!! School::getAllFormatJson() !!};
-        tokenValue = $('input[name=_token]').val();
+            employeeSkillNo = {};
+        autoComplete.school = getArrayFormat({!! School::getAllFormatJson() !!});
         imagePreviewImageDefault = '{{ View::getLinkImage() }}';
         @if (isset($employeeSchools) && $employeeSchools)
             employeeSkillNo.schools = {{ count($employeeSchools) }};
@@ -289,263 +269,25 @@ Form::forget();
             employeeSkillNo.schools = 0;
         @endif
         employeeSkillNo.schools++;
-        console.log(autoComplete);
-        console.log(employeeSkill);
-        console.log(employeeSkillNo.schools);
-        //click button to show modal
-        $(document).on('click', '.employee-skill-box-wrapper [data-modal=true]', function(event) {
-            dataItemId = $(this).parents('.esbw-item').data('id');
-            if (!dataItemId || dataItemId == undefined) {
-                dataItemId = 0;
-            }
-            dataGroup = $(this).parents('.employee-skill-box-wrapper').data('group');
-            dataHrefModal = $(this).parents('.employee-skill-box-wrapper').data('href');
-            dataIsChange = $(this).parents('.employee-skill-box-wrapper').data('change');
-            $(dataHrefModal).modal('show');
-            
-            //process data when show modal
-            $(dataHrefModal).on('shown.bs.modal', function (e) {
-                $(this).find('input').removeAttr('disabled').val('');
-                $(this).find('img.college-image-preview').attr('src', imagePreviewImageDefault);
-                $(this).find('input').each(function (i,k) {
-                    inputType = $(this).attr('type');
-                    dataCol = $(this).data('col');
-                    dataTbl = $(this).data('tbl');
-                    if (! dataCol || ! dataTbl) {
-                    } else {
-                        valueId = employeeSkill[dataGroup][dataItemId][dataTbl].id;
-                        value = employeeSkill[dataGroup][dataItemId][dataTbl][dataCol];
-                        if (inputType == 'file') {
-                            if ($(this).parents('.input-box-img-preview').length) {
-                                $(this).parents('.input-box-img-preview')
-                                    .find('img[data-tbl=' + dataTbl +'][data-col=' + dataCol +'_preview]')
-                                    .attr('src', value);
-                            }
-                            if (valueId) {
-                                $(this).attr('disabled', true).val('');
-                            }
-                        } else {
-                            if (value && value != undefined) {
-                                value = $.parseHTML(value)[0].nodeValue;
-                            } else {
-                                value = '';
-                            }
-                            if (
-                                valueId && 
-                                ! $(this).data('autocomplete') && 
-                                $(this).attr('type') != 'hidden'
-                            ) {
-                                $(this).attr('disabled', true).val(value);
-                            } else {
-                                $(this).val(value);
-                            }
-                        }
-                    }
-                });
-                $(this).attr('data-id', dataItemId);
-            });
+        
+        //preview image
+        <?php
+        $typeAllow = implode('","', Config::get('services.file.image_allow'));
+        $typeAllow = '"' . $typeAllow . '"';
+        ?>
+        $('.input-box-img-preview').previewImage({
+            type: [{!! $typeAllow !!}],
+            size: {{ Config::get('services.file.image_max') }},
+            default_image: imagePreviewImageDefault,
+            message_size: '{{ trans('core::message.File size is large') }}'
         });
         
-        //process data when close modal
-//        $('.employee-skill-modal').on('hide.bs.modal', function(e) {
-//            $(this).find('input').removeAttr('disabled').val('');
-//            $(this).find('img.college-image-preview').attr('src', imagePreviewImageDefault);
-//        });
-        
-        //autocomplete field in modal
-        $('.employee-skill-modal input[data-autocomplete=true]').each(function() {
-            var dataTblAuto = $(this).data('tbl');
-            $(this).autocomplete({
-                minLength: 0,
-                source: autoComplete[dataTblAuto],
-                select: function( event, ui ) {
-                    thisParent = $(this).parents('.employee-college-modal');
-                    var uiItemSelected = ui.item;
-                    thisParent.find('input[data-tbl=' + dataTblAuto + ']:not([data-autocomplete=true])').each(function (){
-                        inputType = $(this).attr('type');
-                        dataCol = $(this).data('col');
-                        if (! dataCol) {
-                        } else {
-                            value = uiItemSelected[dataCol];
-                            if (inputType == 'file') {
-                                if ($(this).parents('.input-box-img-preview').length) {
-                                    $(this).parents('.input-box-img-preview')
-                                        .find('img[data-col=' + dataCol +'_preview]')
-                                        .attr('src', value);
-                                }
-                                $(this).attr('disabled', true).val('');
-                            } else {
-                                if (value && value != undefined) {
-                                    value = $.parseHTML(value)[0].nodeValue;
-                                    $(this).attr('disabled', true).val(value);
-                                } else {
-                                    $(this).attr('disabled', true).val('');
-                                }
-                            }
-                        }
-                    });
-                }
-            }).focus(function(){
-                $(this).autocomplete("search");
-            });
+        $().employeeSkillAction({
+            'autoComplete' : autoComplete,
+            'imagePreviewImageDefault': imagePreviewImageDefault,
+            'employeeSkillNo': employeeSkillNo,
+            'employeeSkill': employeeSkill
         });
-        
-        //process data when key press autocomplete field
-        $('.employee-skill-modal input[data-autocomplete=true]').on('keyup', function(e) {
-            if (e.keyCode == 13) {
-            } else {
-                thisParent = $(this).parents('.employee-skill-modal');
-                var dataTblAuto = $(this).data('tbl');
-                thisParent.find('input[data-tbl=' + dataTblAuto + ']:not([data-autocomplete=true])').each(function (){
-                    inputType = $(this).attr('type');
-                    if (inputType == 'file') {
-                        $(this).removeAttr('disabled');
-                        return true;
-                        if ($(this).parents('.input-box-img-preview').length) {
-                            dataCol = $(this).data('col');
-                            $(this).parents('.input-box-img-preview')
-                                .find('img[data-col=' + dataCol +'_preview]')
-                                .attr('src', imagePreviewImageDefault);
-                        }
-                        $(this).removeAttr('disabled').val('');
-                    } else {
-                        if ($(this).data('col') == 'id') {
-                            $(this).removeAttr('disabled').val('');
-                            return true;
-                        }
-                        $(this).removeAttr('disabled');
-                        return true;
-                        $(this).removeAttr('disabled').val('');
-                    }
-                });
-            }
-        });
-        
-        /**
-        * update employee skill data
-         */
-        function updateEmployeeData(thisDomModal, imageReturnAjax) {
-            if (! imageReturnAjax || imageReturnAjax == undefined) {
-                imageReturnAjax = null;
-            }
-            
-            var id = thisDomModal.attr('data-id');
-            id = parseInt(id);
-            var group = thisDomModal.data('group');
-            if (! id) {
-                id = employeeSkillNo[group];
-                employeeSkillNo[group]++;
-            }
-            thisDomModal.find('input').each(function (i,k) {
-                inputType = $(this).attr('type');
-                dataCol = $(this).data('col');
-                dataTbl = $(this).data('tbl');
-                if (! dataCol || ! dataTbl) {
-                } else {
-                    valueInput = $(this).val();
-                    if (inputType == 'file') {
-                        if ($(this).parents('.input-box-img-preview').length) {
-                            if (imageReturnAjax && imageReturnAjax.image && imageReturnAjax.image_path) {
-                                valueInput = imageReturnAjax.image;
-                                employeeSkill[group][id][dataTbl].image_path = imageReturnAjax.image_path;
-                            } else {
-                                valueInput = $(this).parents('.input-box-img-preview')
-                                    .find('img[data-tbl=' + dataTbl +'][data-col=' + dataCol +'_preview]')
-                                    .attr('src');
-                                employeeSkill[group][id][dataTbl].image_path = '';
-                            }
-                        }
-                    }
-                    if (employeeSkill[group][id] == undefined) {
-                        employeeSkill[group][id] = {};
-                    }
-                    if (employeeSkill[group][id][dataTbl] == undefined) {
-                        employeeSkill[group][id][dataTbl] = {};
-                    }
-                    if (employeeSkill[group][id][dataTbl][dataCol] == undefined) {
-                        employeeSkill[group][id][dataTbl][dataCol] = {};
-                    }
-                    employeeSkill[group][id][dataTbl][dataCol] = valueInput;
-                }
-            });
-        }
-        
-        /**
-        * upload skill html list
-         */
-        function updateHtmlSkillList(group)
-        {
-            skillListWrapper = $('.employee-skill-box-wrapper[data-group=' + group + '] .employee-skill-items');
-            skillListItem0 = skillListWrapper.find('.esbw-item[data-id=0]');
-            var htmlNew = '';
-            $.each(employeeSkill[group], function(i, k){
-                if (i == 0) {
-                    return true;
-                }
-                skillItemNew = skillListItem0.clone();
-                skillItemNew.attr('data-id', i);
-                skillItemNew.removeClass('hidden');
-                skillItemNew.find('[data-tbl][data-col]').each(function(){
-                    dataTbl = $(this).data('tbl');
-                    dataCol = $(this).data('col');
-                    if ($(this).is('img')) {                        
-                        skillItemNew.find('[data-tbl=' + dataTbl + '][data-col=' + dataCol + ']').attr('src', k[dataTbl][dataCol]);
-                    } else {
-                        valueInput = k[dataTbl][dataCol];
-                        domInput = skillItemNew.find('[data-tbl=' + dataTbl + '][data-col=' + dataCol + ']');
-                        dataDateFormat = domInput.data('date-format');
-                        if (dataDateFormat) {
-                            date = new Date(valueInput);
-                            valueInput = getDateFormat(date, dataDateFormat);
-                        }
-                        domInput.html(valueInput);
-                    }
-                });
-                htmlNew += skillItemNew[0].outerHTML;
-            });
-            skillListWrapper.children(':not(.esbw-item)').html(htmlNew);
-        }
-        
-        //process data when modal action change
-        $('.employee-skill-modal .btn-action').on('click', function(event) {
-            var thisDomModal = $(this).parents('.employee-skill-modal');
-            var dataGroupType = thisDomModal.data('group');
-            
-            //upload if available
-            if (thisDomModal.find('input[type=file]').val()) {
-                formDom = thisDomModal.find('form.skill-modal-form');
-                formData = new FormData();
-                formData.append('_token', tokenValue);
-                formData.append('skill_type', dataGroupType);
-                formData.append('file', formDom.find('input[type=file]')[0].files[0]);
-                $.ajax({
-                    url : formDom.attr('action'),
-                    type : 'POST',
-                    data : formData,
-                    dataType: 'json',
-                    processData: false,
-                    contentType: false,
-                    success : function(data) {
-                        updateEmployeeData(thisDomModal, data);
-                        updateHtmlSkillList(dataGroupType);
-                    }
-                });
-            } else {
-                updateEmployeeData(thisDomModal);
-                updateHtmlSkillList(dataGroupType);
-            }
-        });
-        
-        // remove pop up in modal when scroll
-        $('.employee-skill-modal').scroll(function(){
-            $('input').blur();
-        });
-        
-        //disable submti fomr modal
-        $('.employee-skill-modal form').on('submit', function(event) {
-            event.preventDefault();
-        });
-        
         /* -----end modal employee skill process */
         
     });

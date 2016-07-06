@@ -133,13 +133,19 @@ class View
      * @return string|null
      * @throws Exception
      */
-    public static function uploadFile($file, $path, $allowType = [], $rename = true)
+    public static function uploadFile($file, $path, $allowType = [], $maxSize = null, $rename = true)
     {
         if ($file->isValid()) {
             if ($allowType) {
                 $extension = $file->getClientMimeType();
                 if (! in_array($extension, $allowType)) {
                     throw new Exception(Lang::get('core::message.File type dont allow'));
+                }
+            }
+            if ($maxSize) {
+                $fileSize = $file->getClientSize();
+                if ($fileSize / 1000 > $maxSize) {
+                    throw new Exception(Lang::get('core::message.File size is large'));
                 }
             }
             if ($rename) {

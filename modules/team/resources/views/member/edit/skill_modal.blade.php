@@ -27,11 +27,11 @@
                             <div class="input-box col-md-9 input-box-img-preview college-image-box">
                                 <div class="image-preview">
                                     <img src="{{ URL::asset('common/images/noimage.png') }}"
-                                         id="college-image-preview" class="img-responsive college-image-preview" 
+                                         id="college-image-preview" class="img-responsive college-image-preview skill-modal-image-preview" 
                                          data-tbl="school" data-col="image_preview"/>
                                 </div>
                                 <div class="img-input">
-                                    <input type="file" class="form-control college-image" value="" 
+                                    <input type="file" class="form-control college-image skill-modal-image" value="" 
                                         name="image" id="college-image" 
                                         data-tbl="school" data-col="image" />
                                 </div>
@@ -83,14 +83,14 @@
                 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-delete btn-action" data-dismiss="modal">
+                    <button type="button" class="btn-delete btn-action">
                         <span>{{ trans('team::view.Remove') }}</span>
                     </button>
                     <button type="submit" class="btn-add btn-action">
-                        <span>{{ trans('team::view.Add') }}</span>
+                        <span>{{ trans('team::view.Save') }}</span>
                     </button>
                     <button type="submit" class="btn-edit btn-action hidden">
-                        <span>{{ trans('team::view.Edit') }}</span>
+                        <span>{{ trans('team::view.Save') }}</span>
                     </button>
                 </div>
             </form>

@@ -34,6 +34,40 @@ function selectSearchReload(option) {
     });
 }
 
+/**
+ * get date format
+ * 
+ * @param {datetime} date
+ * @param {string} format
+ * @returns {String}
+ */
+function getDateFormat(date, format) {
+    if (format == 'Y') {
+        return date.getFullYear();
+    }
+    return '';
+}
+
+/**
+ * get array format unicode
+ * 
+ * @param {array} arrayData
+ * @returns {Array}
+ */
+function getArrayFormat(arrayData) {
+    if (! arrayData) {
+        return [];
+    }
+    for (i in arrayData) {
+        for (iItem in arrayData[i]) {
+            if (arrayData[i][iItem] != undefined && arrayData[i][iItem]) {
+                arrayData[i][iItem] = jQuery.parseHTML(arrayData[i][iItem])[0].nodeValue;
+            }
+        }
+    }
+    return arrayData;
+}
+
 jQuery(document).ready(function ($) {
 //    $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function (event) {
 //        event.preventDefault();
@@ -425,18 +459,33 @@ jQuery(document).ready(function($) {
     }; //end dom vertical center
     
     // preview image
-    $.fn.previewImage = function() {
+    $.fn.previewImage = function(option) {
         var thisWrapper = $(this);
+        if (option == undefined || ! option) {
+            option = {};
+        }
+        srcDemo = thisWrapper.find('.image-preview > img').attr('src');
+        optionDefault = {
+            type: [ 'image/jpeg','image/png','image/gif'],
+            size: 2048,
+            default_image: srcDemo,
+            message_size: 'File size is large'
+        };
+        option = $.extend(optionDefault, option);
         //exec src image preview
-        var srcDemo = thisWrapper.find('.image-preview > img').attr('src');
-        var allowType = ['image/jpeg','image/png','image/gif'];
+        
+        //var allowType = ['image/jpeg','image/png','image/gif'];
         var domInputFile = thisWrapper.find(".img-input input[type=file]");
         function readURL(input) {
             if (input.files && input.files[0]) {
                 var fileUpload = input.files[0];
-                if($.inArray(fileUpload.type, allowType) < 0) {
-                    thisWrapper.find('.image-preview > img').attr('src', srcDemo);
+                if($.inArray(fileUpload.type, option.type) < 0) {
+                    thisWrapper.find('.image-preview > img').attr('src', option.default_image);
                     domInputFile.val('');
+                } else if (fileUpload.size / 1000 > option.size) {
+                    thisWrapper.find('.image-preview > img').attr('src', option.default_image);
+                    domInputFile.val('');
+                    alert(option.message_size);
                 }
                 else {
                     var reader = new FileReader();

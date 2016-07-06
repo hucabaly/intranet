@@ -92,10 +92,7 @@ class Employees extends CoreModel
             $result = parent::save($options);
             $this->saveTeamPosition();
             $this->saveRoles();
-            $schoolIds = $this->saveSchools();
-            if ($schoolIds) {
-                $this->saveEmployeeSchools($schoolIds);
-            }
+            $this->saveSkills();
             DB::commit();
             CacheHelper::forget(self::KEY_CACHE);
             return $result;
@@ -292,39 +289,46 @@ class Employees extends CoreModel
         return $this;
     }
     
+    protected function saveSkills()
+    {
+        if (! $this->id) {
+            return;
+        }
+        $skills = Input::all();
+        $skills = array_get($skills, 'employee_skill');
+        if (! $skills) {
+            return;
+        }
+        $skillsArray = [];
+        parse_str($skills, $skillsArray);
+        if (isset($skillsArray['schools'][0])) {
+            unset($skillsArray['schools'][0]);
+        }
+        if (isset($skillsArray['schools']) && $skillsArray['schools']) {
+            $this->saveSchools($skillsArray['schools']);
+        }
+    }
+
     /**
      * save schools item
      * 
      * @param array $college
      * @return array
      */
-    public function saveSchools(array $schools = [])
+    protected function saveSchools($schools = [])
     {
-        if (! $this->id) {
-            return;
-        }
-        if (! $schools) {
-            $schools = Input::all();
-            $schools = array_get($schools,'college');
-        }
         if (! $schools) {
             return;
         }
-        return School::saveItems($schools);
+        $schoolIds = School::saveItems($schools);
+        if ($schoolIds) {
+            $this->saveEmployeeSchools($schoolIds, $schools);
+        }
     }
     
-    public function saveEmployeeSchools($schoolIds = [], $employeeSchools = [])
+    public function saveEmployeeSchools($schoolIds = [], $schools = [])
     {
-        if (! $this->id || ! $schoolIds) {
-            return;
-        }
-        if (! $employeeSchools) {
-            $employeeSchools = Input::get('employee_school');
-        }
-        if (! $employeeSchools) {
-            return;
-        }
-        return EmployeeSchool::saveItems($this->id, $schoolIds, $employeeSchools);
+        return EmployeeSchool::saveItems($this->id, $schoolIds, $schools);
     }
     
     /**

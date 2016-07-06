@@ -52,8 +52,8 @@ function getHtmlEmployeeSchool($employeeSchool = null, $i = 0)
             },
             employee_school: {
                 majors: '{{ $employeeSchool->majors }}',
-                start_at: '{{ $employeeSchool->start_at }}',
-                end_at: '{{ $employeeSchool->end_at }}',
+                start_at: '{{ ViewHelper::getDate($employeeSchool->start_at) }}',
+                end_at: '{{ ViewHelper::getDate($employeeSchool->end_at) }}',
             }
         };
     </script>
@@ -78,7 +78,7 @@ function getHtmlEmployeeSchool($employeeSchool = null, $i = 0)
                 </div>
                 <?php getHtmlEmployeeSchool(null, 0); ?>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2 add-skill-item">
                 <button type="button" class="btn-add add-college" data-toggle="tooltip" 
                     data-placement="bottom" title="{{ trans('team::view.Add a college') }}"
                     data-modal="true">

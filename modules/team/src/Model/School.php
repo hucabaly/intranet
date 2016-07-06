@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Exception;
 use Rikkei\Core\View\View;
 use Rikkei\Core\View\CacheHelper;
+use Illuminate\Support\Facades\Validator;
 
 class School extends CoreModel
 {
@@ -26,41 +27,43 @@ class School extends CoreModel
      * @return array
      * @throws Exception
      */
-    public static function saveItems($college = [], array $options = array()) 
+    public static function saveItems($schools = []) 
     {
-        if (! $college) {
+        if (! $schools) {
             return;
         }
         $schoolIds = [];
         try {
-            foreach ($college as $key => $collegeData) {
-                if (! $collegeData['name']) {
+            foreach ($schools as $key => $schoolData) {
+                if (! isset($schoolData['school']) || ! $schoolData['school']) {
                     continue;
                 }
-                if (isset($collegeData['id']) && $collegeData['id']) {
-                    if ( $school = School::find($collegeData['id'])) {
-                        $schoolIds[$key] = $collegeData['id'];
+                $schoolData = $schoolData['school'];
+                if (isset($schoolData['id']) && $schoolData['id']) {
+                    if ( $school = self::find($schoolData['id'])) {
+                        $schoolIds[$key] = $schoolData['id'];
                     } else {
                         continue;
                     }
-                    unset($collegeData['id']);
+                    unset($schoolData['id']);
                 } else {
                     $school = new self();
                 }
-                if (isset($collegeData['image']) && $collegeData['image']) {
-                    $image = $collegeData['image'];
-                    $image = View::uploadFile(
-                        $image, 
-                        public_path(self::PATH_MEDIA_COLLEGE), 
-                        Config::get('services.image_allow')
-                    );
-                    if ($image) {
-                        $school->image = self::PATH_MEDIA_COLLEGE . '/' . $image;
-                    }
-                    unset($collegeData['image']);
+                $validator = Validator::make($schoolData, [
+                    'name' => 'required|max:255',
+                    'country' => 'required|max:255',
+                    'province' => 'required|max:255',
+                ]);
+                if ($validator->fails()) {
+                    return redirect()->back()->withErrors($validator)->send();
                 }
-                $school->setData($collegeData);
-                $school->save($options);
+                if (isset($schoolData['image_path']) && $schoolData['image_path']) {
+                        $school->image = $schoolData['image_path'];
+                }
+                unset($schoolData['image_path']);
+                unset($schoolData['image']);
+                $school->setData($schoolData);
+                $school->save();
                 $schoolIds[$key] = $school->id;
             }
             CacheHelper::forget(self::KEY_CACHE);
