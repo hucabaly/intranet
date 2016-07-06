@@ -4,15 +4,13 @@ $(document).ready(function(){
     });
 });
 
-function goto_make() {
+function goto_make(hrefMake) {
     var makeName = $('#make_name').val(); 
     if(makeName == ''){
         $('#modal-confirm-name').modal('show');
     }else{
-        $(".welcome-body").hide();
-        $(".make-css-page").show();
-        $('.project-info .make-name').text(makeName);
-        $('html,body').scrollTop(0);
+        $.cookie("makeName", makeName, { expires: 7 }); 
+        location.href = hrefMake;
     }
 }
 
@@ -149,7 +147,7 @@ function confirm(arrayValidate){
  * @returns void
  */
 function submit(token, cssId){ 
-    var make_name = $("#make_name").val();
+    var make_name = $(".make-name").text(); 
     var make_email = 'test';
     var totalMark = getTotalPoint();
     var proposed = $("#proposed").val();
@@ -162,7 +160,7 @@ function submit(token, cssId){
         arrayQuestion.push([questionId,diem,comment]);
     });
     
-    $(".apply-click-modal").show();
+    $(".apply-click-modal").show(); 
     $.ajax({
         url: baseUrl + '/css/saveResult',
         type: 'post',

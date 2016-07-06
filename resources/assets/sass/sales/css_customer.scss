@@ -42,6 +42,13 @@ textarea {
     }
 }
 
+.loading-img {
+    width: 40px;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+}
+
 /** Welcome */
 .welcome-body {
     min-height: 550px;
@@ -114,22 +121,8 @@ textarea {
         @extend .company-name;
     }
     .goto-make-parent{
-        position: relative;
-        input[type=text]{
-            width: 285px;
-            height: 32px;
-            outline: none;
-            margin-top: 7px;
-            border-radius: 0;
-            border: 1px solid #1a1a1a;
-        }
-        img{
-            width: 37px;
-            position: absolute;
-            top: 7px;
-            right: 0;
-            cursor: pointer;
-        }
+        width: 285px;
+        top: 11px;
     }
 }
 
@@ -208,9 +201,10 @@ textarea {
                 @include project-header();
             }
             .row-info {
-                padding: 0;
+                padding: 0 -10px;
                 font-size: 12px;
                 margin-bottom: 2px;
+                font-family: 'KozGoPro-Regular';
             }
         }
         
@@ -220,6 +214,7 @@ textarea {
             .header {
                 @include project-header();
                 margin-bottom: 0;
+                border-radius: 3px 3px 0 0;
                 .note-comment {
                     font-size: 9px;
                     margin-top: 1px;
@@ -228,34 +223,51 @@ textarea {
             
             .root-cate {
                 background-color: $colorLightBlue;
-                padding: 5px;
+                padding: 8px 5px;
                 color: #fff;
                 font-family: 'KozGoPro-Medium';
+                border-radius: 3px;
             }
             
             .child-cate {
-                padding: 5px;
+                padding: 8px 5px;
                 font-family: 'KozGoPro-Medium';
             }
             
-            .question {
-                padding: 5px;
-                background-color: #f5f5f7;
-                margin-top: 1px;
-            }
-            
-            .rate {
-                @extend .question;
-                text-align: center;
-            }
-            
-            .comment {
-                @extend .question;
-                padding-left: 2px;
-                padding-right: 2px;
-                textarea {
-                    height: 45px;
-                    resize: none;
+            .container-question{
+                padding-left: 15px;
+                padding-right: 15px;
+                .question {
+                    padding: 5px;
+                    background-color: #f5f5f7;
+                    margin-top: 1px;
+                    .num-border {
+                        border: 1px solid #999;
+                        border-radius: 50%;
+                        font-size: 10px;
+                        display: inline-block;
+                        height: 17px;
+                        width: 18px;
+                        text-align: center;
+                        position: relative;
+                        top: -1px;
+                        padding-top: 1px;
+                    }
+                }
+
+                .rate {
+                    @extend .question;
+                    text-align: center;
+                }
+
+                .comment {
+                    @extend .question;
+                    padding-left: 2px;
+                    padding-right: 2px;
+                    textarea {
+                        height: 45px;
+                        resize: none;
+                    }
                 }
             }
             
@@ -312,11 +324,46 @@ textarea {
             }
         }
         
+        .project-info {
+            .row-info {
+                margin-bottom: 5px;
+            }
+        }
+        
         .project-detail {
             .header {
                 margin-bottom: 0;
                 .note-comment {
                     font-size: 10px;
+                }
+            }
+        }
+    }
+    
+    @media screen and (min-width: 768px){
+        #make-header {
+            .logo-rikkei {
+                img {
+                    width: 100px;
+                }
+            }
+
+            .title {
+                font-size: 45px;
+            }
+
+            .total-point-container {
+                font-size: 13px;
+                #total-point {
+                    font-size: 40px;
+                }
+            }
+        }
+        
+        .project-detail {
+            .header {
+                .note-comment {
+                    font-size: 12px;
                 }
             }
         }
