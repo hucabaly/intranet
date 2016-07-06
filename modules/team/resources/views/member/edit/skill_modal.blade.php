@@ -255,3 +255,86 @@ use Rikkei\Core\View\View;
     </div>
 </div>
 <!-- ------------end cetificate -->
+
+<?php
+function getHtmlModalSkill($type = 'program') { ?>
+<div class="modal fade employee-skill-modal" 
+    id="employee-{{ $type }}-form" role="dialog" data-id="1"
+    data-group="{{ $type }}s">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="{{ URL::route('core::upload.skill') }}" method="post" 
+                    enctype="multipart/form-data" class="skill-modal-form" id="employee-skill-{{ $type }}-form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ trans('team::view.Infomation of ' . $type) }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal form-label-left">
+                        <input type="hidden" name="id" value="" class="input-skill-modal {{ $type }}-id" 
+                            data-tbl="{{ $type }}" data-col="id" />
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="{{ $type }}-name">{{ trans('team::view.Name') }}</label>
+                            <div class="input-box col-md-9">
+                                <input type="text" class="form-control {{ $type }}-name input-skill-modal" placeholder="{{ trans('team::view.Name') }}" 
+                                    value="" name="name" id="{{ $type }}-name"
+                                    data-tbl="{{ $type }}" data-col="name" data-autocomplete="true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="{{ $type }}-image">{{ trans('team::view.Image') }}</label>
+                            <div class="input-box col-md-9 input-box-img-preview">
+                                <div class="image-preview">
+                                    <img src="{{ URL::asset('common/images/noimage.png') }}"
+                                         class="img-responsive college-image-preview skill-modal-image-preview" 
+                                         data-tbl="{{ $type }}" data-col="image_preview"/>
+                                </div>
+                                <div class="img-input">
+                                    <input type="file" class="form-control skill-modal-image input-skill-modal" value="" 
+                                        name="image" id="{{ $type }}-image" 
+                                        data-tbl="{{ $type }}" data-col="image" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-select2">
+                            <label class="col-md-3 control-label" for="{{ $type }}-level">{{ trans('team::view.Level') }}</label>
+                            <div class="input-box col-md-9">
+                                <select name="level" id="{{ $type }}-level" class="form-control {{ $type }}-level input-skill-modal select-search"
+                                        value=""  data-tbl="employee_{{ $type }}" data-col="level">
+                                    @foreach (View::toOptionNormalLevel() as $option)
+                                        <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="{{ $type }}-experience">{{ trans('team::view.Experience') }}</label>
+                            <div class="input-box col-md-9">
+                                <input type="number" id="{{ $type }}-experience" 
+                                    class="form-control {{ $type }}-experience input-skill-modal" placeholder="{{ trans('team::view.Experience year') }}" 
+                                    value="" name="experience" id="{{ $type }}-experience"
+                                    data-tbl="employee_{{ $type }}" data-col="experience" />
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-delete btn-action">
+                        <span>{{ trans('team::view.Remove') }}</span>
+                    </button>
+                    <button type="submit" class="btn-add btn-action">
+                        <span>{{ trans('team::view.Save') }}</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php } //end function html modal skill ?>
+
+<?php
+ getHtmlModalSkill('program');
+ getHtmlModalSkill('database');
+ getHtmlModalSkill('os');
+?>

@@ -7,11 +7,6 @@ use Rikkei\Team\View\Permission;
 use Rikkei\Core\Model\CoreModel;
 
 $genderOption = Employees::toOptionGender();
-if (isset($isProfile) && $isProfile) {
-    $employeePermission = Permission::getInstance()->isScopeCompany(null, 'team::team.member.edit');
-} else {
-    $employeePermission = Permission::getInstance()->isScopeCompany();
-}
 ?>
 <?php
 /**
@@ -145,9 +140,51 @@ function getHtmlEmployeeCetificate($employeeCetificate = null, $i = 0)
 <?php } //end function languages html
 ?>
 
+<?php
+/**
+ * function html render employee skill
+*/
+function getHtmlEmployeeSkill($employeeSkill = null, $i = 0, $type = 'program')
+{ 
+    if (! $employeeSkill) {
+        $employeeSkill = new CoreModel();
+    }
+?>
+    <div class="col-sm-6 employee-school-item esbw-item<?php if(! $i): ?> hidden<?php endif; ?>" data-id="{{ $i }}">
+        <div class="esi-image">
+            <img src="{{ ViewHelper::getLinkImage($employeeSkill->image) }}" 
+                class="img-responsive image-preview" data-tbl="{{ $type }}" data-col="image" />
+        </div>
+        <div class="esi-content">
+            <p>
+                <a href="#" class="esi-title" data-tbl="{{ $type }}" data-col="name"
+                   data-modal="true">{{ $employeeSkill->name }}</a>
+            </p>
+            <p>
+                <span>{{ trans('team::view.Level') }} <span data-tbl="employee_{{ $type }}" data-col="level" data-label-format="level_normal">{{ ViewHelper::getLabelNormalLevel($employeeSkill->level) }}</span>
+                &nbsp;&nbsp;&nbsp;
+                <span data-tbl="employee_{{ $type }}" data-col="experience">{{ $employeeSkill->experience }}</span> <span>{{ trans('team::view.years') }}
+            </p>
+        </div>
+        <script>
+            employeeSkill.{{ $type }}s[{{ $i }}] = {
+                {{ $type }}: {
+                    id: '{{ $employeeSkill->id }}',
+                    name: '{{ $employeeSkill->name }}',
+                    image: '{{ ViewHelper::getLinkImage($employeeSkill->image) }}',
+                },
+                employee_{{ $type }}: {
+                    level: '{{ $employeeSkill->level }}',
+                    experience: '{{ $employeeSkill->experience }}',
+                }
+            };
+        </script>
+    </div>
+<?php } //end function skill html
+?>
 
 <!-- employee school -->
-<div class="row">
+<div class="row skill-list-row">
     <div class="col-sm-12">
         <h5 class="skill-title">{{ trans('team::view.Content has studied') }}</h5>
     </div>
@@ -179,9 +216,9 @@ function getHtmlEmployeeCetificate($employeeCetificate = null, $i = 0)
 <!-- //end employee school -->
 
 <!-- employee Language -->
-<div class="row">
+<div class="row skill-list-row">
     <div class="col-sm-12">
-        <h5 class="skill-title">{{ trans('team::view.Language') }}</h5>
+        <h5 class="skill-title">{{ trans('team::view.Language foreign') }}</h5>
     </div>
     <div class="col-sm-12">
         <div class="row employee-skill-box-wrapper" data-btn-modal="true" 
@@ -211,7 +248,7 @@ function getHtmlEmployeeCetificate($employeeCetificate = null, $i = 0)
 <!-- //end employee language -->
 
 <!-- employee Cetificate -->
-<div class="row">
+<div class="row skill-list-row">
     <div class="col-sm-12">
         <h5 class="skill-title">{{ trans('team::view.Cetificate') }}</h5>
     </div>
@@ -241,3 +278,99 @@ function getHtmlEmployeeCetificate($employeeCetificate = null, $i = 0)
     </div>
 </div>
 <!-- //end employee Cetificate -->
+
+<!-- employee program -->
+<div class="row skill-list-row">
+    <div class="col-sm-12">
+        <h5 class="skill-title">{{ trans('team::view.Programming Language') }}</h5>
+    </div>
+    <div class="col-sm-12">
+        <div class="row employee-skill-box-wrapper" data-btn-modal="true" 
+            data-group="programs" data-href="#employee-program-form">
+            <div class="col-sm-10 employee-skill-items">
+                <div class="row">
+                    @if ($employeePrograms)
+                        <?php $i = 0; ?>
+                        @foreach ($employeePrograms as $employeeProgram)
+                            <?php $i++; ?>
+                            <?php getHtmlEmployeeSkill($employeeProgram, $i, 'program'); ?>
+                        @endforeach
+                    @endif
+                </div>
+                <?php getHtmlEmployeeSkill(null, 0, 'program'); ?>
+            </div>
+            <div class="col-sm-2 add-skill-item">
+                <button type="button" class="btn-add add-college" data-toggle="tooltip" 
+                    data-placement="bottom" title="{{ trans('team::view.Add new programming language') }}"
+                    data-modal="true">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //end employee program -->
+
+<!-- employee database -->
+<div class="row skill-list-row">
+    <div class="col-sm-12">
+        <h5 class="skill-title">{{ trans('team::view.Database') }}</h5>
+    </div>
+    <div class="col-sm-12">
+        <div class="row employee-skill-box-wrapper" data-btn-modal="true" 
+            data-group="databases" data-href="#employee-database-form">
+            <div class="col-sm-10 employee-skill-items">
+                <div class="row">
+                    @if ($employeeDatabases)
+                        <?php $i = 0; ?>
+                        @foreach ($employeeDatabases as $employeeDatabase)
+                            <?php $i++; ?>
+                            <?php getHtmlEmployeeSkill($employeeDatabase, $i, 'database'); ?>
+                        @endforeach
+                    @endif
+                </div>
+                <?php getHtmlEmployeeSkill(null, 0, 'database'); ?>
+            </div>
+            <div class="col-sm-2 add-skill-item">
+                <button type="button" class="btn-add add-college" data-toggle="tooltip" 
+                    data-placement="bottom" title="{{ trans('team::view.Add new database') }}"
+                    data-modal="true">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //end employee database -->
+
+<!-- employee os -->
+<div class="row skill-list-row">
+    <div class="col-sm-12">
+        <h5 class="skill-title">{{ trans('team::view.OS') }}</h5>
+    </div>
+    <div class="col-sm-12">
+        <div class="row employee-skill-box-wrapper" data-btn-modal="true" 
+            data-group="oss" data-href="#employee-os-form">
+            <div class="col-sm-10 employee-skill-items">
+                <div class="row">
+                    @if ($employeeOss)
+                        <?php $i = 0; ?>
+                        @foreach ($employeeOss as $employeeOs)
+                            <?php $i++; ?>
+                            <?php getHtmlEmployeeSkill($employeeOs, $i, 'os'); ?>
+                        @endforeach
+                    @endif
+                </div>
+                <?php getHtmlEmployeeSkill(null, 0, 'os'); ?>
+            </div>
+            <div class="col-sm-2 add-skill-item">
+                <button type="button" class="btn-add add-college" data-toggle="tooltip" 
+                    data-placement="bottom" title="{{ trans('team::view.Add new os') }}"
+                    data-modal="true">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //end employee os -->

@@ -6,15 +6,20 @@ use Rikkei\Team\Model\Roles;
 use Rikkei\Team\Model\School;
 use Rikkei\Core\View\View;
 use Rikkei\Team\Model\Cetificate;
+use Rikkei\Team\Model\Skill;
 
 $postionsOption = Roles::toOptionPosition();
 $teamsOption = TeamList::toOption(null, true, false);
 
 $employeeSchools = $employeeLanguages = $employeeCetificates = null;
+$employeePrograms = $employeeDatabases = $employeeOss = null;
 if (isset($employeeModelItem) && $employeeModelItem) {
     $employeeSchools = $employeeModelItem->getSchools();
     $employeeLanguages = $employeeModelItem->getLanguages();
     $employeeCetificates = $employeeModelItem->getCetificates();
+    $employeePrograms = $employeeModelItem->getPrograms();
+    $employeeDatabases = $employeeModelItem->getDatabases();
+    $employeeOss = $employeeModelItem->getOss();
 }
 ?>
 
@@ -88,7 +93,7 @@ if (isset($employeeModelItem) && $employeeModelItem) {
                 schools: {},
                 languages: {},
                 cetificates: {},
-                programings: {},
+                programs: {},
                 databases: {},
                 oss: {}
             };
@@ -178,6 +183,10 @@ Form::forget();
             },
             'level': {
                 required: '<?php echo trans('core::view.This field is required'); ?>',
+            },
+            'experience': {
+                required: '<?php echo trans('core::view.This field is required'); ?>',
+                'number': '{{ trans('core::view.Please enter a valid number') }}',
             }
         }
         var rules = {
@@ -230,6 +239,10 @@ Form::forget();
             'level': {
                 required: true
             },
+            'experience': {
+                required: true,
+                number: true
+            }
         };
         
         $('#form-employee-info').validate({
@@ -242,6 +255,19 @@ Form::forget();
             messages: messages
         });
         $('#employee-skill-language-form').validate({
+            rules: rules,
+            messages: messages
+        });
+        
+        $('#employee-skill-program-form').validate({
+            rules: rules,
+            messages: messages
+        });
+        $('#employee-skill-database-form').validate({
+            rules: rules,
+            messages: messages
+        });
+        $('#employee-skill-os-form').validate({
             rules: rules,
             messages: messages
         });
@@ -290,6 +316,9 @@ Form::forget();
         autoComplete.school = getArrayFormat({!! School::getAllFormatJson() !!});
         autoComplete.language = getArrayFormat({!! Cetificate::getAllFormatJson(Cetificate::TYPE_LANGUAGE) !!});
         autoComplete.cetificate = getArrayFormat({!! Cetificate::getAllFormatJson(Cetificate::TYPE_CETIFICATE) !!});
+        autoComplete.program = getArrayFormat({!! Skill::getAllFormatJson(Skill::TYPE_PROGRAM) !!});
+        autoComplete.database = getArrayFormat({!! Skill::getAllFormatJson(Skill::TYPE_DATABASE) !!});
+        autoComplete.os = getArrayFormat({!! Skill::getAllFormatJson(Skill::TYPE_OS) !!});
         
         imagePreviewImageDefault = '{{ View::getLinkImage() }}';
         
@@ -314,7 +343,29 @@ Form::forget();
         @endif
         employeeSkillNo.cetificates++;
         
+        @if ($employeePrograms)
+            employeeSkillNo.programs = {{ count($employeePrograms) }};
+        @else
+            employeeSkillNo.programs = 0;
+        @endif
+        employeeSkillNo.programs++;
+        
+        @if ($employeeDatabases)
+            employeeSkillNo.databases = {{ count($employeeDatabases) }};
+        @else
+            employeeSkillNo.databases = 0;
+        @endif
+        employeeSkillNo.databases++;
+        
+        @if ($employeeOss)
+            employeeSkillNo.oss = {{ count($employeeOss) }};
+        @else
+            employeeSkillNo.oss = 0;
+        @endif
+        employeeSkillNo.oss++;
+        
         labelFormat.level_language = {!! View::getLanguageLevelFormatJson() !!};
+        labelFormat.level_normal = {!! View::getNormalLevelFormatJson() !!};
         
         //preview image
         <?php

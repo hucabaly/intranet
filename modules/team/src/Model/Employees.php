@@ -331,6 +331,32 @@ class Employees extends CoreModel
             isset($skillsChageArray['cetificates']) && $skillsChageArray['cetificates']) {
             $this->saveCetificateType($skillsArray['cetificates'], Cetificate::TYPE_CETIFICATE);
         }
+        
+        // save skill
+        if (isset($skillsArray['programs'][0])) {
+            unset($skillsArray['programs'][0]);
+        }
+        if (isset($skillsArray['programs']) && $skillsArray['programs'] &&
+            isset($skillsChageArray['programs']) && $skillsChageArray['programs']) {
+            $this->saveSkillItem($skillsArray['programs'], Skill::TYPE_PROGRAM);
+        }
+        
+        if (isset($skillsArray['oss'][0])) {
+            unset($skillsArray['oss'][0]);
+        }
+        if (isset($skillsArray['oss']) && $skillsArray['oss'] &&
+            isset($skillsChageArray['oss']) && $skillsChageArray['oss']) {
+            $this->saveSkillItem($skillsArray['oss'], Skill::TYPE_OS);
+        }
+        
+        if (isset($skillsArray['databases'][0])) {
+            unset($skillsArray['databases'][0]);
+        }
+        if (isset($skillsArray['databases']) && $skillsArray['databases'] &&
+            isset($skillsChageArray['databases']) && $skillsChageArray['databases']) {
+            $this->saveSkillItem($skillsArray['databases'], Skill::TYPE_DATABASE);
+        }
+        
     }
 
     /**
@@ -389,6 +415,36 @@ class Employees extends CoreModel
     protected function saveEmployeeCetificateType($cetificatesTypeIds = [], $cetificatesType = [], $type = null)
     {
         return EmployeeCetificate::saveItems($this->id, $cetificatesTypeIds, $cetificatesType, $type);
+    }
+    
+    /**
+     * save skills
+     * 
+     * @param array $skills
+     * @param type $type
+     * @return type
+     */
+    protected function saveSkillItem($skills = [], $type = null)
+    {
+        if (! $skills) {
+            return;
+        }
+        $skillIds = Skill::saveItems($skills, $type);
+        if ($skillIds) {
+            $this->saveEmployeeSkillItem($skillIds, $skills, $type);
+        }
+    }
+    
+    /**
+     * save employee skills
+     * 
+     * @param type $cetificatesTypeIds
+     * @param type $cetificatesType
+     * @return type
+     */
+    protected function saveEmployeeSkillItem($skillIds = [], $skills = [], $type = null)
+    {
+        return EmployeeSkill::saveItems($this->id, $skillIds, $skills, $type);
     }
     
     /**
@@ -451,6 +507,51 @@ class Employees extends CoreModel
         $employeeCetificates = EmployeeCetificate::getItemsFollowEmployee($this->id, Cetificate::TYPE_CETIFICATE);
         CacheHelper::put(self::KEY_CACHE, $employeeCetificates, $this->id);
         return $employeeCetificates;
+    }
+    
+    /**
+     * get programs of employee
+     * 
+     * @return model
+     */
+    public function getPrograms()
+    {
+        if ($employeeSkills = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return $employeeSkills;
+        }
+        $employeeSkills = EmployeeSkill::getItemsFollowEmployee($this->id, Skill::TYPE_PROGRAM);
+        CacheHelper::put(self::KEY_CACHE, $employeeSkills, $this->id);
+        return $employeeSkills;
+    }
+    
+    /**
+     * get database of employee
+     * 
+     * @return model
+     */
+    public function getDatabases()
+    {
+        if ($employeeSkills = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return $employeeSkills;
+        }
+        $employeeSkills = EmployeeSkill::getItemsFollowEmployee($this->id, Skill::TYPE_DATABASE);
+        CacheHelper::put(self::KEY_CACHE, $employeeSkills, $this->id);
+        return $employeeSkills;
+    }
+    
+    /**
+     * get os of employee
+     * 
+     * @return model
+     */
+    public function getOss()
+    {
+        if ($employeeSkills = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return $employeeSkills;
+        }
+        $employeeSkills = EmployeeSkill::getItemsFollowEmployee($this->id, Skill::TYPE_OS);
+        CacheHelper::put(self::KEY_CACHE, $employeeSkills, $this->id);
+        return $employeeSkills;
     }
     
     /**

@@ -12,7 +12,7 @@ class EmployeeCetificate extends CoreModel
     public $timestamps = false;
 
     /**
-     * save employee school
+     * save employee cetificate
      * 
      * @param int $employeeId
      * @param array $cetificatesTypeIds
@@ -26,9 +26,8 @@ class EmployeeCetificate extends CoreModel
         }
         $cetificateAdded = [];
         if (! $type) {
-            $type = self::TYPE_LANGUAGE;
+            $type = Cetificate::TYPE_LANGUAGE;
         }
-        $thisTable = self::getTableName();
         $cetificateTable = Cetificate::getTableName();
         self::where('employee_id', $employeeId)
             ->whereIn('cetificate_id', function ($query) use ($cetificateTable, $type) {
@@ -42,6 +41,7 @@ class EmployeeCetificate extends CoreModel
         $tblName = $typeCetificates[$type];
         foreach ($cetificatesTypeIds as $key => $cetificatesTypeId) {
             if (! isset($cetificatesType[$key]) || 
+                ! isset($cetificatesType[$key]["employee_{$tblName}"]) || 
                 ! $cetificatesType[$key]["employee_{$tblName}"] || 
                 in_array($cetificatesTypeId, $cetificateAdded)) {
                 continue;
