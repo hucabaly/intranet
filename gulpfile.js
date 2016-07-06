@@ -19,14 +19,18 @@ elixir(function(mix) {
     mix.sass('team/style.scss', 'public/team/css');
     
     mix.sass('sales/sales.scss', 'public/sales/css');
+    mix.sass('sales/css_customer.scss', 'public/sales/css');
 
     // gulp js
     mix.scripts('common/script.js', 'public/common/js');
     
     mix.scripts('team/script.js', 'public/team/js');
     
-    mix.scripts('sales/css.js', 'public/sales/js');
-    mix.scripts('sales/css_analyze.js', 'public/sales/js');
-    mix.scripts('sales/css_dataTables.js', 'public/sales/js');
+    mix.scripts('sales/css/analyze.js', 'public/sales/js/css');
+    mix.scripts('sales/css/create.js', 'public/sales/js/css');
+    mix.scripts('sales/css/dataTables.js', 'public/sales/js/css');
+    mix.scripts('sales/css/customer.js', 'public/sales/js/css');
+    mix.scripts('sales/css/list.js', 'public/sales/js/css');
+    mix.scripts('sales/css/preview.js', 'public/sales/js/css');
 //    mix.sass('app.scss');
 });
