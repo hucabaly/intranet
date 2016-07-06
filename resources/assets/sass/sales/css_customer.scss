@@ -1,7 +1,8 @@
 @import "css_customer/variables";
 @import "css_customer/elements";
+@import "css_customer/mixins";
 
-/** Welcome */
+/** Common */
 .jumbotron {
     padding-bottom: 0;
     margin-bottom: 0;
@@ -21,6 +22,27 @@
     }
 }
 
+input[type=text] {
+    border-radius: 3px !important;
+}
+
+button {
+    @extend input[type=text];
+}
+
+textarea {
+    @extend input[type=text];
+}
+
+.modal-body {
+    p {
+        font-size: 15px !important;
+        margin-bottom: 0;
+        font-family: 'Source Sans Pro';
+    }
+}
+
+/** Welcome */
 .welcome-body {
     min-height: 550px;
 }
@@ -140,6 +162,7 @@
 
 /** Make CSS */
 .make-css-page {
+    font-family: 'KozGoPro-Light';
     @media screen and (min-width: 320px){
         padding: 0 15px;
         #make-header {
@@ -156,28 +179,116 @@
                 margin: 0;
                 color: $colorBlue;
                 display: inline;
+                font-family: 'KozGoPro-Bold';
             }
 
             .total-point-container {
                 float: right;
                 font-size: 7px;
-                padding: 5px 10px 0;
+                padding: 5px 15px 0;
                 text-align: center;
                 background-color: #e2f4fd;
                 border: 1px solid #409dd7;
+                font-family: 'KozGoPro-Light';
+                #total-point-text {
+                    margin-left: 3px;
+                }
                 #total-point {
-                    font-size: 19px;
+                    font-size: 16px;
                     margin-left: -2px;
                     color: $colorBlue;
+                    font-family: 'KozGoPro-Bold';
                 }
             }
         }
         
         .project-info {
+            padding: 0 15px;
             .header {
-                background-color: $colorBlue;
-                color: #fff;
+                @include project-header();
             }
+            .row-info {
+                padding: 0;
+                font-size: 12px;
+                margin-bottom: 2px;
+            }
+        }
+        
+        .project-detail {
+            padding: 0 15px;
+            font-size: 16px;
+            .header {
+                @include project-header();
+                margin-bottom: 0;
+                .note-comment {
+                    font-size: 9px;
+                    margin-top: 1px;
+                }
+            }
+            
+            .root-cate {
+                background-color: $colorLightBlue;
+                padding: 5px;
+                color: #fff;
+                font-family: 'KozGoPro-Medium';
+            }
+            
+            .child-cate {
+                padding: 5px;
+                font-family: 'KozGoPro-Medium';
+            }
+            
+            .question {
+                padding: 5px;
+                background-color: #f5f5f7;
+                margin-top: 1px;
+            }
+            
+            .rate {
+                @extend .question;
+                text-align: center;
+            }
+            
+            .comment {
+                @extend .question;
+                padding-left: 2px;
+                padding-right: 2px;
+                textarea {
+                    height: 45px;
+                    resize: none;
+                }
+            }
+            
+            .proposed-comment {
+                textarea {
+                    height: 100px;
+                }
+            }
+            
+            .container-submit {
+                text-align: center;
+                margin: 30px 0;
+                button {
+                    color: #fff;
+                    background-color: $colorLightBlue;
+                    border: none;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+                    font-size: 17px;
+                    padding: 5px 15px;
+                }
+            }
+        }
+        
+        .point-fixed {
+            position: fixed;
+            bottom: 5px;
+            right: 15px;
+            padding: 10px;
+            color: $colorBlue;
+            background-color: #e2f4fd;
+            opacity: 0.7;
         }
     }
     
@@ -194,9 +305,18 @@
             }
 
             .total-point-container {
-                font-size: 8px;
+                font-size: 9px;
                 #total-point {
                     font-size: 22px;
+                }
+            }
+        }
+        
+        .project-detail {
+            .header {
+                margin-bottom: 0;
+                .note-comment {
+                    font-size: 10px;
                 }
             }
         }

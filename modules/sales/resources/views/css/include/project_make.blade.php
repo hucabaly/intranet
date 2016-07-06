@@ -1,107 +1,63 @@
-<!--<div class="row project-info">
+<!-- PROJECT INFORMATION -->
+<div class="row project-info">
     <div class="col-xs-12 header">{{ trans('sales::view.Project information') }}</div>
+    <div class="col-xs-12 row-info">{{ trans('sales::view.Project name jp') }} <strong>{{ $css->project_name }}</strong></div>
+    <div class="col-xs-12 row-info">{{ trans('sales::view.Sale name jp') }}<strong>{{ $employee->japanese_name }}</strong></div>
+    <div class="col-xs-12 row-info">{{ trans('sales::view.PM name jp') }}<strong>{{ $css->pm_name }}</strong></div>
+    <div class="col-xs-12 row-info">{{ trans('sales::view.BrSE name jp') }}<strong>{{ $css->brse_name }}</strong></div>
+    <div class="col-xs-12 row-info">{{ trans('sales::view.Project date jp') }}<strong>{{ date("m/d/Y",strtotime($css->start_date)) }} - {{ date("m/d/Y",strtotime($css->end_date)) }}</strong></div>
+    <div class="col-xs-12 row-info">{{ trans('sales::view.Customer company name jp') }}<strong>{{ $css->company_name }}</strong></div>
+    <div class="col-xs-12 row-info">{{ trans('sales::view.Customer name jp') }}<strong>{{ $css->customer_name }}</strong></div>
+    <div class="col-xs-12 row-info">{{ trans('sales::view.Make name jp')}}<strong><span class="make-name"></span></strong></div>
+</div>
+<!-- END PROJECT INFORMATION -->
+
+<!-- PROJECT DETAIL -->
+<div class="row project-detail">
+    <div class="col-xs-12 header">
+        <div>{{ trans('sales::view.Question') }}</div>
+        <div class="note-comment">{{ trans('sales::view.Note comment')}}</div>
+    </div>
+    @foreach($cssCate as $item)
+        <div class="col-xs-12 root-cate">{{$item["sort_order"] . ". " .$item['name']}}</div>
+        @if($item['cssCateChild'])
+            @foreach($item['cssCateChild'] as $itemChild)
+                <div class="col-xs-12 child-cate">{{$itemChild["sort_order"] . ". " .$itemChild['name']}}</div>
+                @if($itemChild['questionsChild'])
+                    @foreach($itemChild['questionsChild'] as $questionChild)
+                        <div class="col-xs-12 question">{{$questionChild->sort_order . ". " .$questionChild->content}}</div>
+                        <div class="col-xs-12 rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$questionChild->id}}" onclick="totalMark(this);"></div></div>
+                        <div class="col-xs-12 comment"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$questionChild->id}}"  ></textarea></div>
+                    @endforeach
+                @endif
+            @endforeach
+        @elseif($item['questions'])
+            @foreach($item['questions'] as $question)
+                <div class="col-xs-12 question">{{$question->sort_order . ". " .$question->content}}</div>
+                <div class="col-xs-12 rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$question->id}}" onclick="totalMark(this);"></div></div>
+                <div class="col-xs-12 comment"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$question->id}}"  ></textarea></div>
+            @endforeach
+        @endif
+    @endforeach
     
-</div>-->
-<table class="table table-bordered bang1">
-    <tr><td colspan="5" class="top"><label class="project-info-title">{{ trans('sales::view.Project information') }}</label></td></tr>
-    <tr>
-        <td class="title"><label>{{ trans('sales::view.Project name') }}<label</td>
-        <td class="infomation">{{$css->project_name}}</td>
-        <td class="title2"><label>{{ trans('sales::view.Period') }}</label></td>
-        <td class="infomation">{{date("d/m/Y",strtotime($css->start_date))}} - {{date("d/m/Y",strtotime($css->end_date))}}</td>
-        <td class="make_date"><label>{{ trans('sales::view.Make date') }} {{date("d/m/Y")}}</label></td>
-    </tr>
-    <tr>
-        <td class="title"><label>{{ trans('sales::view.Sale name') }}</label></td>
-        <td class="infomation">{{$employee->japanese_name}}</td>
-        <td class="title2"><label>{{ trans('sales::view.Customer name') }}</label></td>
-        <td class="infomation">{{$css->customer_name}}</td>
-        <td rowspan="3" class="{{ ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' }}">
-            <div>{{ trans('sales::view.Total point') }}</div>
-            <div class="diem">00.00</div>
-        </td>
-    </tr>
-    <tr>
-        <td class="title"><label>{{ trans('sales::view.PM name') }}</label></td>
-        <td class="infomation">{{$css->pm_name}}</td>
-        <td class="title2"></td>
-        <td></td>
-
-    </tr>
-    <tr>
-        <td class="title"><label>{{ trans('sales::view.BrSE name') }}</label></td>
-        <td class="infomation">{{$css->brse_name}}</td>
-        <td class="title2"></td>
-        <td></td>
-
-    </tr>
-</table>
-<div class="visible-check"></div>
-<table class="table table-bordered bang2 {{($css->project_type_id == 1) ? 'table-osdc' : 'table-base' }}">
-  <!-- header -->
-  <tr class="header">
-      <td><label>{{ trans('sales::view.No.') }}</label></td>
-    <td><label>{{ trans('sales::view.Question') }}</label></td>
-    <td class="reply"><label>{{ trans('sales::view.Rating') }}</label></td>
-    <td class="comment"><label>{{ trans('sales::view.Comment') }}</label></td>
-</tr>
-
-@foreach($cssCate as $item)
-    <tr class="mucto">
-        <td class="title" colspan="3">{{$item["sort_order"] . ". " .$item['name']}}</td>
-        <td class="title2"></td>
-    </tr>
-    @if($item['cssCateChild'])
-        @foreach($item['cssCateChild'] as $itemChild)
-            <tr class="mucbe">
-                <td class="title" colspan="3">{{$itemChild["sort_order"] . ". " .$itemChild['name']}}</td>
-                <td class="title2">
-            </tr>
-            @if($itemChild['questionsChild'])
-                @foreach($itemChild['questionsChild'] as $questionChild)
-                    <tr class="cau">
-                        <td class="title" colspan="2">{{$questionChild->sort_order . ". " .$questionChild->content}}</td>
-                        <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$questionChild->id}}" onclick="totalMark(this);"></div></td>
-                        <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$questionChild->id}}"  ></textarea></td>
-                    </tr>
-                @endforeach
-            @endif
-        @endforeach
-    @elseif($item['questions'])
-        @foreach($item['questions'] as $question)
-            <tr class="cau">
-                <td class="title" colspan="2">{{$question->sort_order . ". " .$question->content}}</td>
-                <td class="rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$question->id}}" onclick="totalMark(this);"></div></td>
-                <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$question->id}}"  ></textarea></td>
-            </tr>
-        @endforeach
-    @endif
+    <!-- Overview question -->
+    <div class="col-xs-12 root-cate">{{$noOverView . ". " .trans('sales::view.Overview') }}</div>
+    <div class="col-xs-12 question">{{ $overviewQuestionContent }}</div>
+    <div class="col-xs-12 rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$overviewQuestionId}}" onclick="totalMark(this);"></div></div>
+    <div class="col-xs-12 comment"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$overviewQuestionId}}" id="comment-tongquat"  ></textarea></div>
     
-@endforeach
-    <tr class="mucto">
-        <td class="title" colspan="4">{{$noOverView . ". " .trans('sales::view.Overview') }}</td>
-    </tr>
-
-    <!-- Overview Question -->
-    <tr class="cau">
-        <td class="title" colspan="2">{{ $overviewQuestionContent }}</td>
-        
-        <td class="rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-questionid="{{$overviewQuestionId}}" data-rateit-resetable="false" onclick="totalMark(this);"></div></td>
-        <td class="title2"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$overviewQuestionId}}" id="comment-tongquat"  ></textarea></td>
-    </tr>
-
     <!-- Proposed -->
-    <tr class="cau">
-        <td class="title" >
-            {{ trans('sales::view.Proposed') }}
-        </td>
-        
-        <td class="title2" colspan="2"><textarea class="proposed form-control" id="proposed" maxlength="2000" placeholder="{{ trans('sales::view.Proposed placeholder') }}"></textarea></td>
-        <td class="title2"></td>
-    </tr>
-</table>
-<div class="container-submit"><button type="button" class="btn btn-primary" onclick="confirm('{{$arrayValidate}}');">Submit</button></div>
-<div class="diem-fixed">Tổng điểm: 00.00</span></div>
+    <div class="col-xs-12 question">{{ trans('sales::view.Proposed') }}</div>
+    <div class="col-xs-12 comment proposed-comment"><textarea class="proposed form-control" id="proposed" maxlength="2000"></textarea></div>
+    
+    <!-- Button submit -->
+    <div class="col-xs-12 container-submit"><button type="button" class="btn btn-primary" onclick="confirm('{{$arrayValidate}}');">Submit</button></div>
+</div>
+<!-- END PROJECT DETAIL -->
+
+<div class="point-fixed">00.00</span></div>
+
+<!-- MODALS -->
 <div class="modal modal-danger" id="modal-alert">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -152,7 +108,8 @@
                 <h4 class="modal-title">{{ trans('sales::view.Warning') }}</h4>
             </div>
             <div class="modal-body">
-                <p>{{ trans('sales::message.Make confirm') }}</p>
+                <p>{{ trans('sales::message.Make confirm line 1') }}</p>
+                <p>{{ trans('sales::message.Make confirm line 2') }}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline pull-left" data-dismiss="modal" onclick="goToFinish();">{{ trans('sales::view.No') }}</button>
