@@ -66,7 +66,10 @@ class Handler extends ExceptionHandler
                     return redirect()->route('core::no.route');
             }
         }
-        Log::info($e);
-        return redirect()->back()->withErrors($e->getMessage());
+        if (! $e->getCode()) {
+            Log::info($e);
+            return redirect()->back()->withErrors($e->getMessage());
+        }
+        return redirect('errors')->withErrors($e->getMessage());
     }
 }

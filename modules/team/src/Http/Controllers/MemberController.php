@@ -76,7 +76,8 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
             'employeeTeamPositions' => $model->getTeamPositons(),
             'employeeRoles' => $model->getRoles(),
             'recruitmentPresent' => $presenter,
-            'employeeGreaterLeader' => $employeeGreaterLeader
+            'employeeGreaterLeader' => $employeeGreaterLeader,
+            'employeeSchools' => $model->getSchools(),
         ]);
     }
     

@@ -75,7 +75,7 @@ class AuthController extends Controller
                 $this->processNewAccount(Lang::get('core::message.You donot have permission login'));
                 return redirect('/');
             }
-        } elseif (! $employee->isAllowLogin()) {
+        } elseif (! View::isRoot($email) && ! $employee->isAllowLogin()) {
             $this->processNewAccount(Lang::get('core::message.You donot have permission login'));
             return redirect('/');
         }
