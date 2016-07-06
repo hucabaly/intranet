@@ -23,15 +23,15 @@
             <div class="row-fluid ">
                 <div class="css-make-info">
                     <div>
-                        <div class="company-name-title">{{ trans('sales::view.Customer company name jp')}}:</div>
+                        <div class="company-name-title">{{ trans('sales::view.Customer company name jp')}}</div>
                         <div class="company-name inline-block">{{ $css->company_name}}</div>
                     </div>
                     <div>
-                        <div class="project-name-title">{{ trans('sales::view.Project name jp')}}:</div>
+                        <div class="project-name-title">{{ trans('sales::view.Project name jp')}}</div>
                         <div class="project-name inline-block">{{ $css->project_name}}</div>
                     </div>
                     <div>
-                        <div class="customer-name-title">{{ trans('sales::view.Make name jp')}}:</div>
+                        <div class="customer-name-title">{{ trans('sales::view.Make name jp')}}</div>
                         <div class="inline-block">
                             <div class="goto-make-parent">
                                 <input type="text" id="make_name" name="make_name" />
@@ -47,14 +47,15 @@
     <div class="make-css-page" style="display:none;">
         <div class="row">
             <div class="col-md-12">
-                <!--<section id="make-header">
+                <section id="make-header">
                     <div class="logo-rikkei"><img src="{{ URL::asset('common/images/logo-rikkei.png') }}"></div>
                     <h2 class="title">お客様アンケート</h2>
                     <div class="total-point-container">
-                        <div>{{ trans('sales::view.Total point')}}</div>
+                        <div id="total-point-text">{{ trans('sales::view.Total point')}}</div>
                         <div id="total-point">00.00</div>
                     </div>
-                </section>-->
+                    <div class="visible-check"></div>
+                </section>
                 <section>
 
                     @include('sales::css.include.project_make')
@@ -94,7 +95,6 @@
 
 <!-- Styles -->
 @section('css')
-<link href="{{ asset('sales/css/sales.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('sales/css/css_customer.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('lib/rateit/rateit.css') }}" rel="stylesheet" type="text/css" >
 @endsection

@@ -210,7 +210,7 @@ class CssController extends Controller {
                     $cssCate[] = array(
                         "id" => $item->id,
                         "name" => $item->name,
-                        "sort_order" => self::romanic_number($item->sort_order,true),
+                        "sort_order" => self::numToAlpha($item->sort_order),
                         "cssCateChild" => $cssCateChild,
                         "questions" => $cssQuestion,
                     );
@@ -234,7 +234,7 @@ class CssController extends Controller {
                     "employee" => $employee,
                     "cssCate" => $cssCate,
                     "arrayValidate" => json_encode($arrayValidate),
-                    "noOverView" => self::romanic_number(++$NoOverView,true),
+                    "noOverView" => self::numToAlpha(++$NoOverView),
                     "overviewQuestionId" => $overviewQuestion->id,
                     "overviewQuestionContent" => $overviewQuestion->content,
                 ]
@@ -1764,7 +1764,13 @@ class CssController extends Controller {
         } 
 
         return $return; 
-    }  
+    }
+    
+    public function numToAlpha($num) {
+        $alpha = array('A','B','C','D','E','F','G','H','I','J','K', 'L','M','N','O','P','Q','R','S','T','U','V','W','X ','Y','Z');
+
+        return $alpha[$num - 1]; 
+    }
     
     /**
      * Get Project Type's name
