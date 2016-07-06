@@ -17,7 +17,7 @@
         <td class="title2"><label>{{ trans('sales::view.Customer name') }}</label></td>
         <td class="infomation">{{$css->customer_name}}</td>
         <td rowspan="3" class="<?php echo ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' ?>">
-            <div>{{ trans('sales::view.Total mark') }}</div>
+            <div>{{ trans('sales::view.Total point') }}</div>
             <div class="diem">{{number_format($cssResult->avg_point,2)}}</div>
         </td>
     </tr>

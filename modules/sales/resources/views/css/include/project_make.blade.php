@@ -1,5 +1,9 @@
+<!--<div class="row project-info">
+    <div class="col-xs-12 header">{{ trans('sales::view.Project information') }}</div>
+    
+</div>-->
 <table class="table table-bordered bang1">
-    <tr><td colspan="5" class="top"><label class="project-info-title">{{ trans('sales::view.Project infomation') }}</label></td></tr>
+    <tr><td colspan="5" class="top"><label class="project-info-title">{{ trans('sales::view.Project information') }}</label></td></tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.Project name') }}<label</td>
         <td class="infomation">{{$css->project_name}}</td>
@@ -13,22 +17,22 @@
         <td class="title2"><label>{{ trans('sales::view.Customer name') }}</label></td>
         <td class="infomation">{{$css->customer_name}}</td>
         <td rowspan="3" class="{{ ($css->project_type_id == 1) ? 'diemso-osdc' : 'diemso-base' }}">
-            <div>{{ trans('sales::view.Total mark') }}</div>
+            <div>{{ trans('sales::view.Total point') }}</div>
             <div class="diem">00.00</div>
         </td>
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.PM name') }}</label></td>
         <td class="infomation">{{$css->pm_name}}</td>
-        <td class="title2"><label>{{ trans('sales::view.Make name') }}</label></td>
-        <td><input type="text" id="make_name" name="make_name" ></td>
+        <td class="title2"></td>
+        <td></td>
 
     </tr>
     <tr>
         <td class="title"><label>{{ trans('sales::view.BrSE name') }}</label></td>
         <td class="infomation">{{$css->brse_name}}</td>
-        <td class="title2"><label>{{ trans('sales::view.Make email') }}</label></td>
-        <td><input type="text" id="make_email" name="make_email" ></td>
+        <td class="title2"></td>
+        <td></td>
 
     </tr>
 </table>

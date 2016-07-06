@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="row">
                                 <!----------- Bảng danh sách du an ------------------->
-                                    <div class="col-md-5">
+                                    <div class="col-md-12">
                                         <h4 class="small-title">{{trans('sales::view.Project list')}}</h4>
                                         <table class="table  table-hover dataTable ketqua" id='danhsachduan'>
                                             <thead>
@@ -115,9 +115,11 @@
                                             <ul class="pagination"></ul>
                                         </div>
                                     </div>
-                                <!----------- Phan hien 2 bieu do ------------------->    
-                                    <div class="col-md-7">
-                                        <div class="row">
+                                <!----------- Phan hien 2 bieu do ------------------->  
+                                </div>
+                                  <div class="row">
+                                    
+                                        
                                             <div class="col-md-6">
                                                 <h4 class="small-title">{{trans('sales::view.Chart title by all')}}</h4>
                                                 <div id="chartAll" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
@@ -126,8 +128,8 @@
                                                 <h4 class="small-title">{{trans('sales::view.Chart title by filter')}}</h4>
                                                 <div id="chartFilter" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                             </div>
-                                        </div>
-                                    </div>
+                                        
+                                    
                                 </div>
                             </div>
                           </div>
@@ -143,18 +145,18 @@
                                   
                                 <div class="row">
                                  <!----------- Bảng danh sách dưới 3 sao ------------------->   
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <h4 class="small-title">{{trans('sales::view.List 3 * below')}}</h4>
                                         <table class="table table-hover dataTable duoi3sao" id='duoi3sao'>
                                             <thead>
                                                 <tr>
                                                     <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
                                                     <th class="col-xs-2" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="projectName" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Project name')}}</th>
-                                                    <th class="col-xs-2" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="questionName" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Criteria name')}}</th>
+                                                    <th class="col-xs-3" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="questionName" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Criteria name')}}</th>
                                                     <th class="col-xs-1" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="questionPoint" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Point *')}}</th>
-                                                    <th class="col-xs-2" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="customerComment" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Customer comment')}}</th>
-                                                    <th class="col-xs-2" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="makeDate" aria-type="desc" class="sorting_asc" data-type="all">{{trans('sales::view.Make date css')}}</th>
-                                                    <th class="col-xs-2" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="projectPoint" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Css point')}}</th>
+                                                    <th class="col-xs-3" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="customerComment" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Customer comment')}}</th>
+                                                    <th class="col-xs-1" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="makeDate" aria-type="desc" class="sorting_asc" data-type="all">{{trans('sales::view.Make date css')}}</th>
+                                                    <th class="col-xs-1" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="projectPoint" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Css point')}}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -165,17 +167,19 @@
                                             <ul class="pagination"></ul>
                                         </div>
                                     </div>
+                                </div>
                                  <!----------- Bảng danh sách de xuat cua khach hang ------------------->
-                                    <div class="col-md-6">
+                                 <div class="row">    
+                                    <div class="col-md-12">
                                         <h4 class="small-title">{{trans('sales::view.Customer proposed')}}</h4>
                                         <table class="table  table-hover dataTable ketqua" id="danhsachdexuat">
                                             <thead>
                                                 <tr>
                                                     <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
-                                                    <th onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="projectName" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Project name')}}</th>
-                                                    <th class="col-xs-4" onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="proposed" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Customer comment')}}</th>
-                                                    <th onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="makeDate" aria-type="desc" class="sorting_asc" data-type="all">{{trans('sales::view.Make date css')}}</th>
-                                                    <th onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="projectPoint" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Css point')}}</th>
+                                                    <th class="col-xs-3" onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="projectName" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Project name')}}</th>
+                                                    <th class="col-xs-5" onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="proposed" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Customer comment')}}</th>
+                                                    <th class="col-xs-2" onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="makeDate" aria-type="desc" class="sorting_asc" data-type="all">{{trans('sales::view.Make date css')}}</th>
+                                                    <th class="col-xs-1" onclick="sortProposed(this,'{{ Session::token() }}');" data-sort-type="projectPoint" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Css point')}}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -228,7 +232,7 @@
 
 <!-- Styles -->
 @section('css')
-<link href="{{ asset('sales/css/css-screen.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('sales/css/sales.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('lib/rangeSlider/css/iThing.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('lib/rangeSlider/demo/rangeSlider.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('adminlte/plugins/iCheck/minimal/_all.css') }}" rel="stylesheet" type="text/css" >
@@ -245,6 +249,6 @@
 <script src="{{ asset('lib/hightcharts/hightcharts.js') }}"></script>
 <script src="{{ asset('lib/hightcharts/exporting.js') }}"></script>
 <script src="{{ asset('lib/js/jquery.canvasjs.min.js') }}"></script>
-<script src="{{ asset('sales/js/css_analyze.js') }}"></script>
-<script src="{{ asset('sales/js/css_dataTables.js') }}"></script>
+<script src="{{ asset('sales/js/css/analyze.js') }}"></script>
+<script src="{{ asset('sales/js/css/dataTables.js') }}"></script>
 @endsection
