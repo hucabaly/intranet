@@ -3,6 +3,8 @@
 use Rikkei\Core\View\Form;
 use Rikkei\Team\View\TeamList;
 use Rikkei\Team\Model\Roles;
+use Rikkei\Team\Model\School;
+use Rikkei\Core\View\View;
 
 $postionsOption = Roles::toOptionPosition();
 $teamsOption = TeamList::toOption(null, true, false);
@@ -20,12 +22,13 @@ $teamsOption = TeamList::toOption(null, true, false);
 @section('css')
 <link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/select2/select2.min.css') }}" />
 <link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/datepicker/datepicker3.css') }}">    
+<link rel="stylesheet" href="{{ URL::asset('lib/css/jquery-ui.min.css') }}" />
 <link rel="stylesheet" href="{{ URL::asset('team/css/style.css') }}" />
 @endsection
 
 @section('content')
 <div class="row member-profile">
-    <form action="{{ route('team::team.member.save') }}" method="post" id="form-employee-info">
+    <form action="{{ route('team::team.member.save') }}" method="post" id="form-employee-info" enctype="multipart/form-data">
         {!! csrf_field() !!}
         @if (Form::getData('employee.id'))
             <input type="hidden" name="id" value="{{ Form::getData('employee.id') }}" />
@@ -69,12 +72,32 @@ $teamsOption = TeamList::toOption(null, true, false);
             </div>
             
         </div> <!-- end edit memeber left col -->
-
+        
+        <script>
+            /**
+             * employee skill data format json object
+             */
+            var employeeSkill = {
+                schools: {}
+            };
+        </script>
+        
         <div class="col-md-7">
-
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h2 class="box-title">{{ trans('team::view.Qualifications and Skills') }}</h2>
+                </div>
+                <div class="box-body">
+                    <input type="hidden" name="employee_skill" value="" />
+                    @include('team::member.edit.qualifications')
+                </div>
+            </div>
         </div> <!-- end edit memeber right col -->
     </form>
 </div>
+
+@include('team::member.edit.skill_modal')
+
 <?php
 //remove flash session
 Form::forget();
@@ -119,6 +142,26 @@ Form::forget();
                 required: '<?php echo trans('core::view.This field is required'); ?>',
                 'number': '{{ trans('core::view.Please enter a valid number') }}',
                 rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 10]) ; ?>',
+            },
+            'name': {
+                required: '<?php echo trans('core::view.This field is required'); ?>',
+                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
+            },
+            'country': {
+                required: '<?php echo trans('core::view.This field is required'); ?>',
+                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
+            },
+            'province': {
+                required: '<?php echo trans('core::view.This field is required'); ?>',
+                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
+            },
+            'majors': {
+                required: '<?php echo trans('core::view.This field is required'); ?>',
+                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
+            },
+            'start_at': {
+                required: '<?php echo trans('core::view.This field is required'); ?>',
+                rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
             }
         }
         var rules = {
@@ -147,6 +190,26 @@ Form::forget();
                 required: true,
                 number: true,
                 rangelength: [1, 10]
+            },
+            'name': {
+                required: true,
+                rangelength: [1, 255]
+            },
+            'country': {
+                required: true,
+                rangelength: [1, 255]
+            },
+            'province': {
+                required: true,
+                rangelength: [1, 255]
+            },
+            'majors': {
+                required: true,
+                rangelength: [1, 255]
+            },
+            'start_at': {
+                required: true,
+                rangelength: [1, 255]
             }
         };
         
@@ -154,6 +217,10 @@ Form::forget();
             rules: rules,
             messages: messages,
             lang: 'vi'
+        });
+        $('#employee-skill-school-form').validate({
+            rules: rules,
+            messages: messages
         });
         
         //Date picker
@@ -163,6 +230,10 @@ Form::forget();
         }
         $('#employee-birthday').datepicker(optionDatePicker);
         $('#employee-joindate').datepicker(optionDatePicker);
+        
+        $('#college-start').datepicker(optionDatePicker);
+        $('#college-end').datepicker(optionDatePicker);
+        
         
         @if (! isset($recruitmentPresent) || ! $recruitmentPresent)
             $('#employee-phone').on('blur', function(event) {
@@ -183,6 +254,42 @@ Form::forget();
                 }
             });
         @endif
+        
+        /*
+        * modal employee skill process
+         */
+        var autoComplete = {},
+            imagePreviewImageDefault,
+            employeeSkillNo = {};
+        autoComplete.school = getArrayFormat({!! School::getAllFormatJson() !!});
+        imagePreviewImageDefault = '{{ View::getLinkImage() }}';
+        @if (isset($employeeSchools) && $employeeSchools)
+            employeeSkillNo.schools = {{ count($employeeSchools) }};
+        @else
+            employeeSkillNo.schools = 0;
+        @endif
+        employeeSkillNo.schools++;
+        
+        //preview image
+        <?php
+        $typeAllow = implode('","', Config::get('services.file.image_allow'));
+        $typeAllow = '"' . $typeAllow . '"';
+        ?>
+        $('.input-box-img-preview').previewImage({
+            type: [{!! $typeAllow !!}],
+            size: {{ Config::get('services.file.image_max') }},
+            default_image: imagePreviewImageDefault,
+            message_size: '{{ trans('core::message.File size is large') }}'
+        });
+        
+        $().employeeSkillAction({
+            'autoComplete' : autoComplete,
+            'imagePreviewImageDefault': imagePreviewImageDefault,
+            'employeeSkillNo': employeeSkillNo,
+            'employeeSkill': employeeSkill
+        });
+        /* -----end modal employee skill process */
+        
     });
 </script>
 @endsection

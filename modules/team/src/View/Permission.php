@@ -51,6 +51,9 @@ class Permission
         if (! $this->employee) {
             $this->employee = Auth::user()->getEmployee();
         }
+        if ($this->isRoot()) {
+            return $this;
+        }
         if (! $this->employee || ! $this->employee->isAllowLogin()) {
             $auth = new AuthController();
             return $auth->logout(Lang::get('core::message.You donot have permission login'));

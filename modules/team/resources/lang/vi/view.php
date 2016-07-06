@@ -107,5 +107,17 @@ return [
     'Register new member' => 'Đăng ký thành viên mới',
     'Employee card id' => 'Mã thẻ',
     'Sum :itemTotal entries / :pagerTotal pager' => 'Tổng :itemTotal đối tượng / :pagerTotal trang',
+    'Qualifications and Skills' => 'Trình độ và kỹ năng',    
+    'Content has studied' => 'Nội dung đã từng học',
+    'Add a college' => 'Thêm trường đại học',
+    'College' => 'Đại học',
+    'Image' => 'Ảnh',
+    'Country' => 'Nước',
+    'Province' => 'Tỉnh',
+    'Majors' => 'Chuyên ngành',
+    'Start at' => 'Bắt đầu lúc',
+    'End at' => 'Kết thúc lúc',
+    'Class of' => 'Lớp của',
+    'Infomation of College' =>  'Thông tin của trường đại học',
     
 ];

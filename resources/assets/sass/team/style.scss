@@ -161,6 +161,20 @@
         margin-bottom: 10px;
     }
 }
+
+/* employee skill */
+.employee-school-item {
+    .esi-image {
+        width: 50px;
+        float: left;
+        margin-right: 5%;
+    }
+    .esi-content {
+        
+    }
+}
+/* -------end employee skill */
+
 /*responsive*/
 @media (min-width: 768px) {
     .box-form-team-position {
@@ -171,6 +185,14 @@
                     max-width: 75%;
                 }
             }
+        }
+    }
+    .employee-skill-box-wrapper {
+        .add-skill-item {
+            position: absolute;
+            bottom: 0;
+            margin-bottom: 15px;
+            right: 0;
         }
     }
 }

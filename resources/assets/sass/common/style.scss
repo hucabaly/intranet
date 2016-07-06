@@ -325,6 +325,17 @@ form{
 .tab-content {
     margin-top: 10px;
 }
+.input-box-img-preview {
+    .image-preview {
+        width: 20%;
+        float: left;
+        margin-right: 5%;
+    }
+    .img-input {
+        width: 75%;
+        float: left;
+    }
+}
 /*grid data*/
 .filter-action {
     text-align: right;
@@ -410,6 +421,15 @@ form{
         width: 100% !important;
     }
 }
+.datepicker {
+    z-index:1151 !important
+}
+.ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index:1151 !important;
+  }
 @media (max-width: $mobile) {
     .form-group-sm-select2 {
         .select2.select2-container {

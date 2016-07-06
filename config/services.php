@@ -42,4 +42,13 @@ return [
     ],
     
     'account_root' => env('ACCOUNT_ROOT'),
+    
+    'file' => [
+        'image_allow' => [
+            'image/jpeg',
+            'image/png',
+            'image/gif'
+        ],
+        'image_max' => '2048', //kB
+    ],
 ];
