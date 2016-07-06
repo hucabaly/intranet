@@ -23,7 +23,9 @@ function hideModalConfirmMake(){
 function goToFinish(){
     location.href = "/css/cancel";
 }
-
+$(".rateit").on("tap",function(){
+  totalMark($(this));
+});
 /**
  * Trang lam danh gia
  * Khi khach hang danh danh gia mot tieu chi

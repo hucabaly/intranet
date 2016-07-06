@@ -311,5 +311,14 @@ textarea {
                 }
             }
         }
+        
+        .project-detail {
+            .header {
+                margin-bottom: 0;
+                .note-comment {
+                    font-size: 10px;
+                }
+            }
+        }
     }
 }
