@@ -119,5 +119,14 @@ return [
     'End at' => 'Kết thúc lúc',
     'Class of' => 'Lớp của',
     'Infomation of College' =>  'Thông tin của trường đại học',
+    'Language' =>  'Ngôn ngữ',
+    'Canot choose the same school' => 'Không được chọn cùng trường',
+    'Add new language' =>  'Thêm ngôn ngữ mới',
+    'Infomation of language' =>  'Thông tin của ngôn ngữ',
+    'Level' => 'Cấp độ',
+    'Canot choose the same language' => 'Không được chọn cùng ngôn ngữ',
+    'Cetificate' => 'Chứng chỉ',
+    'Add new cetificate' => 'Thêm chứng chỉ mới',
+    'Infomation of cetificates' => 'Thông tin của chứng chỉ',
     
 ];

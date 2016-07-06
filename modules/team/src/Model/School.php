@@ -3,7 +3,6 @@ namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\CoreModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Config;
 use Exception;
 use Rikkei\Core\View\View;
 use Rikkei\Core\View\CacheHelper;

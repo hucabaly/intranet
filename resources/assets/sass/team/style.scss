@@ -173,6 +173,20 @@
         
     }
 }
+.employee-skill-items {
+    min-height: 50px;
+    .esbw-item:nth-child(odd) {
+        clear: both;
+    }
+    .esbw-item {
+        margin-top: 15px;
+    }
+}
+.qualifications-skill-box {
+    h5.skill-title {
+        font-weight: 700;
+    }
+}
 /* -------end employee skill */
 
 /*responsive*/

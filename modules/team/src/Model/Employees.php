@@ -294,18 +294,42 @@ class Employees extends CoreModel
         if (! $this->id) {
             return;
         }
-        $skills = Input::all();
-        $skills = array_get($skills, 'employee_skill');
-        if (! $skills) {
+        $skillsAll = Input::all();
+        $skills = array_get($skillsAll, 'employee_skill');
+        $skillsChage = array_get($skillsAll, 'employee_skill_change');
+        if (! $skills || !$skillsChage) {
             return;
         }
         $skillsArray = [];
+        $skillsChageArray = [];
         parse_str($skills, $skillsArray);
+        parse_str($skillsChage, $skillsChageArray);
+        
+        //save school
         if (isset($skillsArray['schools'][0])) {
             unset($skillsArray['schools'][0]);
         }
-        if (isset($skillsArray['schools']) && $skillsArray['schools']) {
+        if (isset($skillsArray['schools']) && $skillsArray['schools'] &&
+            isset($skillsChageArray['schools']) && $skillsChageArray['schools']) {
             $this->saveSchools($skillsArray['schools']);
+        }
+        
+        // save language
+        if (isset($skillsArray['languages'][0])) {
+            unset($skillsArray['languages'][0]);
+        }
+        if (isset($skillsArray['languages']) && $skillsArray['languages'] &&
+            isset($skillsChageArray['languages']) && $skillsChageArray['languages']) {
+            $this->saveCetificateType($skillsArray['languages'], Cetificate::TYPE_LANGUAGE);
+        }
+        
+        // save cetificate
+        if (isset($skillsArray['cetificates'][0])) {
+            unset($skillsArray['cetificates'][0]);
+        }
+        if (isset($skillsArray['cetificates']) && $skillsArray['cetificates'] &&
+            isset($skillsChageArray['cetificates']) && $skillsChageArray['cetificates']) {
+            $this->saveCetificateType($skillsArray['cetificates'], Cetificate::TYPE_CETIFICATE);
         }
     }
 
@@ -326,9 +350,45 @@ class Employees extends CoreModel
         }
     }
     
-    public function saveEmployeeSchools($schoolIds = [], $schools = [])
+    /**
+     * save employee school
+     * 
+     * @param type $schoolIds
+     * @param type $schools
+     * @return type
+     */
+    protected function saveEmployeeSchools($schoolIds = [], $schools = [])
     {
         return EmployeeSchool::saveItems($this->id, $schoolIds, $schools);
+    }
+    
+    /**
+     * 
+     * @param array $cetificatesType
+     * @param type $type
+     * @return type
+     */
+    protected function saveCetificateType($cetificatesType = [], $type = null)
+    {
+        if (! $cetificatesType) {
+            return;
+        }
+        $cetificatesTypeIds = Cetificate::saveItems($cetificatesType, $type);
+        if ($cetificatesTypeIds) {
+            $this->saveEmployeeCetificateType($cetificatesTypeIds, $cetificatesType, $type);
+        }
+    }
+    
+    /**
+     * save employee cetificate
+     * 
+     * @param type $cetificatesTypeIds
+     * @param type $cetificatesType
+     * @return type
+     */
+    protected function saveEmployeeCetificateType($cetificatesTypeIds = [], $cetificatesType = [], $type = null)
+    {
+        return EmployeeCetificate::saveItems($this->id, $cetificatesTypeIds, $cetificatesType, $type);
     }
     
     /**
@@ -348,7 +408,11 @@ class Employees extends CoreModel
         return $employeeTeam;
     }
     
-    
+    /**
+     * get schools of employee
+     * 
+     * @return model
+     */
     public function getSchools()
     {
         if ($employeeSchools = CacheHelper::get(self::KEY_CACHE, $this->id)) {
@@ -357,6 +421,36 @@ class Employees extends CoreModel
         $employeeSchools = EmployeeSchool::getItemsFollowEmployee($this->id);
         CacheHelper::put(self::KEY_CACHE, $employeeSchools, $this->id);
         return $employeeSchools;
+    }
+    
+    /**
+     * get language of employee
+     * 
+     * @return model
+     */
+    public function getLanguages()
+    {
+        if ($employeeLanguages = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return $employeeLanguages;
+        }
+        $employeeLanguages = EmployeeCetificate::getItemsFollowEmployee($this->id, Cetificate::TYPE_LANGUAGE);
+        CacheHelper::put(self::KEY_CACHE, $employeeLanguages, $this->id);
+        return $employeeLanguages;
+    }
+    
+    /**
+     * get cetificate of employee
+     * 
+     * @return model
+     */
+    public function getCetificates()
+    {
+        if ($employeeCetificates = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return $employeeCetificates;
+        }
+        $employeeCetificates = EmployeeCetificate::getItemsFollowEmployee($this->id, Cetificate::TYPE_CETIFICATE);
+        CacheHelper::put(self::KEY_CACHE, $employeeCetificates, $this->id);
+        return $employeeCetificates;
     }
     
     /**

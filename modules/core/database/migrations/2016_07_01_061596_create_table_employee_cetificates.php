@@ -19,8 +19,8 @@ class CreateTableEmployeeCetificates extends Migration
             $table->unsignedInteger('employee_id');
             $table->unsignedInteger('cetificate_id');
             $table->smallInteger('level')->nullable();
-            $table->dateTime('start_at')->nullable();
-            $table->dateTime('end_at')->nullable();
+            $table->date('start_at')->nullable();
+            $table->date('end_at')->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
             

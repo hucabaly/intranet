@@ -5,10 +5,17 @@ use Rikkei\Team\View\TeamList;
 use Rikkei\Team\Model\Roles;
 use Rikkei\Team\Model\School;
 use Rikkei\Core\View\View;
+use Rikkei\Team\Model\Cetificate;
 
 $postionsOption = Roles::toOptionPosition();
 $teamsOption = TeamList::toOption(null, true, false);
 
+$employeeSchools = $employeeLanguages = $employeeCetificates = null;
+if (isset($employeeModelItem) && $employeeModelItem) {
+    $employeeSchools = $employeeModelItem->getSchools();
+    $employeeLanguages = $employeeModelItem->getLanguages();
+    $employeeCetificates = $employeeModelItem->getCetificates();
+}
 ?>
 
 @section('title')
@@ -78,17 +85,23 @@ $teamsOption = TeamList::toOption(null, true, false);
              * employee skill data format json object
              */
             var employeeSkill = {
-                schools: {}
+                schools: {},
+                languages: {},
+                cetificates: {},
+                programings: {},
+                databases: {},
+                oss: {}
             };
         </script>
         
         <div class="col-md-7">
-            <div class="box box-info">
+            <div class="box box-info qualifications-skill-box">
                 <div class="box-header with-border">
                     <h2 class="box-title">{{ trans('team::view.Qualifications and Skills') }}</h2>
                 </div>
                 <div class="box-body">
                     <input type="hidden" name="employee_skill" value="" />
+                    <input type="hidden" name="employee_skill_change" value="" />
                     @include('team::member.edit.qualifications')
                 </div>
             </div>
@@ -162,6 +175,9 @@ Form::forget();
             'start_at': {
                 required: '<?php echo trans('core::view.This field is required'); ?>',
                 rangelength: '<?php echo trans('core::view.This field not be greater than :number characters', ['number' => 255]) ; ?>',
+            },
+            'level': {
+                required: '<?php echo trans('core::view.This field is required'); ?>',
             }
         }
         var rules = {
@@ -210,7 +226,10 @@ Form::forget();
             'start_at': {
                 required: true,
                 rangelength: [1, 255]
-            }
+            },
+            'level': {
+                required: true
+            },
         };
         
         $('#form-employee-info').validate({
@@ -219,6 +238,10 @@ Form::forget();
             lang: 'vi'
         });
         $('#employee-skill-school-form').validate({
+            rules: rules,
+            messages: messages
+        });
+        $('#employee-skill-language-form').validate({
             rules: rules,
             messages: messages
         });
@@ -234,6 +257,7 @@ Form::forget();
         $('#college-start').datepicker(optionDatePicker);
         $('#college-end').datepicker(optionDatePicker);
         
+        $('.input-skill-modal.date-picker').datepicker(optionDatePicker);
         
         @if (! isset($recruitmentPresent) || ! $recruitmentPresent)
             $('#employee-phone').on('blur', function(event) {
@@ -260,15 +284,37 @@ Form::forget();
          */
         var autoComplete = {},
             imagePreviewImageDefault,
-            employeeSkillNo = {};
+            employeeSkillNo = {},
+            labelFormat = {};
+        
         autoComplete.school = getArrayFormat({!! School::getAllFormatJson() !!});
+        autoComplete.language = getArrayFormat({!! Cetificate::getAllFormatJson(Cetificate::TYPE_LANGUAGE) !!});
+        autoComplete.cetificate = getArrayFormat({!! Cetificate::getAllFormatJson(Cetificate::TYPE_CETIFICATE) !!});
+        
         imagePreviewImageDefault = '{{ View::getLinkImage() }}';
-        @if (isset($employeeSchools) && $employeeSchools)
+        
+        @if ($employeeSchools)
             employeeSkillNo.schools = {{ count($employeeSchools) }};
         @else
             employeeSkillNo.schools = 0;
         @endif
         employeeSkillNo.schools++;
+        
+        @if ($employeeLanguages)
+            employeeSkillNo.languages = {{ count($employeeLanguages) }};
+        @else
+            employeeSkillNo.languages = 0;
+        @endif
+        employeeSkillNo.languages++;
+        
+        @if ($employeeCetificates)
+            employeeSkillNo.cetificates = {{ count($employeeCetificates) }};
+        @else
+            employeeSkillNo.cetificates = 0;
+        @endif
+        employeeSkillNo.cetificates++;
+        
+        labelFormat.level_language = {!! View::getLanguageLevelFormatJson() !!};
         
         //preview image
         <?php
@@ -286,7 +332,12 @@ Form::forget();
             'autoComplete' : autoComplete,
             'imagePreviewImageDefault': imagePreviewImageDefault,
             'employeeSkillNo': employeeSkillNo,
-            'employeeSkill': employeeSkill
+            'employeeSkill': employeeSkill,
+            'messageError': {
+                'same_schools': '{!! trans('team::view.Canot choose the same school') !!}',
+                'same_languages': '{!! trans('team::view.Canot choose the same language') !!}'
+            },
+            'labelFormat': labelFormat
         });
         /* -----end modal employee skill process */
         

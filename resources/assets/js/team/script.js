@@ -93,7 +93,7 @@ jQuery(document).ready(function ($) {
         
         //align center for image
         $('.employee-skill-modal').on('shown.bs.modal', function (e) {
-            idModal = $(this).id;
+            idModal = $(this).attr('id');
             if (idModal) {
                 idModal = '#' + idModal + ' ';
             } else {
@@ -114,13 +114,17 @@ jQuery(document).ready(function ($) {
             imagePreviewImageDefault,
             employeeSkillNo = {},
             tokenValue,
-            employeeSkill;
+            employeeSkill,
+            messageError,
+            labelFormat;
         
         tokenValue = $('input[name=_token]').val();
         autoComplete = option.autoComplete;
         imagePreviewImageDefault = option.imagePreviewImageDefault;
         employeeSkillNo = option.employeeSkillNo;
         employeeSkill = option.employeeSkill;
+        messageError = option.messageError;
+        labelFormat = option.labelFormat;
         
         //click button to show modal
         $(document).on('click', '.employee-skill-box-wrapper [data-modal=true]', function(event) {
@@ -135,9 +139,9 @@ jQuery(document).ready(function ($) {
             
             //process data when show modal
             $(dataHrefModal).on('shown.bs.modal', function (e) {
-                $(this).find('input').removeAttr('disabled').val('');
+                $(this).find('.input-skill-modal').removeAttr('disabled').val('');
                 $(this).find('img.college-image-preview').attr('src', imagePreviewImageDefault);
-                $(this).find('input').each(function (i,k) {
+                $(this).find('.input-skill-modal').each(function (i,k) {
                     inputType = $(this).attr('type');
                     dataCol = $(this).data('col');
                     dataTbl = $(this).data('tbl');
@@ -169,6 +173,9 @@ jQuery(document).ready(function ($) {
                             } else {
                                 $(this).val(value);
                             }
+                            if ($(this).is('select')) {
+                                $(this).val(value).trigger("change");
+                            }
                         }
                     }
                 });
@@ -183,9 +190,9 @@ jQuery(document).ready(function ($) {
                 minLength: 0,
                 source: autoComplete[dataTblAuto],
                 select: function( event, ui ) {
-                    thisParent = $(this).parents('.employee-college-modal');
+                    thisParent = $(this).parents('.employee-skill-modal');
                     var uiItemSelected = ui.item;
-                    thisParent.find('input[data-tbl=' + dataTblAuto + ']:not([data-autocomplete=true])').each(function (){
+                    thisParent.find('.input-skill-modal[data-tbl=' + dataTblAuto + ']:not([data-autocomplete=true])').each(function (){
                         inputType = $(this).attr('type');
                         dataCol = $(this).data('col');
                         if (! dataCol) {
@@ -256,11 +263,11 @@ jQuery(document).ready(function ($) {
             id = parseInt(id);
             var group = thisDomModal.data('group');
             groupChange[group] = 1;
-            
             // action delete skill
             if (actionButton && actionButton == 'delete') {
                 delete employeeSkill[group][id];
                 $('input[name=employee_skill]').val($.param(employeeSkill));
+                $('input[name=employee_skill_change]').val($.param(groupChange));
                 return true;
             }
             
@@ -286,11 +293,11 @@ jQuery(document).ready(function ($) {
                 });
             }
             if (flagCheckInputSame) {
-                alert('Canot choose the same school');
+                alert(messageError["same_" + group]);
                 return true;
             }
             
-            thisDomModal.find('input').each(function (i,k) {
+            thisDomModal.find('.input-skill-modal[data-tbl][data-col]').each(function (i,k) {
                 inputType = $(this).attr('type');
                 dataCol = $(this).data('col');
                 dataTbl = $(this).data('tbl');
@@ -324,6 +331,7 @@ jQuery(document).ready(function ($) {
                 }
             });
             $('input[name=employee_skill]').val($.param(employeeSkill));
+            $('input[name=employee_skill_change]').val($.param(groupChange));
         }
         
         /**
@@ -350,9 +358,12 @@ jQuery(document).ready(function ($) {
                         valueInput = k[dataTbl][dataCol];
                         domInput = skillItemNew.find('[data-tbl=' + dataTbl + '][data-col=' + dataCol + ']');
                         dataDateFormat = domInput.data('date-format');
+                        dataLabelFormat = domInput.data('label-format');
                         if (dataDateFormat) {
                             date = new Date(valueInput);
                             valueInput = getDateFormat(date, dataDateFormat);
+                        } else if (dataLabelFormat) {
+                            valueInput = labelFormat[dataLabelFormat][valueInput];
                         }
                         domInput.html(valueInput);
                     }
