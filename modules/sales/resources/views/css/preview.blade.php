@@ -15,7 +15,7 @@
                         <p>{{trans('sales::view.Link make css info')}}</p>
                         <p>{{trans('sales::view.Link make css preview')}}</p>
                         <div class="url_make">
-                            <h2 id="link-make">{{ url('/') }}/css/make/{{$css->token}}/{{$css->id}}</h2>
+                            <h2 id="link-make">{{ url('/') }}/css/welcome/{{$css->token}}/{{$css->id}}</h2>
                             <button type="button" class="btn btn-primary" onclick="location.href='/css/update/{{$css->id}}'">Back</button>
                         </div>
                         

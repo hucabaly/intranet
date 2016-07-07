@@ -1,10 +1,16 @@
-function goto_make() {
+$(document).ready(function(){
+    $('#make_name').focusout(function(){
+        $('.project-info .make-name').text($(this).val());
+    });
+});
+
+function goto_make(hrefMake) {
     var makeName = $('#make_name').val(); 
     if(makeName == ''){
         $('#modal-confirm-name').modal('show');
     }else{
-        $(".welcome-body").hide();
-        $(".make-css-page").show();
+        $.cookie("makeName", makeName, { expires: 7 }); 
+        location.href = hrefMake;
     }
 }
 
@@ -15,27 +21,33 @@ function hideModalConfirmMake(){
 function goToFinish(){
     location.href = "/css/cancel";
 }
-
+$(".rateit").on("tap",function(){
+  totalMark($(this));
+});
 /**
  * Trang lam danh gia
  * Khi khach hang danh danh gia mot tieu chi
  * Tinh tong diem realtime
  * @returns void
  */
-function totalMark(elem) {
+function totalMark(elem) { 
     var point = $(elem).rateit('value');
     var dataQuestionid = $(elem).attr('data-questionid');
     if(point < 3){
         var text = $(".comment-question[data-questionid='"+dataQuestionid+"']").val();
-        if($.trim(text) == ''){
+        if($.trim(text) === ''){
             $(".comment-question[data-questionid='"+dataQuestionid+"']").css("border","1px solid red");
         }
     }else{
         $(".comment-question[data-questionid='"+dataQuestionid+"']").css("border","1px solid #d2d6de");
     }
     
-    $(".diem").html(getTotalPoint());
-    $(".diem-fixed").html('Tổng điểm: ' + getTotalPoint());
+    if(elem.id === 'tongquat'){
+        $(elem).css("border","1px solid #d2d6de");
+    }
+    
+    $("#total-point").html(getTotalPoint());
+    $(".point-fixed").html('Tổng điểm: ' + getTotalPoint());
 }
 
 /**
@@ -70,9 +82,9 @@ function getTotalPoint(){
  */
 $(window).scroll(function(){
     if($('.visible-check').visible()){
-        $(".diem-fixed").hide();
+        $(".point-fixed").hide();
     } else {
-        $(".diem-fixed").show();
+        $(".point-fixed").show();
     }
 });
 
@@ -89,12 +101,11 @@ function confirm(arrayValidate){
     $("#comment-tongquat").css("border-color","#d2d6de");
     
     var arrayValidate = $.parseJSON(arrayValidate);
-    var makeName = $.trim($("#make_name").val());
     
     var diemTongQuat = parseInt($("#tongquat").rateit('value'));
     if(diemTongQuat == 0){
         invalid = true;
-        strInvalid += '<div>'+arrayValidate['totalMarkValidateRequired']+'</div>';
+        strInvalid += '<p>'+arrayValidate['totalMarkValidateRequired']+'</p>';
         $("#tongquat").css("border","1px solid red");
     }
     
@@ -114,7 +125,7 @@ function confirm(arrayValidate){
         for(var i=0; i<arrValidate.length; i++){
             $(".comment-question[data-questionid='"+arrValidate[i]+"']").css("border","1px solid red");
         }
-        strInvalid += '<div>'+arrayValidate['questionCommentRequired']+'</div>';
+        strInvalid += '<p>'+arrayValidate['questionCommentRequired']+'</p>';
         invalid = true;
     }
     
@@ -124,7 +135,7 @@ function confirm(arrayValidate){
         return false;
     }
     
-    $('#modal-confirm .modal-body').html("Số điểm hiện tại của CSS là "+$(".diem").html()+" Điểm. Bạn có chắc muốn hoàn thành CSS tại đây không?");
+    $('#modal-confirm .modal-body').html("Số điểm hiện tại của CSS là "+$("#total-point").html()+" Điểm. Bạn có chắc muốn hoàn thành CSS tại đây không?");
     $('#modal-confirm').modal('show');
 }
 
@@ -136,7 +147,7 @@ function confirm(arrayValidate){
  * @returns void
  */
 function submit(token, cssId){ 
-    var make_name = $("#make_name").val();
+    var make_name = $(".make-name").text(); 
     var make_email = 'test';
     var totalMark = getTotalPoint();
     var proposed = $("#proposed").val();
@@ -149,7 +160,7 @@ function submit(token, cssId){
         arrayQuestion.push([questionId,diem,comment]);
     });
     
-    $(".apply-click-modal").show();
+    $(".apply-click-modal").show(); 
     $.ajax({
         url: baseUrl + '/css/saveResult',
         type: 'post',
