@@ -169,32 +169,41 @@ class CssController extends Controller {
         return redirect(url('/css/preview/' . $css->token . '/' . $css->id));
     }
     
-    public function welcome($token, $id){
+    public function welcome($token, $id, Request $request){
         $css = Css::where('id', $id)
                 ->where('token', $token)
                 ->first();
-        return view(
+        
+        if ($request->input('submit') !== null) {
+            $makeName   = $request->input('make_name'); 
+            $token      = $request->input('token'); 
+            $id         = $request->input('id'); 
+            if($makeName == '') { 
+                return view(
+                    'sales::css.welcome', [
+                        'css' => $css,
+                        'token' => $token,
+                        'id'    => $id,
+                        "nameRequired" => 1, //validate name required
+                    ]);
+            }else { 
+                //Set make name and go to make CSS page
+                $request->session()->put('makeName', $makeName);
+                return redirect(url('/css/make/' . $token . '/' . $id));
+            }
+        }else {
+            return view(
                 'sales::css.welcome', [
                     'css' => $css,
-                    'hrefMake'  => url('/css/make/'. $token . '/' . $id),
                     'token' => $token,
                     'id'    => $id,
+                    "nameRequired" => 0, //validate name required
                 ]
             );
-    }
-    
-    public function saveName(Request $request){
-        $makeName   = $request->input('make_name'); 
-        $token      = $request->input('token'); 
-        $id         = $request->input('id'); 
-        if($makeName == ''){
-            return redirect(url('/css/welcome/' . $token . '/' . $id));
-        }else{
-            $request->session()->put('makeName', $makeName);
-            return redirect(url('/css/make/' . $token . '/' . $id));
         }
+        
     }
-    
+   
     /**
      * Make Css page
      * @param string $token
@@ -207,7 +216,8 @@ class CssController extends Controller {
         $css = Css::where('id', $id)
                 ->where('token', $token)
                 ->first();
-
+        
+        //Get CSS information
         if ($css) {
             $employee = Employees::find($css->employee_id);
             $rootCategory = $cssCategoryModel->getRootCategory($css->project_type_id);
@@ -239,10 +249,12 @@ class CssController extends Controller {
                         "sort_order" => self::numToAlpha($item->sort_order),
                         "cssCateChild" => $cssCateChild,
                         "questions" => $cssQuestion,
+                        "noCate"    => $NoOverView, //No. of root cate
                     );
                 }
             }
             
+            //Get overview question
             $overviewQuestion = $cssQuestionModel->getOverviewQuestionByCategory($rootCategory->id,1);
             
             $arrayValidate = array(

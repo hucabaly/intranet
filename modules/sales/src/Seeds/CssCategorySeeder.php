@@ -123,9 +123,13 @@ class CssCategorySeeder extends Seeder
                 'sort_order' => 4
             ]
         ];
-        foreach ($dataDemo as $data) {
-            if (! DB::table('css_category')->select('id')->where('name', $data['name'])->get()) {
-                DB::table('css_category')->insert($data);
+        
+        $maxId = DB::table('css_category')->max('id'); 
+        if($maxId == 0){
+            foreach ($dataDemo as $data) {
+                if (! DB::table('css_category')->select('id')->where('name', $data['name'])->get()) {
+                    DB::table('css_category')->insert($data);
+                }
             }
         }
     }

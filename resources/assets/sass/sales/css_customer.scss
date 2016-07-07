@@ -9,13 +9,13 @@
 }
 
 .container{
-    @media screen and (max-width: $smallScreen){
+    @media screen and (max-width: $mediumScreen){
         width: 100%;
     }
 }
 
 .content {
-    @media screen and (max-width: $smallScreen){
+    @media screen and (max-width: $mediumScreen){
         padding-bottom: 0;
         padding-left: 0;
         padding-right: 0;
@@ -60,7 +60,7 @@ textarea {
     margin-bottom: 5px;
     .welcome-title {
         font-size: 38px;
-        @media screen and (max-width: $smallScreen){
+        @media screen and (max-width: $mediumScreen){
             font-size: 33px;
         }
     }
@@ -100,7 +100,7 @@ textarea {
     width: 470px;
     line-height: 28px;
     font-size: $welcomeFontSizeNormal;
-    @media screen and (max-width: $smallScreen){
+    @media screen and (max-width: $mediumScreen){
         width: 100%;
         margin: 30px 0;
     }
@@ -123,6 +123,20 @@ textarea {
     .goto-make-parent{
         width: 285px;
         top: 11px;
+        #make_name {
+            border-radius: 3px 0 0 3px !important;
+        }
+        .btn-to-make {
+            background-color: #43a047;
+            border-radius: 0 3px 3px 0 !important;
+            border: none;
+            &:hover {
+                background-color: #65b769;
+            }
+            img {
+                height: 21px;
+            }
+        }
     }
 }
 
@@ -133,7 +147,7 @@ textarea {
     .copyright {
         font-size: $welcomeFontSizeSmall;
         margin-bottom: 0;
-        @media screen and (max-width: $smallScreen){
+        @media screen and (max-width: $mediumScreen){
             width: 100%;
         }
         span {
@@ -142,7 +156,7 @@ textarea {
     } 
     .policy {
         @extend .copyright;
-        @media screen and (max-width: $smallScreen){
+        @media screen and (max-width: $mediumScreen){
             float: left;
             margin-top: 10px;
         }
@@ -164,6 +178,12 @@ textarea {
                 float: left;
                 img {
                     width: 50px;
+                    @media screen and (min-width: $mediumScreen){
+                        width: 65px;
+                    }
+                    @media screen and (min-width: $lagreScreen){
+                        width: 100px;
+                    }
                 }
             }
 
@@ -173,8 +193,18 @@ textarea {
                 color: $colorBlue;
                 display: inline;
                 font-family: 'KozGoPro-Bold';
+                @media screen and (min-width: $mediumScreen){
+                    font-size: 26px;
+                }
+                @media screen and (min-width: $lagreScreen){
+                    font-size: 45px;
+                }
             }
-
+            
+            .title-base {
+                color: $colorGreen;
+            }
+            
             .total-point-container {
                 float: right;
                 font-size: 7px;
@@ -183,14 +213,30 @@ textarea {
                 background-color: #e2f4fd;
                 border: 1px solid #409dd7;
                 font-family: 'KozGoPro-Light';
-                #total-point-text {
+                @media screen and (min-width: $mediumScreen){
+                    font-size:9px;
+                }
+                @media screen and (min-width: $lagreScreen){
+                    font-size:13px;
+                }
+                .total-point-text {
                     margin-left: 3px;
                 }
-                #total-point {
+                .total-point {
                     font-size: 16px;
                     margin-left: -2px;
                     color: $colorBlue;
                     font-family: 'KozGoPro-Bold';
+                    @media screen and (min-width: $mediumScreen){
+                        font-size: 22px;
+                    }
+                    @media screen and (min-width: $lagreScreen){
+                        font-size: 40px;
+                    }
+                }
+                
+                .total-point-base {
+                    color: $colorGreen;
                 }
             }
         }
@@ -199,12 +245,21 @@ textarea {
             padding: 0 15px;
             .header {
                 @include project-header();
+                @media screen and (min-width: $lagreScreen){
+                    text-align: left;
+                }
+            }
+            .header-base {
+                background-color: $colorGreen;
             }
             .row-info {
                 padding: 0 -10px;
                 font-size: 12px;
                 margin-bottom: 2px;
                 font-family: 'KozGoPro-Regular';
+                @media screen and (min-width: $mediumScreen){
+                    margin-bottom: 5px;
+                }
             }
         }
         
@@ -218,7 +273,27 @@ textarea {
                 .note-comment {
                     font-size: 9px;
                     margin-top: 1px;
+                    @media screen and (min-width: $mediumScreen){
+                        font-size: 10px;
+                    }
+                    @media screen and (min-width: $lagreScreen){
+                        display: none;
+                    }
                 }
+                .rating-header {
+                    display: none;
+                    @media screen and (min-width: $lagreScreen){
+                        display: block;
+                    }
+                }
+                .comment-header {
+                    @extend .rating-header;
+                }
+            }
+            
+            
+            .header-base {
+                background-color: $colorGreen;
             }
             
             .root-cate {
@@ -227,6 +302,22 @@ textarea {
                 color: #fff;
                 font-family: 'KozGoPro-Medium';
                 border-radius: 3px;
+                &:first-child {
+                    border-radius: 0 0 3px 3px;
+                }
+                .note-comment {
+                    float: right;
+                    font-size: 13px;
+                    padding-right: 0;
+                    display: none;
+                    @media screen and (min-width: $lagreScreen){
+                        display: block;
+                    }
+                }
+            }
+            
+            .root-cate-base {
+                background-color: $colorLightGreen;
             }
             
             .child-cate {
@@ -237,10 +328,18 @@ textarea {
             .container-question{
                 padding-left: 15px;
                 padding-right: 15px;
+                @media screen and (min-width: $lagreScreen){
+                    background-color: #f5f5f7;
+                    margin-top: 1px;
+                    float: left;
+                    width: 100%;
+                    margin-left: 0;
+                }
                 .question {
                     padding: 5px;
                     background-color: #f5f5f7;
                     margin-top: 1px;
+                    border-radius: 3px;
                     .num-border {
                         border: 1px solid #999;
                         border-radius: 50%;
@@ -258,6 +357,7 @@ textarea {
                 .rate {
                     @extend .question;
                     text-align: center;
+                    margin-top: 12px;
                 }
 
                 .comment {
@@ -273,7 +373,7 @@ textarea {
             
             .proposed-comment {
                 textarea {
-                    height: 100px;
+                    height: 140px !important;
                 }
             }
             
@@ -290,6 +390,9 @@ textarea {
                     font-size: 17px;
                     padding: 5px 15px;
                 }
+                .button-base {
+                    background-color: $colorLightGreen;
+                }
             }
         }
         
@@ -301,70 +404,10 @@ textarea {
             color: $colorBlue;
             background-color: #e2f4fd;
             opacity: 0.7;
-        }
-    }
-    
-    @media screen and (min-width: 450px){
-        #make-header {
-            .logo-rikkei {
-                img {
-                    width: 65px;
-                }
-            }
-
-            .title {
-                font-size: 26px;
-            }
-
-            .total-point-container {
-                font-size: 9px;
-                #total-point {
-                    font-size: 22px;
-                }
-            }
-        }
-        
-        .project-info {
-            .row-info {
-                margin-bottom: 5px;
-            }
-        }
-        
-        .project-detail {
-            .header {
-                margin-bottom: 0;
-                .note-comment {
-                    font-size: 10px;
-                }
-            }
-        }
-    }
-    
-    @media screen and (min-width: 768px){
-        #make-header {
-            .logo-rikkei {
-                img {
-                    width: 100px;
-                }
-            }
-
-            .title {
-                font-size: 45px;
-            }
-
-            .total-point-container {
-                font-size: 13px;
-                #total-point {
-                    font-size: 40px;
-                }
-            }
-        }
-        
-        .project-detail {
-            .header {
-                .note-comment {
-                    font-size: 12px;
-                }
+            font-weight: bold;
+            font-size: 20px;
+            @media screen and (min-width: $lagreScreen){
+                font-size: 30px;
             }
         }
     }
