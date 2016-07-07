@@ -497,10 +497,10 @@ Form::forget();
             'messageError': {
                 'same_schools': '{!! trans('team::view.Canot choose the same school') !!}',
                 'same_languages': '{!! trans('team::view.Canot choose the same language') !!}',
-                'same_cetificates': '{!! trans('team::view.Canot choose the same language') !!}',
-                'same_programs': '{!! trans('team::view.Canot choose the same language') !!}',
-                'same_databases': '{!! trans('team::view.Canot choose the same language') !!}',
-                'same_oss': '{!! trans('team::view.Canot choose the same language') !!}'
+                'same_cetificates': '{!! trans('team::view.Canot choose the same certificate') !!}',
+                'same_programs': '{!! trans('team::view.Canot choose the same programming language') !!}',
+                'same_databases': '{!! trans('team::view.Canot choose the same database') !!}',
+                'same_oss': '{!! trans('team::view.Canot choose the same os') !!}'
             },
             'labelFormat': labelFormat
         });

@@ -34,6 +34,6 @@ return [
     'Remove' => 'Xóa',
     'Permission denied' => 'Bạn không có quyền truy cập trang này',
     'NO.' => 'STT',
-    '-- Please choose --' =>  'Vui lòng chọn',
+    '-- Please choose --' =>  '-- Vui lòng chọn --',
     
 ];
