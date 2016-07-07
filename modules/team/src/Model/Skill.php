@@ -7,6 +7,7 @@ use Exception;
 use Rikkei\Core\View\View;
 use Rikkei\Core\View\CacheHelper;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\URL;
 
 class Skill extends CoreModel
 {
@@ -64,10 +65,18 @@ class Skill extends CoreModel
                     return redirect()->back()->withErrors($validator)->send();
                 }
                 if (isset($skillData['image_path']) && $skillData['image_path']) {
-                        $skill->image = $skillData['image_path'];
+                    $skill->image = $skillData['image_path'];
+                } else if (isset($skillData['image']) && $skillData['image']) {
+                    $urlEncode = preg_replace('/\//', '\/', URL::to('/'));
+                    $image = preg_replace('/^' . $urlEncode . '/', '', $skillData['image']) ;
+                    $image = trim($image, '/');
+                    if (preg_match('/^media/', $image)) {
+                        $skill->image = $image;
+                    }
                 }
                 unset($skillData['image_path']);
                 unset($skillData['image']);
+                print_r($skillData);
                 $skill->setData($skillData);
                 $skill->type = $type;
                 $skill->save();

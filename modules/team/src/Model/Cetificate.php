@@ -7,6 +7,7 @@ use Exception;
 use Rikkei\Core\View\View;
 use Rikkei\Core\View\CacheHelper;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\URL;
 
 class Cetificate extends CoreModel
 {
@@ -63,7 +64,14 @@ class Cetificate extends CoreModel
                     return redirect()->back()->withErrors($validator)->send();
                 }
                 if (isset($cetificateData['image_path']) && $cetificateData['image_path']) {
-                        $cetificate->image = $cetificateData['image_path'];
+                    $cetificate->image = $cetificateData['image_path'];
+                } else if (isset($cetificateData['image']) && $cetificateData['image']) {
+                    $urlEncode = preg_replace('/\//', '\/', URL::to('/'));
+                    $image = preg_replace('/^' . $urlEncode . '/', '', $cetificateData['image']) ;
+                    $image = trim($image, '/');
+                    if (preg_match('/^media/', $image)) {
+                        $cetificate->image = $image;
+                    }
                 }
                 unset($cetificateData['image_path']);
                 unset($cetificateData['image']);

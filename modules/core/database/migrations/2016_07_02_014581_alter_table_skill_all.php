@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlertTableSkillAll extends Migration
+class AlterTableSkillAll extends Migration
 {
     /**
      * Run the migrations.

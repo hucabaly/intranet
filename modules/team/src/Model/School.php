@@ -7,6 +7,7 @@ use Exception;
 use Rikkei\Core\View\View;
 use Rikkei\Core\View\CacheHelper;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\URL;
 
 class School extends CoreModel
 {
@@ -57,7 +58,14 @@ class School extends CoreModel
                     return redirect()->back()->withErrors($validator)->send();
                 }
                 if (isset($schoolData['image_path']) && $schoolData['image_path']) {
-                        $school->image = $schoolData['image_path'];
+                    $school->image = $schoolData['image_path'];
+                } else if (isset($schoolData['image']) && $schoolData['image']) {
+                    $urlEncode = preg_replace('/\//', '\/', URL::to('/'));
+                    $image = preg_replace('/^' . $urlEncode . '/', '', $schoolData['image']) ;
+                    $image = trim($image, '/');
+                    if (preg_match('/^media/', $image)) {
+                        $school->image = $image;
+                    }
                 }
                 unset($schoolData['image_path']);
                 unset($schoolData['image']);

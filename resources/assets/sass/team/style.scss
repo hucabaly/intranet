@@ -163,16 +163,6 @@
 }
 
 /* employee skill */
-.employee-school-item {
-    .esi-image {
-        width: 50px;
-        float: left;
-        margin-right: 5%;
-    }
-    .esi-content {
-        
-    }
-}
 .employee-skill-items {
     min-height: 50px;
     .esbw-item:nth-child(odd) {
@@ -180,12 +170,27 @@
     }
     .esbw-item {
         margin-top: 15px;
+        .esi-image {
+            min-height: 50px;
+            width: 50px;
+            float: left;
+            margin-right: 5%;
+        }
+        .esi-title {
+            font-size: 18px;
+        }
     }
+}
+.employee-skill-items.item-full-col {
+    min-height: 0;
 }
 .qualifications-skill-box {
     h5.skill-title {
         font-weight: 700;
     }
+}
+.employee-experience-item.esbw-item {
+    line-height: 12px;
 }
 /* -------end employee skill */
 

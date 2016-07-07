@@ -136,6 +136,9 @@ class Employees extends CoreModel
             if (isset($teamPostions[0])) {
                 unset($teamPostions[0]);
             }
+            if (! Input::get('employee_team_change')) {
+                return;
+            }
         }
         if (! $teamPostions) {
             return;
@@ -226,9 +229,9 @@ class Employees extends CoreModel
         }
         if (! $roles) {
             $roles = (array) Input::get('role');
-        }
-        if (! $roles) {
-            return;
+            if (! Input::get('employee_role_change')) {
+                return;
+            }
         }
         
         DB::beginTransaction();
@@ -309,7 +312,7 @@ class Employees extends CoreModel
         if (isset($skillsArray['schools'][0])) {
             unset($skillsArray['schools'][0]);
         }
-        if (isset($skillsArray['schools']) && $skillsArray['schools'] &&
+        if (isset($skillsArray['schools']) &&
             isset($skillsChageArray['schools']) && $skillsChageArray['schools']) {
             $this->saveSchools($skillsArray['schools']);
         }
@@ -318,7 +321,7 @@ class Employees extends CoreModel
         if (isset($skillsArray['languages'][0])) {
             unset($skillsArray['languages'][0]);
         }
-        if (isset($skillsArray['languages']) && $skillsArray['languages'] &&
+        if (isset($skillsArray['languages']) &&
             isset($skillsChageArray['languages']) && $skillsChageArray['languages']) {
             $this->saveCetificateType($skillsArray['languages'], Cetificate::TYPE_LANGUAGE);
         }
@@ -327,7 +330,7 @@ class Employees extends CoreModel
         if (isset($skillsArray['cetificates'][0])) {
             unset($skillsArray['cetificates'][0]);
         }
-        if (isset($skillsArray['cetificates']) && $skillsArray['cetificates'] &&
+        if (isset($skillsArray['cetificates']) &&
             isset($skillsChageArray['cetificates']) && $skillsChageArray['cetificates']) {
             $this->saveCetificateType($skillsArray['cetificates'], Cetificate::TYPE_CETIFICATE);
         }
@@ -336,7 +339,7 @@ class Employees extends CoreModel
         if (isset($skillsArray['programs'][0])) {
             unset($skillsArray['programs'][0]);
         }
-        if (isset($skillsArray['programs']) && $skillsArray['programs'] &&
+        if (isset($skillsArray['programs']) &&
             isset($skillsChageArray['programs']) && $skillsChageArray['programs']) {
             $this->saveSkillItem($skillsArray['programs'], Skill::TYPE_PROGRAM);
         }
@@ -344,7 +347,7 @@ class Employees extends CoreModel
         if (isset($skillsArray['oss'][0])) {
             unset($skillsArray['oss'][0]);
         }
-        if (isset($skillsArray['oss']) && $skillsArray['oss'] &&
+        if (isset($skillsArray['oss']) &&
             isset($skillsChageArray['oss']) && $skillsChageArray['oss']) {
             $this->saveSkillItem($skillsArray['oss'], Skill::TYPE_OS);
         }
@@ -352,11 +355,28 @@ class Employees extends CoreModel
         if (isset($skillsArray['databases'][0])) {
             unset($skillsArray['databases'][0]);
         }
-        if (isset($skillsArray['databases']) && $skillsArray['databases'] &&
+        if (isset($skillsArray['databases']) &&
             isset($skillsChageArray['databases']) && $skillsChageArray['databases']) {
             $this->saveSkillItem($skillsArray['databases'], Skill::TYPE_DATABASE);
         }
         
+        //save work experience
+        if (isset($skillsArray['work_experiences'][0])) {
+            unset($skillsArray['work_experiences'][0]);
+        }
+        if (isset($skillsArray['work_experiences']) &&
+            isset($skillsChageArray['work_experiences']) && $skillsChageArray['work_experiences']) {
+            $this->saveWorkExperience($skillsArray['work_experiences']);
+        }
+        
+        //save project experience
+        if (isset($skillsArray['project_experiences'][0])) {
+            unset($skillsArray['project_experiences'][0]);
+        }
+        if (isset($skillsArray['project_experiences']) &&
+            isset($skillsChageArray['project_experiences']) && $skillsChageArray['project_experiences']) {
+            $this->saveProjectExperience($skillsArray['project_experiences']);
+        }        
     }
 
     /**
@@ -367,13 +387,9 @@ class Employees extends CoreModel
      */
     protected function saveSchools($schools = [])
     {
-        if (! $schools) {
-            return;
-        }
         $schoolIds = School::saveItems($schools);
-        if ($schoolIds) {
-            $this->saveEmployeeSchools($schoolIds, $schools);
-        }
+        $this->saveEmployeeSchools($schoolIds, $schools);
+        
     }
     
     /**
@@ -396,13 +412,8 @@ class Employees extends CoreModel
      */
     protected function saveCetificateType($cetificatesType = [], $type = null)
     {
-        if (! $cetificatesType) {
-            return;
-        }
         $cetificatesTypeIds = Cetificate::saveItems($cetificatesType, $type);
-        if ($cetificatesTypeIds) {
-            $this->saveEmployeeCetificateType($cetificatesTypeIds, $cetificatesType, $type);
-        }
+        $this->saveEmployeeCetificateType($cetificatesTypeIds, $cetificatesType, $type);
     }
     
     /**
@@ -426,13 +437,8 @@ class Employees extends CoreModel
      */
     protected function saveSkillItem($skills = [], $type = null)
     {
-        if (! $skills) {
-            return;
-        }
         $skillIds = Skill::saveItems($skills, $type);
-        if ($skillIds) {
-            $this->saveEmployeeSkillItem($skillIds, $skills, $type);
-        }
+        $this->saveEmployeeSkillItem($skillIds, $skills, $type);
     }
     
     /**
@@ -447,6 +453,23 @@ class Employees extends CoreModel
         return EmployeeSkill::saveItems($this->id, $skillIds, $skills, $type);
     }
     
+    /**
+     * save work experience for employee
+     * 
+     * @param type $workExperienceData
+     * @return type
+     */
+    protected function saveWorkExperience($workExperienceData)
+    {
+        return WorkExperience::saveItems($this->id, $workExperienceData);
+    }
+    
+    protected function saveProjectExperience($projectExperienceData)
+    {
+        return ProjectExperience::saveItems($this->id, $projectExperienceData);
+    }
+
+
     /**
      * get team and position of employee
      * 
@@ -550,6 +573,36 @@ class Employees extends CoreModel
             return $employeeSkills;
         }
         $employeeSkills = EmployeeSkill::getItemsFollowEmployee($this->id, Skill::TYPE_OS);
+        CacheHelper::put(self::KEY_CACHE, $employeeSkills, $this->id);
+        return $employeeSkills;
+    }
+    
+    /**
+     * get work experience of employee
+     * 
+     * @return model
+     */
+    public function getWorkExperience()
+    {
+        if ($employeeSkills = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return $employeeSkills;
+        }
+        $employeeSkills = WorkExperience::getItemsFollowEmployee($this->id);
+        CacheHelper::put(self::KEY_CACHE, $employeeSkills, $this->id);
+        return $employeeSkills;
+    }
+    
+    /**
+     * get project experience of employee
+     * 
+     * @return model
+     */
+    public function getProjectExperience()
+    {
+        if ($employeeSkills = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return $employeeSkills;
+        }
+        $employeeSkills = ProjectExperience::getItemsFollowEmployee($this->id);
         CacheHelper::put(self::KEY_CACHE, $employeeSkills, $this->id);
         return $employeeSkills;
     }

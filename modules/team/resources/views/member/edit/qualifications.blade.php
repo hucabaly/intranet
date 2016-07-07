@@ -5,8 +5,6 @@ use Rikkei\Team\Model\Employees;
 use Rikkei\Core\View\View as ViewHelper;
 use Rikkei\Team\View\Permission;
 use Rikkei\Core\Model\CoreModel;
-
-$genderOption = Employees::toOptionGender();
 ?>
 <?php
 /**

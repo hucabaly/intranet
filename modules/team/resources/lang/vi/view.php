@@ -142,5 +142,16 @@ return [
     'Infomation of os' => 'Thông tin của hệ điều hành',
     'years' => 'năm',
     'Language foreign' => 'Ngoại ngữ',
+    'Work experience' => 'Kinh nghiệm làm việc',
+    'Project experience' => 'Kinh nghiệm dự án',
+    'Add new company' => 'Thêm công ty mới',
+    'Add new project' => 'Thêm dự án mới',
+    'Company' => 'Công ty',
+    'Infomation of company' => 'Thông tin công ty',
+    'Infomation of project' => 'Thông tin dự án',
+    'Environment' => 'Môi trường',
+    'Responsible' => 'Kết quả',
+    'Positon' => 'Vị trí',
+    'Period' =>  'Giai đoạn',
     
 ];

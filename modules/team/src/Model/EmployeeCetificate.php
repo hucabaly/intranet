@@ -21,10 +21,6 @@ class EmployeeCetificate extends CoreModel
      */
     public static function saveItems($employeeId, $cetificatesTypeIds = [], $cetificatesType = [], $type = null)
     {
-        if (! $cetificatesTypeIds || ! $cetificatesType || ! $employeeId) {
-            return;
-        }
-        $cetificateAdded = [];
         if (! $type) {
             $type = Cetificate::TYPE_LANGUAGE;
         }
@@ -36,6 +32,11 @@ class EmployeeCetificate extends CoreModel
                     ->where('type', $type);
             })
             ->delete();
+
+        if (! $cetificatesTypeIds || ! $cetificatesType || ! $employeeId) {
+            return;
+        }
+        $cetificateAdded = [];
         
         $typeCetificates = Cetificate::getAllType();
         $tblName = $typeCetificates[$type];

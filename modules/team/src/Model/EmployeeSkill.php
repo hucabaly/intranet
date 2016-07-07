@@ -21,10 +21,6 @@ class EmployeeSkill extends CoreModel
      */
     public static function saveItems($employeeId, $skillIds = [], $skills = [], $type = null)
     {
-        if (! $skills || ! $skillIds || ! $employeeId) {
-            return;
-        }
-        $skillAdded = [];
         if (! $type) {
             $type = Skill::TYPE_PROGRAM;
         }
@@ -36,6 +32,11 @@ class EmployeeSkill extends CoreModel
                     ->where('type', $type);
             })
             ->delete();
+            
+        if (! $skills || ! $skillIds || ! $employeeId) {
+            return;
+        }
+        $skillAdded = [];
         
         $typeSkills = Skill::getAllType();
         $tblName = $typeSkills[$type];

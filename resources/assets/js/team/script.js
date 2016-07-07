@@ -46,15 +46,21 @@ jQuery(document).ready(function ($) {
         if ($('.box-form-team-position').children('.group-team-position').length == 1) {
             $('.box-form-team-position .group-team-position .input-remove').addClass('warning-action');
         }
+        $('input[name=employee_team_change]').val(1);
     });
     $(document).on('click', '.input-team-position.input-remove', function(event) {
         teamLength = $('.box-form-team-position').children('.group-team-position').length;
         if (teamLength > 1) {
             $(this).parents('.group-team-position').remove();
+            $('input[name=employee_team_change]').val(1);
         }
         if (teamLength == 2) {
             $('.box-form-team-position .group-team-position .input-remove').addClass('warning-action');
         }
+    });
+    //change select, update team availabel
+    $(document).on('change', '.group-team-position select', function(e) {
+        $('input[name=employee_team_change]').val(1);
     });
     
     /**
@@ -68,6 +74,7 @@ jQuery(document).ready(function ($) {
             htmlRoleList += '</li></span>';
         });
         $('ul.employee-roles').html(htmlRoleList);
+        $('input[name=employee_role_change]').val(1);
     });
     
     /**
@@ -136,7 +143,11 @@ jQuery(document).ready(function ($) {
             dataHrefModal = $(this).parents('.employee-skill-box-wrapper').data('href');
             dataIsChange = $(this).parents('.employee-skill-box-wrapper').data('change');
             $(dataHrefModal).modal('show');
-            
+            if (! dataItemId) {
+                $(dataHrefModal).find('.btn-delete.btn-action').addClass('hidden');
+            } else {
+                $(dataHrefModal).find('.btn-delete.btn-action').removeClass('hidden');
+            }
             //process data when show modal
             $(dataHrefModal).on('shown.bs.modal', function (e) {
                 $(this).find('.input-skill-modal').removeAttr('disabled').val('');
@@ -156,7 +167,11 @@ jQuery(document).ready(function ($) {
                                     .attr('src', value);
                             }
                             if (valueId) {
-                                $(this).attr('disabled', true).val('');
+                                if ($(this).hasClass('not-auto')) {
+                                    $(this).val('');
+                                } else {
+                                    $(this).attr('disabled', true).val('');
+                                }
                             }
                         } else {
                             if (value && value != undefined) {
@@ -169,7 +184,11 @@ jQuery(document).ready(function ($) {
                                 ! $(this).data('autocomplete') && 
                                 $(this).attr('type') != 'hidden'
                             ) {
-                                $(this).attr('disabled', true).val(value);
+                                if ($(this).hasClass('not-auto')) {
+                                    $(this).val(value);
+                                } else {
+                                    $(this).attr('disabled', true).val(value);
+                                }
                             } else {
                                 $(this).val(value);
                             }
@@ -193,6 +212,9 @@ jQuery(document).ready(function ($) {
                     thisParent = $(this).parents('.employee-skill-modal');
                     var uiItemSelected = ui.item;
                     thisParent.find('.input-skill-modal[data-tbl=' + dataTblAuto + ']:not([data-autocomplete=true])').each(function (){
+                        if ($(this).hasClass('not-auto')) {
+                            return true;
+                        }
                         inputType = $(this).attr('type');
                         dataCol = $(this).data('col');
                         if (! dataCol) {
@@ -232,21 +254,17 @@ jQuery(document).ready(function ($) {
                     if (inputType == 'file') {
                         $(this).removeAttr('disabled');
                         return true;
-                        if ($(this).parents('.input-box-img-preview').length) {
-                            dataCol = $(this).data('col');
-                            $(this).parents('.input-box-img-preview')
-                                .find('img[data-col=' + dataCol +'_preview]')
-                                .attr('src', imagePreviewImageDefault);
-                        }
-                        $(this).removeAttr('disabled').val('');
                     } else {
+                        if ($(this).hasClass('not-auto')) {
+                            $(this).removeAttr('disabled')
+                            return true;
+                        }
                         if ($(this).data('col') == 'id') {
                             $(this).removeAttr('disabled').val('');
                             return true;
                         }
                         $(this).removeAttr('disabled');
                         return true;
-                        $(this).removeAttr('disabled').val('');
                     }
                 });
             }
