@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Rikkei\Recruitment\Model\RecruitmentApplies;
 use Rikkei\Core\View\CacheHelper;
 use Illuminate\Support\Facades\Input;
+use Rikkei\Team\View\Permission;
 
 class Employees extends CoreModel
 {
@@ -308,75 +309,79 @@ class Employees extends CoreModel
         parse_str($skills, $skillsArray);
         parse_str($skillsChage, $skillsChageArray);
         
-        //save school
-        if (isset($skillsArray['schools'][0])) {
-            unset($skillsArray['schools'][0]);
-        }
-        if (isset($skillsArray['schools']) &&
-            isset($skillsChageArray['schools']) && $skillsChageArray['schools']) {
-            $this->saveSchools($skillsArray['schools']);
-        }
-        
-        // save language
-        if (isset($skillsArray['languages'][0])) {
-            unset($skillsArray['languages'][0]);
-        }
-        if (isset($skillsArray['languages']) &&
-            isset($skillsChageArray['languages']) && $skillsChageArray['languages']) {
-            $this->saveCetificateType($skillsArray['languages'], Cetificate::TYPE_LANGUAGE);
-        }
-        
-        // save cetificate
-        if (isset($skillsArray['cetificates'][0])) {
-            unset($skillsArray['cetificates'][0]);
-        }
-        if (isset($skillsArray['cetificates']) &&
-            isset($skillsChageArray['cetificates']) && $skillsChageArray['cetificates']) {
-            $this->saveCetificateType($skillsArray['cetificates'], Cetificate::TYPE_CETIFICATE);
-        }
-        
-        // save skill
-        if (isset($skillsArray['programs'][0])) {
-            unset($skillsArray['programs'][0]);
-        }
-        if (isset($skillsArray['programs']) &&
-            isset($skillsChageArray['programs']) && $skillsChageArray['programs']) {
-            $this->saveSkillItem($skillsArray['programs'], Skill::TYPE_PROGRAM);
-        }
-        
-        if (isset($skillsArray['oss'][0])) {
-            unset($skillsArray['oss'][0]);
-        }
-        if (isset($skillsArray['oss']) &&
-            isset($skillsChageArray['oss']) && $skillsChageArray['oss']) {
-            $this->saveSkillItem($skillsArray['oss'], Skill::TYPE_OS);
-        }
-        
-        if (isset($skillsArray['databases'][0])) {
-            unset($skillsArray['databases'][0]);
-        }
-        if (isset($skillsArray['databases']) &&
-            isset($skillsChageArray['databases']) && $skillsChageArray['databases']) {
-            $this->saveSkillItem($skillsArray['databases'], Skill::TYPE_DATABASE);
-        }
-        
-        //save work experience
-        if (isset($skillsArray['work_experiences'][0])) {
-            unset($skillsArray['work_experiences'][0]);
-        }
-        if (isset($skillsArray['work_experiences']) &&
-            isset($skillsChageArray['work_experiences']) && $skillsChageArray['work_experiences']) {
-            $this->saveWorkExperience($skillsArray['work_experiences']);
+        if (Permission::getInstance()->isAllow('team::team.member.edit.skill')) {
+            //save school
+            if (isset($skillsArray['schools'][0])) {
+                unset($skillsArray['schools'][0]);
+            }
+            if (isset($skillsArray['schools']) &&
+                isset($skillsChageArray['schools']) && $skillsChageArray['schools']) {
+                $this->saveSchools($skillsArray['schools']);
+            }
+
+            // save language
+            if (isset($skillsArray['languages'][0])) {
+                unset($skillsArray['languages'][0]);
+            }
+            if (isset($skillsArray['languages']) &&
+                isset($skillsChageArray['languages']) && $skillsChageArray['languages']) {
+                $this->saveCetificateType($skillsArray['languages'], Cetificate::TYPE_LANGUAGE);
+            }
+
+            // save cetificate
+            if (isset($skillsArray['cetificates'][0])) {
+                unset($skillsArray['cetificates'][0]);
+            }
+            if (isset($skillsArray['cetificates']) &&
+                isset($skillsChageArray['cetificates']) && $skillsChageArray['cetificates']) {
+                $this->saveCetificateType($skillsArray['cetificates'], Cetificate::TYPE_CETIFICATE);
+            }
+
+            // save skill
+            if (isset($skillsArray['programs'][0])) {
+                unset($skillsArray['programs'][0]);
+            }
+            if (isset($skillsArray['programs']) &&
+                isset($skillsChageArray['programs']) && $skillsChageArray['programs']) {
+                $this->saveSkillItem($skillsArray['programs'], Skill::TYPE_PROGRAM);
+            }
+
+            if (isset($skillsArray['oss'][0])) {
+                unset($skillsArray['oss'][0]);
+            }
+            if (isset($skillsArray['oss']) &&
+                isset($skillsChageArray['oss']) && $skillsChageArray['oss']) {
+                $this->saveSkillItem($skillsArray['oss'], Skill::TYPE_OS);
+            }
+
+            if (isset($skillsArray['databases'][0])) {
+                unset($skillsArray['databases'][0]);
+            }
+            if (isset($skillsArray['databases']) &&
+                isset($skillsChageArray['databases']) && $skillsChageArray['databases']) {
+                $this->saveSkillItem($skillsArray['databases'], Skill::TYPE_DATABASE);
+            }
         }
         
-        //save project experience
-        if (isset($skillsArray['project_experiences'][0])) {
-            unset($skillsArray['project_experiences'][0]);
+        if (Permission::getInstance()->isAllow('team::team.member.edit.exerience')) {
+            //save work experience
+            if (isset($skillsArray['work_experiences'][0])) {
+                unset($skillsArray['work_experiences'][0]);
+            }
+            if (isset($skillsArray['work_experiences']) &&
+                isset($skillsChageArray['work_experiences']) && $skillsChageArray['work_experiences']) {
+                $this->saveWorkExperience($skillsArray['work_experiences']);
+            }
+
+            //save project experience
+            if (isset($skillsArray['project_experiences'][0])) {
+                unset($skillsArray['project_experiences'][0]);
+            }
+            if (isset($skillsArray['project_experiences']) &&
+                isset($skillsChageArray['project_experiences']) && $skillsChageArray['project_experiences']) {
+                $this->saveProjectExperience($skillsArray['project_experiences']);
+            }        
         }
-        if (isset($skillsArray['project_experiences']) &&
-            isset($skillsChageArray['project_experiences']) && $skillsChageArray['project_experiences']) {
-            $this->saveProjectExperience($skillsArray['project_experiences']);
-        }        
     }
 
     /**

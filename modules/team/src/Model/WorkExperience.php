@@ -7,6 +7,7 @@ use Exception;
 use Rikkei\Core\View\View;
 use Rikkei\Core\View\CacheHelper;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\URL;
 
 class WorkExperience extends CoreModel
 {
@@ -55,7 +56,14 @@ class WorkExperience extends CoreModel
                     return redirect()->back()->withErrors($validator)->send();
                 }
                 if (isset($experienceData['image_path']) && $experienceData['image_path']) {
-                        $experience->image = $experienceData['image_path'];
+                    $experience->image = $experienceData['image_path'];
+                } else if (isset($experienceData['image']) && $experienceData['image']) {
+                    $urlEncode = preg_replace('/\//', '\/', URL::to('/'));
+                    $image = preg_replace('/^' . $urlEncode . '/', '', $experienceData['image']) ;
+                    $image = trim($image, '/');
+                    if (preg_match('/^media/', $image)) {
+                        $experience->image = $image;
+                    }
                 }
                 unset($experienceData['image_path']);
                 unset($experienceData['image']);

@@ -8,6 +8,7 @@ use Rikkei\Core\View\View;
 use Rikkei\Team\Model\Cetificate;
 use Rikkei\Team\Model\Skill;
 use Rikkei\Team\Model\WorkExperience;
+use Rikkei\Team\View\Permission;
 
 $postionsOption = Roles::toOptionPosition();
 $teamsOption = TeamList::toOption(null, true, false);
@@ -74,7 +75,8 @@ if (isset($employeeModelItem) && $employeeModelItem) {
                     <h2 class="box-title">Team</h2>
                 </div>
                 <div class="box-body">
-                    <input type="hidden" name="employee_team_change" value="" />
+                    <input type="hidden" name="employee_team_change" 
+                        value="<?php if (! Form::getData('employee.id') && Form::getData('employee_team')): ?>1<?php endif; ?>" />
                     @include('team::member.edit.team')
                 </div>
             </div>
@@ -84,7 +86,8 @@ if (isset($employeeModelItem) && $employeeModelItem) {
                     <h2 class="box-title">{{ trans('team::view.Role Special') }}</h2>
                 </div>
                 <div class="box-body">
-                    <input type="hidden" name="employee_role_change" value="" />
+                    <input type="hidden" name="employee_role_change" 
+                        value="<?php if (! Form::getData('employee.id') && Form::getData('employee_role')): ?>1<?php endif; ?>" />
                     @include('team::member.edit.role')
                 </div>
             </div>
@@ -142,10 +145,14 @@ if (isset($employeeModelItem) && $employeeModelItem) {
         </div> <!-- end edit memeber right col -->
     </form>
 </div>
+@if (Permission::getInstance()->isAllow('team::team.member.edit.skill'))
+    @include('team::member.edit.skill_modal')
+@endif
 
-@include('team::member.edit.skill_modal')
-@include('team::member.edit.work_experience_modal')
-@include('team::member.edit.project_experience_modal')
+@if (Permission::getInstance()->isAllow('team::team.member.edit.exerience'))
+    @include('team::member.edit.work_experience_modal')
+    @include('team::member.edit.project_experience_modal')
+@endif
 
 <?php
 //remove flash session

@@ -157,5 +157,6 @@ return [
     'Canot choose the same programming language' => 'Không được chọn cùng ngôn ngữ lập trình',
     'Canot choose the same database' => 'Không được chọn cùng cơ sở dữ liệu',
     'Canot choose the same os' => 'Không được chọn cùng hệ điều hành',
+    'Not found item' => 'Không tìm thấy đối tượng nào',
     
 ];

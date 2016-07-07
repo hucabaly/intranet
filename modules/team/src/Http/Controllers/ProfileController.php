@@ -40,7 +40,8 @@ class ProfileController extends \Rikkei\Core\Http\Controllers\Controller
             'employeeRoles' => $model->getRoles(),
             'recruitmentPresent' => $presenter,
             'employeeGreaterLeader' => $model->isLeader(),
-            'isProfile' => true
+            'isProfile' => true,
+            'employeeModelItem' => $model,
         ]);
     }
 }

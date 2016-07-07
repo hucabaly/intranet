@@ -43,7 +43,6 @@ class AuthController extends Controller
      */
     public function callback($provider)
     {
-        Session::forget('permission');
         $user = Socialite::driver($provider)->user();
         $email = $user->email;
         if (!$email) {
@@ -52,7 +51,8 @@ class AuthController extends Controller
         //add check email allow
         if (! View::isEmailAllow($email)) {
             $this->processNewAccount();
-            return redirect('/');
+            return Redirect::away($this->getGoogleLogoutUrl('/'))
+                    ->send();
         }
         
         $nickName = !empty($user->nickname) ? $user->nickname : preg_replace('/@.*$/', '', $user->email);
@@ -73,11 +73,13 @@ class AuthController extends Controller
                 $employee->save();
             } else {
                 $this->processNewAccount(Lang::get('core::message.You donot have permission login'));
-                return redirect('/');
+                return Redirect::away($this->getGoogleLogoutUrl('/'))
+                    ->send();
             }
         } elseif (! View::isRoot($email) && ! $employee->isAllowLogin()) {
             $this->processNewAccount(Lang::get('core::message.You donot have permission login'));
-            return redirect('/');
+            return Redirect::away($this->getGoogleLogoutUrl('/'))
+                    ->send();
         }
         
         $employeeId = $employee->id;

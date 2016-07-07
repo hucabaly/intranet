@@ -5,6 +5,8 @@ use Rikkei\Team\Model\Employees;
 use Rikkei\Core\View\View as ViewHelper;
 use Rikkei\Team\View\Permission;
 use Rikkei\Core\Model\CoreModel;
+
+$skillPermission = Permission::getInstance()->isAllow('team::team.member.edit.skill');
 ?>
 <?php
 /**
@@ -191,23 +193,29 @@ function getHtmlEmployeeSkill($employeeSkill = null, $i = 0, $type = 'program')
             data-group="schools" data-href="#employee-school-form" data-change="schools">
             <div class="col-sm-10 employee-skill-items">
                 <div class="row">
-                    @if ($employeeSchools)
+                    @if ($employeeSchools && count($employeeSchools))
                         <?php $i = 0; ?>
                         @foreach ($employeeSchools as $employeeSchool)
                             <?php $i++; ?>
                             <?php getHtmlEmployeeSchool($employeeSchool, $i); ?>
                         @endforeach
+                    @else
+                        <div class="col-sm-12">
+                            <p class="text-warning">{{ trans('team::view.Not found item') }}</p>
+                        </div>
                     @endif
                 </div>
                 <?php getHtmlEmployeeSchool(null, 0); ?>
             </div>
-            <div class="col-sm-2 add-skill-item">
-                <button type="button" class="btn-add add-college" data-toggle="tooltip" 
-                    data-placement="bottom" title="{{ trans('team::view.Add a college') }}"
-                    data-modal="true">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
+            @if ($skillPermission)
+                <div class="col-sm-2 add-skill-item">
+                    <button type="button" class="btn-add add-college" data-toggle="tooltip" 
+                        data-placement="bottom" title="{{ trans('team::view.Add a college') }}"
+                        data-modal="true">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 </div>
@@ -223,23 +231,29 @@ function getHtmlEmployeeSkill($employeeSkill = null, $i = 0, $type = 'program')
             data-group="languages" data-href="#employee-language-form">
             <div class="col-sm-10 employee-skill-items">
                 <div class="row">
-                    @if ($employeeLanguages)
+                    @if ($employeeLanguages && count($employeeLanguages))
                         <?php $i = 0; ?>
                         @foreach ($employeeLanguages as $employeeLanguage)
                             <?php $i++; ?>
                             <?php getHtmlEmployeeLanguage($employeeLanguage, $i); ?>
                         @endforeach
+                    @else
+                        <div class="col-sm-12">
+                            <p class="text-warning">{{ trans('team::view.Not found item') }}</p>
+                        </div>
                     @endif
                 </div>
                 <?php getHtmlEmployeeLanguage(null, 0); ?>
             </div>
-            <div class="col-sm-2 add-skill-item">
-                <button type="button" class="btn-add add-college" data-toggle="tooltip" 
-                    data-placement="bottom" title="{{ trans('team::view.Add new language') }}"
-                    data-modal="true">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
+            @if ($skillPermission)
+                <div class="col-sm-2 add-skill-item">
+                    <button type="button" class="btn-add add-college" data-toggle="tooltip" 
+                        data-placement="bottom" title="{{ trans('team::view.Add new language') }}"
+                        data-modal="true">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 </div>
@@ -255,23 +269,29 @@ function getHtmlEmployeeSkill($employeeSkill = null, $i = 0, $type = 'program')
             data-group="cetificates" data-href="#employee-cetificate-form">
             <div class="col-sm-10 employee-skill-items">
                 <div class="row">
-                    @if ($employeeCetificates)
+                    @if ($employeeCetificates && count($employeeCetificates))
                         <?php $i = 0; ?>
                         @foreach ($employeeCetificates as $employeeCetificate)
                             <?php $i++; ?>
                             <?php getHtmlEmployeeCetificate($employeeCetificate, $i); ?>
                         @endforeach
+                    @else
+                        <div class="col-sm-12">
+                            <p class="text-warning">{{ trans('team::view.Not found item') }}</p>
+                        </div>
                     @endif
                 </div>
                 <?php getHtmlEmployeeCetificate(null, 0); ?>
             </div>
-            <div class="col-sm-2 add-skill-item">
-                <button type="button" class="btn-add add-college" data-toggle="tooltip" 
-                    data-placement="bottom" title="{{ trans('team::view.Add new cetificate') }}"
-                    data-modal="true">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
+            @if ($skillPermission)
+                <div class="col-sm-2 add-skill-item">
+                    <button type="button" class="btn-add add-college" data-toggle="tooltip" 
+                        data-placement="bottom" title="{{ trans('team::view.Add new cetificate') }}"
+                        data-modal="true">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 </div>
@@ -287,23 +307,29 @@ function getHtmlEmployeeSkill($employeeSkill = null, $i = 0, $type = 'program')
             data-group="programs" data-href="#employee-program-form">
             <div class="col-sm-10 employee-skill-items">
                 <div class="row">
-                    @if ($employeePrograms)
+                    @if ($employeePrograms && count($employeePrograms))
                         <?php $i = 0; ?>
                         @foreach ($employeePrograms as $employeeProgram)
                             <?php $i++; ?>
                             <?php getHtmlEmployeeSkill($employeeProgram, $i, 'program'); ?>
                         @endforeach
+                    @else
+                        <div class="col-sm-12">
+                            <p class="text-warning">{{ trans('team::view.Not found item') }}</p>
+                        </div>
                     @endif
                 </div>
                 <?php getHtmlEmployeeSkill(null, 0, 'program'); ?>
             </div>
-            <div class="col-sm-2 add-skill-item">
-                <button type="button" class="btn-add add-college" data-toggle="tooltip" 
-                    data-placement="bottom" title="{{ trans('team::view.Add new programming language') }}"
-                    data-modal="true">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
+            @if ($skillPermission)
+                <div class="col-sm-2 add-skill-item">
+                    <button type="button" class="btn-add add-college" data-toggle="tooltip" 
+                        data-placement="bottom" title="{{ trans('team::view.Add new programming language') }}"
+                        data-modal="true">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 </div>
@@ -319,23 +345,29 @@ function getHtmlEmployeeSkill($employeeSkill = null, $i = 0, $type = 'program')
             data-group="databases" data-href="#employee-database-form">
             <div class="col-sm-10 employee-skill-items">
                 <div class="row">
-                    @if ($employeeDatabases)
+                    @if ($employeeDatabases && count($employeeDatabases))
                         <?php $i = 0; ?>
                         @foreach ($employeeDatabases as $employeeDatabase)
                             <?php $i++; ?>
                             <?php getHtmlEmployeeSkill($employeeDatabase, $i, 'database'); ?>
                         @endforeach
+                    @else
+                        <div class="col-sm-12">
+                            <p class="text-warning">{{ trans('team::view.Not found item') }}</p>
+                        </div>
                     @endif
                 </div>
                 <?php getHtmlEmployeeSkill(null, 0, 'database'); ?>
             </div>
-            <div class="col-sm-2 add-skill-item">
-                <button type="button" class="btn-add add-college" data-toggle="tooltip" 
-                    data-placement="bottom" title="{{ trans('team::view.Add new database') }}"
-                    data-modal="true">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
+            @if ($skillPermission)
+                <div class="col-sm-2 add-skill-item">
+                    <button type="button" class="btn-add add-college" data-toggle="tooltip" 
+                        data-placement="bottom" title="{{ trans('team::view.Add new database') }}"
+                        data-modal="true">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 </div>
@@ -351,23 +383,29 @@ function getHtmlEmployeeSkill($employeeSkill = null, $i = 0, $type = 'program')
             data-group="oss" data-href="#employee-os-form">
             <div class="col-sm-10 employee-skill-items">
                 <div class="row">
-                    @if ($employeeOss)
+                    @if ($employeeOss && count($employeeOss))
                         <?php $i = 0; ?>
                         @foreach ($employeeOss as $employeeOs)
                             <?php $i++; ?>
                             <?php getHtmlEmployeeSkill($employeeOs, $i, 'os'); ?>
                         @endforeach
+                    @else
+                        <div class="col-sm-12">
+                            <p class="text-warning">{{ trans('team::view.Not found item') }}</p>
+                        </div>
                     @endif
                 </div>
                 <?php getHtmlEmployeeSkill(null, 0, 'os'); ?>
             </div>
-            <div class="col-sm-2 add-skill-item">
-                <button type="button" class="btn-add add-college" data-toggle="tooltip" 
-                    data-placement="bottom" title="{{ trans('team::view.Add new os') }}"
-                    data-modal="true">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
+            @if ($skillPermission)
+                <div class="col-sm-2 add-skill-item">
+                    <button type="button" class="btn-add add-college" data-toggle="tooltip" 
+                        data-placement="bottom" title="{{ trans('team::view.Add new os') }}"
+                        data-modal="true">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 </div>

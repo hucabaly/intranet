@@ -5,6 +5,8 @@ use Rikkei\Team\Model\Employees;
 use Rikkei\Core\View\View as ViewHelper;
 use Rikkei\Team\View\Permission;
 use Rikkei\Core\Model\CoreModel;
+
+$experiencePermission = Permission::getInstance()->isAllow('team::team.member.edit.exerience');
 ?>
 <?php
 /**
@@ -68,23 +70,29 @@ function getHtmlEmployeeProjectExperience($employeeExperience = null, $i = 0)
             data-group="project_experiences" data-href="#employee-project_experience-form">
             <div class="col-sm-12 employee-skill-items item-full-col">
                 <div class="row">
-                    @if ($employeeProjectExperiences)
+                    @if ($employeeProjectExperiences && count($employeeProjectExperiences))
                         <?php $i = 0; ?>
                         @foreach ($employeeProjectExperiences as $employeeProjectExperience)
                             <?php $i++; ?>
                             <?php getHtmlEmployeeProjectExperience($employeeProjectExperience, $i); ?>
                         @endforeach
+                    @else
+                        <div class="col-sm-12">
+                            <p class="text-warning">{{ trans('team::view.Not found item') }}</p>
+                        </div>
                     @endif
                 </div>
                 <?php getHtmlEmployeeProjectExperience(null, 0); ?>
             </div>
-            <div class="col-sm-2">
-                <button type="button" class="btn-add add-college" data-toggle="tooltip" 
-                    data-placement="bottom" title="{{ trans('team::view.Add new project') }}"
-                    data-modal="true">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
+            @if ($experiencePermission)
+                <div class="col-sm-2">
+                    <button type="button" class="btn-add add-college" data-toggle="tooltip" 
+                        data-placement="bottom" title="{{ trans('team::view.Add new project') }}"
+                        data-modal="true">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 </div>
