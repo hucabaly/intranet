@@ -166,16 +166,42 @@ class CssController extends Controller {
         $cssTeamModel = new CssTeams();
         $cssTeamModel->insertCssTeam($css->id, $arrTeamIds);
         
-        return redirect('/css/preview/' . $css->token . '/' . $css->id);
+        return redirect(url('/css/preview/' . $css->token . '/' . $css->id));
     }
-
+    
+    public function welcome($token, $id){
+        $css = Css::where('id', $id)
+                ->where('token', $token)
+                ->first();
+        return view(
+                'sales::css.welcome', [
+                    'css' => $css,
+                    'hrefMake'  => url('/css/make/'. $token . '/' . $id),
+                    'token' => $token,
+                    'id'    => $id,
+                ]
+            );
+    }
+    
+    public function saveName(Request $request){
+        $makeName   = $request->input('make_name'); 
+        $token      = $request->input('token'); 
+        $id         = $request->input('id'); 
+        if($makeName == ''){
+            return redirect(url('/css/welcome/' . $token . '/' . $id));
+        }else{
+            $request->session()->put('makeName', $makeName);
+            return redirect(url('/css/make/' . $token . '/' . $id));
+        }
+    }
+    
     /**
-     * Welcome and make Css page
+     * Make Css page
      * @param string $token
      * @param int $id
      * @return objects
      */
-    public function make($token, $id) {
+    public function make($token, $id, Request $request) {
         $cssQuestionModel = new CssQuestion();
         $cssCategoryModel = new CssCategory();
         $css = Css::where('id', $id)
@@ -237,6 +263,7 @@ class CssController extends Controller {
                     "noOverView" => self::numToAlpha(++$NoOverView),
                     "overviewQuestionId" => $overviewQuestion->id,
                     "overviewQuestionContent" => $overviewQuestion->content,
+                    "makeName" => ($request->session()->get('makeName')) ? $request->session()->get('makeName') : '',
                 ]
             );
         } else {
@@ -280,6 +307,8 @@ class CssController extends Controller {
             'project_name' => $css->project_name,
         );
         
+        $request->session()->forget('makeName');
+        
         //send mail to sale who created this css
         Mail::send('sales::css.sendMail', $data, function ($message) use($email) {
             $message->from('sales@rikkeisoft.com', 'Rikkeisoft');
@@ -320,7 +349,7 @@ class CssController extends Controller {
                 $item->start_date = date('d/m/Y',strtotime($item->start_date));
                 $item->end_date = date('d/m/Y',strtotime($item->end_date));
                 $item->create_date = date('d/m/Y',strtotime($item->created_at));
-                $item->url =  url('/css/make/'. $item->token . '/' . $item->id);
+                $item->url =  url('/css/welcome/'. $item->token . '/' . $item->id);
                 // get count css result by cssId 
                 $item->countCss = $cssResultModel->getCountCssResultByCss($item->id);
                 if($item->countCss == 1){
