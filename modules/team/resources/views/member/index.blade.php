@@ -61,7 +61,7 @@ $roleTabelAs = 'role_table';
                     <thead>
                         <tr>
                             <th style="width: 20px" class="col-id">{{ trans('core::view.NO.') }}</th>
-                            <th style="width: 50px" class="sorting {{ Config::getDirClass('employee_code') }} col-id" data-order="employee_code" data-dir="{{ Config::getDirOrder('employee_code') }}">Code</th>
+                            <th style="width: 50px" class="sorting {{ Config::getDirClass('employee_code') }} col-id" data-order="employee_code" data-dir="{{ Config::getDirOrder('employee_code') }}">{{ trans('team::view.Code') }}</th>
                             <th class="sorting {{ Config::getDirClass('name') }} col-name" data-order="name" data-dir="{{ Config::getDirOrder('name') }}">{{ trans('team::view.Name') }}</th>
                             <th class="sorting {{ Config::getDirClass('email') }} col-name" data-order="email" data-dir="{{ Config::getDirOrder('email') }}">Email</th>
                             <th class="sorting {{ Config::getDirClass('role_name') }} col-name" data-order="role_name" data-dir="{{ Config::getDirOrder('role_name') }}">{{ trans('team::view.Position') }}</th>
@@ -76,7 +76,7 @@ $roleTabelAs = 'role_table';
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="text" name="filter[employee_code]" value="{{ Form::getFilterData('employee_code') }}" placeholder="Code" class="filter-grid" />
+                                        <input type="text" name="filter[employee_code]" value="{{ Form::getFilterData('employee_code') }}" placeholder="{{ trans('team::view.Code') }}" class="filter-grid" />
                                     </div>
                                 </div>
                             </td>
