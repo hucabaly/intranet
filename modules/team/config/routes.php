@@ -73,7 +73,7 @@ Route::group([
         'prefix' => 'member',
         'as' => 'member.'
     ], function() {
-        Route::get('/','MemberController@index')->name('index');
+        Route::get('/{id?}','MemberController@index')->name('index')->where('id', '[0-9]+');
         Route::get('create','MemberController@create')->name('create');
         Route::get('edit/{id}','MemberController@edit')->name('edit')->where('id', '[0-9]+');
         Route::post('save','MemberController@save')->name('save');

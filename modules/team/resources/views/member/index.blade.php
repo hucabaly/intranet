@@ -6,6 +6,7 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/datatables/dataTables.bootstrap.css') }}" />
+<link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/select2/select2.min.css') }}" />
 <link rel="stylesheet" href="{{ URL::asset('team/css/style.css') }}" />
 @endsection
 
@@ -15,12 +16,29 @@
 use Rikkei\Team\View\Config;
 use Rikkei\Core\View\Form;
 use Rikkei\Core\View\View;
+use Rikkei\Team\View\TeamList;
 
+$teamsOptionAll = TeamList::toOption(null, false, false);
 ?>
 <div class="row">
     <div class="col-sm-12">
         <div class="box box-info">
             <div class="box-body">
+                <div class="team-select-box">
+                    <label for="select-team-member">{{ trans('team::view.Choose team') }}</label>
+                    <div class="input-box">
+                        <select name="team_all" id="select-team-member"
+                            class="form-control select-search input-select-team-member">
+                            @if (count($teamsOptionAll))
+                                @foreach($teamsOptionAll as $option)
+                                    <option value="{{ URL::route('team::team.member.index', ['id' => $option['value']]) }}"<?php
+                                        if ($option['value'] == 0): ?> selected<?php endif; 
+                                    ?>>{{ $option['label'] }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
                 @include('team::include.filter')
                 @include('team::include.pager')
             </div>
@@ -83,4 +101,19 @@ use Rikkei\Core\View\View;
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script src="{{ URL::asset('adminlte/plugins/select2/select2.full.min.js') }}"></script>
+<script src="{{ URL::asset('team/js/script.js') }}"></script>
+<script>
+    jQuery(document).ready(function($) {
+        selectSearchReload();
+        
+        $('.input-select-team-member').on('change', function(event) {
+            value = $(this).val();
+            window.location.href = value;
+        });
+    });
+</script>
 @endsection

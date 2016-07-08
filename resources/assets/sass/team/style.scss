@@ -202,6 +202,19 @@
 
 /*responsive*/
 @media (min-width: 768px) {
+    .team-select-box {
+        float: left;
+        width: 50%;
+        label {
+            float: left;
+            margin-right: 5px;
+            margin-top: 3px;
+        }
+        .input-box {
+            float: left;
+            width: 50%;
+        }
+    }
     .box-form-team-position {
         .form-inline-block {
             .form-group {
@@ -219,6 +232,11 @@
             margin-bottom: 15px;
             right: 0;
         }
+    }
+}
+@media (max-width: 767px) {
+    .team-select-box {
+        margin-bottom: 20px;
     }
 }
 @media (min-width: 1000px) and (max-width: 1200px){
