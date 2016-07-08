@@ -48,7 +48,7 @@ function totalMark(elem) {
     }
     
     $(".total-point").html(getTotalPoint());
-    $(".point-fixed").html(getTotalPoint());
+    //$(".point-fixed").html(getTotalPoint());
 }
 
 /**
@@ -182,3 +182,4 @@ function submit(token, cssId){
         alert("Ajax failed to fetch data");
     })
 }
+
