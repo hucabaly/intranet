@@ -98,13 +98,14 @@ class School extends CoreModel
         $result = '[';
         foreach ($schools as $school) {
             $result .= '{';
-            $result .= 'id: "' . $school->id . '",';
-            $result .= 'label: "' . $school->name . '",';
-            $result .= 'country: "' . $school->country . '",';
-            $result .= 'province: "' . $school->province . '",';
-            $result .= 'image: "' . View::getLinkImage($school->image) . '",';
+            $result .= '"id": "' . $school->id . '",';
+            $result .= '"label": "' . $school->name . '",';
+            $result .= '"country": "' . $school->country . '",';
+            $result .= '"province": "' . $school->province . '",';
+            $result .= '"image": "' . View::getLinkImage($school->image) . '"';
             $result .= '},';
         }
+        $result = trim($result, ',');
         $result .= ']';
         CacheHelper::put(self::KEY_CACHE, $result);
         return $result;

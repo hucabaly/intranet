@@ -112,11 +112,12 @@ class Skill extends CoreModel
         $result = '[';
         foreach ($skills as $skill) {
             $result .= '{';
-            $result .= 'id: "' . $skill->id . '",';
-            $result .= 'label: "' . $skill->name . '",';
-            $result .= 'image: "' . View::getLinkImage($skill->image) . '",';
+            $result .= '"id": "' . $skill->id . '",';
+            $result .= '"label": "' . $skill->name . '",';
+            $result .= '"image": "' . View::getLinkImage($skill->image) . '"';
             $result .= '},';
         }
+        $result = trim($result, ',');
         $result .= ']';
         CacheHelper::put(self::KEY_CACHE, $result);
         return $result;

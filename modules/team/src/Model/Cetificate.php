@@ -109,11 +109,12 @@ class Cetificate extends CoreModel
         $result = '[';
         foreach ($languages as $language) {
             $result .= '{';
-            $result .= 'id: "' . $language->id . '",';
-            $result .= 'label: "' . $language->name . '",';
-            $result .= 'image: "' . View::getLinkImage($language->image) . '",';
+            $result .= '"id": "' . $language->id . '",';
+            $result .= '"label": "' . $language->name . '",';
+            $result .= '"image": "' . View::getLinkImage($language->image) . '"';
             $result .= '},';
         }
+        $result = trim($result, ',');
         $result .= ']';
         CacheHelper::put(self::KEY_CACHE, $result);
         return $result;

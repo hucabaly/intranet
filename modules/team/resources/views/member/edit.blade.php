@@ -413,16 +413,17 @@ Form::forget();
         var autoComplete = {},
             imagePreviewImageDefault,
             employeeSkillNo = {},
-            labelFormat = {};
-        
-        autoComplete.school = getArrayFormat({!! School::getAllFormatJson() !!});
+            labelFormat = {},
+            urlLoadAutoComplete;
+        <?php /*autoComplete.school = getArrayFormat({!! School::getAllFormatJson() !!});
         autoComplete.language = getArrayFormat({!! Cetificate::getAllFormatJson(Cetificate::TYPE_LANGUAGE) !!});
         autoComplete.cetificate = getArrayFormat({!! Cetificate::getAllFormatJson(Cetificate::TYPE_CETIFICATE) !!});
         autoComplete.program = getArrayFormat({!! Skill::getAllFormatJson(Skill::TYPE_PROGRAM) !!});
         autoComplete.database = getArrayFormat({!! Skill::getAllFormatJson(Skill::TYPE_DATABASE) !!});
         autoComplete.os = getArrayFormat({!! Skill::getAllFormatJson(Skill::TYPE_OS) !!});
         autoComplete.work_experience = getArrayFormat({!! WorkExperience::getAllFormatJson() !!});
-        
+        */ ?>
+        urlLoadAutoComplete = '{{ URL::route('core::ajax.skills.autocomplete') }}';
         imagePreviewImageDefault = '{{ View::getLinkImage() }}';
         
         @if ($employeeSchools)
@@ -509,7 +510,8 @@ Form::forget();
                 'same_databases': '{!! trans('team::view.Canot choose the same database') !!}',
                 'same_oss': '{!! trans('team::view.Canot choose the same os') !!}'
             },
-            'labelFormat': labelFormat
+            'labelFormat': labelFormat,
+            'urlLoadAutoComplete': urlLoadAutoComplete
         });
         /* -----end modal employee skill process */
         

@@ -100,11 +100,12 @@ class WorkExperience extends CoreModel
         $result = '[';
         foreach ($experiences as $experience) {
             $result .= '{';
-            $result .= 'id: "' . $experience->id . '",';
-            $result .= 'label: "' . $experience->company . '",';
-            $result .= 'image: "' . View::getLinkImage($experience->image) . '",';
+            $result .= '"id": "' . $experience->id . '",';
+            $result .= '"label": "' . $experience->company . '",';
+            $result .= '"image": "' . View::getLinkImage($experience->image) . '"';
             $result .= '},';
         }
+        $result = trim($result, ',');
         $result .= ']';
         CacheHelper::put(self::KEY_CACHE, $result);
         return $result;
