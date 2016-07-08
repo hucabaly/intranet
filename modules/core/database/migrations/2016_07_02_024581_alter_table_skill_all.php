@@ -36,12 +36,12 @@ class AlterTableSkillAll extends Migration
             }
         }
         
-        if (Schema::hasTable('employee_cetificates')) {
+        if (Schema::hasTable('employee_certificates')) {
             if (
-                Schema::hasColumn('employee_cetificates', 'start_at') && 
-                Schema::hasColumn('employee_cetificates', 'end_at')
+                Schema::hasColumn('employee_certificates', 'start_at') && 
+                Schema::hasColumn('employee_certificates', 'end_at')
             ) {
-                Schema::table('employee_cetificates', function (Blueprint $table) {
+                Schema::table('employee_certificates', function (Blueprint $table) {
                     $table->date('start_at')->nullable()->change();
                     $table->date('end_at')->nullable()->change();
                 });

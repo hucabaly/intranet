@@ -9,7 +9,7 @@ use Rikkei\Core\View\CacheHelper;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\URL;
 
-class Cetificate extends CoreModel
+class Certificate extends CoreModel
 {
     
     use SoftDeletes;
@@ -19,7 +19,7 @@ class Cetificate extends CoreModel
     const TYPE_LANGUAGE = 1;
     const TYPE_CETIFICATE = 2;
     
-    protected $table = 'cetificates';
+    protected $table = 'certificates';
 
     /**
      * save model cetificate

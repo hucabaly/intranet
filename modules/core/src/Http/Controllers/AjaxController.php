@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Rikkei\Team\View\Permission;
 use Illuminate\Http\Request;
 use Rikkei\Team\Model\School;
-use Rikkei\Team\Model\Cetificate;
+use Rikkei\Team\Model\Certificate;
 use Rikkei\Team\Model\Skill;
 use Rikkei\Team\Model\WorkExperience;
 
@@ -33,8 +33,8 @@ class AjaxController extends Controller
         }
         $result = [];
         $result['school'] = School::getAllFormatJson();
-        $result['language'] = Cetificate::getAllFormatJson(Cetificate::TYPE_LANGUAGE);
-        $result['cetificate'] = Cetificate::getAllFormatJson(Cetificate::TYPE_CETIFICATE);
+        $result['language'] = Certificate::getAllFormatJson(Certificate::TYPE_LANGUAGE);
+        $result['cetificate'] = Certificate::getAllFormatJson(Certificate::TYPE_CETIFICATE);
         $result['program'] = Skill::getAllFormatJson(Skill::TYPE_PROGRAM);
         $result['database'] = Skill::getAllFormatJson(Skill::TYPE_DATABASE);
         $result['os'] = Skill::getAllFormatJson(Skill::TYPE_OS);

@@ -4,11 +4,11 @@ namespace Rikkei\Team\Model;
 use Rikkei\Core\Model\CoreModel;
 use Illuminate\Support\Facades\Validator;
 
-class EmployeeCetificate extends CoreModel
+class EmployeeCertificate extends CoreModel
 {
     const KEY_CACHE = 'employee_cetificate';
 
-    protected $table = 'employee_cetificates';
+    protected $table = 'employee_certificates';
     public $timestamps = false;
 
     /**
@@ -22,11 +22,11 @@ class EmployeeCetificate extends CoreModel
     public static function saveItems($employeeId, $cetificatesTypeIds = [], $cetificatesType = [], $type = null)
     {
         if (! $type) {
-            $type = Cetificate::TYPE_LANGUAGE;
+            $type = Certificate::TYPE_LANGUAGE;
         }
-        $cetificateTable = Cetificate::getTableName();
+        $cetificateTable = Certificate::getTableName();
         self::where('employee_id', $employeeId)
-            ->whereIn('cetificate_id', function ($query) use ($cetificateTable, $type) {
+            ->whereIn('certificate_id', function ($query) use ($cetificateTable, $type) {
                 $query->from($cetificateTable)
                     ->select('id')
                     ->where('type', $type);
@@ -38,7 +38,7 @@ class EmployeeCetificate extends CoreModel
         }
         $cetificateAdded = [];
         
-        $typeCetificates = Cetificate::getAllType();
+        $typeCetificates = Certificate::getAllType();
         $tblName = $typeCetificates[$type];
         foreach ($cetificatesTypeIds as $key => $cetificatesTypeId) {
             if (! isset($cetificatesType[$key]) || 
@@ -48,7 +48,7 @@ class EmployeeCetificate extends CoreModel
                 continue;
             }
             $employeeCetificateData = $cetificatesType[$key]["employee_{$tblName}"];
-            if ($type == Cetificate::TYPE_LANGUAGE) {
+            if ($type == Certificate::TYPE_LANGUAGE) {
                 $arrayRule = [
                     'level' => 'required|max:255',
                     'start_at' => 'required|max:255',
@@ -67,7 +67,7 @@ class EmployeeCetificate extends CoreModel
             }
             $employeeCetificateItem = new self();
             $employeeCetificateItem->setData($employeeCetificateData);
-            $employeeCetificateItem->cetificate_id = $cetificatesTypeId;
+            $employeeCetificateItem->certificate_id = $cetificatesTypeId;
             $employeeCetificateItem->employee_id = $employeeId;
             $employeeCetificateItem->updated_at = date('Y-m-d H:i:s');
             $employeeCetificateItem->save();
@@ -84,14 +84,14 @@ class EmployeeCetificate extends CoreModel
     public static function getItemsFollowEmployee($employeeId, $type = null)
     {
         if ($type == null ) {
-            $type = Cetificate::TYPE_LANGUAGE;
+            $type = Certificate::TYPE_LANGUAGE;
         }
         $thisTable = self::getTableName();
-        $cetificateTable = Cetificate::getTableName();
+        $cetificateTable = Certificate::getTableName();
         
         return self::select('level', 'start_at', 'end_at', 'type', 
                 'name', 'image', 'id')
-            ->join($cetificateTable, "{$cetificateTable}.id", '=', "{$thisTable}.cetificate_id")
+            ->join($cetificateTable, "{$cetificateTable}.id", '=', "{$thisTable}.certificate_id")
             ->where('employee_id', $employeeId)
             ->where('type', $type)
             ->get();

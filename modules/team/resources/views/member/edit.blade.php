@@ -5,7 +5,7 @@ use Rikkei\Team\View\TeamList;
 use Rikkei\Team\Model\Roles;
 use Rikkei\Team\Model\School;
 use Rikkei\Core\View\View;
-use Rikkei\Team\Model\Cetificate;
+use Rikkei\Team\Model\Certificate;
 use Rikkei\Team\Model\Skill;
 use Rikkei\Team\Model\WorkExperience;
 use Rikkei\Team\View\Permission;

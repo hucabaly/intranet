@@ -325,7 +325,7 @@ class Employees extends CoreModel
             }
             if (isset($skillsArray['languages']) &&
                 isset($skillsChageArray['languages']) && $skillsChageArray['languages']) {
-                $this->saveCetificateType($skillsArray['languages'], Cetificate::TYPE_LANGUAGE);
+                $this->saveCetificateType($skillsArray['languages'], Certificate::TYPE_LANGUAGE);
             }
 
             // save cetificate
@@ -334,7 +334,7 @@ class Employees extends CoreModel
             }
             if (isset($skillsArray['cetificates']) &&
                 isset($skillsChageArray['cetificates']) && $skillsChageArray['cetificates']) {
-                $this->saveCetificateType($skillsArray['cetificates'], Cetificate::TYPE_CETIFICATE);
+                $this->saveCetificateType($skillsArray['cetificates'], Certificate::TYPE_CETIFICATE);
             }
 
             // save skill
@@ -417,7 +417,7 @@ class Employees extends CoreModel
      */
     protected function saveCetificateType($cetificatesType = [], $type = null)
     {
-        $cetificatesTypeIds = Cetificate::saveItems($cetificatesType, $type);
+        $cetificatesTypeIds = Certificate::saveItems($cetificatesType, $type);
         $this->saveEmployeeCetificateType($cetificatesTypeIds, $cetificatesType, $type);
     }
     
@@ -430,7 +430,7 @@ class Employees extends CoreModel
      */
     protected function saveEmployeeCetificateType($cetificatesTypeIds = [], $cetificatesType = [], $type = null)
     {
-        return EmployeeCetificate::saveItems($this->id, $cetificatesTypeIds, $cetificatesType, $type);
+        return EmployeeCertificate::saveItems($this->id, $cetificatesTypeIds, $cetificatesType, $type);
     }
     
     /**
@@ -517,7 +517,7 @@ class Employees extends CoreModel
         if ($employeeLanguages = CacheHelper::get(self::KEY_CACHE, $this->id)) {
             return $employeeLanguages;
         }
-        $employeeLanguages = EmployeeCetificate::getItemsFollowEmployee($this->id, Cetificate::TYPE_LANGUAGE);
+        $employeeLanguages = EmployeeCertificate::getItemsFollowEmployee($this->id, Certificate::TYPE_LANGUAGE);
         CacheHelper::put(self::KEY_CACHE, $employeeLanguages, $this->id);
         return $employeeLanguages;
     }
@@ -532,7 +532,7 @@ class Employees extends CoreModel
         if ($employeeCetificates = CacheHelper::get(self::KEY_CACHE, $this->id)) {
             return $employeeCetificates;
         }
-        $employeeCetificates = EmployeeCetificate::getItemsFollowEmployee($this->id, Cetificate::TYPE_CETIFICATE);
+        $employeeCetificates = EmployeeCertificate::getItemsFollowEmployee($this->id, Certificate::TYPE_CETIFICATE);
         CacheHelper::put(self::KEY_CACHE, $employeeCetificates, $this->id);
         return $employeeCetificates;
     }
