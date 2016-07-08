@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Exception;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * View ouput gender
@@ -127,7 +128,7 @@ class View
      * upload file
      * 
      * @param \Illuminate\Http\UploadedFile $file
-     * @param srting $path
+     * @param srting $path name path after storage/app/
      * @param array $allowType
      * @param boolean $rename
      * @return string|null
@@ -159,7 +160,10 @@ class View
             } else {
                 $fileName = $file->getClientOriginalName();
             }
-            $file->move($path, $fileName);
+            Storage::put(
+                $path . '/' . $fileName,
+                file_get_contents($file->getRealPath())
+            );
             return $fileName;
         }
         return null;
