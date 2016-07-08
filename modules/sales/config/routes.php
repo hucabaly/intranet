@@ -23,6 +23,7 @@ Route::group([
 });
 Route::get('css/success/{id}', 'CssController@success')->name('success');
 Route::get('css/welcome/{token}/{id}', 'CssController@welcome')->name('welcome') ;
+Route::post('css/welcome/{token}/{id}', 'CssController@welcome')->name('welcome') ;
 Route::get('css/make/{token}/{id}', 'CssController@make')->name('make') ;
 Route::post('css/saveResult', 'CssController@saveResult')->name('saveResult');
-Route::post('css/save_name', 'CssController@saveName')->name('saveName');
+

@@ -1,10 +1,13 @@
 @mixin project-header() {
     background-color: $colorBlue;
     color: #fff;
-    padding: 5px;
+    padding: 8px 5px;
     font-family: 'KozGoPro-Medium';
     text-align: center;
     margin: 10px 0;
     border-radius: 3px;
+    @media screen and (min-width: $lagreScreen){
+        font-size: 17px;
+    }
 }
 

@@ -4,9 +4,13 @@ namespace Rikkei\Sales\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use Rikkei\Sales\Model\CssQuestion;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CssCategory extends Model
 {
+    
+    use SoftDeletes;
+    
     protected $table = 'css_category';
     
     /**
@@ -15,7 +19,7 @@ class CssCategory extends Model
      * @return object category
      */
     public function getRootCategory($projectTypeId){
-        return self::where("parent_id",0)->where('project_type_id',$projectTypeId)->first();
+        return self::where("parent_id",0)->where('project_type_id',$projectTypeId)->withTrashed()->first();
     }
     
     /**
@@ -24,7 +28,7 @@ class CssCategory extends Model
      * @return object list category
      */
     public function getCategoryByParent($parentId){
-        return self::where('parent_id', $parentId)->get();
+        return self::where('parent_id', $parentId)->withTrashed()->get();
     }
     
     /**
@@ -35,7 +39,7 @@ class CssCategory extends Model
         return self::where('id', function($query) use ($questionId){
                     $query->select('category_id')
                     ->from(with(new CssQuestion)->getTable())
-                    ->where('id', $questionId);
+                    ->where('id', $questionId)->withTrashed();
                 })->first();
     }    
 }

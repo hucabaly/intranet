@@ -3,9 +3,13 @@
 namespace Rikkei\Sales\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CssQuestion extends Model
 {
+    
+    use SoftDeletes;
+    
     protected $table = 'css_question';
     
     /**
@@ -23,6 +27,6 @@ class CssQuestion extends Model
      * @return object list questions
      */
     public function getQuestionByCategory($categoryId){
-        return self::where('category_id', $categoryId)->get();
+        return self::where('category_id', $categoryId)->withTrashed()->get();
     }
 }

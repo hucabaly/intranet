@@ -21,13 +21,13 @@
                 </div>
             </div>
             <div class="row-fluid ">
-                <form method="post" action="{{ url('/css/save_name/')}}"  >
+                <form method="post" action="{{ url('/css/welcome/'.$token.'/'.$id)}}"  >
                     <input type="hidden" name="token" value="{{$token}}" />
                     <input type="hidden" name="id" value="{{$id}}" />
                     <div class="css-make-info">
                         <div>
                             <div class="company-name-title">{{ trans('sales::view.Customer company name jp')}}</div>
-                            <div class="company-name inline-block">{{ $css->company_name}}</div>
+                            <div class="company-name inline-block">{{ $css->company_name}} 様</div>
                         </div>
                         <div>
                             <div class="project-name-title">{{ trans('sales::view.Project name jp')}}</div>
@@ -38,13 +38,11 @@
                             <div class="inline-block">
                                 <div class="input-group goto-make-parent">
 
-                                        <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
-                                        <input type="text" class="form-control" id="make_name" name="make_name" />
-                                        <span class="input-group-btn">
-                                            <button type="submit" class="btn btn-default" type="button">Go!</button>
-                                        </span>
-
-                                    <!--<img class="btn-make-css" src="{{ URL::asset('sales/images/btn-make-css.jpg') }}" onclick="goto_make('{{ $hrefMake }}');" />-->
+                                    <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
+                                    <input type="text" class="form-control" id="make_name" name="make_name" />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-default btn-to-make" name="submit"><img src="{{ URL::asset('sales/images/splash.png') }}" /></button>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -92,4 +90,9 @@
 @section('script')
 <script src="{{ asset('lib/js/jquery.visible.js') }}"></script>
 <script src="{{ asset('sales/js/css/customer.js') }}"></script>
+<script>
+   <?php if($nameRequired == 1): ?>
+        $('#modal-confirm-name').modal('show');
+    <?php endif; ?>
+</script>
 @endsection
