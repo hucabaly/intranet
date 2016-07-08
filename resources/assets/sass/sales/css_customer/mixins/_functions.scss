@@ -2,12 +2,28 @@
     background-color: $colorBlue;
     color: #fff;
     padding: 8px 5px;
-    font-family: 'KozGoPro-Medium';
+    font-weight: 700;
     text-align: center;
     margin: 10px 0;
     border-radius: 3px;
     @media screen and (min-width: $lagreScreen){
         font-size: 17px;
+    }
+}
+
+@mixin total-point(){
+    float: right;
+    font-size: 7px;
+    padding: 5px 15px 0;
+    text-align: center;
+    background-color: #e2f4fd;
+    border: 1px solid #409dd7;
+    border-radius: 3px;
+    @media screen and (min-width: $mediumScreen){
+        font-size:9px;
+    }
+    @media screen and (min-width: $lagreScreen){
+        font-size:13px;
     }
 }
 

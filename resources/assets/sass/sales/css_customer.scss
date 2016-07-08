@@ -11,6 +11,8 @@
 .container{
     @media screen and (max-width: $mediumScreen){
         width: 100%;
+        padding-left: 5px;
+        padding-right: 5px;
     }
 }
 
@@ -50,9 +52,6 @@ textarea {
 }
 
 /** Welcome */
-.welcome-body {
-    min-height: 550px;
-}
 
 .welcome-header {
     text-align: center;
@@ -90,11 +89,11 @@ textarea {
     margin-bottom: 0 !important;
     color: #58595b;
     font-size: $welcomeFontSizeMedium !important;
-    font-family: 'KozGoPro-Light';
+    
 }
 
 .css-make-info{
-    font-family: 'KozGoPro-Medium';
+    
     margin: 30px auto;
     color: #58595b;
     width: 470px;
@@ -169,9 +168,9 @@ textarea {
 
 /** Make CSS */
 .make-css-page {
-    font-family: 'KozGoPro-Light';
+    
     @media screen and (min-width: 320px){
-        padding: 0 15px;
+        padding: 0 5px;
         #make-header {
             text-align: center;
             .logo-rikkei {
@@ -192,7 +191,7 @@ textarea {
                 margin: 0;
                 color: $colorBlue;
                 display: inline;
-                font-family: 'KozGoPro-Bold';
+                font-weight: 700;
                 @media screen and (min-width: $mediumScreen){
                     font-size: 26px;
                 }
@@ -206,19 +205,7 @@ textarea {
             }
             
             .total-point-container {
-                float: right;
-                font-size: 7px;
-                padding: 5px 15px 0;
-                text-align: center;
-                background-color: #e2f4fd;
-                border: 1px solid #409dd7;
-                font-family: 'KozGoPro-Light';
-                @media screen and (min-width: $mediumScreen){
-                    font-size:9px;
-                }
-                @media screen and (min-width: $lagreScreen){
-                    font-size:13px;
-                }
+                @include total-point();
                 .total-point-text {
                     margin-left: 3px;
                 }
@@ -226,7 +213,7 @@ textarea {
                     font-size: 16px;
                     margin-left: -2px;
                     color: $colorBlue;
-                    font-family: 'KozGoPro-Bold';
+                    
                     @media screen and (min-width: $mediumScreen){
                         font-size: 22px;
                     }
@@ -238,6 +225,23 @@ textarea {
                 .total-point-base {
                     color: $colorGreen;
                 }
+            }
+            
+            .total-point-container-base { 
+                background-color: #e9f4e9;
+                border: 1px solid $colorGreen;
+            }
+            
+            .total-point-container-fixed {
+                @extend .total-point-container;
+                position: fixed;
+                display: none;
+            }
+            
+            .total-point-container-base-fixed { 
+                @extend .total-point-container-base;
+                position: fixed;
+                display: none;
             }
         }
         
@@ -256,7 +260,7 @@ textarea {
                 padding: 0 -10px;
                 font-size: 12px;
                 margin-bottom: 2px;
-                font-family: 'KozGoPro-Regular';
+                
                 @media screen and (min-width: $mediumScreen){
                     margin-bottom: 5px;
                 }
@@ -307,7 +311,7 @@ textarea {
                 background-color: $colorLightBlue;
                 padding: 8px 5px;
                 color: #fff;
-                font-family: 'KozGoPro-Medium';
+                
                 border-radius: 3px;
                 
                 .note-comment {
@@ -337,7 +341,7 @@ textarea {
             
             .child-cate {
                 padding: 8px 5px;
-                font-family: 'KozGoPro-Medium';
+                
             }
             
             .container-question{
@@ -399,9 +403,7 @@ textarea {
                     color: #fff;
                     background-color: $colorLightBlue;
                     border: none;
-                    font-weight: bold;
                     text-transform: uppercase;
-                    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
                     font-size: 17px;
                     padding: 5px 15px;
                 }
@@ -411,23 +413,29 @@ textarea {
             }
         }
         
-        .point-fixed {
-            position: fixed;
-            bottom: 5px;
-            right: 15px;
-            padding: 10px;
-            color: $colorBlue;
-            background-color: #e2f4fd;
-            opacity: 0.7;
-            font-weight: bold;
-            font-size: 20px;
-            @media screen and (min-width: $lagreScreen){
-                font-size: 30px;
-            }
-        }
         
-        .point-base {
-            color: $colorGreen;
+    }
+}
+
+/** End Make page */
+
+/** Success page */
+
+.success-body{
+    text-align: center;
+    @media screen and (min-width: 320px){
+        img {
+            width: 170px;
+        }
+        .success-action {
+            margin-top: 100px;
+            p {
+                font-size: 20px;
+                font-weight: 700;
+                @media screen and (min-width: $lagreScreen){
+                    font-size: 35px;
+                }
+            }
         }
     }
 }

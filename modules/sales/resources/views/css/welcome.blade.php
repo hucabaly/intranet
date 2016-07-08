@@ -52,13 +52,7 @@
         </div>
     </div>
     
-    <div class="welcome-footer col-md-12">
-        <div class="row">
-            <div class="col-md-6"><p class="float-left copyright">Copyright © 2016 <span>Rikkeisoft</span>. All rights reserved.</p></div>
-            <div class="col-md-6"><p class="float-right policy"><a href="http://rikkeisoft.com/privacypolicy/" target="_blank"><span class="policy-link">プライバシーポリシー</span></a> &nbsp; | &nbsp; Version 1.0.0</p></div>
-        </div>
-        
-    </div>
+    
 </div>
 <div class="modal modal-warning" id="modal-confirm-name">
     <div class="modal-dialog">
@@ -94,5 +88,8 @@
    <?php if($nameRequired == 1): ?>
         $('#modal-confirm-name').modal('show');
     <?php endif; ?>
+    //Fix footer bottom
+   $('.welcome-footer').css('position','fixed');
+   $('.welcome-footer').css('bottom','0');
 </script>
 @endsection
