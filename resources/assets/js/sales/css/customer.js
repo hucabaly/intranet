@@ -21,9 +21,7 @@ function hideModalConfirmMake(){
 function goToFinish(){
     location.href = "/css/cancel";
 }
-$(".rateit").on("tap",function(){
-  totalMark($(this));
-});
+
 /**
  * Trang lam danh gia
  * Khi khach hang danh danh gia mot tieu chi
@@ -31,23 +29,26 @@ $(".rateit").on("tap",function(){
  * @returns void
  */
 function totalMark(elem) { 
-    var point = $(elem).rateit('value');
+    var point = $(elem).rateit('value');  
     var dataQuestionid = $(elem).attr('data-questionid');
+    var commentElem = $(".comment-question[data-questionid='"+dataQuestionid+"']");
     if(point < 3){
-        var text = $(".comment-question[data-questionid='"+dataQuestionid+"']").val();
+        var text = commentElem.val();
         if($.trim(text) === ''){
-            $(".comment-question[data-questionid='"+dataQuestionid+"']").css("border","1px solid red");
+            commentElem.css("border","1px solid red");
+            commentElem.attr('placeholder','＃コメントがあればご記入ください');
         }
     }else{
-        $(".comment-question[data-questionid='"+dataQuestionid+"']").css("border","1px solid #d2d6de");
+        commentElem.css("border","1px solid #d2d6de");
+        commentElem.removeAttr('placeholder');
     }
     
     if(elem.id === 'tongquat'){
         $(elem).css("border","1px solid #d2d6de");
     }
     
-    $("#total-point").html(getTotalPoint());
-    $(".point-fixed").html('Tổng điểm: ' + getTotalPoint());
+    $(".total-point").html(getTotalPoint());
+    $(".point-fixed").html(getTotalPoint());
 }
 
 /**
@@ -59,7 +60,7 @@ function getTotalPoint(){
     var total = 0;
     $(".rateit").each(function(){
         var danhGia = parseInt($(this).rateit('value'));
-        if($(this).attr("id") != "tongquat"){
+        if($(this).attr("id") !== "tongquat"){
             if(danhGia > 0){
                 tongSoCauDanhGia++;
                 total += danhGia;
@@ -68,7 +69,7 @@ function getTotalPoint(){
     });
     
     var diemTongQuat = parseInt($("#tongquat").rateit('value'));
-    if(tongSoCauDanhGia == 0){
+    if(tongSoCauDanhGia === 0){
         total = diemTongQuat * 20;
     }else{
         total = diemTongQuat * 4 + total/(tongSoCauDanhGia * 5) * 80;
@@ -135,7 +136,7 @@ function confirm(arrayValidate){
         return false;
     }
     
-    $('#modal-confirm .modal-body').html("Số điểm hiện tại của CSS là "+$("#total-point").html()+" Điểm. Bạn có chắc muốn hoàn thành CSS tại đây không?");
+    $('#modal-confirm .modal-body').html("現在の点数は "+$(".total-point").html()+" 点です。アンケート結果を送信しますか。");
     $('#modal-confirm').modal('show');
 }
 

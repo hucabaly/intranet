@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>
             @yield('title')
-            Rikkei Intranet
+            Rikkeisoft お客様アンケート
         </title>
         <script>
             var baseUrl = '{{ url('/') }}/';

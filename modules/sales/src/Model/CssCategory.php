@@ -7,6 +7,7 @@ use Rikkei\Sales\Model\CssQuestion;
 
 class CssCategory extends Model
 {
+    
     protected $table = 'css_category';
     
     /**

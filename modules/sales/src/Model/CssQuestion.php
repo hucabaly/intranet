@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CssQuestion extends Model
 {
+    
     protected $table = 'css_question';
     
     /**

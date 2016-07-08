@@ -231,9 +231,13 @@ class CssQuestionSeeder extends Seeder
                 'is_overview_question' => 1
             ],
         ];
-        foreach ($dataDemo as $data) {
-            if (! DB::table('css_question')->select('id')->where('content', $data['content'])->get()) {
-                DB::table('css_question')->insert($data);
+        
+        $maxId = DB::table('css_question')->max('id'); 
+        if($maxId == 0){
+            foreach ($dataDemo as $data) {
+                if (! DB::table('css_question')->select('id')->where('content', $data['content'])->get()) {
+                    DB::table('css_question')->insert($data);
+                }
             }
         }
     }

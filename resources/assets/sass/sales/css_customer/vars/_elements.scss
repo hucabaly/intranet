@@ -1,10 +1,9 @@
-$smallScreen: 550px;
-
 /** 
 * Font color welcome page
 */
 $colorRed: #be1e2d;
 $colorGreen: #43a047;
+$colorLightGreen: #82c785;
 $colorGray: #8c9a9c;
 $colorBlue: #2b98d4;
 $colorLightBlue: #58c1ef;
@@ -21,5 +20,16 @@ $welcomeFontSizeNormal: 13pt;
 $welcomeFontSizeSmall: 9pt;
 $welcomeFontSizeSmallest: 8pt;
 
-//Fix font height slogan in Welcome page
+/**
+*Fix font height slogan in Welcome page
+*/
 $fontHeightSloganScale: 0.7;
+
+/**
+* Screen width
+*/
+
+//Medium screen width
+$mediumScreen: 550px;
+//Large screen width
+$lagreScreen: 768px;
