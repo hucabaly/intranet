@@ -34,11 +34,29 @@ function getHtmlEmployeeProjectExperience($employeeExperience = null, $i = 0)
                 ~
                 <span data-tbl="project_experience" data-col="end_at" data-date-format="M/Y">{{ ViewHelper::formatDateTime('Y-m-d', 'm/Y', $employeeExperience->end_at) }}</span>
                 &nbsp;&nbsp;&nbsp;
-                <span>{{ trans('team::view.Language') }}:<span> <span data-tbl="project_experience" data-col="enviroment_language">{{ $employeeExperience->getEnvironment('language') }}</span>
+                <span>{{ trans('team::view.Language') }}:<span> <span data-tbl="project_experience" data-col="enviroment_language"><?php 
+                        if ($enviromentItem = $employeeExperience->getEnvironment('language')) {
+                            echo e($enviromentItem);
+                        } else {
+                            echo e($employeeExperience->enviroment_language);
+                        }
+                    ?></span>
                 &nbsp;&nbsp;&nbsp;
-                <span>{{ trans('team::view.Environment') }}:<span> <span data-tbl="project_experience" data-col="enviroment_enviroment">{{ $employeeExperience->getEnvironment('enviroment') }}</span>
+                <span>{{ trans('team::view.Environment') }}:<span> <span data-tbl="project_experience" data-col="enviroment_enviroment"><?php 
+                        if ($enviromentItem = $employeeExperience->getEnvironment('enviroment')) {
+                            echo e($enviromentItem);
+                        } else {
+                            echo e($employeeExperience->enviroment_enviroment);
+                        }
+                    ?></span>
                 &nbsp;&nbsp;&nbsp;
-                <span>{{ trans('team::view.OS') }}:<span> <span data-tbl="project_experience" data-col="enviroment_os">{{ $employeeExperience->getEnvironment('os') }}</span>
+                <span>{{ trans('team::view.OS') }}:<span> <span data-tbl="project_experience" data-col="enviroment_os"><?php 
+                        if ($enviromentItem = $employeeExperience->getEnvironment('os')) {
+                            echo e($enviromentItem);
+                        } else {
+                            echo e($employeeExperience->enviroment_os);
+                        }
+                    ?></span>
             </p>
             <p>
                 <span>{{ trans('team::view.Responsible') }}:<span> <span data-tbl="project_experience" data-col="responsible">{{ $employeeExperience->responsible }}</span>
@@ -49,9 +67,27 @@ function getHtmlEmployeeProjectExperience($employeeExperience = null, $i = 0)
                 project_experience: {
                     id: '{{ $employeeExperience->id }}',
                     name: '{{ $employeeExperience->name }}',
-                    enviroment_language: '{{ $employeeExperience->getEnvironment('language') }}',
-                    enviroment_enviroment: '{{ $employeeExperience->getEnvironment('enviroment') }}',
-                    enviroment_os: '{{ $employeeExperience->getEnvironment('os') }}',
+                    enviroment_language: '<?php 
+                        if ($enviromentItem = $employeeExperience->getEnvironment('language')) {
+                            echo e($enviromentItem);
+                        } else {
+                            echo e($employeeExperience->enviroment_language);
+                        }
+                    ?>',
+                    enviroment_enviroment: '<?php 
+                        if ($enviromentItem = $employeeExperience->getEnvironment('enviroment')) {
+                            echo e($enviromentItem);
+                        } else {
+                            echo e($employeeExperience->enviroment_enviroment);
+                        }
+                    ?>',
+                    enviroment_os: '<?php 
+                        if ($enviromentItem = $employeeExperience->getEnvironment('os')) {
+                            echo e($enviromentItem);
+                        } else {
+                            echo e($employeeExperience->enviroment_os);
+                        }
+                    ?>',
                     start_at: '{{ $employeeExperience->start_at }}',
                     end_at: '{{ $employeeExperience->end_at }}',
                     image: '{{ ViewHelper::getLinkImage($employeeExperience->image) }}',

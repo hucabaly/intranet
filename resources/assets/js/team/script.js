@@ -134,8 +134,9 @@ jQuery(document).ready(function ($) {
         employeeSkill = option.employeeSkill;
         messageError = option.messageError;
         labelFormat = option.labelFormat;
-        urlLoadAutoComplete = option.urlLoadAutoComplete;
-        
+        urlLoadAutoComplete = option.urlLoadAutoComplete,
+        groupChange = option.groupChange;
+
         //click button to show modal
         $(document).on('click', '.employee-skill-box-wrapper [data-modal=true]', function(event) {
             dataItemId = $(this).parents('.esbw-item').data('id');

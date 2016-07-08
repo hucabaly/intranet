@@ -9,6 +9,7 @@ use Rikkei\Team\Model\Certificate;
 use Rikkei\Team\Model\Skill;
 use Rikkei\Team\Model\WorkExperience;
 use Rikkei\Team\View\Permission;
+use Rikkei\Team\View\General;
 
 $postionsOption = Roles::toOptionPosition();
 $teamsOption = TeamList::toOption(null, true, false);
@@ -16,6 +17,8 @@ $teamsOption = TeamList::toOption(null, true, false);
 $employeeSchools = $employeeLanguages = $employeeCetificates = null;
 $employeePrograms = $employeeDatabases = $employeeOss = null;
 $employeeWorkExperiences = $employeeProjectExperiences = null;
+
+// skill data for employee
 if (isset($employeeModelItem) && $employeeModelItem) {
     $employeeSchools = $employeeModelItem->getSchools();
     $employeeLanguages = $employeeModelItem->getLanguages();
@@ -25,6 +28,40 @@ if (isset($employeeModelItem) && $employeeModelItem) {
     $employeeOss = $employeeModelItem->getOss();
     $employeeWorkExperiences = $employeeModelItem->getWorkExperience();
     $employeeProjectExperiences = $employeeModelItem->getProjectExperience();
+}
+
+//skill data for flash create employee
+$employeeSkillchangeFlashData = $employeeSkillFlashData = null;
+$employeeSkillModelFlash = $employeeSkillGroupChange = null;
+if (! Form::getData('employee.id') && Form::getData('employee_skill.data')) {
+    $employeeSkillchangeFlashData = Form::getData('employee_skill_change.data');
+    $employeeSkillFlashData = Form::getData('employee_skill.data');
+    $employeeSkillModelFlash = General::getEmployeeSkllObject($employeeSkillFlashData, $employeeSkillchangeFlashData);
+    if (isset($employeeSkillModelFlash['schools']) && $employeeSkillModelFlash['schools']) {
+        $employeeSchools = $employeeSkillModelFlash['schools'];
+    }
+    if (isset($employeeSkillModelFlash['languages']) && $employeeSkillModelFlash['languages']) {
+        $employeeLanguages = $employeeSkillModelFlash['languages'];
+    }
+    if (isset($employeeSkillModelFlash['cetificates']) && $employeeSkillModelFlash['cetificates']) {
+        $employeeCetificates = $employeeSkillModelFlash['cetificates'];
+    }
+    if (isset($employeeSkillModelFlash['programs']) && $employeeSkillModelFlash['programs']) {
+        $employeePrograms = $employeeSkillModelFlash['programs'];
+    }
+    if (isset($employeeSkillModelFlash['oss']) && $employeeSkillModelFlash['oss']) {
+        $employeeOss = $employeeSkillModelFlash['oss'];
+    }
+    if (isset($employeeSkillModelFlash['databases']) && $employeeSkillModelFlash['databases']) {
+        $employeeDatabases = $employeeSkillModelFlash['databases'];
+    }
+    if (isset($employeeSkillModelFlash['work_experiences']) && $employeeSkillModelFlash['work_experiences']) {
+        $employeeWorkExperiences = $employeeSkillModelFlash['work_experiences'];
+    }
+    if (isset($employeeSkillModelFlash['project_experiences']) && $employeeSkillModelFlash['project_experiences']) {
+        $employeeProjectExperiences = $employeeSkillModelFlash['project_experiences'];
+    }
+    parse_str($employeeSkillchangeFlashData, $employeeSkillGroupChange);
 }
 ?>
 
@@ -110,8 +147,8 @@ if (isset($employeeModelItem) && $employeeModelItem) {
                     project_experiences: {},
                 };
             </script>
-            <input type="hidden" name="employee_skill" value="" />
-            <input type="hidden" name="employee_skill_change" value="" />
+            <input type="hidden" name="employee_skill" value="{!! $employeeSkillFlashData !!}" />
+            <input type="hidden" name="employee_skill_change" value="{!! $employeeSkillchangeFlashData !!}" />
             <!-- box skills -->
             <div class="box box-info qualifications-skill-box">
                 <div class="box-header with-border">
@@ -414,7 +451,8 @@ Form::forget();
             imagePreviewImageDefault,
             employeeSkillNo = {},
             labelFormat = {},
-            urlLoadAutoComplete;
+            urlLoadAutoComplete,
+            groupChange = {};
         <?php /*autoComplete.school = getArrayFormat({!! School::getAllFormatJson() !!});
         autoComplete.language = getArrayFormat({!! Cetificate::getAllFormatJson(Cetificate::TYPE_LANGUAGE) !!});
         autoComplete.cetificate = getArrayFormat({!! Cetificate::getAllFormatJson(Cetificate::TYPE_CETIFICATE) !!});
@@ -485,6 +523,11 @@ Form::forget();
         labelFormat.level_language = {!! View::getLanguageLevelFormatJson() !!};
         labelFormat.level_normal = {!! View::getNormalLevelFormatJson() !!};
         
+        @if ($employeeSkillGroupChange && count($employeeSkillGroupChange))
+            @foreach ($employeeSkillGroupChange as $itemKey => $itemValue)
+                groupChange.{{ $itemKey }} = {{ $itemValue }};
+            @endforeach
+        @endif
         //preview image
         <?php
         $typeAllow = implode('","', Config::get('services.file.image_allow'));
@@ -511,7 +554,8 @@ Form::forget();
                 'same_oss': '{!! trans('team::view.Canot choose the same os') !!}'
             },
             'labelFormat': labelFormat,
-            'urlLoadAutoComplete': urlLoadAutoComplete
+            'urlLoadAutoComplete': urlLoadAutoComplete,
+            'groupChange': groupChange
         });
         /* -----end modal employee skill process */
         

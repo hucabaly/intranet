@@ -162,7 +162,7 @@ function getHtmlEmployeeSkill($employeeSkill = null, $i = 0, $type = 'program')
             </p>
             <p>
                 <span>{{ trans('team::view.Level') }} <span data-tbl="employee_{{ $type }}" data-col="level" data-label-format="level_normal">{{ ViewHelper::getLabelNormalLevel($employeeSkill->level) }}</span>
-                &nbsp;&nbsp;&nbsp;
+                ~
                 <span data-tbl="employee_{{ $type }}" data-col="experience">{{ $employeeSkill->experience }}</span> <span>{{ trans('team::view.years') }}
             </p>
         </div>
