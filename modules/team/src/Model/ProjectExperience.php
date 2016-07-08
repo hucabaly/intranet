@@ -7,6 +7,7 @@ use Exception;
 use Rikkei\Core\View\CacheHelper;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Config;
 
 class ProjectExperience extends CoreModel
 {
@@ -65,7 +66,7 @@ class ProjectExperience extends CoreModel
                     $urlEncode = preg_replace('/\//', '\/', URL::to('/'));
                     $image = preg_replace('/^' . $urlEncode . '/', '', $experienceData['image']) ;
                     $image = trim($image, '/');
-                    if (preg_match('/^media/', $image)) {
+                    if (preg_match('/^' . Config::get('general.upload_folder') . '/', $image)) {
                         $experience->image = $image;
                     }
                 }

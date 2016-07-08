@@ -20,18 +20,20 @@ class UploadController extends Controller
         if (Auth::guest()) {
             exit;
         }
+        $uploadFolderImageTeam = 'team/images';
         $result = [];
         $image = array_get(Input::all(),'file');
         $type = Input::get('skill_type');
         if (! $type) {
             $type = 'general';
         }
-        $pathFolder = 'media/' . $type;
+        $pathFolder = Config::get('general.upload_folder') . '/' . $uploadFolderImageTeam . '/' . $type;
         if ($image) {
             try {
                 $image = View::uploadFile(
                     $image, 
-                    public_path($pathFolder),
+                    Config::get('general.upload_storage_public_folder') . 
+                        '/' . $uploadFolderImageTeam . '/' . $type,
                     Config::get('services.file.image_allow'),
                     Config::get('services.file.image_max')
                 );

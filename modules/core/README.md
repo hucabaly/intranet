@@ -18,20 +18,13 @@ php artisan vendor:publish --tag=database
 php artisan migrate
 php artisan db:seed
 
-#### add menu and acl default
-Run in command line:
+#### upload folder
+create symlink to upload folder. Source folder `/path/project/storage/app/public/`, link folder: `/path/project/public/storage`
 
-    `composer dump-autoload`
-    `php artisan db:seed --class=PermissionSeeder` 
-
-to update menu and acl
+    ln -s /path/project/storage/app/public/ /path/project/public/storage
 
 #### Recuirement demo data
 Add demo data for recruitment
-
-    `composer dump-autoload`
-    `php artisan db:seed --class=RecruitmentSeeder`
-
 Fill phone field demo in profile data, presenter autoload:
 
     0912345678
