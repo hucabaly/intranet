@@ -55,5 +55,8 @@ return [
         'High',
         'Normal',
         'Low'
-    ]
+    ],
+    
+    'upload_folder' => 'storage', //folder public/storage
+    
 ];

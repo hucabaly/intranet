@@ -8,6 +8,7 @@ use Rikkei\Core\View\View;
 use Rikkei\Core\View\CacheHelper;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Config;
 
 class Certificate extends CoreModel
 {
@@ -69,7 +70,7 @@ class Certificate extends CoreModel
                     $urlEncode = preg_replace('/\//', '\/', URL::to('/'));
                     $image = preg_replace('/^' . $urlEncode . '/', '', $cetificateData['image']) ;
                     $image = trim($image, '/');
-                    if (preg_match('/^media/', $image)) {
+                    if (preg_match('/^' . Config::get('general.upload_folder') . '/', $image)) {
                         $cetificate->image = $image;
                     }
                 }

@@ -26,7 +26,7 @@ class UploadController extends Controller
         if (! $type) {
             $type = 'general';
         }
-        $pathFolder = 'media/' . $type;
+        $pathFolder = Config::get('general.upload_folder') . '/' . $type;
         if ($image) {
             try {
                 $image = View::uploadFile(
