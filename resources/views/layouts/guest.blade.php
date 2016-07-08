@@ -43,6 +43,12 @@
                     @yield('content')
                 </section><!-- /.content -->
             </div>
+            <div class="welcome-footer col-md-12">
+                <div class="row">
+                    <div class="col-md-6"><p class="float-left copyright">Copyright © 2016 <span>Rikkeisoft</span>. All rights reserved.</p></div>
+                    <div class="col-md-6"><p class="float-right policy"><a href="http://rikkeisoft.com/privacypolicy/" target="_blank"><span class="policy-link">プライバシーポリシー</span></a> &nbsp; | &nbsp; Version 1.0.0</p></div>
+                </div>
+            </div>
         </div>
         <!-- jQuery 2.2.0 -->
         <script src="{{ URL::asset('adminlte/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
