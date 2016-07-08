@@ -19,6 +19,12 @@ use Rikkei\Core\View\View;
 use Rikkei\Team\View\TeamList;
 
 $teamsOptionAll = TeamList::toOption(null, false, false);
+
+//get table name
+$teamTableAs = 'team_table';
+$employeeTableAs = 'employees';
+$employeeTeamTableAs = 'team_member_table';
+$roleTabelAs = 'role_table';
 ?>
 <div class="row">
     <div class="col-sm-12">
@@ -29,11 +35,19 @@ $teamsOptionAll = TeamList::toOption(null, false, false);
                     <div class="input-box">
                         <select name="team_all" id="select-team-member"
                             class="form-control select-search input-select-team-member">
+                            <option value="{{ URL::route('team::team.member.index') }}"<?php
+                                    if (! $teamIdCurrent): ?> selected<?php endif; 
+                                    ?><?php
+                                    if ($teamIdsAvailable !== true): ?> disabled<?php endif;
+                                    ?>>&nbsp;</option>
                             @if (count($teamsOptionAll))
                                 @foreach($teamsOptionAll as $option)
                                     <option value="{{ URL::route('team::team.member.index', ['id' => $option['value']]) }}"<?php
-                                        if ($option['value'] == 0): ?> selected<?php endif; 
-                                    ?>>{{ $option['label'] }}</option>
+                                        if ($option['value'] == $teamIdCurrent): ?> selected<?php endif; 
+                                            ?><?php
+                                        if ($teamIdsAvailable === true):
+                                        elseif (! in_array($option['value'], $teamIdsAvailable)): ?> disabled<?php endif;
+                                        ?>>{{ $option['label'] }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -46,10 +60,13 @@ $teamsOptionAll = TeamList::toOption(null, false, false);
                 <table class="table table-striped dataTable table-bordered table-hover table-grid-data">
                     <thead>
                         <tr>
-                            <th class="col-id">{{ trans('core::view.NO.') }}</th>
-                            <th class="sorting {{ Config::getDirClass('employee_code') }} col-id" data-order="employee_code" data-dir="{{ Config::getDirOrder('employee_code') }}">Code</th>
+                            <th style="width: 20px" class="col-id">{{ trans('core::view.NO.') }}</th>
+                            <th style="width: 50px" class="sorting {{ Config::getDirClass('employee_code') }} col-id" data-order="employee_code" data-dir="{{ Config::getDirOrder('employee_code') }}">Code</th>
                             <th class="sorting {{ Config::getDirClass('name') }} col-name" data-order="name" data-dir="{{ Config::getDirOrder('name') }}">{{ trans('team::view.Name') }}</th>
                             <th class="sorting {{ Config::getDirClass('email') }} col-name" data-order="email" data-dir="{{ Config::getDirOrder('email') }}">Email</th>
+                            <th class="sorting {{ Config::getDirClass('role_name') }} col-name" data-order="role_name" data-dir="{{ Config::getDirOrder('role_name') }}">{{ trans('team::view.Position') }}</th>
+                            <th class="sorting {{ Config::getDirClass('birthday') }} col-name" data-order="birthday" data-dir="{{ Config::getDirOrder('birthday') }}">{{ trans('team::view.Birthday') }}</th>
+                            <th class="sorting {{ Config::getDirClass('mobile_phone') }} col-name" data-order="mobile_phone" data-dir="{{ Config::getDirOrder('mobile_phone') }}">{{ trans('team::view.Phone') }}</th>
                             <th class="col-action">&nbsp;</th>
                         </tr>
                     </thead>
@@ -66,18 +83,32 @@ $teamsOptionAll = TeamList::toOption(null, false, false);
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="text" name="filter[name]" value="{{ Form::getFilterData('name') }}" placeholder="{{ trans('team::view.Name') }}" class="filter-grid" />
+                                        <input type="text" name="filter[{{ $employeeTableAs }}.name]" value="{{ Form::getFilterData("{$employeeTableAs}.name") }}" placeholder="{{ trans('team::view.Name') }}" class="filter-grid" />
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="text" name="filter[email]" value="{{ Form::getFilterData('email') }}" placeholder="Email" class="filter-grid" />
+                                        <input type="text" name="filter[{{ $employeeTableAs }}.email]" value="{{ Form::getFilterData("{$employeeTableAs}.email") }}" placeholder="Email" class="filter-grid" />
                                     </div>
                                 </div>
                             </td>
                             <td>&nbsp;</td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" name="filter[{{ $employeeTableAs }}.birthday]" value="{{ Form::getFilterData("{$employeeTableAs}.birthday") }}" placeholder="{{ trans('team::view.Birthday') }}" class="filter-grid" />
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" name="filter[{{ $employeeTableAs }}.mobile_phone]" value="{{ Form::getFilterData("{$employeeTableAs}.mobile_phone") }}" placeholder="{{ trans('team::view.Phone') }}" class="filter-grid" />
+                                    </div>
+                                </div>
+                            </td>
                             <td>&nbsp;</td>
                         </tr>
                         @if(isset($collectionModel) && count($collectionModel))
@@ -88,6 +119,9 @@ $teamsOptionAll = TeamList::toOption(null, false, false);
                                     <td>{{ $item->employee_code }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->email }}</td>
+                                    <td>{{ $item->role_name }}</td>
+                                    <td>{{ $item->birthday }}</td>
+                                    <td>{{ $item->mobile_phone }}</td>
                                     <td>
                                         <a href="{{ route('team::team.member.edit', ['id' => $item->id ]) }}" class="btn-edit">{{ trans('team::view.View profile') }}</a>
                                     </td>

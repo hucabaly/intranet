@@ -199,7 +199,13 @@
     }
 }
 /* -------end employee skill */
-
+.team-select-box {
+    .select2.select2-container {
+        .select2-selection.select2-selection--single {
+            height: 31px;
+        }
+    }
+}
 /*responsive*/
 @media (min-width: 768px) {
     .team-select-box {
