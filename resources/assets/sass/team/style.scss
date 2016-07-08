@@ -197,6 +197,13 @@
     input[type=file] {
         height: auto
     }
+    .select-search.error + label {
+        position: absolute;
+        bottom: 0;
+    }
+    .select-search.error ~ span.select2-container {
+        margin-bottom: 25px;
+    }
 }
 /* -------end employee skill */
 .team-select-box {
