@@ -3,11 +3,11 @@ namespace Rikkei\Team\Model;
 
 use Rikkei\Core\Model\CoreModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Config;
 use Exception;
 use Rikkei\Core\View\View;
 use Rikkei\Core\View\CacheHelper;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\URL;
 
 class School extends CoreModel
 {
@@ -58,7 +58,14 @@ class School extends CoreModel
                     return redirect()->back()->withErrors($validator)->send();
                 }
                 if (isset($schoolData['image_path']) && $schoolData['image_path']) {
-                        $school->image = $schoolData['image_path'];
+                    $school->image = $schoolData['image_path'];
+                } else if (isset($schoolData['image']) && $schoolData['image']) {
+                    $urlEncode = preg_replace('/\//', '\/', URL::to('/'));
+                    $image = preg_replace('/^' . $urlEncode . '/', '', $schoolData['image']) ;
+                    $image = trim($image, '/');
+                    if (preg_match('/^media/', $image)) {
+                        $school->image = $image;
+                    }
                 }
                 unset($schoolData['image_path']);
                 unset($schoolData['image']);
@@ -91,13 +98,14 @@ class School extends CoreModel
         $result = '[';
         foreach ($schools as $school) {
             $result .= '{';
-            $result .= 'id: "' . $school->id . '",';
-            $result .= 'label: "' . $school->name . '",';
-            $result .= 'country: "' . $school->country . '",';
-            $result .= 'province: "' . $school->province . '",';
-            $result .= 'image: "' . View::getLinkImage($school->image) . '",';
+            $result .= '"id": "' . $school->id . '",';
+            $result .= '"label": "' . $school->name . '",';
+            $result .= '"country": "' . $school->country . '",';
+            $result .= '"province": "' . $school->province . '",';
+            $result .= '"image": "' . View::getLinkImage($school->image) . '"';
             $result .= '},';
         }
+        $result = trim($result, ',');
         $result .= ']';
         CacheHelper::put(self::KEY_CACHE, $result);
         return $result;

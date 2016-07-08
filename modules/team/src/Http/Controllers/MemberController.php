@@ -77,7 +77,7 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
             'employeeRoles' => $model->getRoles(),
             'recruitmentPresent' => $presenter,
             'employeeGreaterLeader' => $employeeGreaterLeader,
-            'employeeSchools' => $model->getSchools(),
+            'employeeModelItem' => $model,
         ]);
     }
     
@@ -130,6 +130,11 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
         if (! $id) {
             Form::setData($dataEmployee, 'employee');
             Form::setData($teamPostions, 'employee_team');
+            Form::setData(['data' => Input::get('employee_skill')], 
+                'employee_skill');
+            Form::setData(['data' => Input::get('employee_skill_change')], 
+                'employee_skill_change');
+            
             $roles = (array) Input::get('role');
             $employeeRole = Roles::select('id as role_id', 'role')
                 ->whereIn('id', $roles)

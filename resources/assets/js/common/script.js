@@ -19,7 +19,8 @@ function selectSearchReload(option) {
     if (option.showSearch) {
         jQuery(".select-search").select2();
     } else {
-        jQuery(".select-search").select2({
+        jQuery(".select-search.has-search").select2();
+        jQuery(".select-search:not(.has-search)").select2({
             minimumResultsForSearch: Infinity
         });
     }
@@ -44,6 +45,9 @@ function selectSearchReload(option) {
 function getDateFormat(date, format) {
     if (format == 'Y') {
         return date.getFullYear();
+    }
+    if (format == 'M/Y') {
+        return (date.getMonth() + 1 ) + '/' + date.getFullYear();
     }
     return '';
 }

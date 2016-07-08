@@ -117,12 +117,12 @@ class Permission
                     $routePermission = '.*';
                 }
                 $flagCheck = false; //search route action
-                if (is_numeric($routeCurrent)) {
-                    if ($routeCurrent == $routePermission) {
+                if (strpos($routePermission, '*') !== false) {
+                    if (preg_match('/' . $routePermission . '/', $routeCurrent)) {
                         $flagCheck = true;
                     }
                 } else {
-                    if (preg_match('/' . $routePermission . '/', $routeCurrent)) {
+                    if ($routeCurrent == $routePermission) {
                         $flagCheck = true;
                     }
                 }

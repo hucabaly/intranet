@@ -151,4 +151,20 @@ class CoreModel extends \Illuminate\Database\Eloquent\Model
         }
         return self::FLAG_FALSE;
     }
+    
+    /**
+     * rewrite __call funciton of modal
+     *  - check method start string: get
+     * 
+     * @param type $method
+     * @param type $parameters
+     * @return type
+     */
+    public function __call($method, $parameters)
+    {
+        if (preg_match('/^get[A-Z]/', $method)) {
+            return null;
+        }        
+        return parent::__call($method, $parameters);
+    }
 }

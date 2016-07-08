@@ -12,23 +12,23 @@ class CreateTableEmployeeCetificates extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('employee_cetificates')) {
+        if (Schema::hasTable('employee_certificates')) {
             return;
         }
-        Schema::create('employee_cetificates', function (Blueprint $table) {
+        Schema::create('employee_certificates', function (Blueprint $table) {
             $table->unsignedInteger('employee_id');
-            $table->unsignedInteger('cetificate_id');
+            $table->unsignedInteger('certificate_id');
             $table->smallInteger('level')->nullable();
-            $table->dateTime('start_at')->nullable();
-            $table->dateTime('end_at')->nullable();
+            $table->date('start_at')->nullable();
+            $table->date('end_at')->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
             
-            $table->primary(['employee_id', 'cetificate_id']);
-            $table->index('cetificate_id');
-            $table->foreign('cetificate_id')
+            $table->primary(['employee_id', 'certificate_id']);
+            $table->index('certificate_id');
+            $table->foreign('certificate_id')
                 ->references('id')
-                ->on('cetificates');
+                ->on('certificates');
             $table->foreign('employee_id')
                 ->references('id')
                 ->on('employees');
@@ -42,6 +42,6 @@ class CreateTableEmployeeCetificates extends Migration
      */
     public function down()
     {
-        Schema::drop('employee_cetificates');
+        Schema::drop('employee_certificates');
     }
 }

@@ -20,10 +20,10 @@ class EmployeeSchool extends CoreModel
      */
     public static function saveItems($employeeId, $schoolIds= [], $schools = [])
     {
+        self::where('employee_id', $employeeId)->delete();
         if (! $schoolIds || ! $schools || ! $employeeId) {
             return;
         }
-        self::where('employee_id', $employeeId)->delete();
         $schoolIdsAdded = [];
         foreach ($schoolIds as $key => $schoolId) {
             if (! isset($schools[$key]) || ! $schools[$key]['employee_school'] || in_array($schoolId, $schoolIdsAdded)) {
