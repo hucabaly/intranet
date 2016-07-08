@@ -47,7 +47,7 @@ function totalMark(elem) {
         $(elem).css("border","1px solid #d2d6de");
     }
     
-    $("#total-point").html(getTotalPoint());
+    $(".total-point").html(getTotalPoint());
     $(".point-fixed").html(getTotalPoint());
 }
 
@@ -136,7 +136,7 @@ function confirm(arrayValidate){
         return false;
     }
     
-    $('#modal-confirm .modal-body').html("現在の点数は "+$("#total-point").html()+" 点です。アンケート結果を送信しますか。");
+    $('#modal-confirm .modal-body').html("現在の点数は "+$(".total-point").html()+" 点です。アンケート結果を送信しますか。");
     $('#modal-confirm').modal('show');
 }
 

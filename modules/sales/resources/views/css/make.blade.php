@@ -43,7 +43,7 @@
                     </div>
                     @foreach($cssCate as $item)
                         @if($item['noCate'] == 1)
-                        <div class="col-xs-12 root-cate <?php if($css->project_type_id === 2){ echo 'root-cate-base'; }?>">
+                        <div class="col-xs-12 root-cate root-cate-first <?php if($css->project_type_id === 2){ echo 'root-cate-base'; }?>">
                             {{$item["sort_order"] . ". " .$item['name']}}
                             <div class="col-sm-5 note-comment">{{ trans('sales::view.Note comment')}}</div>
                         </div>
@@ -100,7 +100,7 @@
                 </div>
                 <!-- END PROJECT DETAIL -->
 
-                <div class="point-fixed">00.00</span></div>
+                <div class="point-fixed <?php if($css->project_type_id === 2){ echo 'point-base'; }?>">00.00</span></div>
 
                 <!-- MODALS -->
                 <div class="modal modal-danger" id="modal-alert">

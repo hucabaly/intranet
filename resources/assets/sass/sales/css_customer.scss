@@ -266,10 +266,17 @@ textarea {
         .project-detail {
             padding: 0 15px;
             font-size: 16px;
+            
             .header {
                 @include project-header();
                 margin-bottom: 0;
                 border-radius: 3px 3px 0 0;
+                background-image: none;
+                @media screen and (min-width: $lagreScreen){
+                    background-image: url(../images/white-dot.jpg), url(../images/white-dot.jpg);
+                    background-repeat: repeat-y;
+                    background-position: 41.66666667%, 58.3333333%;
+                }
                 .note-comment {
                     font-size: 9px;
                     margin-top: 1px;
@@ -302,9 +309,7 @@ textarea {
                 color: #fff;
                 font-family: 'KozGoPro-Medium';
                 border-radius: 3px;
-                &:first-child {
-                    border-radius: 0 0 3px 3px;
-                }
+                
                 .note-comment {
                     float: right;
                     font-size: 13px;
@@ -313,6 +318,16 @@ textarea {
                     @media screen and (min-width: $lagreScreen){
                         display: block;
                     }
+                }
+            }
+            
+            .root-cate-first {
+                background-image: none;
+                border-radius: 0 0 3px 3px;
+                @media screen and (min-width: $lagreScreen){
+                    background-image: url(../images/white-dot.jpg);
+                    background-repeat: repeat-y;
+                    background-position: 58.3333333%;
                 }
             }
             
@@ -409,6 +424,10 @@ textarea {
             @media screen and (min-width: $lagreScreen){
                 font-size: 30px;
             }
+        }
+        
+        .point-base {
+            color: $colorGreen;
         }
     }
 }
