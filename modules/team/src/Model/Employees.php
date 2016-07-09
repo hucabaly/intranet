@@ -940,6 +940,28 @@ class Employees extends CoreModel
     }
     
     /**
+     * get ids of team that employee is leader
+     * 
+     * @return array
+     */
+    public function getTeamIdIsLeader()
+    {
+        if ($teamIds = CacheHelper::get(self::KEY_CACHE, $this->id)) {
+            return $teamIds;
+        }
+        $teamIds = [];
+        $positions = $this->getTeamPositons();
+        foreach ($positions as $position) {
+            $employeeLeader = Roles::isPositionLeader($position->role_id);
+            if ($employeeLeader) {
+                $teamIds[] = $position->team_id;
+            }
+        }
+        CacheHelper::put(self::KEY_CACHE, $teamIds, $this->id);
+        return $teamIds;
+    }
+    
+    /**
      * check permission greater with another employee
      * 
      * @param model $employee

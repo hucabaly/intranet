@@ -167,4 +167,17 @@ class CoreModel extends \Illuminate\Database\Eloquent\Model
         }        
         return parent::__call($method, $parameters);
     }
+    
+    /**
+     * check model use soft delete
+     * 
+     * @return boolean
+     */
+    public static function isUseSoftDelete()
+    {
+        if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses(with(new static)))) {
+            return true;
+        }
+        return false;
+    }
 }

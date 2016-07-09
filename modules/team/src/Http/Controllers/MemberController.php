@@ -14,6 +14,7 @@ use Rikkei\Core\View\View;
 use Rikkei\Recruitment\Model\RecruitmentApplies;
 use Rikkei\Team\View\Permission;
 use Rikkei\Team\Model\Roles;
+use Rikkei\Team\Model\Team;
 
 class MemberController extends \Rikkei\Core\Http\Controllers\Controller
 {
@@ -30,10 +31,42 @@ class MemberController extends \Rikkei\Core\Http\Controllers\Controller
     /**
      * list member
      */
-    public function index()
+    public function index($id = null)
     {
+        $teamIdsAvailable = null;
+        //scope company => view all team
+        if (Permission::getInstance()->isScopeCompany()) {
+            $teamIdsAvailable = true;
+        } elseif (Permission::getInstance()->isScopeTeam()){
+            //scope team => check
+            $employeeCurrent = Permission::getInstance()->getEmployee();
+            $teamIdsAvailable = (array) $employeeCurrent->getTeamIdIsLeader();
+            //employee not is leader
+            if (! $teamIdsAvailable) {
+                View::viewErrorPermission();
+            }
+            //check scope comany of each team
+            foreach ($teamIdsAvailable as $key => $teamId) {
+                if (! Permission::getInstance()->isScopeTeam($teamId)) {
+                    unset($teamIdsAvailable[$key]);
+                }
+            }
+            if (! $teamIdsAvailable) {
+                View::viewErrorPermission();
+            }
+            if (! $id) {
+                $id = reset($teamIdsAvailable);    
+            }
+            if (! in_array($id, $teamIdsAvailable)) {
+                View::viewErrorPermission();
+            }
+        } else {
+            View::viewErrorPermission();
+        }
         return view('team::member.index', [
-            'collectionModel' => Employees::getGridData()
+            'collectionModel' => Team::getMemberGridData($id),
+            'teamIdCurrent' => $id,
+            'teamIdsAvailable' => $teamIdsAvailable
         ]);
     }
     
