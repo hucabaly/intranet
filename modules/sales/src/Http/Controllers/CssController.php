@@ -238,6 +238,8 @@ class CssController extends Controller {
                                 "parent_id" => $item->id,
                                 "sort_order" => $item_child->sort_order,
                                 "questionsChild" => $cssQuestionChild,
+                                "show_brse_name" => $item_child->show_brse_name,
+                                "show_pm_name" => $item_child->show_pm_name,
                             );
                         }
                     }
@@ -250,6 +252,8 @@ class CssController extends Controller {
                         "cssCateChild" => $cssCateChild,
                         "questions" => $cssQuestion,
                         "noCate"    => $NoOverView, //No. of root cate
+                        "show_brse_name" => $item->show_brse_name,
+                        "show_pm_name" => $item->show_pm_name,
                     );
                 }
             }

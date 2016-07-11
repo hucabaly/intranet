@@ -154,4 +154,7 @@ return [
     'Link make css info' => 'Link đường dẫn URL đến trang CSS bạn cần gửi cho khách hàng ở bên dưới, bạn chỉ cần copy URL này và gửi qua mail cho khách hàng.',
     'Link make css preview' => 'Bạn có thể xem trang preview lời chào mừng và chi tiết bài CSS ở bên dưới, đây chính xác là những gì khách hàng có thể nhìn thấy được, nếu chưa ok, bạn có thể bấm nút back để quay lại màn hình đăng ký thông tin cho CSS.',
     'Set relation teams' => 'Chọn các team liên quan',
+    'Show BrSE OSDC in category' => '担当BrSEの氏名： :brse_name',
+    'Show BrSE base in category' => '担当ブリッジSE氏名： :brse_name',
+    'Show PM in category' => '担当者の氏名： :pm_name',
 ];

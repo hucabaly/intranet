@@ -52,6 +52,18 @@
                             {{$item["sort_order"] . ". " .$item['name']}}
                         </div>    
                         @endif
+                        @if($item['show_pm_name'] === 1)
+                        <div class="col-xs-12 show-name-in-cate">{{trans('sales::view.Show PM in category',['pm_name' => $css->pm_name])}}</div>
+                        @endif
+                        @if($item['show_brse_name'] === 1)
+                        <div class="col-xs-12 show-name-in-cate">
+                            @if($css->project_type_id === 1)
+                                {{trans('sales::view.Show BrSE OSDC in category',['brse_name' => $css->brse_name])}}
+                            @else
+                                {{trans('sales::view.Show BrSE base in category',['brse_name' => $css->brse_name])}}
+                            @endif
+                        </div>
+                        @endif
                         @if($item['cssCateChild'])
                             @foreach($item['cssCateChild'] as $itemChild)
                                 <div class="col-xs-12 child-cate">{{$itemChild["sort_order"] . ". " .$itemChild['name']}}</div>

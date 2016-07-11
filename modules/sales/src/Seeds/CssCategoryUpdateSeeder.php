@@ -18,10 +18,10 @@ class CssCategoryUpdateSeeder extends Seeder
                 ->update(['name' => 'プロジェクトの品質']);
         
         DB::table('css_category')->where('id',4)
-                ->update(['name' => 'プロジェクト管理']);
+                ->update(['name' => 'プロジェクト管理', 'show_pm_name' => 1]);
         
         DB::table('css_category')->where('id',5)
-                ->update(['name' => 'ブリッジSEのチームに関する評価']);
+                ->update(['name' => 'ブリッジSEのチームに関する評価', 'show_brse_name' => 1]);
         
         DB::table('css_category')->where('id',6)
                 ->update(['name' => '要求分析工程の品質']);
@@ -45,10 +45,10 @@ class CssCategoryUpdateSeeder extends Seeder
                 ->update(['name' => 'サービスの品質']);
         
         DB::table('css_category')->where('id',13)
-                ->update(['name' => '日本語でのコミュニケーション能力についての評価']);
+                ->update(['name' => '日本語でのコミュニケーション能力についての評価', 'show_brse_name' => 1]);
         
         DB::table('css_category')->where('id',14)
-                ->update(['name' => 'OSDCの担当者についての評価']);
+                ->update(['name' => 'OSDCの担当者についての評価', 'show_pm_name' => 1]);
         
         DB::table('css_category')->where('id',15)
                 ->update(['name' => '能力/スキル']);
