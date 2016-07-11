@@ -113,7 +113,7 @@
                                 <p>One fine body…</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">{{ trans('sales::view.Close')}}</button>
                             </div>
                         </div>
                         <!-- /.modal-content -->
