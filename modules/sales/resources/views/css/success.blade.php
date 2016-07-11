@@ -20,6 +20,7 @@
 
 @section('script')
 <script src="{{ URL::asset('lib/js/jquery.backstretch.min.js') }}"></script>
+<script src="{{ asset('sales/js/css/customer.js') }}"></script>
 <script>
     jQuery(document).ready(function($) {
         $.backstretch('{{ URL::asset('common/images/login-background.png') }}');
@@ -44,7 +45,9 @@
 </script>
 <script>
    //Fix footer bottom
-   $('.welcome-footer').css('position','fixed');
-   $('.welcome-footer').css('bottom','0');
+    setHeightBody('.success-body', 130);
+    $(window).resize(function(){
+        setHeightBody('.success-body', 130);
+    });
 </script>
 @endsection

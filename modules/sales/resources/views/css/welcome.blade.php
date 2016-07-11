@@ -89,7 +89,9 @@
         $('#modal-confirm-name').modal('show');
     <?php endif; ?>
     //Fix footer bottom
-   $('.welcome-footer').css('position','fixed');
-   $('.welcome-footer').css('bottom','0');
+    setHeightBody('.welcome-body', 90);
+    $(window).resize(function(){
+        setHeightBody('.welcome-body', 90);
+    });
 </script>
 @endsection

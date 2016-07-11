@@ -1,35 +1,53 @@
 @extends('layouts.guest')
 
 @section('content')
-<div class="row">
-    <div class="col-xs-12">
-        <div class="col-md-12">
-          <div class="box box-solid">
-            <div class="box-body">
-              <div class="box-group" id="accordion">
-                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                <div class="panel box box-primary">
-                  <div class="box-header with-border">
-                    <h4 class="box-title">
-                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                        {{trans("sales::view.Cancel make title")}}
-                      </a>
-                    </h4>
-                  </div>
-                  <div id="collapseOne" class="panel-collapse collapse in">
-                    <div class="box-body">
-                      {{trans("sales::view.Cancel make")}}
-                    </div>
-                  </div>
-                </div>
-                
-              </div>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-        </div>
+<div class="success-body">
+    <h1 class="success-title">
+        <img src="{{ URL::asset('common/images/logo-rikkei.png') }}" />
+    </h1><!-- /.login-logo -->
+    <div class="success-action">
+        <p>
+            <span class="success-item success-content">{{trans("sales::view.Cancel make")}}</span>
+        </p>
+    </div><!-- /.login-box-action -->
+</div><!-- /.login-wrapper -->
+@endsection
+
+<!-- Styles -->
+@section('css')
+<link href="{{ asset('sales/css/css_customer.css') }}" rel="stylesheet" type="text/css" >
+@endsection
+
+@section('script')
+<script src="{{ URL::asset('lib/js/jquery.backstretch.min.js') }}"></script>
+<script src="{{ asset('sales/js/css/customer.js') }}"></script>
+<script>
+    jQuery(document).ready(function($) {
+        $.backstretch('{{ URL::asset('common/images/login-background.png') }}');
         
-    </div>
-</div>    
+        /**
+         * fix position for login block - margin height
+         */
+        function fixPositionLoginBlock()
+        {
+            windowHeight = $(window).height();
+            loginHeight = $('.login-wrapper').height();
+            placeHeight = windowHeight / 2 - loginHeight / 2;
+            $('.login-wrapper').css('margin-top', placeHeight + 'px');
+        }
+        
+        fixPositionLoginBlock();
+        $(window).resize(function (event) {
+            fixPositionLoginBlock();
+        });
+    });
+    
+</script>
+<script>
+   //Fix footer bottom
+    setHeightBody('.success-body', 130);
+    $(window).resize(function(){
+        setHeightBody('.success-body', 130);
+    });
+</script>
 @endsection
