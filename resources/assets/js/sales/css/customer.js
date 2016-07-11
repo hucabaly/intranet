@@ -181,7 +181,7 @@ function submit(token, cssId){
         },
     })
     .done(function (data) { 
-        location.href = baseUrl + "css/success/"+cssId;
+        location.href = baseUrl + "css/success";
     })
     .fail(function () {
         alert("Ajax failed to fetch data");

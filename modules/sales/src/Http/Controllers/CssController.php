@@ -315,16 +315,16 @@ class CssController extends Controller {
         $employee = Employees::find($css->employee_id); 
         $email = $employee->email; 
         $data = array(
-            'href' => url("/css/detail/" . $cssResultId) ,
-            'project_name' => $css->project_name,
+            'href'      => url("/css/detail/" . $cssResultId) ,
+            'css'       => $css,
+            'cssResult' => $dataResult,
+            'employee'  => $employee,
         );
         
-        $request->session()->forget('makeName');
-        
-        //send mail to sale who created this css
-        Mail::send('sales::css.sendMail', $data, function ($message) use($email) {
+        //Send mail to sale who created this css
+        Mail::send('sales::css.sendMail', $data, function ($message) use($email, $css) {
             $message->from('sales@rikkeisoft.com', 'Rikkeisoft');
-            $message->to($email)->subject(Lang::get('sales::view.Subject email notification make css'));
+            $message->to($email)->subject(Lang::get('sales::view.Subject email notification make css',["company" => $css->company_name]));
 
         });
 
@@ -699,13 +699,9 @@ class CssController extends Controller {
      * @param int $cssId
      * @return void
      */
-    public function success($cssId){
-        $css = Css::find($cssId);
-        return view(
-            'sales::css.success', [
-                "css" => $css
-            ]
-        ); 
+    public function success(){
+        
+        return view('sales::css.success'); 
     }
     
     /**
