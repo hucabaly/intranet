@@ -11,5 +11,5 @@ return [
     'Make confirm line 2' => "Quý khách có chắc là muốn thực hiện phiếu điều tra này hay không?", 
     'Proposed required' => 'Xin quý khách góp ý để chúng tôi có thể cải thiện chất lượng dự án tốt hơn',
     'Rikkei slogan' => 'Where the dream begins',
-    'Comment question placeholder' => '＃コメントがあればご記入ください',
+    'Comment question placeholder' => '＃コメントがあればご記入ください。',
 ];

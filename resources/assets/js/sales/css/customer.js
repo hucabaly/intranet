@@ -41,7 +41,7 @@ function totalMark(elem) {
         var text = commentElem.val();
         if($.trim(text) === ''){
             commentElem.css("border","1px solid red");
-            commentElem.attr('placeholder','＃コメントがあればご記入ください');
+            commentElem.attr('placeholder','＃コメントがあればご記入ください。');
         }
     }else{
         commentElem.css("border","1px solid #d2d6de");
