@@ -1,8 +1,19 @@
 $(document).ready(function(){
-    $('#make_name').focusout(function(){
-        $('.project-info .make-name').text($(this).val());
-    });
+    fixQuestionPosition();
 });
+
+/**
+ * Fix question vertical align div
+ */
+function fixQuestionPosition(){
+    if($('.make-css-page').length > 0) {
+        $('.container-question').each( function(){
+            var containerHeight = $(this).height();
+            var questionHeight = $(this).find('.question').height();
+            $(this).find('.question').css('margin-top', (containerHeight - questionHeight)/2 -2);
+        });
+    }
+}
 
 //Fix footer bottom customer pages
 function setHeightBody(elem, height){
@@ -80,30 +91,6 @@ function getTotalPoint(){
     }
     
     return total.toFixed(2);
-}
-
-$(window).scroll(function(){
-    fixPointContainer();
-});
-
-$(window).resize(function(){
-    fixPointContainer();
-});
-
-/**
- * show or hide total point container at top right make css page
- */
-function fixPointContainer(){
-    var screen_width = $(window).width();
-    var project_width = $('#make-header').width();
-    if($('.visible-check').visible()){
-        $(".total-point-container ").css('position','inherit');
-    } else {
-        $(".total-point-container ").css('position','fixed');
-        var fix_width = (screen_width - project_width)/2;
-        $(".total-point-container ").css('right',fix_width);
-        
-    }
 }
 
 /**
