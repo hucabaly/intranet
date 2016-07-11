@@ -119,7 +119,7 @@ return [
     'Max point' => 'Điểm cao nhất',
     'Min point' => 'Điểm thấp nhất',
     'Please choose question' => 'Mời bạn chọn câu hỏi',
-    'Close' => 'Đóng',
+    'Close' => '閉じる',
     'Notification' => "Thông báo",
     'Avg point' => 'Điểm trung bình',
     'Max point' => 'Điểm cao nhất',
