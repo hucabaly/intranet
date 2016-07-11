@@ -246,7 +246,7 @@ class CssController extends Controller {
                     $cssCate[] = array(
                         "id" => $item->id,
                         "name" => $item->name,
-                        "sort_order" => self::numToAlpha($item->sort_order),
+                        "sort_order" => self::romanic_number($item->sort_order,true),
                         "cssCateChild" => $cssCateChild,
                         "questions" => $cssQuestion,
                         "noCate"    => $NoOverView, //No. of root cate
@@ -272,7 +272,7 @@ class CssController extends Controller {
                     "employee" => $employee,
                     "cssCate" => $cssCate,
                     "arrayValidate" => json_encode($arrayValidate),
-                    "noOverView" => self::numToAlpha(++$NoOverView),
+                    "noOverView" => self::romanic_number(++$NoOverView,true),
                     "overviewQuestionId" => $overviewQuestion->id,
                     "overviewQuestionContent" => $overviewQuestion->content,
                     "makeName" => ($request->session()->get('makeName')) ? $request->session()->get('makeName') : '',
@@ -1783,6 +1783,12 @@ class CssController extends Controller {
         return $data;
     }
     
+    /**
+     * Get Romanic number
+     * @param int $integer
+     * @param boolean $upcase
+     * @return romanic
+     */
     public function romanic_number($integer, $upcase = true) 
     { 
         $table = array('M'=>1000, 'CM'=>900, 'D'=>500, 'CD'=>400, 'C'=>100, 'XC'=>90, 'L'=>50, 'XL'=>40, 'X'=>10, 'IX'=>9, 'V'=>5, 'IV'=>4, 'I'=>1); 
@@ -1801,12 +1807,6 @@ class CssController extends Controller {
         } 
 
         return $return; 
-    }
-    
-    public function numToAlpha($num) {
-        $alpha = array('A','B','C','D','E','F','G','H','I','J','K', 'L','M','N','O','P','Q','R','S','T','U','V','W','X ','Y','Z');
-
-        return $alpha[$num - 1]; 
     }
     
     /**
