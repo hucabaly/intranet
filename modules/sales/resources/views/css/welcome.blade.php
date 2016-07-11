@@ -39,7 +39,7 @@
                                 <div class="input-group goto-make-parent">
 
                                     <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
-                                    <input type="text" class="form-control" id="make_name" name="make_name" />
+                                    <input type="text" class="form-control" id="make_name" name="make_name" maxlength="100" />
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-default btn-to-make" name="submit"><img src="{{ URL::asset('sales/images/splash.png') }}" /></button>
                                     </span>
@@ -85,8 +85,12 @@
 <script src="{{ asset('lib/js/jquery.visible.js') }}"></script>
 <script src="{{ asset('sales/js/css/customer.js') }}"></script>
 <script>
-   <?php if($nameRequired == 1): ?>
+    <?php if($nameRequired == 1): ?>
         $('#modal-confirm-name').modal('show');
+    <?php elseif($nameRequired == -1): ?>
+        $('#modal-confirm-name .modal-body').html('{{trans("sales::message.Check max length name")}}');
+        $('#modal-confirm-name').modal('show');
+        $('#make_name').val('{{$makeName}}');
     <?php endif; ?>
     //Fix footer bottom
     setHeightBody('.welcome-body', 90);

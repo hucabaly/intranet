@@ -184,7 +184,16 @@ class CssController extends Controller {
                         'css' => $css,
                         'token' => $token,
                         'id'    => $id,
-                        "nameRequired" => 1, //validate name required
+                        "nameRequired" => 1, //name is empty
+                    ]);
+            }elseif(strlen($makeName) > 100){
+                return view(
+                    'sales::css.welcome', [
+                        'css' => $css,
+                        'token' => $token,
+                        'id'    => $id,
+                        'makeName' => $makeName,
+                        "nameRequired" => -1, //name with lenght > 100 char
                     ]);
             }else { 
                 //Set make name and go to make CSS page
@@ -197,7 +206,7 @@ class CssController extends Controller {
                     'css' => $css,
                     'token' => $token,
                     'id'    => $id,
-                    "nameRequired" => 0, //validate name required
+                    "nameRequired" => 0, //name valid
                 ]
             );
         }
