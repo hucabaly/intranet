@@ -410,6 +410,12 @@ textarea {
                     background-color: $colorLightGreen;
                 }
             }
+            
+            .show-name-in-cate {
+                @extend .container-question;
+                padding: 13px 20px;
+                font-size: 13px;
+            }
         }
         
         
