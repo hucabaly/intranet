@@ -206,11 +206,20 @@ textarea {
             
             .total-point-container {
                 @include total-point();
+                top: 0;
+                right: 10px;
+                z-index: 9;
+                @media screen and (min-width: $mediumScreen){
+                    right: 35px;
+                }
+                @media screen and (min-width: $lagreScreen){
+                    right: 8%;
+                }
                 .total-point-text {
                     margin-left: 3px;
                 }
                 .total-point {
-                    font-size: 16px;
+                    font-size: 18px;
                     margin-left: -2px;
                     color: $colorBlue;
                     
@@ -232,17 +241,6 @@ textarea {
                 border: 1px solid $colorGreen;
             }
             
-            .total-point-container-fixed {
-                @extend .total-point-container;
-                position: fixed;
-                display: none;
-            }
-            
-            .total-point-container-base-fixed { 
-                @extend .total-point-container-base;
-                position: fixed;
-                display: none;
-            }
         }
         
         .project-info {

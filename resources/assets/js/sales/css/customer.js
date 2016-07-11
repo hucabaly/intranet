@@ -88,9 +88,9 @@ function getTotalPoint(){
  */
 $(window).scroll(function(){
     if($('.visible-check').visible()){
-        $(".point-fixed").hide();
+        $(".total-point-container ").css('position','inherit');
     } else {
-        $(".point-fixed").show();
+        $(".total-point-container ").css('position','fixed');
     }
 });
 

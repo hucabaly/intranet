@@ -11,10 +11,6 @@
                     <div class="total-point-text">{{ trans('sales::view.Total point')}}</div>
                     <div class="total-point <?php if($css->project_type_id === 2){ echo 'total-point-base'; }?>" >00.00</div>
                 </div>
-                <div class="total-point-container-fixed <?php if($css->project_type_id === 2){ echo 'total-point-container-base'; }?>">
-                    <div class="total-point-text">{{ trans('sales::view.Total point')}}</div>
-                    <div class="total-point <?php if($css->project_type_id === 2){ echo 'total-point-base'; }?>" >00.00</div>
-                </div>
                 <div class="visible-check"></div>
             </section>
             <section>
