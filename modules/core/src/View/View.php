@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Exception;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * View ouput gender
@@ -127,7 +128,7 @@ class View
      * upload file
      * 
      * @param \Illuminate\Http\UploadedFile $file
-     * @param srting $path
+     * @param srting $path name path after storage/app/
      * @param array $allowType
      * @param boolean $rename
      * @return string|null
@@ -159,7 +160,10 @@ class View
             } else {
                 $fileName = $file->getClientOriginalName();
             }
-            $file->move($path, $fileName);
+            Storage::put(
+                $path . '/' . $fileName,
+                file_get_contents($file->getRealPath())
+            );
             return $fileName;
         }
         return null;
@@ -190,5 +194,137 @@ class View
             return URL::asset('common/images/noimage.png');
         }
         return null;
+    }
+    
+    /**
+     * get language level
+     * 
+     * @return array
+     */
+    public static function getLanguageLevel()
+    {
+        return Config::get('general.language_level');
+    }
+    
+    /**
+     * get format json language level
+     * 
+     * @return string json
+     */
+    public static function getLanguageLevelFormatJson()
+    {
+        return \GuzzleHttp\json_encode(self::getLanguageLevel());
+    }
+    
+    /**
+     * to option language level
+     * 
+     * @param type $nullable
+     * @return type
+     */
+    public static function toOptionLanguageLevel($nullable = true)
+    {
+        $options = [];
+        if ($nullable) {
+            $options[] = [
+                'value' => '',
+                'label' => Lang::get('core::view.-- Please choose --'),
+            ];
+        }
+        $level = self::getLanguageLevel();
+        if (! $level) {
+            return $options;
+        }
+        foreach ($level as $key => $item) {
+            if (! $key) {
+                continue;
+            }
+            $options[] = [
+                'value' => $key,
+                'label' => $item,
+            ];
+        }
+        return $options;
+    }
+    
+    /**
+     * get label of level language
+     * 
+     * @param type $key
+     * @return type
+     */
+    public static function getLabelLanguageLevel($key)
+    {
+        $level = self::getLanguageLevel();
+        if (! $level || ! isset($level[$key]) || ! $level[$key]) {
+            return;
+        }
+        return $level[$key];
+    }
+    
+    /**
+     * get normal level
+     * 
+     * @return array
+     */
+    public static function getNormalLevel()
+    {
+        return Config::get('general.normal_level');
+    }
+    
+    /**
+     * to option normal level
+     * 
+     * @param type $nullable
+     * @return type
+     */
+    public static function toOptionNormalLevel($nullable = true)
+    {
+        $options = [];
+        if ($nullable) {
+            $options[] = [
+                'value' => '',
+                'label' => Lang::get('core::view.-- Please choose --'),
+            ];
+        }
+        $level = self::getNormalLevel();
+        if (! $level) {
+            return $options;
+        }
+        foreach ($level as $key => $item) {
+            if (! $key) {
+                continue;
+            }
+            $options[] = [
+                'value' => $key,
+                'label' => $item,
+            ];
+        }
+        return $options;
+    }
+    
+    /**
+     * get label of level normal
+     * 
+     * @param type $key
+     * @return type
+     */
+    public static function getLabelNormalLevel($key)
+    {
+        $level = self::getNormalLevel();
+        if (! $level || ! isset($level[$key]) || ! $level[$key]) {
+            return;
+        }
+        return $level[$key];
+    }
+    
+    /**
+     * get format json normal level
+     * 
+     * @return string json
+     */
+    public static function getNormalLevelFormatJson()
+    {
+        return \GuzzleHttp\json_encode(self::getNormalLevel());
     }
 }

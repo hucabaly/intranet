@@ -20,8 +20,8 @@ class CreateTableProjExperiences extends Migration
             $table->unsignedInteger('employee_id');
             $table->integer('work_experience_id')->nullable();
             $table->string('name');
-            $table->dateTime('start_at');
-            $table->dateTime('end_at');
+            $table->date('start_at');
+            $table->date('end_at');
             $table->text('enviroment');
             $table->text('responsible');
             $table->string('image')->nullable();

@@ -46,15 +46,21 @@ jQuery(document).ready(function ($) {
         if ($('.box-form-team-position').children('.group-team-position').length == 1) {
             $('.box-form-team-position .group-team-position .input-remove').addClass('warning-action');
         }
+        $('input[name=employee_team_change]').val(1);
     });
     $(document).on('click', '.input-team-position.input-remove', function(event) {
         teamLength = $('.box-form-team-position').children('.group-team-position').length;
         if (teamLength > 1) {
             $(this).parents('.group-team-position').remove();
+            $('input[name=employee_team_change]').val(1);
         }
         if (teamLength == 2) {
             $('.box-form-team-position .group-team-position .input-remove').addClass('warning-action');
         }
+    });
+    //change select, update team availabel
+    $(document).on('change', '.group-team-position select', function(e) {
+        $('input[name=employee_team_change]').val(1);
     });
     
     /**
@@ -68,6 +74,7 @@ jQuery(document).ready(function ($) {
             htmlRoleList += '</li></span>';
         });
         $('ul.employee-roles').html(htmlRoleList);
+        $('input[name=employee_role_change]').val(1);
     });
     
     /**
@@ -93,7 +100,7 @@ jQuery(document).ready(function ($) {
         
         //align center for image
         $('.employee-skill-modal').on('shown.bs.modal', function (e) {
-            idModal = $(this).id;
+            idModal = $(this).attr('id');
             if (idModal) {
                 idModal = '#' + idModal + ' ';
             } else {
@@ -114,14 +121,22 @@ jQuery(document).ready(function ($) {
             imagePreviewImageDefault,
             employeeSkillNo = {},
             tokenValue,
-            employeeSkill;
+            employeeSkill,
+            messageError,
+            labelFormat,
+            urlLoadAutoComplete;
         
+        //init var
         tokenValue = $('input[name=_token]').val();
         autoComplete = option.autoComplete;
         imagePreviewImageDefault = option.imagePreviewImageDefault;
         employeeSkillNo = option.employeeSkillNo;
         employeeSkill = option.employeeSkill;
-        
+        messageError = option.messageError;
+        labelFormat = option.labelFormat;
+        urlLoadAutoComplete = option.urlLoadAutoComplete,
+        groupChange = option.groupChange;
+
         //click button to show modal
         $(document).on('click', '.employee-skill-box-wrapper [data-modal=true]', function(event) {
             dataItemId = $(this).parents('.esbw-item').data('id');
@@ -132,12 +147,16 @@ jQuery(document).ready(function ($) {
             dataHrefModal = $(this).parents('.employee-skill-box-wrapper').data('href');
             dataIsChange = $(this).parents('.employee-skill-box-wrapper').data('change');
             $(dataHrefModal).modal('show');
-            
+            if (! dataItemId) {
+                $(dataHrefModal).find('.btn-delete.btn-action').addClass('hidden');
+            } else {
+                $(dataHrefModal).find('.btn-delete.btn-action').removeClass('hidden');
+            }
             //process data when show modal
             $(dataHrefModal).on('shown.bs.modal', function (e) {
-                $(this).find('input').removeAttr('disabled').val('');
+                $(this).find('.input-skill-modal').removeAttr('disabled').val('');
                 $(this).find('img.college-image-preview').attr('src', imagePreviewImageDefault);
-                $(this).find('input').each(function (i,k) {
+                $(this).find('.input-skill-modal').each(function (i,k) {
                     inputType = $(this).attr('type');
                     dataCol = $(this).data('col');
                     dataTbl = $(this).data('tbl');
@@ -152,7 +171,11 @@ jQuery(document).ready(function ($) {
                                     .attr('src', value);
                             }
                             if (valueId) {
-                                $(this).attr('disabled', true).val('');
+                                if ($(this).hasClass('not-auto')) {
+                                    $(this).val('');
+                                } else {
+                                    $(this).attr('disabled', true).val('');
+                                }
                             }
                         } else {
                             if (value && value != undefined) {
@@ -165,84 +188,22 @@ jQuery(document).ready(function ($) {
                                 ! $(this).data('autocomplete') && 
                                 $(this).attr('type') != 'hidden'
                             ) {
-                                $(this).attr('disabled', true).val(value);
+                                if ($(this).hasClass('not-auto')) {
+                                    $(this).val(value);
+                                } else {
+                                    $(this).attr('disabled', true).val(value);
+                                }
                             } else {
                                 $(this).val(value);
+                            }
+                            if ($(this).is('select')) {
+                                $(this).val(value).trigger("change");
                             }
                         }
                     }
                 });
                 $(this).attr('data-id', dataItemId);
             });
-        });
-        
-        //autocomplete field in modal
-        $('.employee-skill-modal input[data-autocomplete=true]').each(function() {
-            var dataTblAuto = $(this).data('tbl');
-            $(this).autocomplete({
-                minLength: 0,
-                source: autoComplete[dataTblAuto],
-                select: function( event, ui ) {
-                    thisParent = $(this).parents('.employee-college-modal');
-                    var uiItemSelected = ui.item;
-                    thisParent.find('input[data-tbl=' + dataTblAuto + ']:not([data-autocomplete=true])').each(function (){
-                        inputType = $(this).attr('type');
-                        dataCol = $(this).data('col');
-                        if (! dataCol) {
-                        } else {
-                            value = uiItemSelected[dataCol];
-                            if (inputType == 'file') {
-                                if ($(this).parents('.input-box-img-preview').length) {
-                                    $(this).parents('.input-box-img-preview')
-                                        .find('img[data-col=' + dataCol +'_preview]')
-                                        .attr('src', value);
-                                }
-                                $(this).attr('disabled', true).val('');
-                            } else {
-                                if (value && value != undefined) {
-                                    value = $.parseHTML(value)[0].nodeValue;
-                                    $(this).attr('disabled', true).val(value);
-                                } else {
-                                    $(this).attr('disabled', true).val('');
-                                }
-                            }
-                        }
-                    });
-                }
-            }).focus(function(){
-                $(this).autocomplete("search");
-            });
-        });
-        
-        //process data when key press autocomplete field
-        $('.employee-skill-modal input[data-autocomplete=true]').on('keyup', function(e) {
-            if (e.keyCode == 13) {
-            } else {
-                thisParent = $(this).parents('.employee-skill-modal');
-                var dataTblAuto = $(this).data('tbl');
-                thisParent.find('input[data-tbl=' + dataTblAuto + ']:not([data-autocomplete=true])').each(function (){
-                    inputType = $(this).attr('type');
-                    if (inputType == 'file') {
-                        $(this).removeAttr('disabled');
-                        return true;
-                        if ($(this).parents('.input-box-img-preview').length) {
-                            dataCol = $(this).data('col');
-                            $(this).parents('.input-box-img-preview')
-                                .find('img[data-col=' + dataCol +'_preview]')
-                                .attr('src', imagePreviewImageDefault);
-                        }
-                        $(this).removeAttr('disabled').val('');
-                    } else {
-                        if ($(this).data('col') == 'id') {
-                            $(this).removeAttr('disabled').val('');
-                            return true;
-                        }
-                        $(this).removeAttr('disabled');
-                        return true;
-                        $(this).removeAttr('disabled').val('');
-                    }
-                });
-            }
         });
         
         /**
@@ -256,11 +217,11 @@ jQuery(document).ready(function ($) {
             id = parseInt(id);
             var group = thisDomModal.data('group');
             groupChange[group] = 1;
-            
             // action delete skill
             if (actionButton && actionButton == 'delete') {
                 delete employeeSkill[group][id];
                 $('input[name=employee_skill]').val($.param(employeeSkill));
+                $('input[name=employee_skill_change]').val($.param(groupChange));
                 return true;
             }
             
@@ -286,11 +247,11 @@ jQuery(document).ready(function ($) {
                 });
             }
             if (flagCheckInputSame) {
-                alert('Canot choose the same school');
+                alert(messageError["same_" + group]);
                 return true;
             }
             
-            thisDomModal.find('input').each(function (i,k) {
+            thisDomModal.find('.input-skill-modal[data-tbl][data-col]').each(function (i,k) {
                 inputType = $(this).attr('type');
                 dataCol = $(this).data('col');
                 dataTbl = $(this).data('tbl');
@@ -324,6 +285,7 @@ jQuery(document).ready(function ($) {
                 }
             });
             $('input[name=employee_skill]').val($.param(employeeSkill));
+            $('input[name=employee_skill_change]').val($.param(groupChange));
         }
         
         /**
@@ -350,9 +312,12 @@ jQuery(document).ready(function ($) {
                         valueInput = k[dataTbl][dataCol];
                         domInput = skillItemNew.find('[data-tbl=' + dataTbl + '][data-col=' + dataCol + ']');
                         dataDateFormat = domInput.data('date-format');
+                        dataLabelFormat = domInput.data('label-format');
                         if (dataDateFormat) {
                             date = new Date(valueInput);
                             valueInput = getDateFormat(date, dataDateFormat);
+                        } else if (dataLabelFormat) {
+                            valueInput = labelFormat[dataLabelFormat][valueInput];
                         }
                         domInput.html(valueInput);
                     }
@@ -429,6 +394,103 @@ jQuery(document).ready(function ($) {
         $('.employee-skill-modal').on('hidden.bs.modal', function(e) {
             $(this).find('input').removeAttr('disabled').val('');
             $(this).find('img[data-col=image_preview]').attr('src', imagePreviewImageDefault);
+        });
+        
+        /**
+         * init autocomplete field
+         */
+        function initAutocompleteModal() {
+            //autocomplete field in modal
+            $('.employee-skill-modal input[data-autocomplete=true]').each(function() {
+                var dataTblAuto = $(this).data('tbl');
+                if (autoComplete[dataTblAuto] == undefined || 
+                    ! autoComplete[dataTblAuto]) {
+                    return true;
+                }
+                autoComplete[dataTblAuto] = JSON.parse(autoComplete[dataTblAuto]);
+                $(this).autocomplete({
+                    minLength: 0,
+                    source: autoComplete[dataTblAuto],
+                    select: function( event, ui ) {
+                        thisParent = $(this).parents('.employee-skill-modal');
+                        var uiItemSelected = ui.item;
+                        thisParent.find('.input-skill-modal[data-tbl=' + dataTblAuto + ']:not([data-autocomplete=true])').each(function (){
+                            if ($(this).hasClass('not-auto')) {
+                                return true;
+                            }
+                            inputType = $(this).attr('type');
+                            dataCol = $(this).data('col');
+                            if (! dataCol) {
+                            } else {
+                                value = uiItemSelected[dataCol];
+                                if (inputType == 'file') {
+                                    if ($(this).parents('.input-box-img-preview').length) {
+                                        $(this).parents('.input-box-img-preview')
+                                            .find('img[data-col=' + dataCol +'_preview]')
+                                            .attr('src', value);
+                                    }
+                                    $(this).attr('disabled', true).val('');
+                                } else {
+                                    if (value && value != undefined) {
+                                        value = $.parseHTML(value)[0].nodeValue;
+                                        $(this).attr('disabled', true).val(value);
+                                    } else {
+                                        $(this).attr('disabled', true).val('');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }).focus(function(){
+                    $(this).autocomplete("search");
+                });
+            });
+        }
+        
+        /**
+         * load autocomplete data throw ajax
+         */
+        function loadAjaxAutocomplete() {
+            $.ajax({
+                url: urlLoadAutoComplete,
+                type: 'POST',
+                data: {'_token': tokenValue},
+                dataType: 'json',
+                success: function(dataReturn) {
+                    autoComplete = dataReturn;
+                    initAutocompleteModal();
+                }
+            });
+        }
+        $(window).load(function() {
+            loadAjaxAutocomplete();
+        });
+        
+        //process data when key press autocomplete field
+        $('.employee-skill-modal input[data-autocomplete=true]').on('keyup', function(e) {
+            if (e.keyCode == 13) {
+            } else {
+                thisParent = $(this).parents('.employee-skill-modal');
+                var dataTblAuto = $(this).data('tbl');
+                thisParent.find('input[data-tbl=' + dataTblAuto + ']:not([data-autocomplete=true])').each(function (){
+                    inputType = $(this).attr('type');
+                    if (inputType == 'file') {
+                        $(this).removeAttr('disabled');
+                        return true;
+                    } else {
+                        if ($(this).hasClass('not-auto')) {
+                            $(this).removeAttr('disabled')
+                            return true;
+                        }
+                        if ($(this).data('col') == 'id') {
+                            $(this).removeAttr('disabled').val('');
+                            return true;
+                        }
+                        $(this).removeAttr('disabled');
+                        return true;
+                    }
+                });
+            }
         });
     };
 })(jQuery);

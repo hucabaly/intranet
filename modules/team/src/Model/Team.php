@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Rikkei\Core\View\CacheHelper;
+use Rikkei\Team\View\Config;
 
 class Team extends CoreModel
 {
@@ -341,5 +342,85 @@ class Team extends CoreModel
         }
         $teamPaths[] = (int) $teamParent->id;
         self::getTeamPathRecursive($teamPaths, $teamParent->parent_id);
+    }
+    
+    
+    public static function getMemberGridData($teamId = null)
+    {
+        $teamTable = self::getTableName();
+        $teamTableAs = 'team_table';
+        $employeeTable = Employees::getTableName();
+        $employeeTableAs = $employeeTable;
+        $employeeTeamTable = TeamMembers::getTableName();
+        $employeeTeamTableAs = 'team_member_table';
+        $roleTabel = Roles::getTableName();
+        $roleTabelAs = 'role_table';
+        $pager = Config::getPagerData();
+        
+        $collection = Employees::select(
+                "{$employeeTable}.id as id",
+                "{$employeeTable}.employee_code as employee_code",
+                "{$employeeTable}.name as name",
+                "{$employeeTable}.email as email",
+                "{$employeeTable}.birthday as birthday",
+                "{$employeeTable}.mobile_phone as mobile_phone",
+                "{$teamTableAs}.name as team_name"
+            );
+        if (! $teamId) {
+            $collection->addSelect(
+                DB::raw("GROUP_CONCAT(" . 
+                    "CONCAT(`{$roleTabelAs}`.`role`, ' - ', `{$teamTableAs}`.`name`)" . 
+                    " SEPARATOR '; ')" .
+                    "as role_name")
+            );
+            $collection->groupBy("{$employeeTable}.id");
+        } else {
+            $collection->addSelect(
+                "{$roleTabelAs}.role as role_name"
+            );
+        }
+        //join team member
+        $collection->join(
+            "{$employeeTeamTable} as {$employeeTeamTableAs}", 
+            function ($join) use ($teamId, $employeeTable, $employeeTeamTableAs
+        ) {
+            $join->on("{$employeeTable}.id", '=', "{$employeeTeamTableAs}.employee_id");
+            if ($teamId) {
+                $join->on("{$employeeTeamTableAs}.team_id", '=', DB::raw($teamId));
+            }
+        });
+        //join team
+        $collection->join(
+            "{$teamTable} as {$teamTableAs}", 
+            function ($join) use ($teamId, $teamTableAs, $employeeTeamTableAs
+        ) {
+            $join->on("{$teamTableAs}.id", '=', "{$employeeTeamTableAs}.team_id");
+            if ($teamId) {
+                $join->on("{$teamTableAs}.id", '=', DB::raw($teamId));
+            }
+        });
+        //join role
+        $collection->join(
+            "{$roleTabel} as {$roleTabelAs}", 
+            function ($join) use ($roleTabelAs, $employeeTeamTableAs
+        ) {
+            $join->on("{$roleTabelAs}.id", '=', "{$employeeTeamTableAs}.role_id");
+            $join->on("{$roleTabelAs}.special_flg", '=', DB::raw(Roles::FLAG_POSITION));
+        });
+        
+        //use soft delete
+        if (Team::isUseSoftDelete()) {
+            $collection->whereNull("{$teamTableAs}.deleted_at");
+        }
+        if (Roles::isUseSoftDelete()) {
+            $collection->whereNull("{$roleTabelAs}.deleted_at");
+        }
+        $collection = self::filterGrid($collection);
+        $collection->orderBy($pager['order'], $pager['dir']);
+        $collection = self::pagerCollection($collection, $pager['limit'], $pager['page']);
+        return $collection;
+        echo ($collection->toSql());
+        exit;
+        
     }
 }

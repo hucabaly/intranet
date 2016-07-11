@@ -19,8 +19,8 @@ class CreateTableWorkExperiences extends Migration
             $table->increments('id');
             $table->unsignedInteger('employee_id');
             $table->string('company');
-            $table->dateTime('start_at')->nullable();
-            $table->dateTime('end_at')->nullable();
+            $table->date('start_at')->nullable();
+            $table->date('end_at')->nullable();
             $table->string('position')->nullable();
             $table->string('image')->nullable();
             $table->dateTime('created_at');

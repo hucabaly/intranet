@@ -59,11 +59,13 @@ return [
             'edit.skill' => [
                 'label' => 'Edit skill',
                 'routes' => [
+                    'team::team.member.edit.skill'
                 ]
             ],
             'edit.experience' => [
                 'label' => 'Edit experience project',
                 'routes' => [
+                    'team::team.member.edit.exerience'
                 ]
             ],
             'delete.employee.left' => [

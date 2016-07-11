@@ -12,10 +12,10 @@ class CreateTableCetificates extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('cetificates')) {
+        if (Schema::hasTable('certificates')) {
             return;
         }
-        Schema::create('cetificates', function (Blueprint $table) {
+        Schema::create('certificates', function (Blueprint $table) {
             $table->increments('id');
             $table->boolean('type');
             $table->string('name');
@@ -34,6 +34,6 @@ class CreateTableCetificates extends Migration
      */
     public function down()
     {
-        Schema::drop('cetificates');
+        Schema::drop('certificates');
     }
 }

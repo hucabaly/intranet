@@ -22,6 +22,9 @@ Route::get('/grid/filter/pager', 'GridFilterController@pager')->name('grid.filte
 //upload file ajax
 Route::post('upload/skill', 'UploadController@imageSkill')->name('upload.skill');
 
+//load skill data ajax
+Route::post('ajax/skills/autocomplete', 'AjaxController@skillAutocomplete')->name('ajax.skills.autocomplete');
+
 //manage setting
 Route::group([
     'prefix' => 'setting',
