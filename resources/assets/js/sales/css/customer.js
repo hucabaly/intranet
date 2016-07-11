@@ -4,6 +4,11 @@ $(document).ready(function(){
     });
 });
 
+//Fix footer bottom customer pages
+function setHeightBody(elem, height){
+    $(elem).css('min-height', $(window).height() - $('.welcome-footer').outerHeight() - height);
+}
+
 function goto_make(hrefMake) {
     var makeName = $('#make_name').val(); 
     if(makeName == ''){
