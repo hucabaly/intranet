@@ -1,1 +1,23 @@
-$(function(){$("#rateit_star").rateit({min:1,max:10,step:2})}),$("#link-make").click(function(){$("#link-make").selectText()}),jQuery.fn.selectText=function(){var e=document,t=this[0];if(e.body.createTextRange){var n=document.body.createTextRange();n.moveToElementText(t),n.select()}else if(window.getSelection){var a=window.getSelection(),n=document.createRange();n.selectNodeContents(t),a.removeAllRanges(),a.addRange(n)}};
+$(function () { $('#rateit_star').rateit({min: 1, max: 10, step: 2}); });
+
+$("#link-make").click(function(){
+    $("#link-make").selectText();
+});
+
+jQuery.fn.selectText = function(){
+    var doc = document;
+    var element = this[0];
+    console.log(this, element);
+    if (doc.body.createTextRange) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+    } else if (window.getSelection) {
+        var selection = window.getSelection();        
+        var range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+ }
+//# sourceMappingURL=preview.js.map
