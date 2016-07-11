@@ -21,7 +21,7 @@ Route::group([
         Route::post('css/get_proposes_question/{questionid}/{cssresultids}/{curpage}/{orderby}/{ariatype}', 'CssController@getProposesByQuestion')->name('getProposesByQuestion');
         Route::get('css/export_excel/{cssresultid}', 'CssController@exportExcel')->name('exportExcel');
 });
-Route::get('css/success/{id}', 'CssController@success')->name('success');
+Route::get('css/success', 'CssController@success')->name('success');
 Route::get('css/welcome/{token}/{id}', 'CssController@welcome')->name('welcome') ;
 Route::post('css/welcome/{token}/{id}', 'CssController@welcome')->name('welcome') ;
 Route::get('css/make/{token}/{id}', 'CssController@make')->name('make') ;

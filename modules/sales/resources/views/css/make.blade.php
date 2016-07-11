@@ -28,7 +28,7 @@
                         <div class="row-info">{{ trans('sales::view.Project date jp') }}{{ date("m/d/Y",strtotime($css->start_date)) }} - {{ date("m/d/Y",strtotime($css->end_date)) }}</div>
                         <div class="row-info">{{ trans('sales::view.Customer company name jp') }}{{ $css->company_name }} 様</div>
                         <div class="row-info">{{ trans('sales::view.Customer name jp') }}{{ $css->customer_name }} 様</div>
-                        <div class="row-info">{{ trans('sales::view.Make name jp')}}<span class="make-name">{{ $makeName }} 様</span></div>
+                        <div class="row-info">{{ trans('sales::view.Make name jp')}}<span class="make-name">{{ $makeName }} </span>様</div>
                     </div>
                 </div>
                 <!-- END PROJECT INFORMATION -->
