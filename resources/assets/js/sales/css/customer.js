@@ -37,13 +37,13 @@ function totalMark(elem) {
     var point = $(elem).rateit('value');  
     var dataQuestionid = $(elem).attr('data-questionid');
     var commentElem = $(".comment-question[data-questionid='"+dataQuestionid+"']");
-    if(point < 3){
+    if(point < 3 && point > 0){
         var text = commentElem.val();
         if($.trim(text) === ''){
             commentElem.css("border","1px solid red");
             commentElem.attr('placeholder','＃コメントがあればご記入ください。');
         }
-    }else{
+    }else if(point >= 3){
         commentElem.css("border","1px solid #d2d6de");
         commentElem.removeAttr('placeholder');
     }
@@ -53,7 +53,6 @@ function totalMark(elem) {
     }
     
     $(".total-point").html(getTotalPoint());
-    //$(".point-fixed").html(getTotalPoint());
 }
 
 /**

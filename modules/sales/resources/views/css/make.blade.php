@@ -59,7 +59,7 @@
                                     @foreach($itemChild['questionsChild'] as $questionChild)
                                     <div class="row container-question">
                                         <div class="col-xs-12 col-sm-5 question"><span class="num-border">{{ $questionChild->sort_order }}</span> {{ $questionChild->content}}</div>
-                                        <div class="col-xs-12 col-sm-2 rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$questionChild->id}}" onclick="totalMark(this);"></div></div>
+                                        <div class="col-xs-12 col-sm-2 rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$questionChild->id}}" onclick="totalMark(this);" ontouchstart="totalMark(this);"></div></div>
                                         <div class="col-xs-12 col-sm-5 comment"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$questionChild->id}}" ></textarea></div>
                                     </div>
                                     @endforeach
@@ -117,7 +117,7 @@
                                 <p>One fine body…</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">{{ trans('sales::view.Close')}}</button>
+                                <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">{{ trans('sales::view.Close jp')}}</button>
                             </div>
                         </div>
                         <!-- /.modal-content -->

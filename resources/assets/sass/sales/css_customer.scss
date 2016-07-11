@@ -256,7 +256,7 @@ textarea {
             }
             .row-info {
                 padding: 0 -10px;
-                font-size: 12px;
+                font-size: 13px;
                 margin-bottom: 2px;
                 
                 @media screen and (min-width: $mediumScreen){
@@ -309,7 +309,7 @@ textarea {
                 background-color: $colorLightBlue;
                 padding: 8px 5px;
                 color: #fff;
-                
+                font-weight: bold;
                 border-radius: 3px;
                 
                 .note-comment {
@@ -339,7 +339,7 @@ textarea {
             
             .child-cate {
                 padding: 8px 5px;
-                
+                font-size: 15px;
             }
             
             .container-question{
@@ -357,6 +357,7 @@ textarea {
                     background-color: #f5f5f7;
                     margin-top: 1px;
                     border-radius: 3px;
+                    font-size: 13px;
                     .num-border {
                         border: 1px solid #999;
                         border-radius: 50%;
