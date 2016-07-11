@@ -35,7 +35,7 @@ class CssQuestionUpdateSeeder extends Seeder
                 ->update(['content' => 'ソースコードは、ご要求の機能を全て反映していましたか。']);
         
         DB::table('css_question')->where('id',7)
-                ->update(['content' => '単体テストはどう思われますか。','category_id' => 9]);
+                ->update(['content' => '単体テストはどう思われますか。','category_id' => 8]);
         
         DB::table('css_question')->where('id',8)
                 ->update(['content' => 'テストのドキュメントの品質は良好でしたか。']);
@@ -65,7 +65,7 @@ class CssQuestionUpdateSeeder extends Seeder
                 ->update(['content' => 'プロジェクトチームの熱心度はいかがでしたか。']);
         
         DB::table('css_question')->where('id',17)
-                ->update(['content' => '貴社とプロジェクトチーム（又は弊社）との関係はいかがでしたでしょうか。仕事上やそれ以外も含む直接の会話やメールを通してのやりとりによる関係']);
+                ->update(['content' => '貴社とプロジェクトチーム（又は弊社）との関係はいかがでしたでしょうか。仕事上やそれ以外も含む直接の会話やメールを通してのやりとりによる関係。']);
         
         DB::table('css_question')->where('id',18)
                 ->update(['content' => 'テクニカルスキルについてどう思われましたか。（要求の理解力、設計、コーディング能力等）']);
@@ -96,7 +96,7 @@ class CssQuestionUpdateSeeder extends Seeder
                 ->update(['content' => '弊社スタッフのチームワークスキルについてどう思われますか。']);
         
         DB::table('css_question')->where('id',26)
-                ->update(['content' => 'プロジェクトチームのスケジュールの遵守度はいかがでしたか。（進捗状況がス']);
+                ->update(['content' => 'プロジェクトチームのスケジュールの遵守度はいかがでしたか。（進捗状況がスケジュール通りであったかどうか、納品は納期通りであったかどうか等）']);
         
         DB::table('css_question')->where('id',27)
                 ->update(['content' => 'プロジェクトチームの報告書の作成能力とその質はいかがでしたか。']);
@@ -114,13 +114,13 @@ class CssQuestionUpdateSeeder extends Seeder
                 ->update(['content' => '弊社スタッフの仕事対応のレスポンスについてどう思われますか。']);
         
         DB::table('css_question')->where('id',32)
-                ->update(['content' => '弊社スタッフの作業に対する責任感・義務感について評価して下さい。 ']);
+                ->update(['content' => '弊社スタッフの作業に対する責任感・義務感について評価して下さい。']);
         
         DB::table('css_question')->where('id',33)
                 ->update(['content' => '担当したプロジェクト、弊社、貴社の利益に対する弊社スタッフの責任意識についてどう感じられましたか。']);
         
         DB::table('css_question')->where('id',34)
-                ->update(['content' => '弊社スタッフの、仕事や私事的な障害を乗り越える能力についてどう思われましたか']);
+                ->update(['content' => '弊社スタッフの、仕事や私事的な障害を乗り越える能力についてどう思われましたか。']);
         
         DB::table('css_question')->where('id',35)
                 ->update(['content' => '弊社スタッフは就業時間を有効に利用しましたか。']);
@@ -141,7 +141,7 @@ class CssQuestionUpdateSeeder extends Seeder
                 ->update(['content' => 'ラボ担当者の責任感について評価してください。（各プロジェクトの確認、リソース調整能力など）']);
         
         DB::table('css_question')->where('id',41)
-                ->update(['content' => '貴社とプロジェクトチーム（又は弊社）との関係はいかがでしたでしょうか。仕事上やそれ以外も含む直接の会話やメールを通してのやりとりによる関']);
+                ->update(['content' => '貴社とプロジェクトチーム（又は弊社）との関係はいかがでしたでしょうか。仕事上やそれ以外も含む直接の会話やメールを通してのやりとりによる関係。']);
         
         DB::table('css_question')->where('id',42)
                 ->update(['content' => '全体的に、弊社の提供した製品とサービスにご満足いただけましたか。']);

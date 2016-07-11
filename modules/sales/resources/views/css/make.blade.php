@@ -86,7 +86,11 @@
                     <!-- Proposed -->
                     <div class="row container-question">
                         <div class="col-xs-12 col-sm-5 question">
-                            <div>{{ trans('sales::view.Proposed line 1') }}</div>
+                            @if($css->project_type_id === 1)
+                            <div>{{ trans('sales::view.Proposed line 1 OSDC') }}</div>
+                            @else
+                            <div>{{ trans('sales::view.Proposed line 1 base') }}</div>
+                            @endif
                             <div>{{ trans('sales::view.Proposed line 2') }}</div>
                             <div>{{ trans('sales::view.Proposed line 3') }}</div>
                             <div>{{ trans('sales::view.Proposed line 4') }}</div>
