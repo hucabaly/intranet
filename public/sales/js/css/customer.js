@@ -86,12 +86,25 @@ function getTotalPoint(){
  * show or hide total point at bottom right make css page
  */
 $(window).scroll(function(){
+    fixPointContainer();
+});
+
+$(window).resize(function(){
+    fixPointContainer();
+});
+
+function fixPointContainer(){
+    var screen_width = $(window).width();
+    var project_width = $('#make-header').width();
     if($('.visible-check').visible()){
         $(".total-point-container ").css('position','inherit');
     } else {
         $(".total-point-container ").css('position','fixed');
+        var fix_width = (screen_width - project_width)/2;
+        $(".total-point-container ").css('right',fix_width);
+        
     }
-});
+}
 
 /**
  * Function confirm CSS
