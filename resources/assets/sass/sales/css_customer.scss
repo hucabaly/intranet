@@ -3,6 +3,11 @@
 @import "css_customer/mixins";
 
 /** Common */
+
+body {
+    font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Meiryo, Helvetica, verdana, "Lucida Grande", "ＭＳ Ｐゴシック", Osaka, Arial, sans-serif;
+}
+
 .jumbotron {
     padding-bottom: 0;
     margin-bottom: 0;
