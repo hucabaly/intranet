@@ -8,7 +8,7 @@ $(window).resize(function(){
     if($(window).width() >= 768) {
         fixQuestionPosition();
     } else {
-        $('.question').css('margin-top',1px);
+        $('.question').css('margin-top','1px');
     }
 });
 
@@ -212,6 +212,8 @@ function submit(token, cssId){
         },
     })
     .done(function (data) { 
+        $('.comment-question').val('');
+        $('.proposed').val('');
         location.href = baseUrl + "css/success";
     })
     .fail(function () {
@@ -219,3 +221,11 @@ function submit(token, cssId){
     })
 }
 
+$( "#frm_welcome" ).submit(function( event ) {
+    var name = $.trim($('#make_name').val());
+    if(name === ''){
+        $('#modal-confirm-name').modal('show');
+        event.preventDefault();
+    }
+     
+});

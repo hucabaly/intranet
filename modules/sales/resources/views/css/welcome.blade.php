@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="row-fluid ">
-                <form method="post" action="{{ url('/css/welcome/'.$token.'/'.$id)}}"  >
+                <form method="post" id="frm_welcome" action="{{ url('/css/welcome/'.$token.'/'.$id)}}"  >
                     <input type="hidden" name="token" value="{{$token}}" />
                     <input type="hidden" name="id" value="{{$id}}" />
                     <div class="css-make-info">
@@ -39,7 +39,7 @@
                                 <div class="input-group goto-make-parent">
 
                                     <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
-                                    <input type="text" class="form-control" id="make_name" name="make_name" value="" maxlength="100" />
+                                    <input type="text" class="form-control" id="make_name" name="make_name" value="{{$makeName}}" maxlength="100" />
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-default btn-to-make <?php if($css->project_type_id === 1){ echo 'bg-color-blue'; } ?>" name="submit"><img src="{{ URL::asset('sales/images/splash.png') }}" /></button>
                                     </span>
