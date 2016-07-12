@@ -51,9 +51,8 @@
             </div>
         </div>
     </div>
-    
-    
 </div>
+
 <div class="modal modal-warning" id="modal-confirm-name">
     <div class="modal-dialog">
         <div class="modal-content">
