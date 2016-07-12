@@ -65,6 +65,8 @@
         var widthScreen = $(window).width();
         if(widthScreen < 480){
            setHeightBody('.success-body', 90);
+        } else if(widthScreen < 700) {
+            setHeightBody('.success-body', 100);
         } else {
             setHeightBody('.success-body', 125);
         }
