@@ -407,7 +407,9 @@ textarea {
                 .rate {
                     @extend .question;
                     text-align: center;
-                    margin-top: 12px;
+                    @media screen and (min-width: $lagreScreen){
+                        margin-top: 12px;
+                    }
                 }
 
                 .comment {

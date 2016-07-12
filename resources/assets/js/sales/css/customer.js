@@ -1,5 +1,15 @@
 $(document).ready(function(){
-    fixQuestionPosition();
+    if($(window).width() >= 768) {
+        fixQuestionPosition();
+    }
+});
+
+$(window).resize(function(){
+    if($(window).width() >= 768) {
+        fixQuestionPosition();
+    } else {
+        $('.question').css('margin-top',1px);
+    }
 });
 
 /**
