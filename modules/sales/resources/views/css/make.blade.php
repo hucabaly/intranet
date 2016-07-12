@@ -73,7 +73,7 @@
                                     <div class="row container-question">
                                         <div class="col-xs-12 col-sm-5 question"><span class="num-border">{{ $questionChild->sort_order }}</span> {{ $questionChild->content}}</div>
                                         <div class="col-xs-12 col-sm-2 rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$questionChild->id}}" onclick="totalMark(this);" ontouchend="totalMark(this);" ></div></div>
-                                        <div class="col-xs-12 col-sm-5 comment"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$questionChild->id}}" ></textarea></div>
+                                        <div class="col-xs-12 col-sm-5 comment"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$questionChild->id}}" onkeyup="checkPoint(this);" ></textarea></div>
                                     </div>
                                     @endforeach
                                 @endif
@@ -83,7 +83,7 @@
                             <div class="row container-question">
                                 <div class="col-xs-12 col-sm-5 question"><span class="num-border">{{ $question->sort_order }}</span> {{ $question->content}}</div>
                                 <div class="col-xs-12 col-sm-2 rate"><div class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$question->id}}" onclick="totalMark(this);" ontouchend="totalMark(this);" ></div></div>
-                                <div class="col-xs-12 col-sm-5 comment"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$question->id}}" ></textarea></div>
+                                <div class="col-xs-12 col-sm-5 comment"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$question->id}}" onkeyup="checkPoint(this);"></textarea></div>
                             </div>
                             @endforeach
                         @endif
@@ -94,7 +94,7 @@
                     <div class="row container-question">
                         <div class="col-xs-12 col-sm-5 question">{{ $overviewQuestionContent }}</div>
                         <div class="col-xs-12 col-sm-2 rate"><div id="tongquat" class="rateit" data-rateit-step='1' data-rateit-resetable="false" data-questionid="{{$overviewQuestionId}}" onclick="totalMark(this);" ontouchend="totalMark(this);" ></div></div>
-                        <div class="col-xs-12 col-sm-5 comment"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$overviewQuestionId}}" id="comment-tongquat" ></textarea></div>
+                        <div class="col-xs-12 col-sm-5 comment"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$overviewQuestionId}}" id="comment-tongquat" onkeyup="checkPoint(this);" ></textarea></div>
                     </div>
                     <!-- Proposed -->
                     <div class="row container-question">
