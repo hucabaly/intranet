@@ -422,7 +422,7 @@ textarea {
                     @extend .question;
                     padding-left: 2px;
                     padding-right: 2px;
-                    textarea {
+                    .comment-question {
                         height: 45px;
                         resize: none;
                     }
