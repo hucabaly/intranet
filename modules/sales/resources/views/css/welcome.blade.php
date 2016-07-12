@@ -8,7 +8,7 @@
             <img src="{{ URL::asset('common/images/logo-rikkei.png') }}">
         </div>
         <div class="box-header welcome-header">
-            <h2 class="welcome-title">{{ trans('sales::view.Welcome title') }}</h2>
+            <h2 class="welcome-title <?php if($css->project_type_id === 1){ echo 'color-blue'; } ?>">{{ trans('sales::view.Welcome title') }}</h2>
         </div>
         <div class="container-fluid">
             <div class="row-fluid">
@@ -41,7 +41,7 @@
                                     <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
                                     <input type="text" class="form-control" id="make_name" name="make_name" maxlength="100" />
                                     <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-default btn-to-make" name="submit"><img src="{{ URL::asset('sales/images/splash.png') }}" /></button>
+                                        <button type="submit" class="btn btn-default btn-to-make <?php if($css->project_type_id === 1){ echo 'bg-color-blue'; } ?>" name="submit"><img src="{{ URL::asset('sales/images/splash.png') }}" /></button>
                                     </span>
                                 </div>
                             </div>

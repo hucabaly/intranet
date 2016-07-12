@@ -57,17 +57,25 @@ textarea {
 }
 
 /** Welcome */
-
+.welcome-body{
+    .container-fluid {
+        margin-bottom: 30px;
+    }
+}
 .welcome-header {
     text-align: center;
-    color: $colorGreen;
     margin-bottom: 5px;
+    @media screen and (max-width: $mediumScreen){
+        margin-bottom: 15px;
+    }
     .welcome-title {
         font-size: 38px;
+        color: $colorGreen;
         @media screen and (max-width: $mediumScreen){
             font-size: 33px;
         }
     }
+    
 }
 
 .logo-rikkei {
@@ -76,17 +84,6 @@ textarea {
     img{
         width: 180px;
     }
-    .slogan{
-        display: block;
-        font-size: 18px;
-        font-style: italic;
-        color: $colorGray;
-        transform : scale(1,$fontHeightSloganScale);
-        -webkit-transform:scale(1,$fontHeightSloganScale); /* Safari and Chrome */
-        -moz-transform:scale(1,$fontHeightSloganScale); /* Firefox */
-        -ms-transform:scale(1,$fontHeightSloganScale); /* IE 9+ */
-        -o-transform:scale(1,$fontHeightSloganScale); /* Opera */
-    }
 }
 
 .welcome-line{
@@ -94,11 +91,14 @@ textarea {
     margin-bottom: 0 !important;
     color: #58595b;
     font-size: $welcomeFontSizeMedium !important;
-    
+    @media screen and (max-width: $mediumScreen){
+        font-size: 14px !important;
+        margin-bottom: 10px !important;
+        text-align: left;
+    }
 }
 
 .css-make-info{
-    
     margin: 30px auto;
     color: #58595b;
     width: 470px;
@@ -107,10 +107,15 @@ textarea {
     @media screen and (max-width: $mediumScreen){
         width: 100%;
         margin: 30px 0;
+        font-size: 14px;
+        margin: 40px 0;
     }
     .company-name-title {
         width: 155px;
         display: inline-block;
+        @media screen and (max-width: $mediumScreen){
+            width: 105px;
+        }
     }
     .project-name-title {
         @extend .company-name-title;
@@ -118,27 +123,25 @@ textarea {
     .customer-name-title {
         @extend .company-name-title;
     }
-    .company-name {
-        color: $colorGreen;
-    }
-    .project-name {
-        @extend .company-name;
-    }
+    
     .goto-make-parent{
         width: 285px;
         top: 11px;
+        @media screen and (max-width: $mediumScreen){
+            width: 100%;
+        }
         #make_name {
             border-radius: 3px 0 0 3px !important;
         }
         .btn-to-make {
-            background-color: #43a047;
+            background-color: $colorGreen;
             border-radius: 0 3px 3px 0 !important;
             border: none;
             &:hover {
                 background-color: #65b769;
             }
             img {
-                height: 21px;
+                height: 22px;
             }
         }
     }
@@ -153,20 +156,41 @@ textarea {
         margin-bottom: 0;
         @media screen and (max-width: $mediumScreen){
             width: 100%;
+            text-align: center;
         }
         span {
             color: $colorRed;
         }
     } 
-    .policy {
-        @extend .copyright;
+    
+    .policy-container{
         @media screen and (max-width: $mediumScreen){
-            float: left;
-            margin-top: 10px;
+            display: none;
         }
-        .policy-link{
-            font-size: $welcomeFontSizeSmallest;
-            text-decoration: underline;
+        .policy {
+            @extend .copyright;
+            .policy-link{
+                font-size: $welcomeFontSizeSmallest;
+                text-decoration: underline;
+            }
+        }
+    }
+    
+    .policy-mobile-container{
+        display: none;
+        @media screen and (max-width: $mediumScreen){
+            display: block;
+        }
+        .policy {
+            @extend .copyright;
+            @media screen and (max-width: $mediumScreen){
+                float: left;
+                margin-bottom: 10px;
+            }
+            .policy-link{
+                font-size: $welcomeFontSizeSmallest;
+                text-decoration: underline;
+            }
         }
     }
 }
