@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <section id="make-header">
                 <div class="logo-rikkei"><img src="{{ URL::asset('common/images/logo-rikkei.png') }}"></div>
-                <div class="title-container" ><h2 class="title <?php if($css->project_type_id === 2){ echo 'title-base'; }?>">お客様アンケート</h2></div>
+                <h2 class="title <?php if($css->project_type_id === 2){ echo 'title-base'; }?>">お客様アンケート</h2>
                 <span class="visible-check"></span>
                 <div class="total-point-container <?php if($css->project_type_id === 2){ echo 'total-point-container-base'; }?>">
                     <div class="total-point-text">{{ trans('sales::view.Total point')}}</div>
@@ -97,7 +97,7 @@
                         <div class="col-xs-12 col-sm-5 comment"><textarea class="comment-question form-control" rows="1" type="text" maxlength="1000" data-questionid="{{$overviewQuestionId}}" id="comment-tongquat" onkeyup="checkPoint(this);" ></textarea></div>
                     </div>
                     <!-- Proposed -->
-                    <div class="row container-question">
+                    <div class="row proposed container-question">
                         <div class="col-xs-12 col-sm-5 question">
                             @if($css->project_type_id === 1)
                             <div>{{ trans('sales::view.Proposed line 1 OSDC') }}</div>
@@ -204,14 +204,11 @@
         $('#modal-confirm-make').show();
     <?php endif; ?>
         
-    setTitleWidth();
-    
     $(window).scroll(function(){
         fixPointContainer();
     });
 
     $(window).resize(function(){
-        setTitleWidth();
         fixPointContainer();
     });
 
@@ -230,15 +227,5 @@
 
         }
     } 
-    
-    /**
-     * Set width for class container-title
-     */
-    function setTitleWidth(){
-        $logoWidth = $('.logo-rikkei').outerWidth();
-        $pointWidth = $('.total-point-container ').outerWidth();
-        $titleWidth = $('#make-header').outerWidth() - $logoWidth - $pointWidth;
-        $('.title-container').width($titleWidth);
-    }
 </script>
 @endsection

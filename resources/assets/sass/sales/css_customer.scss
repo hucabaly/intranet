@@ -199,6 +199,7 @@ textarea {
     @media screen and (min-width: 320px){
         padding: 0 5px;
         #make-header {
+            text-align: center;
             .logo-rikkei {
                 float: left;
                 img {
@@ -210,29 +211,27 @@ textarea {
                         width: 100px;
                     }
                 }
+            }            
+            
+            .title {
+                font-size: 19px;
+                margin: 0;
+                color: $colorBlue;
+                font-weight: 700;
+                position: absolute;
+                left: 0;
+                right: 0;
+                @media screen and (min-width: $mediumScreen){
+                    font-size: 26px;
+                }
+                @media screen and (min-width: $lagreScreen){
+                    font-size: 45px;
+                }
             }
             
-            .title-container {
-                display: inline-block;
-                text-align: center;
-                margin-left: -1px;
-                .title {
-                    font-size: 19px;
-                    margin: 0;
-                    color: $colorBlue;
-                    display: inline;
-                    font-weight: 700;
-                    @media screen and (min-width: $mediumScreen){
-                        font-size: 26px;
-                    }
-                    @media screen and (min-width: $lagreScreen){
-                        font-size: 45px;
-                    }
-                }
-                .title-base {
-                    color: $colorGreen;
-                }
-            }
+            .title-base {
+                color: $colorGreen;
+            }            
 
             .total-point-container {
                 @include total-point();
@@ -383,6 +382,11 @@ textarea {
                     float: left;
                     width: 100%;
                     margin-left: 0;
+                    height: 85px;
+                    overflow: auto;
+                }
+                @media screen and (min-width: $bigScreen){
+                    height: 66px;
                 }
                 .question {
                     padding: 5px;
@@ -390,6 +394,11 @@ textarea {
                     margin-top: 1px;
                     border-radius: 3px;
                     font-size: 13px;
+                    @media screen and (min-width: $lagreScreen){
+                        position: relative;
+                        top: 50%;
+                        transform: translateY(-50%);
+                    }
                     .num-border {
                         border: 1px solid #999;
                         border-radius: 50%;
@@ -407,9 +416,6 @@ textarea {
                 .rate {
                     @extend .question;
                     text-align: center;
-                    @media screen and (min-width: $lagreScreen){
-                        margin-top: 12px;
-                    }
                 }
 
                 .comment {
@@ -423,9 +429,18 @@ textarea {
                 }
             }
             
-            .proposed-comment {
-                textarea {
-                    height: 140px !important;
+            .proposed {
+                height: auto;
+                .question {
+                    transform: none;
+                }
+                .comment {
+                    transform: none;
+                }
+                .proposed-comment {
+                    textarea {
+                        height: 140px !important;
+                    }
                 }
             }
             
@@ -449,6 +464,7 @@ textarea {
                 @extend .container-question;
                 padding: 13px 20px;
                 font-size: 13px;
+                height: auto;
             }
         }
         
