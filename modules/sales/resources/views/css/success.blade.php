@@ -44,18 +44,30 @@
     
 </script>
 <script>
-   //Fix footer bottom
-    setHeightBody('.success-body', 130);
+    //Fix footer bottom
+    
+    setHeightByWidth();
+    
     if($('.success-body').height() < 300){
         $('.success-body .success-action').css('margin-top', '50px');
     }else {
         $('.success-body .success-action').css('margin-top', '100px');
     }
     $(window).resize(function(){
-        setHeightBody('.success-body', 130);
+        setHeightByWidth();
+        
         if($('.success-body').height() < 300){
             $('.success-body .success-action').css('margin-top', '50px');
         }
     });
+    
+    function setHeightByWidth(){
+        var widthScreen = $(window).width();
+        if(widthScreen < 480){
+           setHeightBody('.success-body', 90);
+        } else {
+            setHeightBody('.success-body', 125);
+        }
+    }
 </script>
 @endsection

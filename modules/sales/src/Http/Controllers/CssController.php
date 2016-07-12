@@ -185,6 +185,7 @@ class CssController extends Controller {
                         'token' => $token,
                         'id'    => $id,
                         "nameRequired" => 1, //name is empty
+                        'makeName'  => $makeName,
                     ]);
             }elseif(strlen($makeName) > 100){
                 return view(
