@@ -6,7 +6,8 @@
         <div class="col-md-12">
             <section id="make-header">
                 <div class="logo-rikkei"><img src="{{ URL::asset('common/images/logo-rikkei.png') }}"></div>
-                <h2 class="title <?php if($css->project_type_id === 2){ echo 'title-base'; }?>">お客様アンケート</h2>
+                <div class="title-container" ><h2 class="title <?php if($css->project_type_id === 2){ echo 'title-base'; }?>">お客様アンケート</h2></div>
+                <span class="visible-check"></span>
                 <div class="total-point-container <?php if($css->project_type_id === 2){ echo 'total-point-container-base'; }?>">
                     <div class="total-point-text">{{ trans('sales::view.Total point')}}</div>
                     <div class="total-point <?php if($css->project_type_id === 2){ echo 'total-point-base'; }?>" >00.00</div>
@@ -26,9 +27,9 @@
                     </div>
                     <div class="col-xs-12 col-sm-6 padding-left-right-5px">
                         <div class="row-info">{{ trans('sales::view.Project date jp') }}{{ date("m/d/Y",strtotime($css->start_date)) }} - {{ date("m/d/Y",strtotime($css->end_date)) }}</div>
-                        <div class="row-info">{{ trans('sales::view.Customer company name jp') }}{{ $css->company_name }} 様</div>
-                        <div class="row-info">{{ trans('sales::view.Customer name jp') }}{{ $css->customer_name }} 様</div>
-                        <div class="row-info">{{ trans('sales::view.Make name jp')}}<span class="make-name">{{ $makeName }} </span>様</div>
+                        <div class="row-info">{{ trans('sales::view.Customer company name jp') }}{{ $css->company_name }}様</div>
+                        <div class="row-info">{{ trans('sales::view.Customer name jp') }}{{ $css->customer_name }}様</div>
+                        <div class="row-info">{{ trans('sales::view.Make name jp')}}<span class="make-name">{{ $makeName }}</span>様</div>
                     </div>
                 </div>
                 <!-- END PROJECT INFORMATION -->
@@ -203,11 +204,14 @@
         $('#modal-confirm-make').show();
     <?php endif; ?>
         
+    setTitleWidth();
+    
     $(window).scroll(function(){
         fixPointContainer();
     });
 
     $(window).resize(function(){
+        setTitleWidth();
         fixPointContainer();
     });
 
@@ -225,6 +229,16 @@
             $(".total-point-container ").css('right',fix_width);
 
         }
-    }    
+    } 
+    
+    /**
+     * Set width for class container-title
+     */
+    function setTitleWidth(){
+        $logoWidth = $('.logo-rikkei').outerWidth();
+        $pointWidth = $('.total-point-container ').outerWidth();
+        $titleWidth = $('#make-header').outerWidth() - $logoWidth - $pointWidth;
+        $('.title-container').width($titleWidth);
+    }
 </script>
 @endsection
