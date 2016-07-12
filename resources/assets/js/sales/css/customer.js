@@ -1,30 +1,3 @@
-$(document).ready(function(){
-    if($(window).width() >= 768) {
-        fixQuestionPosition();
-    }
-});
-
-$(window).resize(function(){
-    if($(window).width() >= 768) {
-        fixQuestionPosition();
-    } else {
-        $('.question').css('margin-top',1px);
-    }
-});
-
-/**
- * Fix question vertical align div
- */
-function fixQuestionPosition(){
-    if($('.make-css-page').length > 0) {
-        $('.container-question').each( function(){
-            var containerHeight = $(this).height();
-            var questionHeight = $(this).find('.question').height();
-            $(this).find('.question').css('margin-top', (containerHeight - questionHeight)/2 -2);
-        });
-    }
-}
-
 //Fix footer bottom customer pages
 function setHeightBody(elem, height){
     $(elem).css('min-height', $(window).height() - $('.welcome-footer').outerHeight() - height);
@@ -212,6 +185,8 @@ function submit(token, cssId){
         },
     })
     .done(function (data) { 
+        $('.comment-question').val('');
+        $('.proposed').val('');
         location.href = baseUrl + "css/success";
     })
     .fail(function () {
@@ -219,3 +194,11 @@ function submit(token, cssId){
     })
 }
 
+$( "#frm_welcome" ).submit(function( event ) {
+    var name = $.trim($('#make_name').val());
+    if(name === ''){
+        $('#modal-confirm-name').modal('show');
+        event.preventDefault();
+    }
+     
+});
