@@ -46,8 +46,16 @@
 <script>
    //Fix footer bottom
     setHeightBody('.success-body', 130);
+    if($('.success-body').height() < 300){
+        $('.success-body .success-action').css('margin-top', '50px');
+    }else {
+        $('.success-body .success-action').css('margin-top', '100px');
+    }
     $(window).resize(function(){
         setHeightBody('.success-body', 130);
+        if($('.success-body').height() < 300){
+            $('.success-body .success-action').css('margin-top', '50px');
+        }
     });
 </script>
 @endsection
