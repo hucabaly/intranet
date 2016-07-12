@@ -467,9 +467,9 @@ textarea {
         .success-action {
             margin-top: 100px;
             p {
-                font-size: 20px;
-                @media screen and (min-width: $mediumScreen){
-                    font-size: 35px;
+                font-size: 19px;
+                @media screen and (min-width: $lagreScreen){
+                    font-size: 30px;
                 }
             }
         }

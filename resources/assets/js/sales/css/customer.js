@@ -39,6 +39,28 @@ function goToFinish(){
 }
 
 /**
+ * Check point when press a comment
+ */
+function checkPoint(elem) {
+    var value = $(elem).val();
+    if(value === ''){
+        var questionid = $(elem).attr('data-questionid');;
+        var rateElem = $('.rateit[data-questionid='+questionid+']');
+        var rateValue = rateElem.rateit('value');
+        if(rateValue < 3 && rateValue > 0) {
+            $(elem).css("border","1px solid red");
+            $(elem).attr('placeholder','＃コメントがあればご記入ください。');
+        }else if(rateValue >= 3){
+            $(elem).css("border","1px solid #d2d6de");
+            $(elem).removeAttr('placeholder');
+        }
+    }else {
+        $(elem).css("border","1px solid #d2d6de");
+        $(elem).removeAttr('placeholder');
+    }
+}
+
+/**
  * Trang lam danh gia
  * Khi khach hang danh danh gia mot tieu chi
  * Tinh tong diem realtime
