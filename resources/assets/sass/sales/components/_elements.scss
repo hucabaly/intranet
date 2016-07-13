@@ -2,6 +2,7 @@
     color:red;
     font-size: 13px;
     font-weight: 100;
+    display: inline-block;
 }
 
 .width-300{
@@ -9,5 +10,9 @@
 }
 
 .position-relative {
-    position: relative;
+    position: relative !important;
+}
+
+.position-inherit {
+    position: inherit !important;
 }

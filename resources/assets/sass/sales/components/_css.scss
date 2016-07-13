@@ -32,11 +32,6 @@
 }
 
 .css-create-page {
-    input[type=text] {
-        width: 93%;
-        display: inline-block;
-    }
-    
     .box-header {
         text-align: center;
         border-bottom: none;
@@ -52,15 +47,39 @@
         
     }
     
-    .sama_label{
-        position: absolute;
-        top: 8px;
-        left: 85%;
+    .css-create-body {
+        margin-top: 10px;
+        input[type=text] {
+            width: 93%;
+            display: inline-block;
+            border-radius: 3px; 
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .sama_label{
+            position: absolute;
+            top: 8px;
+            left: 85%;
+        }
+
+        .radio-inline {
+            padding-left: 0;
+        }
+        
+        .icheckbox-container {
+            width: 100%;
+        }
+        
+        .required {
+            position: absolute;
+            top: 8px;
+            left: 95%;
+        }
     }
     
-    .radio-inline {
-        padding-left: 0;
-    }
     
     .container-fluid .row-fluid button.btn-next{
         float: right; 

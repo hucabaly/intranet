@@ -7,17 +7,17 @@
         <h3 class="box-title">{{ trans('sales::view.Create CSS title') }}</h3>
     </div>
             
-    <div class="span12">
+    <div class="css-create-body">
        <form id="frm_create_css" method="post" action="/css/save"  >
             <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
             <input type="hidden" name="create_or_update" value="create">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                         <input type="hidden" id="employee_id" name="employee_id" value="{{$employee->id}}">
                         <input type="text" class="form-control" id="employee_name" name="employee_name" value="{{$employee->name}}" disabled="disabled" placeholder="{{ trans('sales::view.Create.Sale name') }}">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                         <input type="text" class="form-control" id="japanese_name" name="japanese_name" value="{{$employee->japanese_name}}" tabindex=1 maxlength="100" placeholder="{{ trans('sales::view.Create.Sale name jp') }}" >
                         &nbsp;<span class="required">(*)</span>
                     </div>
@@ -31,8 +31,8 @@
                         <label class="sama_label">様</label>
                         &nbsp;<span class="required">(*)</span>
                     </div>
-                    <div class="form-group">
-                        <label for="project_type_id">{{ trans('sales::view.Project type') }} <span class="required">*</span></label>
+                    <div class="form-group position-relative">
+                        <label for="project_type_id">{{ trans('sales::view.Project type') }} <span class="required position-inherit">(*)</span></label>
                         <div>
                             <label class="radio-inline">
                                 <input type="radio" checked="checked" name="project_type_id" value="1">&nbsp;{{trans('sales::view.Osdc')}}
@@ -44,29 +44,30 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                         <label for="project_name"> </label>
                         <input type="text" class="form-control" id="project_name" name="project_name" tabindex=4  maxlength="200" placeholder="{{ trans('sales::view.Project base name') }}" >
                         &nbsp;<span class="required">(*)</span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                         <div>
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teamsModal" data-whatever="@mdo" onclick="set_teams_popup();">{{ trans('sales::view.Create.Set team relate') }}</button>
-                            &nbsp;<span class="required">(*)</span>
+                            &nbsp;<span class="required position-inherit">(*)</span>
                             <input id="team_id_check" name="team_id_check" type="text" value="" style="visibility: hidden; position: absolute;">
                             <label class="set_team"></label>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                         <input type="text" class="form-control" id="pm_name" name="pm_name" tabindex=5  maxlength="100" placeholder="{{ trans('sales::view.PM name') }} " >
                         &nbsp;<span class="required">(*)</span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                         <input type="text" class="form-control" id="brse_name" name="brse_name" tabindex=6  maxlength="100" placeholder="{{ trans('sales::view.BrSE name') }}" >
                         &nbsp;<span class="required">(*)</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="start_date">{{ trans('sales::view.Project date') }} <span class="required">*</span></label>
+                    </div> 
+                    <div class="form-group position-relative">
+                        <label for="start_date">{{ trans('sales::view.Project date') }} <span class="required position-inherit">(*)</span></label>
+                        <div class="input-group"> <span class="input-group-btn"> <button class="btn btn-default" type="button">Go!</button> </span> <input type="text" class="form-control" placeholder="Search for..."> </div>
                         <div >
                             <div class="container-date">
                                 <div class="input-group-addon calendar-button" target="start_date" onclick="showCalendar(this);">
