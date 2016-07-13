@@ -21,19 +21,19 @@
                             <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                 <thead>
                                     <tr role="row">
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Id') }}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Project type') }}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Project base name') }}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Team relate') }}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Sale name 2') }}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.PM') }}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Project date') }}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Customer company') }}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Customer name') }}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Create date css') }}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Count make css') }}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.View css make list')}}</th>
-                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Url css')}}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Id') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project type') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project base name') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Team relate') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Sale name 2') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.PM') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project date') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Customer company') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Customer name') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Create date css') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Count make css') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.View css make list')}}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Url css')}}</th>
                                    </tr>
                                 </thead>
                                 <tbody>
@@ -55,7 +55,7 @@
                                                 <a href="{{$item->hrefToView}}">{{ trans('sales::view.View') }}</a>
                                             @endif
                                         </td>
-                                        <td class="sorting" rowspan="1" colspan="1" >
+                                        <td  rowspan="1" colspan="1" >
                                             <a href="javascript:void(0)" data-href="{{$item->url}}" onclick="copyToClipboard(this);">{{ trans('sales::view.Copy to clipboard')}}</a>
                                         </td>
                                     </tr>
