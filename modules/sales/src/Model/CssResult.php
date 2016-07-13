@@ -408,8 +408,8 @@ class CssResult extends Model
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->where('css.pm_name', $pmName)
-                ->orderBy('css_result.id','ASC')
                 ->orderBy('css.end_date','ASC')
+                ->orderBy('css_result.id','ASC')
                 ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
@@ -437,8 +437,8 @@ class CssResult extends Model
                 ->where('css.end_date','<=',$endDate)
                 ->where('css.employee_id','=',$employeeId)
                 ->where('css.pm_name', $pmName)
-                ->orderBy('css_result.id','ASC')
                 ->orderBy('css.end_date','ASC')
+                ->orderBy('css_result.id','ASC')
                 ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
@@ -466,8 +466,8 @@ class CssResult extends Model
                 ->where('css.end_date','>=',$startDate)
                 ->where('css.end_date','<=',$endDate)
                 ->where('css.pm_name', $pmName)
-                ->orderBy('css_result.id','ASC')
                 ->orderBy('css.end_date','ASC')
+                ->orderBy('css_result.id','ASC')
                 ->groupBy('css_result.id')
                 ->select('css_result.*','css.end_date','css.project_name','css.pm_name as pmName','teams.name as teamName')
                 ->get();
