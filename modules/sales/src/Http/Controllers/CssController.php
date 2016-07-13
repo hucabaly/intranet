@@ -198,11 +198,11 @@ class CssController extends Controller {
                     ]);
             }else { 
                 //Set make name and go to make CSS page
-                $request->session()->put('makeName', $makeName);
+                $request->session()->put('makeName'.$id, $makeName);
                 return redirect(url('/css/make/' . $token . '/' . $id));
             }
         }else {
-            $name = ($request->session()->get('makeName') !== null) ? $request->session()->get('makeName') : '';
+            $name = ($request->session()->get('makeName'.$id) !== null) ? $request->session()->get('makeName'.$id) : '';
             return view(
                 'sales::css.welcome', [
                     'css' => $css,
@@ -292,7 +292,7 @@ class CssController extends Controller {
                     "noOverView" => self::romanic_number(++$NoOverView,true),
                     "overviewQuestionId" => $overviewQuestion->id,
                     "overviewQuestionContent" => $overviewQuestion->content,
-                    "makeName" => ($request->session()->get('makeName') !== null) ? $request->session()->get('makeName') : '',
+                    "makeName" => ($request->session()->get('makeName'.$id) !== null) ? $request->session()->get('makeName'.$id) : '',
                 ]
             );
         } else {
