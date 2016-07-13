@@ -665,7 +665,7 @@ function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids,or
             _token: token, 
         },
     })
-    .done(function (data) { 
+    .done(function (data) {  
         var countResult = data["cssResultdata"].length; 
         html = "";
         if(countResult > 0){
