@@ -12,7 +12,6 @@
                     <div class="total-point-text">{{ trans('sales::view.Total point')}}</div>
                     <div class="total-point <?php if($css->project_type_id === 2){ echo 'total-point-base'; }?>" >00.00</div>
                 </div>
-                <div class="visible-check"></div>
             </section>
             <section>
 
@@ -33,7 +32,7 @@
                     </div>
                 </div>
                 <!-- END PROJECT INFORMATION -->
-
+                   
                 <!-- PROJECT DETAIL -->
                 <div class="row project-detail">
                     <div class="col-xs-12 header <?php if($css->project_type_id === 2){ echo 'header-base'; }?>">
@@ -204,6 +203,10 @@
         $('#modal-confirm-make').show();
     <?php endif; ?>
         
+    $(document).ready(function(){
+        fixPointContainer();
+    });
+    
     $(window).scroll(function(){
         fixPointContainer();
     });
@@ -218,13 +221,18 @@
     function fixPointContainer(){
         var screen_width = $(window).width();
         var project_width = $('#make-header').width();
+        var point_width = $(".total-point-container ").outerWidth();
         if($('.visible-check').visible()){
             $(".total-point-container ").css('position','inherit');
         } else {
             $(".total-point-container ").css('position','fixed');
             var fix_width = (screen_width - project_width)/2;
-            $(".total-point-container ").css('right',fix_width);
-
+            if(fix_width <= point_width){
+                $(".total-point-container ").css('right',fix_width);
+            } else {
+                var fix_width = fix_width - point_width;
+                $(".total-point-container ").css('right',fix_width);
+            }
         }
     } 
 </script>

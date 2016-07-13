@@ -27,7 +27,7 @@
                     <div class="css-make-info">
                         <div>
                             <div class="company-name-title">{{ trans('sales::view.Customer company name jp')}}</div>
-                            <div class="company-name inline-block">{{ $css->company_name}} 様</div>
+                            <div class="company-name inline-block">{{ $css->company_name}}様</div>
                         </div>
                         <div>
                             <div class="project-name-title">{{ trans('sales::view.Project name jp')}}</div>
