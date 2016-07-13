@@ -86,6 +86,7 @@ return [
     'Email project name' => ':project_type: :project_name',
     'Email project date' => 'Thời gian: :project_date',
     'Email pm name' => 'Tên người phụ trách: :pm_name',
+    'Email point' => '<strong>Số điểm: :point điểm</strong>',
     'Email text view detail CSS' => 'Chi tiết bài đánh giá của khách hàng:',
     'Email respect' => 'Trân trọng,',
     'Product team'  => 'Product team.',
