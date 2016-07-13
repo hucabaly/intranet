@@ -383,7 +383,7 @@ textarea {
                     width: 100%;
                     margin-left: 0;
                     height: 85px;
-                    overflow: auto;
+                    overflow: hidden;
                 }
                 @media screen and (min-width: $bigScreen){
                     height: 66px;
