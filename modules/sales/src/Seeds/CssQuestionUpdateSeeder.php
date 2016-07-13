@@ -44,7 +44,7 @@ class CssQuestionUpdateSeeder extends Seeder
                 ->update(['content' => 'テスト実施の品質は良好でしたか。']);
         
         DB::table('css_question')->where('id',10)
-                ->update(['content' => '不具合対応の品質はどう思われますか。（影響範囲の調査、対応期間など）']);
+                ->update(['content' => '不具合対応の品質はどう思われましたか。（影響範囲の調査、対応期間など）']);
         
         DB::table('css_question')->where('id',11)
                 ->update(['content' => 'チームのレスポンスタイムはいかがでしたか。']);
