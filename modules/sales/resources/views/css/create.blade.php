@@ -21,12 +21,12 @@
                         <input type="text" class="form-control" id="japanese_name" name="japanese_name" value="{{$employee->japanese_name}}" tabindex=1 maxlength="100" placeholder="{{ trans('sales::view.Create.Sale name jp') }}" >
                         &nbsp;<span class="required">(*)</span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                         <input type="text" class="form-control" id="company_name" name="company_name" tabindex=2 maxlength="200" placeholder="{{ trans('sales::view.Customer company name') }}"  >
                         <label class="sama_label">様</label>
                         &nbsp;<span class="required">(*)</span>
                     </div>
-                    <div class="form-group" style="position: relative;">
+                    <div class="form-group position-relative">
                         <input type="text" class="form-control" id="customer_name" name="customer_name" tabindex=3  maxlength="100" placeholder="{{ trans('sales::view.Customer name') }}" >
                         <label class="sama_label">様</label>
                         &nbsp;<span class="required">(*)</span>
