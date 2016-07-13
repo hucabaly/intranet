@@ -1694,7 +1694,10 @@ class CssController extends Controller {
      * @param int $curPage
      */
     protected function getListLessThreeStarByQuestion($questionId,$cssResultIds,$curPage,$orderBy,$ariaType){
-        $offset = ($curPage-1) * self::$perPage;
+        Paginator::currentPageResolver(function () use ($curPage) {
+            return $curPage;
+        });
+        
         $lessThreeStar = Css::getListLessThreeStarByQuestionId($questionId,$cssResultIds,self::$perPage,$orderBy,$ariaType);
         
         $offset = ($lessThreeStar->currentPage()-1) * $lessThreeStar->perPage() + 1;
