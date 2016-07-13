@@ -32,7 +32,7 @@ function checkPoint(elem) {
         var rateValue = rateElem.rateit('value');
         if(rateValue < 3 && rateValue > 0) {
             $(elem).css("border","1px solid red");
-            $(elem).attr('placeholder','＃（★）と（★★）の項目がある場合はコメントをご記入ください。');
+            $(elem).attr('placeholder','＃コメントがあればご記入ください。');
         }else if(rateValue >= 3){
             $(elem).css("border","1px solid #d2d6de");
             $(elem).removeAttr('placeholder');
@@ -57,7 +57,7 @@ function totalMark(elem) {
         var text = commentElem.val();
         if($.trim(text) === ''){
             commentElem.css("border","1px solid red");
-            commentElem.attr('placeholder','＃（★）と（★★）の項目がある場合はコメントをご記入ください。');
+            commentElem.attr('placeholder','＃コメントがあればご記入ください。');
         }
     }else if(point >= 3){
         commentElem.css("border","1px solid #d2d6de");
