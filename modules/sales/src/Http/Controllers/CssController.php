@@ -355,12 +355,13 @@ class CssController extends Controller {
      * View Css list 
      * @return void
      */
-    public function grid()
+    public function grid(Request $request)
     {
+        $curPage = $request->input('page');
         $pager = Config::getPagerData();
         $css = CssPermission::getCssListByPermission($pager['order'], $pager['dir']);
         $css = CoreModel::filterGrid($css);
-        $css = CoreModel::pagerCollection($css, $pager['limit'], $pager['page']);
+        $css = CoreModel::pagerCollection($css, $pager['limit'], $curPage);
         
         if(count($css) > 0){
             $cssResultModel = new CssResult();
@@ -413,7 +414,7 @@ class CssController extends Controller {
      * View Css result by Css
      * @param int $cssId
      */
-    public function view($cssId)
+    public function view($cssId, Request $request)
     {
         $css = Css::find($cssId);
         $permissionFlag = CssPermission::isCssPermission($cssId,$css->employee_id);
@@ -427,13 +428,14 @@ class CssController extends Controller {
         
         //If has permission
         if(count($css)){
+            $curPage = $request->input('page'); 
+            $pager = Config::getPagerData();
             $cssResultModel = new CssResult();
-            $cssResults = $cssResultModel->getCssResulByCss($cssId,self::$perPageCss);
+            $cssResults = $cssResultModel->getCssResulByCss($cssId,$pager['order'], $pager['dir']);
+            $cssResults = CoreModel::filterGrid($cssResults);
+            $cssResults = CoreModel::pagerCollection($cssResults, $pager['limit'], $curPage);
             if(count($cssResults)){
-                $i = ($cssResults->currentPage()-1) * $cssResults->perPage() + 1;
                 foreach($cssResults as &$item){
-                    $item->stt = $i;
-                    $i++;
                     $item->make_date = date('d/m/Y',strtotime($item->created_at));
                 }
             }
