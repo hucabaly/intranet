@@ -98,7 +98,7 @@
                                         <table class="table  table-hover dataTable ketqua" id='danhsachduan'>
                                             <thead>
                                                 <tr>
-                                                    <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
+                                                    <th onclick="sortProject(this,'{{ Session::token() }}');" class="col-xs-1 sorting" data-sort-type="resultId" aria-type="asc">{{trans('sales::view.No.')}}</th>
                                                     <th onclick="sortProject(this,'{{ Session::token() }}');" data-sort-type="projectName" aria-type="asc" class="sorting">{{trans('sales::view.Project name')}}</th>
                                                     <th onclick="sortProject(this,'{{ Session::token() }}');" data-sort-type="team" aria-type="asc" class="sorting">{{trans('sales::view.Team')}}</th>
                                                     <th onclick="sortProject(this,'{{ Session::token() }}');" data-sort-type="pm" aria-type="asc" class="sorting">{{trans('sales::view.PM')}}</th>
@@ -151,12 +151,12 @@
                                             <thead>
                                                 <tr>
                                                     <th class="col-xs-1">{{trans('sales::view.No.')}}</th>
-                                                    <th class="col-xs-2" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="projectName" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Project name')}}</th>
-                                                    <th class="col-xs-3" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="questionName" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Criteria name')}}</th>
-                                                    <th class="col-xs-1" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="questionPoint" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Point *')}}</th>
-                                                    <th class="col-xs-3" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="customerComment" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Customer comment')}}</th>
-                                                    <th class="col-xs-1" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="makeDate" aria-type="desc" class="sorting_asc" data-type="all">{{trans('sales::view.Make date css')}}</th>
-                                                    <th class="col-xs-1" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="projectPoint" aria-type="asc" class="sorting" data-type="all">{{trans('sales::view.Css point')}}</th>
+                                                    <th class="col-xs-2 sorting" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="projectName" aria-type="asc" data-type="all">{{trans('sales::view.Project name')}}</th>
+                                                    <th class="col-xs-3 sorting" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="questionName" aria-type="asc" data-type="all">{{trans('sales::view.Criteria name')}}</th>
+                                                    <th class="col-xs-1 sorting" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="questionPoint" aria-type="asc" data-type="all">{{trans('sales::view.Point *')}}</th>
+                                                    <th class="col-xs-3 sorting" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="customerComment" aria-type="asc" data-type="all">{{trans('sales::view.Customer comment')}}</th>
+                                                    <th class="col-xs-1 sorting_asc" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="makeDate" aria-type="desc" data-type="all">{{trans('sales::view.Make date css')}}</th>
+                                                    <th class="col-xs-1 sorting" onclick="sortLess3Star(this,'{{ Session::token() }}');" data-sort-type="projectPoint" aria-type="asc" data-type="all">{{trans('sales::view.Css point')}}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

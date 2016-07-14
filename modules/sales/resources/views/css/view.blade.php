@@ -21,7 +21,7 @@
                             <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                 <thead>
                                     <tr role="row">
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.STT') }}</th>
+                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Id') }}</th>
                                         <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Make name') }}</th>
                                         <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Sale name 2') }}</th>
                                         <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.CSS mark') }}</th>
@@ -33,7 +33,7 @@
                                 <tbody>
                                     @foreach($cssResults as $item)
                                     <tr role="row" class="odd">
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->stt }}</td>
+                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->id }}</td>
                                         <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->name }}</td>
                                         <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->sale_name }}</td>
                                         <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ number_format($item->avg_point,2) }}</td>

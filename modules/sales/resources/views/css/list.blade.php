@@ -21,41 +21,41 @@
                             <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                 <thead>
                                     <tr role="row">
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.STT') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Project type') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Project base name') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Team relate') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Sale name 2') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.PM') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Project date') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Customer company') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Customer name') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Create date css') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Count make css') }}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.View css make list')}}</th>
-                                        <th tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ trans('sales::view.Url css')}}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Id') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project type') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project base name') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Team relate') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Sale name 2') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.PM') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project date') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Customer company') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Customer name') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Create date css') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Count make css') }}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.View css make list')}}</th>
+                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Url css')}}</th>
                                    </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($css as $item)
                                     <tr role="row" class="odd">
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->stt }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->project_type_name }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->project_name }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->teamsName }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->sale_name }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->pm_name }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->start_date }} - {{ $item->end_date }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->company_name }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->customer_name }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->create_date }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" class="with-textalign-center" >{{ $item->countCss }}</td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" class="with-textalign-center" >
+                                        <td rowspan="1" colspan="1" >{{ $item->id }}</td>
+                                        <td rowspan="1" colspan="1" >{{ $item->project_type_name }}</td>
+                                        <td rowspan="1" colspan="1" >{{ $item->project_name }}</td>
+                                        <td rowspan="1" colspan="1" >{{ $item->teamsName }}</td>
+                                        <td rowspan="1" colspan="1" >{{ $item->sale_name }}</td>
+                                        <td rowspan="1" colspan="1" >{{ $item->pm_name }}</td>
+                                        <td rowspan="1" colspan="1" >{{ $item->start_date }} - {{ $item->end_date }}</td>
+                                        <td rowspan="1" colspan="1" >{{ $item->company_name }}</td>
+                                        <td rowspan="1" colspan="1" >{{ $item->customer_name }}</td>
+                                        <td rowspan="1" colspan="1" >{{ $item->create_date }}</td>
+                                        <td rowspan="1" colspan="1" class="with-textalign-center" >{{ $item->countCss }}</td>
+                                        <td rowspan="1" colspan="1" class="with-textalign-center" >
                                             @if($item->countCss > 0)
                                                 <a href="{{$item->hrefToView}}">{{ trans('sales::view.View') }}</a>
                                             @endif
                                         </td>
-                                        <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >
+                                        <td  rowspan="1" colspan="1" >
                                             <a href="javascript:void(0)" data-href="{{$item->url}}" onclick="copyToClipboard(this);">{{ trans('sales::view.Copy to clipboard')}}</a>
                                         </td>
                                     </tr>
@@ -108,6 +108,7 @@
 @endsection
 <!-- Styles -->
 @section('css')
+<link rel="stylesheet" href="{{ URL::asset('adminlte/plugins/datatables/dataTables.bootstrap.css') }}" />
 <link href="{{ asset('sales/css/sales.css') }}" rel="stylesheet" type="text/css" >
 @endsection
 

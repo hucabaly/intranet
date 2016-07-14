@@ -93,6 +93,7 @@ return [
     'Warning'   => 'ご確認',
     'Yes'   => 'Có',
     'No' => 'Không',
+    'Id'    => 'Id',
     'Cancel make css' => 'キャンセル',
     'Submit make css' => 'OK',
     'Confirm make css' => 'ご確認',
