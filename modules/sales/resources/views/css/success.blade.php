@@ -25,23 +25,6 @@
 <script>
     jQuery(document).ready(function($) {
         $.backstretch('{{ URL::asset('common/images/login-background.png') }}');
-        
-        /**
-         * fix position for login block - margin height
-         */
-        function fixPositionLoginBlock()
-        {
-            windowHeight = $(window).height();
-            loginHeight = $('.login-wrapper').height();
-            placeHeight = windowHeight / 2 - loginHeight / 2;
-            $('.login-wrapper').css('margin-top', placeHeight + 'px');
-        }
-        
-        fixPositionLoginBlock();
-        $(window).resize(function (event) {
-            fixPositionLoginBlock();
-        });
     });
-    
 </script>
 @endsection
