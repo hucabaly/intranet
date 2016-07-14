@@ -53,14 +53,14 @@ class CssResult extends Model
      * @param int $perPage
      * @return object list css result
      */
-    public function getCssResulByCss($cssId, $perPage){
+    public function getCssResulByCss($cssId, $order, $dir){
         return self::join('css', 'css.id', '=', 'css_result.css_id')
                 ->join('employees', 'employees.id', '=', 'css.employee_id')
                 ->where("css_result.css_id",$cssId)
+                ->orderBy($order, $dir)
                 ->orderBy('id', 'desc')
                 ->groupBy('css_result.id')
-                ->select('css_result.*','employees.name as sale_name')
-                ->paginate($perPage);
+                ->select('css_result.*','employees.name as sale_name');
     }
     
     /**
