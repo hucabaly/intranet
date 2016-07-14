@@ -570,7 +570,11 @@ class Css extends Model
                 ->orderBy($order,$dir)
                 ->orderBy('css.id','asc')
                 ->groupBy('css.id')
-                ->select('css.*','css_project_type.name as project_type_name','employees.name as sale_name',DB::raw('(select COUNT(css_result.id) from css_result where css_id = css.id) as countCss'));
+                ->select('css.*',
+                    'css_project_type.name as project_type_name',
+                    'employees.name as sale_name',
+                    DB::raw(
+                        '(select COUNT(css_result.id) from css_result where css_id = css.id) as countCss'));
     }
     
     /**
