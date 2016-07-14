@@ -21,33 +21,11 @@
 @section('script')
 <script src="{{ URL::asset('lib/js/jquery.backstretch.min.js') }}"></script>
 <script src="{{ asset('sales/js/css/customer.js') }}"></script>
+<script src="{{ asset('sales/js/css/success.js') }}"></script>
 <script>
     jQuery(document).ready(function($) {
         $.backstretch('{{ URL::asset('common/images/login-background.png') }}');
-        
-        /**
-         * fix position for login block - margin height
-         */
-        function fixPositionLoginBlock()
-        {
-            windowHeight = $(window).height();
-            loginHeight = $('.login-wrapper').height();
-            placeHeight = windowHeight / 2 - loginHeight / 2;
-            $('.login-wrapper').css('margin-top', placeHeight + 'px');
-        }
-        
-        fixPositionLoginBlock();
-        $(window).resize(function (event) {
-            fixPositionLoginBlock();
-        });
     });
     
-</script>
-<script>
-   //Fix footer bottom
-    setHeightBody('.success-body', 130);
-    $(window).resize(function(){
-        setHeightBody('.success-body', 130);
-    });
 </script>
 @endsection

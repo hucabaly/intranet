@@ -198,42 +198,10 @@
 <script src="{{ asset('lib/rateit/jquery.rateit.js') }}"></script>
 <script src="{{ asset('lib/js/jquery.visible.js') }}"></script>
 <script src="{{ asset('sales/js/css/customer.js') }}"></script>
+<script src="{{ asset('sales/js/css/make.js') }}"></script>
 <script type="text/javascript">
     <?php if(Auth::check()): ?>
         $('#modal-confirm-make').show();
     <?php endif; ?>
-        
-    $(document).ready(function(){
-        fixPointContainer();
-    });
-    
-    $(window).scroll(function(){
-        fixPointContainer();
-    });
-
-    $(window).resize(function(){
-        fixPointContainer();
-    });
-
-    /**
-     * show or hide total point container at top right make css page
-     */
-    function fixPointContainer(){
-        var screen_width = $(window).width();
-        var project_width = $('#make-header').width();
-        var point_width = $(".total-point-container ").outerWidth();
-        if($('.visible-check').visible()){
-            $(".total-point-container ").css('position','inherit');
-        } else {
-            $(".total-point-container ").css('position','fixed');
-            var fix_width = (screen_width - project_width)/2;
-            if(fix_width <= point_width){
-                $(".total-point-container ").css('right',fix_width);
-            } else {
-                var fix_width = fix_width - point_width;
-                $(".total-point-container ").css('right',fix_width);
-            }
-        }
-    } 
 </script>
 @endsection
