@@ -32,5 +32,8 @@ elixir(function(mix) {
     mix.scripts('sales/css/customer.js', 'public/sales/js/css');
     mix.scripts('sales/css/list.js', 'public/sales/js/css');
     mix.scripts('sales/css/preview.js', 'public/sales/js/css');
+    mix.scripts('sales/css/make.js', 'public/sales/js/css');
+    mix.scripts('sales/css/welcome.js', 'public/sales/js/css');
+    mix.scripts('sales/css/success.js', 'public/sales/js/css');
 //    mix.sass('app.scss');
 });

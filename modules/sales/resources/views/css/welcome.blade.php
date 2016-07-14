@@ -83,6 +83,7 @@
 @section('script')
 <script src="{{ asset('lib/js/jquery.visible.js') }}"></script>
 <script src="{{ asset('sales/js/css/customer.js') }}"></script>
+<script src="{{ asset('sales/js/css/welcome.js') }}"></script>
 <script>
     <?php if($nameRequired === 1): ?>
         $('#modal-confirm-name').modal('show');
@@ -91,10 +92,5 @@
         $('#modal-confirm-name').modal('show');
         $('#make_name').val('{{$makeName}}');
     <?php endif; ?>
-    //Fix footer bottom
-    setHeightBody('.welcome-body', 90);
-    $(window).resize(function(){
-        setHeightBody('.welcome-body', 90);
-    });
 </script>
 @endsection
