@@ -77,7 +77,7 @@ return [
     'Cancel make title'  => "キャンセル",
     'success title' => 'Hoàn tất',
     'success notification' => "Bài CSS của quý khách về dự án :project_name đã hoàn tất. Xin chân thành cảm ơn quý khách và công ty sẽ tiếp thu ý kiến của quý khách để cải thiện cho những dự án về sau",
-    'Subject email notification make css' => "[Intranet] Một bài CSS vừa được khách hàng :company đánh giá",
+    'Subject email notification make css' => "[Intranet] Một bài CSS vừa được khách hàng :company đánh giá :point điểm",
     'Email hello' => 'Xin chào :sale',
     'Email notifical' => 'Một bài CSS do bạn tạo ra vừa được khách hàng đánh giá.',
     'Email company name'    => 'Tên công ty khách hàng: :company',
