@@ -27,7 +27,7 @@
                     <div class="css-make-info">
                         <div>
                             <div class="company-name-title">{{ trans('sales::view.Customer company name jp')}}</div>
-                            <div class="company-name inline-block">{{ $css->company_name}} 様</div>
+                            <div class="company-name inline-block">{{ $css->company_name}}様</div>
                         </div>
                         <div>
                             <div class="project-name-title">{{ trans('sales::view.Project name jp')}}</div>
@@ -83,6 +83,7 @@
 @section('script')
 <script src="{{ asset('lib/js/jquery.visible.js') }}"></script>
 <script src="{{ asset('sales/js/css/customer.js') }}"></script>
+<script src="{{ asset('sales/js/css/welcome.js') }}"></script>
 <script>
     <?php if($nameRequired === 1): ?>
         $('#modal-confirm-name').modal('show');
@@ -91,10 +92,5 @@
         $('#modal-confirm-name').modal('show');
         $('#make_name').val('{{$makeName}}');
     <?php endif; ?>
-    //Fix footer bottom
-    setHeightBody('.welcome-body', 90);
-    $(window).resize(function(){
-        setHeightBody('.welcome-body', 90);
-    });
 </script>
 @endsection

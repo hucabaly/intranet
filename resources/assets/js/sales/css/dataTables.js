@@ -35,7 +35,7 @@ function sortProject(elem,token){
         var html = "";
         for(var i=0; i<countResult; i++){
             html += "<tr>";
-            html += "<td>"+data["cssResultdata"]["data"][i]["stt"]+"</td>";
+            html += "<td>"+data["cssResultdata"]["data"][i]["id"]+"</td>";
             html += "<td>"+data["cssResultdata"]["data"][i]["project_name"]+"</td>";
             html += "<td>"+data["cssResultdata"]["data"][i]["teamName"]+"</td>";
             html += "<td>"+data["cssResultdata"]["data"][i]["pmName"]+"</td>";
@@ -169,7 +169,7 @@ function getSortProjectType(sortType){
             return 'css.project_name';
             break;
         case 'team':
-            return 'css.project_name';
+            return 'teams.name';
             break;
         case 'pm':
             return 'css.pm_name';
@@ -194,6 +194,9 @@ function getSortProjectType(sortType){
             break;
         case 'proposed':
             return 'proposed';
+            break;
+        case 'resultId':
+            return 'id';
             break;
     }
 }

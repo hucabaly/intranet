@@ -199,7 +199,7 @@ function apply(token){
         var html = "";
         for(var i=0; i<countResult; i++){
             html += "<tr>";
-            html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["stt"]+"</td>";
+            html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["id"]+"</td>";
             html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["project_name"]+"</td>";
             html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["teamName"]+"</td>";
             html += "<td>"+data["cssResultPaginate"]["cssResultdata"]["data"][i]["pmName"]+"</td>";
@@ -399,7 +399,7 @@ function showAnalyzeListProject(curpage,token,orderBy,ariaType){
         var html = "";
         for(var i=0; i<countResult; i++){
             html += "<tr>";
-            html += "<td>"+data["cssResultdata"]["data"][i]["stt"]+"</td>";
+            html += "<td>"+data["cssResultdata"]["data"][i]["id"]+"</td>";
             html += "<td>"+data["cssResultdata"]["data"][i]["project_name"]+"</td>";
             html += "<td>"+data["cssResultdata"]["data"][i]["teamName"]+"</td>";
             html += "<td>"+data["cssResultdata"]["data"][i]["pmName"]+"</td>";
@@ -665,7 +665,7 @@ function getListLessThreeStarByQuestion(questionId,curpage,token,cssresultids,or
             _token: token, 
         },
     })
-    .done(function (data) { 
+    .done(function (data) {  
         var countResult = data["cssResultdata"].length; 
         html = "";
         if(countResult > 0){

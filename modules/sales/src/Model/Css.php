@@ -561,9 +561,20 @@ class Css extends Model
      * @param int $perPage
      * @return Css list
      */
-    public function getCssList($perPage){
-        return self::orderBy('id', 'desc')->paginate($perPage);
-        
+    public function getCssList($order, $dir){
+        return self::join('css_project_type', 'css_project_type.id', '=', 'css.project_type_id')
+                ->join('css_result', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->join('teams','teams.id','=','css_team.team_id')
+                ->join('employees','employees.id','=','css.employee_id')
+                ->orderBy($order,$dir)
+                ->orderBy('css.id','asc')
+                ->groupBy('css.id')
+                ->select('css.*',
+                    'css_project_type.name as project_type_name',
+                    'employees.name as sale_name',
+                    DB::raw(
+                        '(select COUNT(css_result.id) from css_result where css_id = css.id) as countCss'));
     }
     
     /**
@@ -572,11 +583,17 @@ class Css extends Model
      * @param int $perPage
      * @return Css list
      */
-    public function getCssListByEmployee($employeeId,$perPage){
-        return self::where('employee_id',$employeeId)
-                ->orderBy('id', 'desc')
-                ->paginate($perPage);
-        
+    public function getCssListByEmployee($employeeId,$order, $dir){
+        return self::join('css_project_type', 'css_project_type.id', '=', 'css.project_type_id')
+                ->join('css_result', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->join('teams','teams.id','=','css_team.team_id')
+                ->join('employees','employees.id','=','css.employee_id')
+                ->where('css.employee_id',$employeeId)
+                ->orderBy($order,$dir)
+                ->orderBy('css.id','asc')
+                ->groupBy('css.id')
+                ->select('css.*','css_project_type.name as project_type_name','employees.name as sale_name',DB::raw('(select COUNT(css_result.id) from css_result where css_id = css.id) as countCss'));
     }
     
     /**
@@ -585,12 +602,17 @@ class Css extends Model
      * @param int $perPage
      * @return Css list
      */
-    public function getCssListByCssIdAndArrTeamId($arrTeamId,$perPage){
-        return self::join('css_team', 'css.id', '=', 'css_team.css_id')
+    public function getCssListByCssIdAndArrTeamId($arrTeamId,$order, $dir){
+        return self::join('css_project_type', 'css_project_type.id', '=', 'css.project_type_id')
+                ->join('css_result', 'css.id', '=', 'css_result.css_id')
+                ->join('css_team', 'css.id', '=', 'css_team.css_id')
+                ->join('teams','teams.id','=','css_team.team_id')
+                ->join('employees','employees.id','=','css.employee_id')
                 ->whereIn('css_team.team_id',$arrTeamId)
+                ->orderBy($order,$dir)
+                ->orderBy('css.id','asc')
                 ->groupBy('css.id')
-                ->select('css.*')
-                ->paginate($perPage);
+                ->select('css.*','css_project_type.name as project_type_name','employees.name as sale_name',DB::raw('(select COUNT(css_result.id) from css_result where css_id = css.id) as countCss'));
     }
     
     /**

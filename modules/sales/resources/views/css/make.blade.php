@@ -12,7 +12,6 @@
                     <div class="total-point-text">{{ trans('sales::view.Total point')}}</div>
                     <div class="total-point <?php if($css->project_type_id === 2){ echo 'total-point-base'; }?>" >00.00</div>
                 </div>
-                <div class="visible-check"></div>
             </section>
             <section>
 
@@ -33,7 +32,7 @@
                     </div>
                 </div>
                 <!-- END PROJECT INFORMATION -->
-
+                   
                 <!-- PROJECT DETAIL -->
                 <div class="row project-detail">
                     <div class="col-xs-12 header <?php if($css->project_type_id === 2){ echo 'header-base'; }?>">
@@ -137,7 +136,7 @@
                     </div>
                     <!-- /.modal-dialog -->
                 </div>
-
+                
                 <div class="modal modal-primary" id="modal-confirm">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -150,8 +149,8 @@
                                 <p>One fine body…</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">{{ trans('sales::view.Cancel make css') }}</button>
-                                <button type="button" class="btn btn-outline" onclick="submit('{{ Session::token() }}',{{$css->id}});">{{ trans('sales::view.Submit make css') }}</button>
+                                <button type="button" class="btn btn-outline pull-left cancel" data-dismiss="modal">{{ trans('sales::view.Cancel make css') }}</button>
+                                <button type="button" class="btn btn-outline submit" onclick="submit('{{ Session::token() }}',{{$css->id}});">{{ trans('sales::view.Submit make css') }}</button>
                             </div>
                         </div>
                         <!-- /.modal-content -->
@@ -199,33 +198,10 @@
 <script src="{{ asset('lib/rateit/jquery.rateit.js') }}"></script>
 <script src="{{ asset('lib/js/jquery.visible.js') }}"></script>
 <script src="{{ asset('sales/js/css/customer.js') }}"></script>
+<script src="{{ asset('sales/js/css/make.js') }}"></script>
 <script type="text/javascript">
     <?php if(Auth::check()): ?>
         $('#modal-confirm-make').show();
     <?php endif; ?>
-        
-    $(window).scroll(function(){
-        fixPointContainer();
-    });
-
-    $(window).resize(function(){
-        fixPointContainer();
-    });
-
-    /**
-     * show or hide total point container at top right make css page
-     */
-    function fixPointContainer(){
-        var screen_width = $(window).width();
-        var project_width = $('#make-header').width();
-        if($('.visible-check').visible()){
-            $(".total-point-container ").css('position','inherit');
-        } else {
-            $(".total-point-container ").css('position','fixed');
-            var fix_width = (screen_width - project_width)/2;
-            $(".total-point-container ").css('right',fix_width);
-
-        }
-    } 
 </script>
 @endsection

@@ -104,7 +104,10 @@ function getTotalPoint(){
  */
 function confirm(arrayValidate){
     var invalid = false;
+    var invalidComment = false;
     var strInvalid = "";
+    var strInvalidComment = "";
+    
     $('#modal-confirm').modal('hide');
     $(".comment-question").css("border-color","#d2d6de");
     $("#tongquat").css("border","none");
@@ -135,8 +138,8 @@ function confirm(arrayValidate){
         for(var i=0; i<arrValidate.length; i++){
             $(".comment-question[data-questionid='"+arrValidate[i]+"']").css("border","1px solid red");
         }
-        strInvalid += '<p>'+arrayValidate['questionCommentRequired']+'</p>';
-        invalid = true;
+        strInvalidComment += '<p>'+arrayValidate['questionCommentRequired']+'</p>';
+        invalidComment = true;
     }
     
     if(invalid){
@@ -145,9 +148,20 @@ function confirm(arrayValidate){
         return false;
     }
     
+    if(invalidComment) {
+        $('#modal-confirm .modal-body').html(strInvalidComment+"<p>現在の点数は "+$(".total-point").html()+" 点です。アンケート結果を送信しますか。</p>");
+        $('#modal-confirm .modal-footer .cancel').html('アンケートに戻る');
+        $('#modal-confirm .modal-footer .submit').html('そのまま送信する');
+        $('#modal-confirm').modal('show');
+        return false;
+    }
+    
     $('#modal-confirm .modal-body').html("現在の点数は "+$(".total-point").html()+" 点です。アンケート結果を送信しますか。");
+    $('#modal-confirm .modal-footer .cancel').html('キャンセル');
+    $('#modal-confirm .modal-footer .submit').html('OK');
     $('#modal-confirm').modal('show');
 }
+
 
 /**
  * Validate then insert CSS result into database
