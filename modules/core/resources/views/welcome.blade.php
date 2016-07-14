@@ -21,7 +21,7 @@ Login
 @endsection
 
 @section('script')
-<script src="{{ URL::asset('adminlte/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
+<script src="{{ URL::asset('adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
 <script src="{{ URL::asset('lib/js/jquery.backstretch.min.js') }}"></script>
 <script>
     jQuery(document).ready(function($) {
