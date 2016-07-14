@@ -1,7 +1,13 @@
 @extends('layouts.default')
 
 @section('content')
+<?php
 
+use Rikkei\Team\View\Config;
+use Rikkei\Core\View\Form;
+use Rikkei\Core\View\View;
+
+?>
 <div class="row">
     <div class="col-xs-12">
         <div class="box box-primary">
@@ -16,22 +22,26 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
+                         <div class="box-body">
+                @include('team::include.filter')
+                @include('team::include.pager')
+            </div>
                         @if(count($css) > 0)
                         <div class="table-responsive">
-                            <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                            <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                 <thead>
                                     <tr role="row">
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Id') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project type') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project base name') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Team relate') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Sale name 2') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.PM') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project date') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Customer company') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Customer name') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Create date css') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Count make css') }}</th>
+                                        <th class=" sorting_desc" data-order="cssId" data-dir="{{ Config::getDirOrder('cssId') }}" >{{ trans('sales::view.Id') }}</th>
+                                        <th class="sorting" data-order="projectType" data-dir="{{ Config::getDirOrder('projectType') }}" >{{ trans('sales::view.Project type') }}</th>
+                                        <th class="sorting" data-order="projectName" data-dir="{{ Config::getDirOrder('projectName') }}" >{{ trans('sales::view.Project base name') }}</th>
+                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Team relate') }}</th>
+                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Sale name 2') }}</th>
+                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.PM') }}</th>
+                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Project date') }}</th>
+                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Customer company') }}</th>
+                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Customer name') }}</th>
+                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Create date css') }}</th>
+                                        <th class="sorting" rowspan="1" colspan="1" >{{ trans('sales::view.Count make css') }}</th>
                                         <th  rowspan="1" colspan="1" >{{ trans('sales::view.View css make list')}}</th>
                                         <th  rowspan="1" colspan="1" >{{ trans('sales::view.Url css')}}</th>
                                    </tr>
