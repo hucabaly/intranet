@@ -11,6 +11,7 @@ use Rikkei\Sales\Model\CssQuestion;
 use Rikkei\Sales\Model\CssCategory;
 use Rikkei\Sales\Model\CssResult;
 use Rikkei\Sales\Model\CssResultDetail;
+use Rikkei\Sales\Model\ProjectType;
 use Rikkei\Team\Model\Team;
 use Rikkei\Team\Model\Employees;
 use Rikkei\Sales\View\CssPermission;
@@ -24,6 +25,8 @@ use Rikkei\Core\View\Menu;
 use Maatwebsite\Excel\Facades\Excel;
 use Rikkei\Team\View\Permission;
 use Route;
+use Rikkei\Core\Model\CoreModel;
+use Rikkei\Team\View\Config;
 
 class CssController extends Controller {
     
@@ -352,35 +355,44 @@ class CssController extends Controller {
      * View Css list 
      * @return void
      */
-    public function grid(){
-        $css = CssPermission::getCssListByPermission(self::$perPageCss);
+    public function grid()
+    {
+        $pager = Config::getPagerData();
+        $css = CssPermission::getCssListByPermission($pager['order'], $pager['dir']);
+        $css = CoreModel::filterGrid($css);
+        $css = CoreModel::pagerCollection($css, $pager['limit'], $pager['page']);
         
         if(count($css) > 0){
             $cssResultModel = new CssResult();
             $teamModel = new Team();
-            $i = ($css->currentPage()-1) * $css->perPage() + 1;
             foreach($css as &$item){ 
-                $item->stt = $i;
-                $i++;
-                $item->project_type_name = self::getProjectTypeNameById($item->project_type_id);
+                //Get teams list
                 $cssTeams = CssTeams::getCssTeamByCssId($item->id);
-
                 $arr_team = array();
                 foreach($cssTeams as $cssTeamChild){
                     $team = $teamModel->getTeamWithTrashedById($cssTeamChild->team_id);
                     $arr_team[] = $team->name;
                 }
+                //end get teams list
+                
+                //sort teams
                 sort($arr_team); 
+                if($pager['order'] === 'teams.name'){
+                    if($pager['dir'] === 'asc'){
+                        sort($arr_team); 
+                    } else {
+                        rsort($arr_team); 
+                    }
+                }
+                //end sort teams
+                
                 $item->teamsName = implode(", ", $arr_team);
-
-                $employee = Employees::find($item->employee_id);
-                $item->sale_name = $employee->name;
                 $item->start_date = date('d/m/Y',strtotime($item->start_date));
                 $item->end_date = date('d/m/Y',strtotime($item->end_date));
-                $item->create_date = date('d/m/Y',strtotime($item->created_at));
+                $item->created_date = date('d/m/Y',strtotime($item->created_at));
                 $item->url =  url('/css/welcome/'. $item->token . '/' . $item->id);
-                // get count css result by cssId 
-                $item->countCss = $cssResultModel->getCountCssResultByCss($item->id);
+                
+                //Check CSS count to show link
                 if($item->countCss == 1){
                     $cssResultDetail = $cssResultModel->getCssResultFirstByCss($item->id);
                     $item->hrefToView = url('/css/detail/' . $cssResultDetail->id);
@@ -401,7 +413,8 @@ class CssController extends Controller {
      * View Css result by Css
      * @param int $cssId
      */
-    public function view($cssId){
+    public function view($cssId)
+    {
         $css = Css::find($cssId);
         $permissionFlag = CssPermission::isCssPermission($cssId,$css->employee_id);
         
@@ -884,7 +897,6 @@ class CssController extends Controller {
      * @return object list
      */
     public function showAnalyzeListProject($criteriaIds,$teamIds,$projectTypeIds,$startDate,$endDate,$criteria,$curPage,$orderBy,$ariaType){
-        $cssResultModel = new CssResult(); 
         $teamModel = new Team();
         Paginator::currentPageResolver(function () use ($curPage) {
             return $curPage;
@@ -924,7 +936,14 @@ class CssController extends Controller {
                 $team = $teamModel->getTeamWithTrashedById($teamId->team_id);
                 $arrTeam[] = $team->name;
             }
-            rsort($arrTeam);
+            
+            sort($arrTeam);
+            if($orderBy === 'teams.name'){
+                if($ariaType === 'desc'){
+                    rsort($arrTeam);
+                }
+            }
+            
             $teamName = implode(', ', $arrTeam);
             //end get teams name
             
@@ -1836,16 +1855,9 @@ class CssController extends Controller {
      */
     public function getProjectTypeNameById($projectTypeId){
         $projectTypeName = "";
-        switch($projectTypeId){
-            case 1: 
-                $projectTypeName = "OSDC";
-                break;
-            case 2: 
-                $projectTypeName = "Project base";
-                break;
-        }
+        $projectType = ProjectType::find($projectTypeId);
         
-        return $projectTypeName;
+        return $projectType->name;
     }
     
     /**

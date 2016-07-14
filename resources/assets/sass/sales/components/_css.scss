@@ -511,20 +511,33 @@ table tr.loading {
     padding-left:10%;
 }
 
-#danhsachduan th, #duoi3sao th, #danhsachdexuat th{
-    cursor: pointer;
+
+
+.analyze-body {
+    table.dataTable thead th, table.dataTable thead td {
+        padding: 8px !important;
+        vertical-align: middle;
+        border-bottom: 1px solid #f4f4f4 !important;
+    }
+    .dataTable {
+        table-layout: fixed;
+        td {
+            word-wrap:break-word;
+        }
+    }
+    
+    #danhsachduan th, #duoi3sao th, #danhsachdexuat th{
+        cursor: pointer;
+    }
 }
 
-table.dataTable thead th, table.dataTable thead td {
-    padding: 8px !important;
-    vertical-align: middle;
-    border-bottom: 1px solid #f4f4f4 !important;
-}
-
-.analyze-body .dataTable {
-    table-layout: fixed;
-}
-
-.analyze-body .dataTable td {
-    word-wrap:break-word;
+.list-css-page {
+    .dataTable {
+        th {
+            vertical-align: middle !important;
+            &:after {
+                top: 30px !important;
+            }
+        }
+    }
 }

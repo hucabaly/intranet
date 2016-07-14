@@ -169,7 +169,7 @@ function getSortProjectType(sortType){
             return 'css.project_name';
             break;
         case 'team':
-            return 'css.project_name';
+            return 'teams.name';
             break;
         case 'pm':
             return 'css.pm_name';

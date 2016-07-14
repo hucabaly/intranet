@@ -22,8 +22,8 @@ class ProjectTypeSeeder extends Seeder
             ]
         ];
         foreach ($dataDemo as $data) {
-            if (! DB::table('project_type')->select('id')->where('name', $data['name'])->get()) {
-                DB::table('project_type')->insert($data);
+            if (! DB::table('css_project_type')->select('id')->where('name', $data['name'])->get()) {
+                DB::table('css_project_type')->insert($data);
             }
         }
     }
