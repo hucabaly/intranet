@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(Rikkei\Sales\Seeds\CssCategoryUpdateSeeder::class);
         $this->call(Rikkei\Sales\Seeds\CssQuestionSeeder::class);
         $this->call(Rikkei\Sales\Seeds\CssQuestionUpdateSeeder::class);
+        $this->call(Rikkei\Sales\Seeds\ProjectTypeSeeder::class);
         
         $this->call(Rikkei\Team\Seeds\ActionSeeder::class);
         $this->call(Rikkei\Core\Seeds\MenusSeeder::class);

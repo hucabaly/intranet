@@ -697,18 +697,18 @@ class CssPermission
      * @param int $perPage
      * @return Css list
      */
-    public static function getCssListByPermission($perPage){
+    public static function getCssListByPermission($order, $dir){
         $userAccount = Auth::user(); 
         $permission = new Permission();
         $model = new Css();
         
         if($permission->isScopeSelf()){
-            $css = $model->getCssListByEmployee($userAccount->employee_id,$perPage);
+            $css = $model->getCssListByEmployee($userAccount->employee_id,$order, $dir);
         }elseif ($permission->isScopeTeam()) {
             $arrTeamId = self::getArrTeamIdByEmployee($userAccount->employee_id);
-            $css = $model->getCssListByCssIdAndArrTeamId($arrTeamId, $perPage);
+            $css = $model->getCssListByCssIdAndArrTeamId($arrTeamId, $order, $dir);
         }elseif ($permission->isScopeCompany()){
-            $css = $model->getCssList($perPage);
+            $css = $model->getCssList($order, $dir);
         }
         
         return $css;

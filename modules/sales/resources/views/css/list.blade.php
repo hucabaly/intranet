@@ -1,8 +1,14 @@
 @extends('layouts.default')
 
 @section('content')
+<?php
 
-<div class="row">
+use Rikkei\Team\View\Config;
+use Rikkei\Core\View\Form;
+use Rikkei\Core\View\View;
+
+?>
+<div class="row list-css-page">
     <div class="col-xs-12">
         <div class="box box-primary">
             <div class="box-header">
@@ -17,21 +23,25 @@
                 <div class="row">
                     <div class="col-sm-12">
                         @if(count($css) > 0)
+                        <div class="box-body">
+                            @include('team::include.filter')
+                            @include('team::include.pager')
+                        </div>
                         <div class="table-responsive">
-                            <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                            <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                 <thead>
                                     <tr role="row">
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Id') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project type') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project base name') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Team relate') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Sale name 2') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.PM') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Project date') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Customer company') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Customer name') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Create date css') }}</th>
-                                        <th  rowspan="1" colspan="1" >{{ trans('sales::view.Count make css') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('id') }}" data-order="id" data-dir="{{ Config::getDirOrder('id') }}" >{{ trans('sales::view.Id') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('project_type_name') }}" data-order="project_type_name" data-dir="{{ Config::getDirOrder('project_type_name') }}" >{{ trans('sales::view.Project type') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('project_name') }}" data-order="project_name" data-dir="{{ Config::getDirOrder('project_name') }}" >{{ trans('sales::view.Project base name') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('teams.name') }}" data-order="teams.name" data-dir="{{ Config::getDirOrder('teams.name') }}" >{{ trans('sales::view.Team relate') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('sale_name') }}" data-order="sale_name" data-dir="{{ Config::getDirOrder('sale_name') }}" >{{ trans('sales::view.Sale name 2') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('pm_name') }}" data-order="pm_name" data-dir="{{ Config::getDirOrder('pm_name') }}" >{{ trans('sales::view.PM') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('start_date') }}" data-order="start_date" data-dir="{{ Config::getDirOrder('start_date') }}" >{{ trans('sales::view.Project date') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('company_name') }}" data-order="company_name" data-dir="{{ Config::getDirOrder('company_name') }}" >{{ trans('sales::view.Customer company') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('customer_name') }}" data-order="customer_name" data-dir="{{ Config::getDirOrder('customer_name') }}" >{{ trans('sales::view.Customer name') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('css.created_at') }}" data-order="css.created_at" data-dir="{{ Config::getDirOrder('css.created_at') }}" >{{ trans('sales::view.Create date css') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('countCss') }}" data-order="countCss" data-dir="{{ Config::getDirOrder('countCss') }}"  >{{ trans('sales::view.Count make css') }}</th>
                                         <th  rowspan="1" colspan="1" >{{ trans('sales::view.View css make list')}}</th>
                                         <th  rowspan="1" colspan="1" >{{ trans('sales::view.Url css')}}</th>
                                    </tr>
@@ -48,7 +58,7 @@
                                         <td rowspan="1" colspan="1" >{{ $item->start_date }} - {{ $item->end_date }}</td>
                                         <td rowspan="1" colspan="1" >{{ $item->company_name }}</td>
                                         <td rowspan="1" colspan="1" >{{ $item->customer_name }}</td>
-                                        <td rowspan="1" colspan="1" >{{ $item->create_date }}</td>
+                                        <td rowspan="1" colspan="1" >{{ $item->created_date }}</td>
                                         <td rowspan="1" colspan="1" class="with-textalign-center" >{{ $item->countCss }}</td>
                                         <td rowspan="1" colspan="1" class="with-textalign-center" >
                                             @if($item->countCss > 0)
