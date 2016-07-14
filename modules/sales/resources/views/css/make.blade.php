@@ -137,27 +137,6 @@
                     <!-- /.modal-dialog -->
                 </div>
                 
-                <div class="modal modal-warning" id="modal-alert-comment">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span></button>
-                                <h4 class="modal-title">{{ trans('sales::view.Warning') }}</h4>
-                            </div>
-                            <div class="modal-body">
-                                <p>One fine body…</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">{{ trans('sales::view.MakeCSS.Back')}}</button>
-                                <button type="button" class="btn btn-outline pull-right" onclick="cssContinue();">{{ trans('sales::view.MakeCSS.Continue') }}</button>
-                            </div>
-                        </div>
-                        <!-- /.modal-content -->
-                    </div>
-                    <!-- /.modal-dialog -->
-                </div>
-
                 <div class="modal modal-primary" id="modal-confirm">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -170,8 +149,8 @@
                                 <p>One fine body…</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">{{ trans('sales::view.Cancel make css') }}</button>
-                                <button type="button" class="btn btn-outline" onclick="submit('{{ Session::token() }}',{{$css->id}});">{{ trans('sales::view.Submit make css') }}</button>
+                                <button type="button" class="btn btn-outline pull-left cancel" data-dismiss="modal">{{ trans('sales::view.Cancel make css') }}</button>
+                                <button type="button" class="btn btn-outline submit" onclick="submit('{{ Session::token() }}',{{$css->id}});">{{ trans('sales::view.Submit make css') }}</button>
                             </div>
                         </div>
                         <!-- /.modal-content -->
