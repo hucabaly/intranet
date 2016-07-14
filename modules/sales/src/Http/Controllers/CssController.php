@@ -342,9 +342,9 @@ class CssController extends Controller {
         );
         
         //Send mail to sale who created this css
-        Mail::send('sales::css.sendMail', $data, function ($message) use($email, $css) {
+        Mail::send('sales::css.sendMail', $data, function ($message) use($email, $css, $avgPoint) {
             $message->from('sales@rikkeisoft.com', 'Rikkeisoft');
-            $message->to($email)->subject(Lang::get('sales::view.Subject email notification make css',["company" => $css->company_name]));
+            $message->to($email)->subject(Lang::get('sales::view.Subject email notification make css',["company" => $css->company_name, "point" => $avgPoint]));
 
         });
 

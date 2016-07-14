@@ -149,21 +149,19 @@ function confirm(arrayValidate){
     }
     
     if(invalidComment) {
-        $('#modal-alert-comment .modal-body').html(strInvalidComment);
-        $('#modal-alert-comment').modal('show');
+        $('#modal-confirm .modal-body').html(strInvalidComment+"<p>現在の点数は "+$(".total-point").html()+" 点です。アンケート結果を送信しますか。</p>");
+        $('#modal-confirm .modal-footer .cancel').html('アンケートに戻る');
+        $('#modal-confirm .modal-footer .submit').html('そのまま送信する');
+        $('#modal-confirm').modal('show');
         return false;
     }
     
     $('#modal-confirm .modal-body').html("現在の点数は "+$(".total-point").html()+" 点です。アンケート結果を送信しますか。");
+    $('#modal-confirm .modal-footer .cancel').html('キャンセル');
+    $('#modal-confirm .modal-footer .submit').html('OK');
     $('#modal-confirm').modal('show');
 }
 
-function cssContinue(){
-    $('#modal-alert-comment').modal('hide');
-    
-    $('#modal-confirm .modal-body').html("現在の点数は "+$(".total-point").html()+" 点です。アンケート結果を送信しますか。");
-    $('#modal-confirm').modal('show');
-}
 
 /**
  * Validate then insert CSS result into database
