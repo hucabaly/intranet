@@ -22,7 +22,6 @@ use Rikkei\Core\View\View;
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        @if(count($cssResults))
                         <div class="box-body">
                             @include('team::include.filter')
                             @include('team::include.pager')
@@ -41,6 +40,36 @@ use Rikkei\Core\View\View;
                                    </tr>
                                 </thead>
                                 <tbody>
+                                    <td>&nbsp;</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="text" name="filter[css_result.name]" value="{{ Form::getFilterData('css_result.name') }}"  class="filter-grid" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="text" name="filter[employees.name]" value="{{ Form::getFilterData('employees.name') }}" class="filter-grid" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="text" name="filter[css_result.created_at]" value="{{ Form::getFilterData('css_result.created_at') }}"  class="filter-grid" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                    @if(count($cssResults))
                                     @foreach($cssResults as $item)
                                     <tr role="row" class="odd">
                                         <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" >{{ $item->id }}</td>
@@ -51,12 +80,13 @@ use Rikkei\Core\View\View;
                                         <td tabindex="0" aria-controls="example2" rowspan="1" colspan="1" ><a href="/css/detail/{{$item->id}}">{{ trans('sales::view.View') }}</a></td>
                                     </tr>
                                     @endforeach
+                                    @else
+                                    <tr><td colspan="13"><h2>{{ trans('sales::view.No result not found')}}</td></tr></h2>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
-                        @else
-                        <h2>{{ trans('sales::view.No result not found')}}</h2>
-                        @endif
+                        
                     </div>
                 </div>
                 <div class="row">

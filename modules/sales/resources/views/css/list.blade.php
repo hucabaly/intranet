@@ -22,7 +22,6 @@ use Rikkei\Core\View\View;
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        @if(count($css) > 0)
                         <div class="box-body">
                             @include('team::include.filter')
                             @include('team::include.pager')
@@ -47,6 +46,82 @@ use Rikkei\Core\View\View;
                                    </tr>
                                 </thead>
                                 <tbody>
+                                    <tr class="filter-input-grid">
+                                        <td>&nbsp;</td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input type="text" name="filter[css_project_type.name]" value="{{ Form::getFilterData('css_project_type.name') }}"  class="filter-grid" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input type="text" name="filter[project_name]" value="{{ Form::getFilterData('project_name') }}" class="filter-grid" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input type="text" name="filter[teams.name]" value="{{ Form::getFilterData('teams.name') }}" class="filter-grid" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input type="text" name="filter[employees.name]" value="{{ Form::getFilterData('employees.name') }}"  class="filter-grid" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input type="text" name="filter[pm_name]" value="{{ Form::getFilterData('pm_name') }}" class="filter-grid" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input type="text" name="filter[start_date]" value="{{ Form::getFilterData('start_date') }}" class="filter-grid" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input type="text" name="filter[company_name]" value="{{ Form::getFilterData('company_name') }}"  class="filter-grid" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input type="text" name="filter[customer_name]" value="{{ Form::getFilterData('customer_name') }}" class="filter-grid" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input type="text" name="filter[css.created_at]" value="{{ Form::getFilterData('css.created_at') }}" class="filter-grid" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    @if(count($css) > 0)
                                     @foreach($css as $item)
                                     <tr role="row" class="odd">
                                         <td rowspan="1" colspan="1" >{{ $item->id }}</td>
@@ -70,12 +145,13 @@ use Rikkei\Core\View\View;
                                         </td>
                                     </tr>
                                     @endforeach
+                                    @else
+                                    <tr><td colspan="13" class="text-align-center"><h2>{{trans('sales::view.No result not found')}}</h2></td></tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>    
-                        @else
-                        <h3>{{trans('sales::view.No result not found')}}</h3>
-                        @endif
+                        
                     </div>
                 </div>
                 <div class="row">
