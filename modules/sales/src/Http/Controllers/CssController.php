@@ -51,13 +51,19 @@ class CssController extends Controller {
         $employee = Employees::find($user->employee_id);
         $teams = Team::all();
         $htmlTeam = self::getTreeDataRecursive(null, 0, null);
-
+        $css = new Css();
+        $css->start_date = '';
+        $css->end_date   = '';
+        $css->project_type_id = 1;
         return view(
                 'sales::css.create', 
                 [
+                    'css'       => $css,
                     'employee'  => $employee,
                     'teams'     => $teams,
                     'htmlTeam'  => $htmlTeam,
+                    'save'      => 'create',
+                    'projectType'       => ProjectType::all(),
                 ]
         );
     }
@@ -93,15 +99,21 @@ class CssController extends Controller {
         $strTeamsNameSet = implode(', ', $strTeamsNameSet);
         
         $htmlTeam = self::getTreeDataRecursive(null, 0, null);
+        
+        //format css date
+        $css->start_date = date('m/d/Y',strtotime($css->start_date));
+        $css->end_date   = date('m/d/Y',strtotime($css->end_date));
         return view(
-            'sales::css.update', 
+            'sales::css.create', 
             [
-                'css' => $css, 
-                'employee' => $employee, 
-                "teams" => $teams, 
-                "teamsSet" => $teamsSet, 
-                "strTeamsNameSet" => $strTeamsNameSet, 
-                "htmlTeam"  => $htmlTeam,
+                'css'               => $css, 
+                'employee'          => $employee, 
+                "teams"             => $teams, 
+                "teamsSet"          => $teamsSet, 
+                "strTeamsNameSet"   => $strTeamsNameSet, 
+                "htmlTeam"          => $htmlTeam,
+                'save'              => 'update',
+                'projectType'       => ProjectType::all(),
             ]
         );
     }

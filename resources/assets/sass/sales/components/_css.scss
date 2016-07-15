@@ -1,160 +1,250 @@
 @import "mixins/function";
 
+.content-wrapper {
+    background: #fff;
+    @media screen and (min-width: $largeScreen){
+        background-color: #ecf0f5;
+    }
+    
+    .content-header {
+        padding: 0;
+        @media screen and (min-width: $largeScreen){
+            padding: 15px 15px 0 15px;
+        }
+        h1 {
+            display: none;
+            @media screen and (min-width: $bigScreen){
+                display: block;
+            }
+        }
+    }
+    
+    .content {
+        @extend .content-header;
+        padding-top: 15px;
+        .container {
+            padding: 0;
+            @media screen and (min-width: $largeScreen){
+                padding: 0 15px;
+            }
+        }
+        .box {
+            box-shadow: none;
+            @media screen and (min-width: $largeScreen){
+                box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            }
+        }
+        .box-header {
+            @media screen and (min-width: $bigScreen){
+                display: none;
+            }
+        }
+    }
+}
+
+.css-create-page {
+    .box-header {
+        text-align: center;
+        border-bottom: none;
+        @media screen and (min-width: $largeScreen){
+            border-bottom: 1px solid #f4f4f4;
+        }
+        .box-title {
+            font-size: 18px;
+            @media screen and (min-width: $largeScreen){
+                font-size: 25px;
+            }
+        }
+        
+    }
+    
+    .css-create-body {
+        input[type=text] {
+            width: 93%;
+            display: inline-block;
+            border-radius: 3px; 
+        }
+        
+        .form-group {
+            margin-top: 25px;
+        }
+        
+        .sama_label{
+            position: absolute;
+            top: 8px;
+            left: 85%;
+        }
+
+        .radio-inline {
+            padding-left: 0;
+        }
+        
+        .icheckbox-container {
+            width: 100%;
+            display: inline-block;
+        }
+        
+        .required {
+            position: absolute;
+            top: 8px;
+            left: 95%;
+        }
+        
+        .container-button-css{
+            text-align: center;
+            button{
+                padding: 5px 35px;
+            }
+        }
+        
+        .date {
+            position: relative; 
+            left: -1px;
+            border-radius: 0 4px 4px 0 !important;
+            
+        }
+        
+        #start_date-error {
+            position: absolute;
+            bottom: -29px;
+            left: 0;
+        }
+        
+        #end_date-error {
+            @extend #start_date-error;
+        }
+        
+        .btn-create {
+            margin: 40px 0;
+        }
+        
+    }
+    
+    
+    .container-fluid .row-fluid button.btn-next{
+        float: right; 
+        background-color: #690F8E; 
+        padding: 3px 28px;
+    }
+
+    /* hien popup chon team vao css */
+    .css-create-page .modal-dialog, .css-update-page .modal-dialog{
+        width: 400px !important;
+    }
+
+    #frm-add-teams{
+        text-align: center;
+    }
+
+    .container-teams{
+        width:200px; 
+        height:300px;
+        background: #6e6e6e;
+        float:left;
+    }
+
+    .btn-add-team{
+        position: relative;
+        top:134px;
+        margin:0 16px; 
+        padding: 5px 15px;
+        border: none;
+        color: #fff;
+        float: left;
+        font-weight: bold;
+        background: -webkit-linear-gradient(#929292, #000); /* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(#929292, #000); /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(#929292, #000); /* For Firefox 3.6 to 15 */
+        background: linear-gradient(#929292, #000); /* Standard syntax */
+    }
+
+    .modal-header{
+        background-color:#3c8dbc; 
+        border-bottom: 1px solid #d2d6de !important;
+        .modal-title{
+            color: #fff ;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    }
+
+    .css-create-page .modal-body, .css-update-page .modal-body{
+        font-size: 12px;
+        overflow-y: auto;
+        height: 400px;
+    }
+
+    .list-team-tree li {
+        list-style: none;
+    }
+
+    .list-team-tree ul label {
+        width: 100%;
+    }
+
+    .modal-footer{
+        border-top: 1px solid #3c8dbc !important;
+        button.create-css{
+            color: #000 ; 
+            font-weight: bold; 
+            background: #e3b019 ; 
+            padding: 3px 25px;    
+            margin-top: 10px;
+        }   
+    }
+
+    .modal-body{
+        ul.list-teams{
+            padding: 10px;
+            list-style: none;
+            text-align: left;
+            color: #fff;
+            font-weight: bold;
+            li{
+                cursor: pointer;
+                padding: 3px;
+            }
+        }
+        .remove-team{
+            margin-bottom: 10px;
+            text-align: right;
+            img{
+                cursor: pointer;
+            }
+        }
+    } 
+
+    .container-date{
+        position: relative;
+        display: inline;
+        #start_date-error{    
+            position: absolute;
+            top:43px;
+            left:0;
+        }
+        #end_date-error{    
+            @extend #start_date-error;
+        }
+    }
+
+    #team_id_check-error{
+        display: block;
+    }
+}
+
 .page-header{
     text-align: left; 
     border-bottom: none;
 }
 
-.table-create-css td{
-    border-top: none !important;
-}
-.container-fluid .row-fluid button.btn-next{
-    float: right; 
-    background-color: #690F8E; 
-    padding: 3px 28px;
-}
-.date {
-    width:35% !important; 
-    display: inline !important;
-}
-.calendar-button{
-    position: relative;
-    top: -2px;left: 0;
-    padding: 9px 15px !important;
-    display: inline-block !important;
-    width: auto !important; 
-    cursor: pointer;
-}
-.date{    
-    left: -6px;    
-    position: relative;    
-    border-radius: 0 4px 4px 0 !important;
-}
-.container-button-css{
-    text-align: center;
-}
-.container-button-css button{
-    padding: 5px 35px;
-}
 
-/* hien popup chon team vao css */
-.css-create-page .modal-dialog, .css-update-page .modal-dialog{
-    width: 400px !important;
-}
-#frm-add-teams{
-    text-align: center;
-}
-.container-teams{
-    width:200px; 
-    height:300px;
-    background: #6e6e6e;
-    float:left;}
-.btn-add-team{
-    position: relative;
-    top:134px;
-    margin:0 16px; 
-    padding: 5px 15px;
-    border: none;
-    color: #fff;
-    float: left;
-    font-weight: bold;
-    background: -webkit-linear-gradient(#929292, #000); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#929292, #000); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#929292, #000); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#929292, #000); /* Standard syntax */
-}
-
-.modal-header{
-    background-color:#3c8dbc; 
-    border-bottom: 1px solid #d2d6de !important;
-}
-.modal-header .modal-title{
-    color: #fff ;
-    font-weight: bold;
-    font-size: 18px;
-}
-.modal-header button.close span{
-    color:#fff;
-}
-
-.css-create-page .modal-body, .css-update-page .modal-body{
-    font-size: 12px;
-    overflow-y: auto;
-    height: 400px;
-}
-
-.list-team-tree li {
-    list-style: none;
-}
-
-.list-team-tree ul label {
-    width: 100%;
-}
-
-.modal-footer{
-    border-top: 1px solid #3c8dbc !important;
-}
-.modal-footer button.create-css{
-    color: #000 ; 
-    font-weight: bold; 
-    background: #e3b019 ; 
-    padding: 3px 25px;    
-    margin-top: 10px;}
-.modal-body ul.list-teams{
-    padding: 10px;
-    list-style: none;
-    text-align: left;
-    color: #fff;
-    font-weight: bold;
-}
-
-.modal-body ul.list-teams li{
-    cursor: pointer;
-    padding: 3px;
-}
-
-.modal-body .remove-team{
-    margin-bottom: 10px;
-    text-align: right;
-}
-
-.modal-body .remove-team img{
-    cursor: pointer;
-}
-
-.width-300{
-    width:325px;
-}
-.date{
-    width: 40%;
-}
-.error{
-    color:red;
-    font-size: 13px;
-    font-weight: 100;
-}
-.container-date{
-    position: relative;
-}
-#start_date-error{    
-    position: absolute;
-    top:43px;
-    left:0;
-}
-#end_date-error{    
-    position: absolute;
-    top:43px;
-    left:0;
-}
-#team_id_check-error{
-    display: block;
-}
 
 .url_make{
     width: 100%;
     text-align: center; 
     padding-bottom: 30px;
 }
+
 .url_make h2{
     color: #0230BF; 
     text-decoration: underline; 
@@ -300,11 +390,7 @@
     padding-right: 30px;
 }
 
-.sama_label{
-    position: absolute;
-    top: 27px;
-    left: 94%;
-}
+
 
 label{
     display:inline;
@@ -358,14 +444,6 @@ label{
     outline: none;
 }
 
-.icheckbox-container {
-    width: 99px;
-    display: inline-block;
-}
-
-.icheckbox{
-    display: inline-block;
-}
 
 .title-label{
     width: 90px;
@@ -426,27 +504,6 @@ table.tieuchi-theocauhoi .check{
 
 select option.parent{
     font-weight: bold;
-}
-
-.analyze-body ul{
-    list-style: none;
-}
-
-.analyze-body ul label{
-    width:100%;
-}
-
-.analyze-body .list-team-tree{
-    height:300px;
-    overflow-y: auto; 
-}
-
-.ketquaapply{
-    display: none;
-}
-
-.tbl-criteria{
-    display: none;
 }
 
 .dataTables_paginate{
@@ -514,6 +571,31 @@ table tr.loading {
 
 
 .analyze-body {
+    .icheckbox-container {
+        width: 99px;
+        display: inline-block;
+        .icheckbox{
+            display: inline-block;
+        }
+    }
+    ul{
+        list-style: none;
+        label{
+            width:100%;
+        }
+    }
+    .list-team-tree{
+        height:300px;
+        overflow-y: auto; 
+    }
+    .ketquaapply{
+        display: none;
+    }
+
+    .tbl-criteria{
+        display: none;
+    }
+
     table.dataTable thead th, table.dataTable thead td {
         padding: 8px !important;
         vertical-align: middle;
