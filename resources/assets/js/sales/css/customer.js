@@ -58,6 +58,7 @@ function totalMark(elem) {
         if($.trim(text) === ''){
             commentElem.css("border","1px solid red");
             commentElem.attr('placeholder','＃コメントがあればご記入ください。');
+            commentElem.focus();
         }
     }else if(point >= 3){
         commentElem.css("border","1px solid #d2d6de");

@@ -103,7 +103,7 @@
                         &nbsp;<span class="required">(*)</span>
                     </div> 
                     <div class="form-group position-relative">
-                        <label class="col-xs-12 padding-0" for="start_date">{{ trans('sales::view.Project date') }} <span class="required position-inherit">(*)</span></label>
+                        <label class="col-xs-12 padding-0" for="start_date">{{ trans('sales::view.Project date') }} <span class="required position-inherit position-reset">(*)</span></label>
                         <div class="col-xs-12 col-sm-6 padding-0" >
                             <div class="input-group margin-top-10"> 
                                 <span class="input-group-btn"> 
@@ -134,21 +134,20 @@
             </div>
         </form>  
     </div>
-</div>
+    <div class="modal fade" id="teamsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">{{ trans('sales::view.Set relation teams') }}</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-team-tree">{!! $htmlTeam !!}</ul>
+                </div>
+                <div class="modal-footer">
 
-<div class="modal fade" id="teamsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title">{{ trans('sales::view.Set relation teams') }}</span>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <ul class="list-team-tree">{!! $htmlTeam !!}</ul>
-            </div>
-            <div class="modal-footer">
-
-                <button type="button" class="btn btn-primary" onclick="set_team_to_css();">{{ trans('sales::view.OK') }}</button>
+                    <button type="button" class="btn btn-primary" onclick="set_team_to_css();">{{ trans('sales::view.OK') }}</button>
+                </div>
             </div>
         </div>
     </div>

@@ -1,5 +1,16 @@
 @import "mixins/function";
 
+body {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
+    font-size: 13px !important;
+    button {
+        border-radius: 3px;
+    }
+    input[type=text] {
+        @extend button;
+    }
+}
+
 .content-wrapper {
     background: #fff;
     @media screen and (min-width: $largeScreen){
@@ -73,6 +84,9 @@
             position: absolute;
             top: 8px;
             left: 85%;
+            @media screen and (min-width: $largeScreen){
+                left: 88%;
+            }
         }
 
         .radio-inline {
@@ -118,6 +132,8 @@
             margin: 40px 0;
         }
         
+        
+        
     }
     
     
@@ -158,16 +174,6 @@
         background: linear-gradient(#929292, #000); /* Standard syntax */
     }
 
-    .modal-header{
-        background-color:#3c8dbc; 
-        border-bottom: 1px solid #d2d6de !important;
-        .modal-title{
-            color: #fff ;
-            font-weight: bold;
-            font-size: 18px;
-        }
-    }
-
     .css-create-page .modal-body, .css-update-page .modal-body{
         font-size: 12px;
         overflow-y: auto;
@@ -180,6 +186,16 @@
 
     .list-team-tree ul label {
         width: 100%;
+    }
+    
+    .modal-header{
+        background-color:#3c8dbc; 
+        border-bottom: 1px solid #d2d6de !important;
+        .modal-title{
+            color: #fff ;
+            font-weight: bold;
+            font-size: 18px;
+        }
     }
 
     .modal-footer{
