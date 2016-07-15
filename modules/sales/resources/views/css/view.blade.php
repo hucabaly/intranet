@@ -44,14 +44,14 @@ use Rikkei\Core\View\View;
                                     <td>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <input type="text" class='form-control' name="filter[css_result.name]" value="{{ Form::getFilterData('css_result.name') }}"  class="filter-grid" />
+                                                <input type="text" class='form-control filter-grid' name="filter[css_result.name]" value="{{ Form::getFilterData('css_result.name') }}"  />
                                             </div>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <input type="text" class='form-control' name="filter[employees.name]" value="{{ Form::getFilterData('employees.name') }}" class="filter-grid" />
+                                                <input type="text" class='form-control filter-grid' name="filter[employees.name]" value="{{ Form::getFilterData('employees.name') }}"  />
                                             </div>
                                         </div>
                                     </td>
@@ -64,8 +64,8 @@ use Rikkei\Core\View\View;
                                     </td>
                                     <td>
                                         <div class="row">
-                                            <div class="col-md-12">
-                                                <input type="text" class='form-control' name="filter[css_result.created_at]" value="{{ Form::getFilterData('css_result.created_at') }}"  class="filter-grid" />
+                                            <div class="col-md-12"> 
+                                                <input type="text" class='form-control filter-grid' name="filter[css_result.created_at]" value="{{ Form::getFilterData('css_result.created_at') }}" />
                                             </div>
                                         </div>
                                     </td>
