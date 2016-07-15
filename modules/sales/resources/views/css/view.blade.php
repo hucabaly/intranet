@@ -44,14 +44,14 @@ use Rikkei\Core\View\View;
                                     <td>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <input type="text" name="filter[css_result.name]" value="{{ Form::getFilterData('css_result.name') }}"  class="filter-grid" />
+                                                <input type="text" class='form-control' name="filter[css_result.name]" value="{{ Form::getFilterData('css_result.name') }}"  class="filter-grid" />
                                             </div>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <input type="text" name="filter[employees.name]" value="{{ Form::getFilterData('employees.name') }}" class="filter-grid" />
+                                                <input type="text" class='form-control' name="filter[employees.name]" value="{{ Form::getFilterData('employees.name') }}" class="filter-grid" />
                                             </div>
                                         </div>
                                     </td>
@@ -65,7 +65,7 @@ use Rikkei\Core\View\View;
                                     <td>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <input type="text" name="filter[css_result.created_at]" value="{{ Form::getFilterData('css_result.created_at') }}"  class="filter-grid" />
+                                                <input type="text" class='form-control' name="filter[css_result.created_at]" value="{{ Form::getFilterData('css_result.created_at') }}"  class="filter-grid" />
                                             </div>
                                         </div>
                                     </td>

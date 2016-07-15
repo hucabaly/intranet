@@ -49,63 +49,63 @@ use Rikkei\Core\View\View;
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="text" name="filter[css_project_type.name]" value="{{ Form::getFilterData('css_project_type.name') }}"  class="filter-grid" />
+                                                    <input type="text" class='form-control' name="filter[css_project_type.name]" value="{{ Form::getFilterData('css_project_type.name') }}"  class="filter-grid" />
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="text" name="filter[project_name]" value="{{ Form::getFilterData('project_name') }}" class="filter-grid" />
+                                                    <input type="text" class='form-control' name="filter[project_name]" value="{{ Form::getFilterData('project_name') }}" class="filter-grid" />
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="text" name="filter[teams.name]" value="{{ Form::getFilterData('teams.name') }}" class="filter-grid" />
+                                                    <input type="text" class='form-control' name="filter[teams.name]" value="{{ Form::getFilterData('teams.name') }}" class="filter-grid" />
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="text" name="filter[employees.name]" value="{{ Form::getFilterData('employees.name') }}"  class="filter-grid" />
+                                                    <input type="text" class='form-control' name="filter[employees.name]" value="{{ Form::getFilterData('employees.name') }}"  class="filter-grid" />
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="text" name="filter[pm_name]" value="{{ Form::getFilterData('pm_name') }}" class="filter-grid" />
+                                                    <input type="text" class='form-control' name="filter[pm_name]" value="{{ Form::getFilterData('pm_name') }}" class="filter-grid" />
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="text" name="filter[start_date]" value="{{ Form::getFilterData('start_date') }}" class="filter-grid" />
+                                                    <input type="text" class='form-control' name="filter[start_date]" value="{{ Form::getFilterData('start_date') }}" class="filter-grid" />
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="text" name="filter[company_name]" value="{{ Form::getFilterData('company_name') }}"  class="filter-grid" />
+                                                    <input type="text" class='form-control' name="filter[company_name]" value="{{ Form::getFilterData('company_name') }}"  class="filter-grid" />
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="text" name="filter[customer_name]" value="{{ Form::getFilterData('customer_name') }}" class="filter-grid" />
+                                                    <input type="text" class='form-control' name="filter[customer_name]" value="{{ Form::getFilterData('customer_name') }}" class="filter-grid" />
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="text" name="filter[css.created_at]" value="{{ Form::getFilterData('css.created_at') }}" class="filter-grid" />
+                                                    <input type="text" class='form-control' name="filter[css.created_at]" value="{{ Form::getFilterData('css.created_at') }}" class="filter-grid" />
                                                 </div>
                                             </div>
                                         </td>
