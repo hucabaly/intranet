@@ -6,9 +6,14 @@ use Rikkei\Core\View\Form;
 use Rikkei\Core\View\View;
 
 ?>
+
+@section('title')
+    {{ trans('sales::view.Css result list of')}}<strong>{{$css->project_name}}</strong>
+@endsection
+
 @section('content')
 
-<div class="row">
+<div class="row view-css-page">
     <div class="col-xs-12">
         <div class="box">
             <div class="box-header">

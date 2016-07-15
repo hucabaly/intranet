@@ -11,7 +11,7 @@ use Rikkei\Sales\Model\CssQuestion;
 use Rikkei\Sales\Model\CssCategory;
 use Rikkei\Sales\Model\CssResult;
 use Rikkei\Sales\Model\CssResultDetail;
-use Rikkei\Sales\Model\ProjectType;
+use Rikkei\Sales\Model\CssProjectType;
 use Rikkei\Team\Model\Team;
 use Rikkei\Team\Model\Employees;
 use Rikkei\Sales\View\CssPermission;
@@ -63,7 +63,7 @@ class CssController extends Controller {
                     'teams'     => $teams,
                     'htmlTeam'  => $htmlTeam,
                     'save'      => 'create',
-                    'projectType'       => ProjectType::all(),
+                    'projectType'       => CssProjectType::all(),
                 ]
         );
     }
@@ -113,7 +113,7 @@ class CssController extends Controller {
                 "strTeamsNameSet"   => $strTeamsNameSet, 
                 "htmlTeam"          => $htmlTeam,
                 'save'              => 'update',
-                'projectType'       => ProjectType::all(),
+                'projectType'       => CssProjectType::all(),
             ]
         );
     }

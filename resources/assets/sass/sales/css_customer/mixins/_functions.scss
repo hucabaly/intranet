@@ -14,13 +14,14 @@
 @mixin total-point(){
     float: right;
     font-size: 7px;
-    padding: 5px 15px 0;
+    padding: 5px 10px 0;
     text-align: center;
     background-color: #e2f4fd;
     border: 1px solid #409dd7;
     border-radius: 3px;
     @media screen and (min-width: $mediumScreen){
         font-size:9px;
+        padding: 5px 15px 0;
     }
     @media screen and (min-width: $lagreScreen){
         font-size:13px;
