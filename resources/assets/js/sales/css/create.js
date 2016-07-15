@@ -66,6 +66,27 @@ function set_teams_popup() {
     }
 }
 
+$('.btn-create').click(function(){
+    setMarginTopEndDate();
+});
+
+$(window).resize(function(){
+    setMarginTopEndDate();
+});
+
+function setMarginTopEndDate(){
+    var startDate = $.trim($('#start_date').val());
+    if($(window).width() < 678){
+        if(startDate === '') {
+            $('#end_date').parent().css('margin-top','30px');
+        } else {
+            $('#end_date').parent().css('margin-top','10px');
+        }
+    } else{
+        $('#end_date').parent().css('margin-top','10px');
+    } 
+}
+
 $(document).ready(function () {
     $(".project_type input[type=radio]:first-child").prop('checked', true);
     $(".team-tree a").removeAttr("href");
@@ -74,7 +95,7 @@ $(document).ready(function () {
     //hide calendar sau khi select
     $('#start_date').on('changeDate', function () {
         $(this).datepicker('hide');
-        $('#end_date').focus();
+        //$('#end_date').focus();
         $('#start_date').css('color','#555').css('font-size','14px');
         $('#start_date-error').remove();
     });

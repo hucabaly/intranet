@@ -1,5 +1,7 @@
 @extends('layouts.default')
-
+@section('title')
+    {{ trans('sales::view.Css list') }}
+@endsection
 @section('content')
 <?php
 
@@ -10,11 +12,7 @@ use Rikkei\Core\View\View;
 ?>
 <div class="row list-css-page">
     <div class="col-xs-12">
-        <div class="box box-primary">
-            <div class="box-header">
-                <h3 class="box-title">{{ trans('sales::view.Css list') }}</h3>
-            </div>
-            <!-- /.box-header -->
+        <div class="box box-info">
             <div class="box-body">
                 <div class="row">
                     <div class="col-sm-6"></div>
@@ -33,7 +31,7 @@ use Rikkei\Core\View\View;
                                         <th class="sorting {{ Config::getDirClass('id') }}" data-order="id" data-dir="{{ Config::getDirOrder('id') }}" >{{ trans('sales::view.Id') }}</th>
                                         <th class="sorting {{ Config::getDirClass('project_type_name') }}" data-order="project_type_name" data-dir="{{ Config::getDirOrder('project_type_name') }}" >{{ trans('sales::view.Project type') }}</th>
                                         <th class="sorting {{ Config::getDirClass('project_name') }}" data-order="project_name" data-dir="{{ Config::getDirOrder('project_name') }}" >{{ trans('sales::view.Project base name') }}</th>
-                                        <th class="sorting {{ Config::getDirClass('teams.name') }}" data-order="teams.name" data-dir="{{ Config::getDirOrder('teams.name') }}" >{{ trans('sales::view.Team relate') }}</th>
+                                        <th class="sorting {{ Config::getDirClass('teams.name') }}" data-order="teams.name" data-dir="{{ Config::getDirOrder('teams.name') }}" >{{ trans('sales::view.List.Team relate') }}</th>
                                         <th class="sorting {{ Config::getDirClass('sale_name') }}" data-order="sale_name" data-dir="{{ Config::getDirOrder('sale_name') }}" >{{ trans('sales::view.Sale name 2') }}</th>
                                         <th class="sorting {{ Config::getDirClass('pm_name') }}" data-order="pm_name" data-dir="{{ Config::getDirOrder('pm_name') }}" >{{ trans('sales::view.PM') }}</th>
                                         <th class="sorting {{ Config::getDirClass('start_date') }}" data-order="start_date" data-dir="{{ Config::getDirOrder('start_date') }}" >{{ trans('sales::view.Project date') }}</th>
