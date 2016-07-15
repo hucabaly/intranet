@@ -88,7 +88,7 @@ use Rikkei\Core\View\View;
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="text" class='form-control filter-grid' name="filter[start_date]" value="{{ Form::getFilterData('start_date') }}" />
+                                                    <input type="text" class='form-control filter-grid filter-date' name="filter[start_date]" value="{{ Form::changeFormatDate(Form::getFilterData('start_date')) }}" />
                                                 </div>
                                             </div>
                                         </td>
@@ -109,7 +109,7 @@ use Rikkei\Core\View\View;
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="text" class='form-control filter-grid' name="filter[css.created_at]" value="{{ Form::getFilterData('css.created_at') }}" />
+                                                    <input type="text" class='form-control filter-grid filter-date' name="filter[css.created_at]" value="{{ Form::changeFormatDate(Form::getFilterData('css.created_at')) }}" />
                                                 </div>
                                             </div>
                                         </td>

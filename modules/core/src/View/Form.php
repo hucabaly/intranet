@@ -161,6 +161,7 @@ class Form
          if (! isset($data[$key2])) {
              return null;
          }
+         
          return $data[$key2];
     }
     
@@ -192,5 +193,20 @@ class Form
         $url = app('request')->url();
         $url = md5($url);
         Session::forget('filter.' . $url);
+    }
+    
+    /**
+     * Change date format date from yyyy-mm-dd to dd/mm/yyyy
+     * @param string $date
+     * @return string
+     */
+    public static function changeFormatDate($date){
+        $arr = [];
+        $date = explode('-', $date);
+        $count = count($date) - 1;
+        for($i=$count;$i>=0;$i--){
+            $arr[] = $date[$i];
+        }
+        return implode('/', $arr);
     }
 }

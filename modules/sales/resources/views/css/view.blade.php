@@ -70,7 +70,7 @@ use Rikkei\Core\View\View;
                                     <td>
                                         <div class="row">
                                             <div class="col-md-12"> 
-                                                <input type="text" class='form-control filter-grid' name="filter[css_result.created_at]" value="{{ Form::getFilterData('css_result.created_at') }}" />
+                                                <input type="text" class='form-control filter-grid filter-date' name="filter[css_result.created_at]" value="{{ Form::changeFormatDate(Form::getFilterData('css_result.created_at')) }}" />
                                             </div>
                                         </div>
                                     </td>
@@ -86,7 +86,7 @@ use Rikkei\Core\View\View;
                                     </tr>
                                     @endforeach
                                     @else
-                                    <tr><td colspan="13"><h2>{{ trans('sales::view.No result not found')}}</td></tr></h2>
+                                    <tr><td colspan="13" class="text-align-center"><h2>{{ trans('sales::view.No result not found')}}</td></tr></h2>
                                     @endif
                                 </tbody>
                             </table>

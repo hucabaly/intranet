@@ -162,6 +162,24 @@ jQuery(document).ready(function($) {
             valueFilter = $.trim($(this).val());
             nameFilter = $(this).attr('name');
             if (valueFilter && nameFilter) {
+                if($(this).hasClass('filter-date')) { 
+                    var arr = $(this).val().split('\/');
+                    var count = arr.length - 1; 
+                    if(count >= 0){
+                        var strTemp = "";
+                        for(var i=count; i>=0;i--){
+                            if(parseInt(arr[i]) < 10 && arr[i].length < 2) {
+                                arr[i] = "0" + arr[i]; 
+                            }
+                            if(strTemp === "") {
+                                strTemp = arr[i];
+                            } else {
+                                strTemp += "-" + arr[i];
+                            }
+                        }
+                    }
+                    valueFilter = strTemp;
+                }
                 params += nameFilter + '=' + valueFilter + '&';
             }
         });
