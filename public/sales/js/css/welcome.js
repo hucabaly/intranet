@@ -1,1 +1,1 @@
-setHeightBody(".welcome-body",90),$(window).resize(function(){setHeightBody(".welcome-body",90)});
+function setHeightByWidth(){var e=$(window).width();e<480?setHeightBody(".welcome-body",95):e<=768?setHeightBody(".welcome-body",120):e<=1024?setHeightBody(".welcome-body",100):setHeightBody(".welcome-body",90)}setHeightByWidth(),$(window).resize(function(){setHeightByWidth()});
