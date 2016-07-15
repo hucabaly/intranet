@@ -159,7 +159,7 @@ jQuery(document).ready(function($) {
         var valueFilter, nameFilter, params;
         params = '';
         $('.filter-grid').each(function(i,k) {
-            valueFilter = $(this).val();
+            valueFilter = $.trim($(this).val());
             nameFilter = $(this).attr('name');
             if (valueFilter && nameFilter) {
                 params += nameFilter + '=' + valueFilter + '&';

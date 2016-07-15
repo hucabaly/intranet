@@ -634,7 +634,8 @@ table tr.loading {
         th {
             vertical-align: middle !important;
             &:after {
-                top: 30px !important;
+                top: 50% !important;
+                transform: translateY(-50%);
             }
         }
         
@@ -642,4 +643,12 @@ table tr.loading {
             width: 100%;
         }
     }
+    
+    div.dataTables_paginate {
+        text-align: left;
+    }
+}
+
+.view-css-page {
+    @extend .list-css-page;
 }

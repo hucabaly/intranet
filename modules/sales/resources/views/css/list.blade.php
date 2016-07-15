@@ -13,6 +13,10 @@ use Rikkei\Core\View\View;
 <div class="row list-css-page">
     <div class="col-xs-12">
         <div class="box box-info">
+            <div class="box-header">
+                <h3 class="box-title">{{ trans('sales::view.Css list') }}</strong></h3>
+            </div>
+            <!-- /.box-header -->
             <div class="box-body">
                 <div class="row">
                     <div class="col-sm-6"></div>

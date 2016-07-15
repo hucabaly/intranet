@@ -74,137 +74,91 @@ textarea {
     .container-fluid {
         margin-bottom: 30px;
     }
-}
-.welcome-header {
-    text-align: center;
-    margin-bottom: 5px;
-    @media screen and (max-width: $mediumScreen){
-        margin-bottom: 15px;
-    }
-    .welcome-title {
-        font-size: 38px;
-        color: $colorGreen;
-        @media screen and (max-width: $mediumScreen){
-            font-size: 33px;
-        }
-    }
     
-}
-
-.logo-rikkei {
-    text-align: center;
-    margin-bottom: 10px;
-    img{
-        width: 180px;
-    }
-}
-
-.welcome-line{
-    text-align: center;
-    margin-bottom: 0 !important;
-    font-size: $welcomeFontSizeMedium !important;
-    @media screen and (max-width: $mediumScreen){
-        font-size: 14px !important;
-        margin-bottom: 10px !important;
-        text-align: left;
-    }
-}
-
-.css-make-info{
-    margin: 30px auto;
-    width: 470px;
-    line-height: 28px;
-    font-size: $welcomeFontSizeNormal;
-    @media screen and (max-width: $mediumScreen){
-        width: 100%;
-        margin: 30px 0;
-        font-size: 14px;
-        margin: 40px 0;
-    }
-    .company-name-title {
-        width: 155px;
-        display: inline-block;
+    .welcome-header {
+        text-align: center;
+        margin-bottom: 5px;
         @media screen and (max-width: $mediumScreen){
-            width: 105px;
+            margin-bottom: 15px;
         }
-    }
-    .project-name-title {
-        @extend .company-name-title;
-    }
-    .customer-name-title {
-        @extend .company-name-title;
-    }
-    
-    .goto-make-parent{
-        width: 285px;
-        top: 11px;
-        @media screen and (max-width: $mediumScreen){
-            width: 100%;
-        }
-        #make_name {
-            border-radius: 3px 0 0 3px !important;
-        }
-        .btn-to-make {
-            background-color: $colorGreen;
-            border-radius: 0 3px 3px 0 !important;
-            border: none;
-            &:hover {
-                background-color: #65b769;
-            }
-            img {
-                height: 22px;
-            }
-        }
-    }
-}
-
-.welcome-footer{
-    font-size: 10pt;
-    margin-bottom: 10px;
-    color: #939598;
-    .copyright {
-        font-size: $welcomeFontSizeSmall;
-        margin-bottom: 0;
-        @media screen and (max-width: $mediumScreen){
-            width: 100%;
-            text-align: center;
-        }
-        span {
-            color: $colorRed;
-        }
-    } 
-    
-    .policy-container{
-        @media screen and (max-width: $mediumScreen){
-            display: none;
-        }
-        .policy {
-            @extend .copyright;
-            .policy-link{
-                font-size: $welcomeFontSizeSmallest;
-                text-decoration: underline;
-            }
-        }
-    }
-    
-    .policy-mobile-container{
-        display: none;
-        @media screen and (max-width: $mediumScreen){
-            display: block;
-        }
-        .policy {
-            @extend .copyright;
+        .welcome-title {
+            font-size: 38px;
+            color: $colorGreen;
             @media screen and (max-width: $mediumScreen){
-                float: left;
-                margin-bottom: 10px;
+                font-size: 33px;
             }
-            .policy-link{
-                font-size: $welcomeFontSizeSmallest;
-                text-decoration: underline;
+        }
+
+    }
+
+    .logo-rikkei {
+        text-align: center;
+        margin-bottom: 10px;
+        img{
+            width: 180px;
+        }
+    }
+
+    .welcome-line{
+        text-align: center;
+        margin-bottom: 0 !important;
+        font-size: $welcomeFontSizeMedium !important;
+        @media screen and (max-width: $mediumScreen){
+            font-size: 14px !important;
+            margin-bottom: 10px !important;
+            text-align: left;
+        }
+    }
+
+    .css-make-info{
+        margin: 30px auto;
+        width: 470px;
+        line-height: 28px;
+        font-size: $welcomeFontSizeNormal;
+        @media screen and (max-width: $mediumScreen){
+            width: 100%;
+            margin: 30px 0;
+            font-size: 14px;
+            margin: 40px 0;
+        }
+        .company-name-title {
+            width: 155px;
+            display: inline-block;
+            @media screen and (max-width: $mediumScreen){
+                width: 105px;
+            }
+        }
+        .project-name-title {
+            @extend .company-name-title;
+        }
+        .customer-name-title {
+            @extend .company-name-title;
+        }
+
+        .goto-make-parent{
+            width: 285px;
+            top: 11px;
+            @media screen and (max-width: $mediumScreen){
+                width: 100%;
+            }
+            #make_name {
+                border-radius: 3px 0 0 3px !important;
+            }
+            .btn-to-make {
+                background-color: $colorGreen;
+                border-radius: 0 3px 3px 0 !important;
+                border: none;
+                &:hover {
+                    background-color: #65b769;
+                }
+                img {
+                    height: 22px;
+                }
             }
         }
     }
 }
+
 
 /** Make CSS */
 .make-css-page {
@@ -215,12 +169,15 @@ textarea {
             .logo-rikkei {
                 float: left;
                 img {
-                    width: 50px;
+                    width: 60px;
+                    margin-top: 5px;
                     @media screen and (min-width: $mediumScreen){
-                        width: 65px;
+                        width: 85px;
+                        margin-top: 4px;
                     }
                     @media screen and (min-width: $lagreScreen){
-                        width: 100px;
+                        width: 130px;
+                        margin-top: 8px;
                     }
                 }
             }            
@@ -234,11 +191,14 @@ textarea {
                 left: 0;
                 right: 0;
                 font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Meiryo, Helvetica, verdana, "Lucida Grande", "ＭＳ Ｐゴシック", Osaka, Arial, sans-serif;
+                margin-top: 13px;
                 @media screen and (min-width: $mediumScreen){
                     font-size: 26px;
+                    margin-top: 14px;
                 }
                 @media screen and (min-width: $lagreScreen){
                     font-size: 45px;
+                    margin-top: 20px;
                 }
             }
             
@@ -261,7 +221,7 @@ textarea {
                     margin-left: 3px;
                 }
                 .total-point {
-                    font-size: 18px;
+                    font-size: 16px;
                     margin-left: -2px;
                     color: $colorBlue;
                     
@@ -480,8 +440,6 @@ textarea {
                 height: auto;
             }
         }
-        
-        
     }
 }
 
@@ -502,6 +460,54 @@ textarea {
                 @media screen and (min-width: $lagreScreen){
                     font-size: 30px;
                 }
+            }
+        }
+    }
+}
+
+.welcome-footer{
+    font-size: 10pt;
+    margin-bottom: 10px;
+    color: #939598;
+    .copyright {
+        font-size: $welcomeFontSizeSmall;
+        margin-bottom: 0;
+        @media screen and (max-width: $mediumScreen){
+            width: 100%;
+            text-align: center;
+        }
+        span {
+            color: $colorRed;
+        }
+    } 
+
+    .policy-container{
+        @media screen and (max-width: $mediumScreen){
+            display: none;
+        }
+        .policy {
+            @extend .copyright;
+            .policy-link{
+                font-size: $welcomeFontSizeSmallest;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .policy-mobile-container{
+        display: none;
+        @media screen and (max-width: $mediumScreen){
+            display: block;
+        }
+        .policy {
+            @extend .copyright;
+            @media screen and (max-width: $mediumScreen){
+                float: left;
+                margin-bottom: 10px;
+            }
+            .policy-link{
+                font-size: $welcomeFontSizeSmallest;
+                text-decoration: underline;
             }
         }
     }
